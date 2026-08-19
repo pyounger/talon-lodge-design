@@ -1,0 +1,111 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Signature Cocktails</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--gold:#b9892b;--gold-soft:#f6ecd6;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 22px rgba(18,42,43,.06)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--gold:#e0b45e;--gold-soft:#2c2413;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--gold:#e0b45e}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--gold:#b9892b}
+  *{box-sizing:border-box}
+  .rm{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(14px,3vw,30px);-webkit-font-smoothing:antialiased}
+  .rm .wrap{max-width:960px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(20px,3vw,28px)/1.1 var(--sans);letter-spacing:-.02em;margin:0 0 4px}
+  .lede{color:var(--muted);margin:0 0 18px;font-size:13.5px;max-width:82ch}
+  .top{display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
+  .btn{font:700 12.5px var(--sans);border-radius:8px;padding:9px 14px;cursor:pointer;border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+  .btn:hover{background:var(--surface-2)}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .card{background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);padding:14px 16px;margin-bottom:12px;display:grid;grid-template-columns:150px 1fr auto;gap:16px;align-items:start}
+  @media(max-width:660px){.card{grid-template-columns:1fr}}
+  .ph{display:flex;flex-direction:column;gap:8px}
+  .thumb{width:150px;height:100px;object-fit:cover;border-radius:9px;border:1px solid var(--line-2);background:#000}
+  .thumb.none{display:grid;place-items:center;color:var(--faint);font-size:26px;background:var(--surface-2)}
+  @media(max-width:660px){.thumb{width:100%;height:150px}}
+  .filebtn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;font:700 11.5px var(--sans);color:#fff;background:var(--accent);border-radius:7px;padding:7px 10px;cursor:pointer}
+  .filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .rmphoto{font:600 11px var(--sans);color:var(--faint);background:none;border:0;cursor:pointer}.rmphoto:hover{color:var(--salmon)}
+  .fields{display:flex;flex-direction:column;gap:8px;min-width:0}
+  .frow{display:flex;gap:8px;align-items:center}
+  input,textarea{font:600 13.5px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:8px 10px;width:100%}
+  input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+  input.name{font-weight:800;font-size:15px}
+  input.price{width:90px;text-align:right;font-weight:800}
+  .lbl{font:700 10px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+  textarea.ingr{min-height:88px;font-weight:500;resize:vertical}
+  .side{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+  .tgl{font:700 11px var(--sans);border:1px solid var(--line-2);background:var(--surface);border-radius:20px;padding:5px 11px;cursor:pointer;color:var(--muted);white-space:nowrap}
+  .tgl.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep)}
+  .icon{border:1px solid var(--line-2);background:var(--surface);color:var(--muted);border-radius:7px;width:32px;height:32px;cursor:pointer}
+  .icon:hover{border-color:var(--salmon);color:var(--salmon)}
+  .schema{margin-top:8px;font-size:12px;color:var(--muted);background:var(--surface);border:1px dashed var(--line-2);border-radius:10px;padding:11px 14px;line-height:1.6}
+  .schema b{color:var(--accent-deep)} .schema code{font-family:var(--mono);font-size:.9em;color:var(--ink)}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--accent-deep);color:#fff;font:600 13px var(--sans);padding:9px 16px;border-radius:9px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+<div class="rm"><div class="wrap">
+  <p class="eyebrow">Admin setup · Bar</p>
+  <h1>Signature Cocktails</h1>
+  <p class="lede">The signature cocktail menu shown on the <b>Evening Display</b>. Each carries a name, price, ingredient list and a photo. Photos are stored in the browser's large image store (IndexedDB), so full-size shots load fine.</p>
+  <div class="top"><button class="btn primary" onclick="CK.add()">＋ Add cocktail</button><button class="btn" onclick="CK.restore()">↻ Restore standard list</button><span class="lbl" style="margin-left:auto" id="count"></span></div>
+  <div id="list"></div>
+  <div class="schema">Maps to Andy's schema → <b>cocktails</b>: <code>id, name, price, ingredients[], photo, active, sort</code>. Read by the Evening Display slideshow.</div>
+</div></div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+  const KEY='talon_cocktails_v1';
+  const SEED=[
+    ['Spicy Mango Margarita',18,['Patrón Silver','Mango Purée','Jalapeño','Lime Juice','Grand Marnier']],
+    ['Raspberry Daiquiri',18,['Bacardi Rum','Raspberry Purée','Lime Juice','Butterfly Pea Flower']],
+    ['Rosemary Gin Fizz',18,["Hendrick's Gin",'Lemon Juice','Rosemary Syrup','Club Soda']],
+    ['Irish Mint Mule',18,['Jameson','Lime Juice','Muddled Mint','Spruce tip Syrup','Ginger Beer']],
+    ['Nutty Irishman',18,['Coffee',"Bailey's",'Frangelico','Toasted Marshmallow']]
+  ].map((r,i)=>({id:i+1,name:r[0],price:r[1],ingredients:r[2],active:true,sort:i+1}));
+
+  const IMGDB=(()=>{let dbp=null;function open(){if(dbp)return dbp;dbp=new Promise((res,rej)=>{let r;try{r=indexedDB.open('talon-images',1);}catch(e){return rej(e);}r.onupgradeneeded=e=>{try{e.target.result.createObjectStore('photos');}catch(_){}};r.onsuccess=e=>res(e.target.result);r.onerror=()=>rej(r.error);});return dbp;}
+    return {put:(k,v)=>open().then(db=>new Promise((res,rej)=>{const tx=db.transaction('photos','readwrite');tx.objectStore('photos').put(v,k);tx.oncomplete=()=>res(true);tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error);})),
+      get:k=>open().then(db=>new Promise(res=>{const rq=db.transaction('photos','readonly').objectStore('photos').get(k);rq.onsuccess=()=>res(rq.result||null);rq.onerror=()=>res(null);})).catch(()=>null),
+      del:k=>open().then(db=>new Promise(res=>{const tx=db.transaction('photos','readwrite');tx.objectStore('photos').delete(k);tx.oncomplete=()=>res(true);tx.onerror=()=>res(false);})).catch(()=>false)};})();
+  function resolveIdb(){[...document.querySelectorAll('img[data-idb]')].forEach(img=>{const k=img.getAttribute('data-idb');img.removeAttribute('data-idb');IMGDB.get(k).then(v=>{if(v)img.src=v;});});}
+  function resizeImg(file,cb){const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const max=1600;let w=img.width,h=img.height;if(w>max){h=Math.round(h*max/w);w=max;}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);cb(c.toDataURL('image/jpeg',.85));};img.onerror=()=>cb(null);img.src=r.result;};r.readAsDataURL(file);}
+
+  let items=[],nextId=1;
+  try{items=JSON.parse(localStorage.getItem(KEY))||null;}catch(e){}
+  if(!items||!items.length){let bak=null;try{bak=JSON.parse(localStorage.getItem(KEY+'__bak'))||null;}catch(e){}items=(bak&&bak.length)?bak:JSON.parse(JSON.stringify(SEED));persist();}
+  nextId=Math.max(0,...items.map(t=>t.id||0))+1;
+  function persist(){try{const j=JSON.stringify(items);localStorage.setItem(KEY,j);try{localStorage.setItem(KEY+'__bak',j);}catch(e){}return true;}catch(e){return false;}}
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1500);}
+
+  function render(){
+    items.sort((a,b)=>(a.sort||0)-(b.sort||0));
+    el('count').textContent=items.filter(x=>x.active!==false).length+' active of '+items.length;
+    el('list').innerHTML=items.map(t=>{
+      const photo=t.photo||'';const isIdb=photo.indexOf('idb:')===0;
+      const thumb=photo?(isIdb?`<img class="thumb" data-idb="${esc(photo.slice(4))}" alt="">`:`<img class="thumb" src="${esc(photo)}" alt="">`):'<div class="thumb none">🍸</div>';
+      return `<div class="card">
+        <div class="ph">${thumb}<div class="frow"><label class="filebtn">${photo?'Replace':'⬆ Upload'}<input type="file" accept="image/*" onchange="CK.upload(${t.id},this)"></label>${photo?`<button class="rmphoto" onclick="CK.rmPhoto(${t.id})">Remove</button>`:''}</div>
+          <input placeholder="Photo URL (optional)" value="${esc(/^https?:/.test(photo)?photo:'')}" oninput="CK.setPhotoUrl(${t.id},this.value)"></div>
+        <div class="fields">
+          <div class="frow"><input class="name" value="${esc(t.name)}" placeholder="Cocktail name" oninput="CK.set(${t.id},'name',this.value)"><span class="lbl">$</span><input class="price" type="number" min="0" step="1" value="${esc(t.price)}" oninput="CK.set(${t.id},'price',this.value)"></div>
+          <span class="lbl">Ingredients (one per line)</span>
+          <textarea class="ingr" oninput="CK.setIngr(${t.id},this.value)">${esc((t.ingredients||[]).join('\n'))}</textarea>
+        </div>
+        <div class="side"><button class="tgl ${t.active!==false?'on':''}" onclick="CK.toggle(${t.id})">${t.active!==false?'On menu':'Hidden'}</button><button class="icon" title="Delete" onclick="CK.del(${t.id})">✕</button></div>
+      </div>`;}).join('');
+    resolveIdb();
+  }
+  window.CK={
+    set(id,f,v){const t=items.find(x=>x.id===id);if(t){t[f]=(f==='price'?(+v||0):v);persist();if(f==='price'){}}},
+    setIngr(id,v){const t=items.find(x=>x.id===id);if(t){t.ingredients=v.split('\n').map(s=>s.trim()).filter(Boolean);persist();}},
+    setPhotoUrl(id,v){const t=items.find(x=>x.id===id);if(!t)return;if(v.trim())t.photo=v.trim();else if(t.photo&&t.photo.indexOf('idb:')!==0)delete t.photo;persist();render();},
+    upload(id,input){const f=input.files&&input.files[0];input.value='';if(!f)return;const t=items.find(x=>x.id===id);if(!t)return;resizeImg(f,url=>{if(!url){toast('Could not read image');return;}const key='cocktail:'+id;IMGDB.put(key,url).then(()=>{t.photo='idb:'+key;persist();render();toast('Photo added');}).catch(()=>{t.photo=url;if(!persist()){delete t.photo;toast('Photo too large — use a URL');return;}render();});});},
+    rmPhoto(id){const t=items.find(x=>x.id===id);if(!t)return;const p=t.photo;delete t.photo;persist();render();if(p&&p.indexOf('idb:')===0)IMGDB.del(p.slice(4));},
+    toggle(id){const t=items.find(x=>x.id===id);if(t){t.active=t.active===false;persist();render();}},
+    add(){const t={id:nextId++,name:'',price:18,ingredients:[],active:true,sort:(Math.max(0,...items.map(x=>x.sort||0))+1)};items.push(t);render();toast('Cocktail added');},
+    del(id){const t=items.find(x=>x.id===id);if(!confirm('Delete “'+((t&&t.name)||'this cocktail')+'”?'))return;const p=t&&t.photo;items=items.filter(x=>x.id!==id);persist();render();if(p&&p.indexOf('idb:')===0)IMGDB.del(p.slice(4));toast('Deleted');},
+    restore(){let n=0;SEED.forEach(s=>{if(!items.some(t=>(t.name||'').trim().toLowerCase()===s.name.toLowerCase())){items.push({id:nextId++,name:s.name,price:s.price,ingredients:s.ingredients.slice(),active:true,sort:(Math.max(0,...items.map(x=>x.sort||0))+1)});n++;}});persist();render();toast(n?('Restored '+n):'Standard list already complete');}
+  };
+  render();
+})();
+</script>
+</body></html>

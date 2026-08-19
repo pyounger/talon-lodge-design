@@ -1,0 +1,161 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — DB Schema ERD</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{
+    --paper:#f3f6f5;--surface:#ffffff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;
+    --line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;
+    --salmon:#c25e39;--salmon-soft:#f4e5de;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 10px 28px rgba(18,42,43,.05);
+  }
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35);}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35);}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#ffffff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--shadow:0 1px 2px rgba(18,42,43,.05),0 10px 28px rgba(18,42,43,.05);}
+  *{box-sizing:border-box}
+  .er{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(20px,4vw,52px);-webkit-font-smoothing:antialiased}
+  .er .inner{max-width:1160px;margin:0 auto}
+  .er-eyebrow{font:600 12px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 14px}
+  .er h1{font:800 clamp(26px,4vw,42px)/1.05 var(--sans);letter-spacing:-.022em;margin:0 0 12px;text-wrap:balance;max-width:22ch}
+  .er .lede{font-size:clamp(14px,1.4vw,16px);color:var(--muted);margin:0;max-width:66ch}
+  .er .lede b{color:var(--ink)}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin:20px 0 6px;font:500 12.5px/1 var(--sans);color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:8px}
+  .sw{width:20px;height:0;border-top:2px solid var(--accent)}
+  .sw.n{border-top-color:var(--line-2)} .sw.s{border-top:2px dashed var(--salmon)}
+  .figwrap{overflow-x:auto;border:1px solid var(--line);border-radius:6px;background:var(--surface);box-shadow:var(--shadow);margin-top:14px}
+  .figwrap svg{display:block;width:100%;min-width:900px;height:auto;color:var(--ink)}
+  figcaption{font-size:12.5px;color:var(--faint);margin-top:10px;max-width:74ch}
+  .node{fill:var(--surface);stroke:var(--line-2);stroke-width:1.2}
+  .node.hub{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.8}
+  .hdr{fill:var(--ink);font:800 13px var(--mono)}
+  .hdr.hub{fill:var(--accent-deep)}
+  .sub{fill:var(--muted);font:500 10.5px var(--sans)}
+  .rel{stroke:var(--line-2);stroke-width:1.5;fill:none}
+  .rel.k{stroke:var(--accent);stroke-width:2}
+  .card{fill:var(--faint);font:600 10px var(--mono)}
+  .rlab{fill:var(--muted);font:600 10px var(--sans)}
+</style>
+<div class="er"><div class="inner">
+  <p class="er-eyebrow">Talon Lodge Platform · Data Model</p>
+  <h1>The schema spine: everything hangs off one person</h1>
+  <p class="lede">The relationship backbone of <b>DB_SCHEMA.md</b> — how a person enters, becomes a
+  master record, and gathers groups, trips, profiles and day-by-day asset assignments over time.
+  Full column-level tables are in the schema doc; this is the map to review it against.</p>
+  <div class="legend">
+    <span><i class="sw"></i>key relationship (resolve to 1 person)</span>
+    <span><i class="sw n"></i>foreign key (1 : N)</span>
+    <span><i class="sw s"></i>booking agent (not a person)</span>
+  </div>
+  <div class="figwrap">
+  <svg viewBox="0 0 1120 470" role="img" aria-label="Entity-relationship spine: intake channels feed one matching engine that resolves to a single person record; person links through group_person to groups, groups have trips, trips have per-person profiles and day-by-day person-to-asset assignments, and trips reference packages.">
+    <defs><marker id="a" markerWidth="9" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="context-stroke"/></marker></defs>
+
+    <!-- INTAKE -->
+    <rect class="node" x="24" y="80" width="188" height="164" rx="5"/>
+    <text class="hdr" x="40" y="104">INTAKE</text>
+    <text class="sub" x="40" y="126">inquiries</text>
+    <text class="sub" x="40" y="146">leads</text>
+    <text class="sub" x="40" y="166">reservation_requests</text>
+    <text class="sub" x="40" y="186">brochure_requests</text>
+    <text class="sub" x="40" y="206">guest_list_entries</text>
+    <text class="sub" x="40" y="230" style="fill:var(--faint)">each keeps raw + person_id</text>
+
+    <!-- MATCHING -->
+    <rect class="node" x="262" y="120" width="140" height="86" rx="5"/>
+    <text class="hdr" x="278" y="150">MATCHING</text>
+    <text class="sub" x="278" y="170">resolveGuest…()</text>
+    <text class="sub" x="278" y="188">email·phone·name</text>
+
+    <!-- PERSON hub -->
+    <rect class="node hub" x="452" y="120" width="182" height="80" rx="6"/>
+    <text class="hdr hub" x="470" y="150">person</text>
+    <text class="sub" x="470" y="170" style="fill:var(--accent-deep)">one master record</text>
+    <text class="sub" x="470" y="188" style="fill:var(--accent-deep)">history only accumulates</text>
+
+    <!-- contact children -->
+    <rect class="node" x="452" y="232" width="182" height="60" rx="5"/>
+    <text class="hdr" x="470" y="256" style="font-size:11.5px">person_emails · _phones</text>
+    <text class="sub" x="470" y="276">person_name_aliases</text>
+
+    <!-- group_person + group -->
+    <rect class="node" x="686" y="60" width="172" height="44" rx="5"/>
+    <text class="hdr" x="702" y="80" style="font-size:11.5px">group_persons</text>
+    <text class="sub" x="702" y="96">role: lead | member</text>
+
+    <rect class="node" x="686" y="132" width="172" height="66" rx="5"/>
+    <text class="hdr" x="702" y="156">group</text>
+    <text class="sub" x="702" y="176" style="fill:var(--salmon)">+ booking_agent_* (not a person)</text>
+
+    <!-- package -->
+    <rect class="node" x="686" y="238" width="172" height="46" rx="5"/>
+    <text class="hdr" x="702" y="262" style="font-size:12px">package</text>
+    <text class="sub" x="702" y="278">package_assets → assets</text>
+
+    <!-- trip + children -->
+    <rect class="node" x="910" y="132" width="184" height="66" rx="5"/>
+    <text class="hdr" x="926" y="156">trip</text>
+    <text class="sub" x="926" y="176">dated booking · reports/events</text>
+
+    <rect class="node" x="910" y="228" width="184" height="46" rx="5"/>
+    <text class="hdr" x="926" y="250" style="font-size:11.5px">trip_profiles</text>
+    <text class="sub" x="926" y="266">snapshot, per person, copied fwd</text>
+
+    <rect class="node" x="910" y="300" width="184" height="44" rx="5"/>
+    <text class="hdr" x="926" y="320" style="font-size:11px">assignments · person+asset+date</text>
+
+    <rect class="node" x="910" y="372" width="150" height="44" rx="5"/>
+    <text class="hdr" x="926" y="392" style="font-size:11.5px">assets</text>
+    <text class="sub" x="926" y="392" style="display:none"></text>
+
+    <!-- ===== relationships ===== -->
+    <!-- intake -> matching -->
+    <line class="rel" x1="212" y1="162" x2="262" y2="162" marker-end="url(#a)"/>
+    <!-- matching -> person (key) -->
+    <line class="rel k" x1="402" y1="160" x2="452" y2="160" marker-end="url(#a)"/>
+    <text class="rlab" x="404" y="150">→ 1 person</text>
+    <!-- person -> contact -->
+    <line class="rel" x1="543" y1="200" x2="543" y2="232" marker-end="url(#a)"/>
+    <text class="card" x="548" y="222">1:N</text>
+    <!-- person -> group_person -->
+    <line class="rel" x1="634" y1="140" x2="686" y2="90" marker-end="url(#a)"/>
+    <text class="rlab" x="636" y="112">member</text>
+    <!-- group_person -> group -->
+    <line class="rel" x1="772" y1="104" x2="772" y2="132" marker-end="url(#a)"/>
+    <!-- group -> trip -->
+    <line class="rel" x1="858" y1="165" x2="910" y2="165" marker-end="url(#a)"/>
+    <text class="card" x="866" y="158">1:1</text>
+    <!-- trip -> trip_profiles -->
+    <line class="rel" x1="1002" y1="198" x2="1002" y2="228" marker-end="url(#a)"/>
+    <text class="card" x="1006" y="220">1:N</text>
+    <!-- trip -> person_day_assignments (rail to the right) -->
+    <line class="rel" x1="1070" y1="198" x2="1070" y2="322" marker-end="url(#a)"/>
+    <line class="rel" x1="1070" y1="322" x2="1094" y2="322"/>
+    <text class="card" x="1050" y="296">1:N</text>
+    <!-- assignments -> assets -->
+    <line class="rel" x1="985" y1="344" x2="985" y2="372" marker-end="url(#a)"/>
+    <text class="rlab" x="990" y="366">uses</text>
+    <!-- trip -> package (elbow below group) -->
+    <line class="rel" x1="858" y1="261" x2="936" y2="261"/>
+    <line class="rel" x1="936" y1="261" x2="936" y2="198" marker-end="url(#a)"/>
+    <text class="card" x="866" y="255">N:1</text>
+    <text class="rlab" x="792" y="255">package</text>
+
+    <!-- person core fields callout -->
+    <rect class="node" x="262" y="300" width="380" height="158" rx="5"/>
+    <text class="hdr hub" x="278" y="322">person — core fields (master record)</text>
+    <text class="sub" x="278" y="344">identity · first · middle · last · suffix · preferred_name · photo</text>
+    <text class="sub" x="278" y="362">contact · person_emails · person_phones · name_aliases</text>
+    <text class="sub" x="278" y="380">address · line1/2 · city · state · postal · country</text>
+    <text class="sub" x="278" y="398">demographics · date_of_birth (→ age) · gender · emergency_contact</text>
+    <text class="sub" x="278" y="416">preferences · marketing_opt_in · do_not_email/phone/mail</text>
+    <text class="sub" x="278" y="434">lifecycle · past_guest · first/last_stay · total_trips/nights</text>
+    <text class="sub" x="278" y="452">rollups · lifetime_spend · latest/avg survey_score</text>
+  </svg>
+  </div>
+  <figcaption>Rooms, boats, guides, massage, activities &amp; breakfast are all <b>assets</b>
+  (asset_type + <code>properties</code> JSON); anything scheduled is an <b>assignment</b>
+  (person + asset + date + <code>details</code> JSON). Field sets for assets/profiles/assignments are
+  defined as data in <b>field_definitions</b> (meta-schema, §0). Also off this spine:
+  <b>survey_scores</b>, <b>merge_history</b>, <b>invoices</b>, <b>stay_media</b>. A booking agent's
+  shared inbox lives on the <code>group</code>, never merged into a person.</figcaption>
+</div></div>
+</body></html>

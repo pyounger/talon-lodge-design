@@ -1,0 +1,117 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Access & Roles</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--gold:#b9892b;--gold-soft:#f6ecd6;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 22px rgba(18,42,43,.06)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--gold:#e0b45e;--gold-soft:#2c2413;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--gold:#e0b45e}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--gold:#b9892b}
+  *{box-sizing:border-box}
+  .rm{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(14px,3vw,30px);-webkit-font-smoothing:antialiased}
+  .rm .wrap{max-width:1000px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(20px,3vw,28px)/1.1 var(--sans);letter-spacing:-.02em;margin:0 0 4px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:13.5px;max-width:88ch}
+  .top{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+  .btn{font:700 12.5px var(--sans);border-radius:8px;padding:9px 14px;cursor:pointer;border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+  .btn:hover{background:var(--surface-2)}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .role{background:var(--surface);border:1px solid var(--line-2);border-radius:14px;box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
+  .rhead{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .rhead input.name{font:800 16px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:8px 11px;min-width:180px}
+  .rhead .lock{font:700 9px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent-deep);background:var(--accent-soft);border-radius:20px;padding:3px 9px}
+  .rhead .cnt{font:600 12px var(--sans);color:var(--muted)}
+  .rhead .sp{margin-left:auto}
+  .tgl{font:700 12px var(--sans);border:1px solid var(--line-2);background:var(--surface);border-radius:20px;padding:7px 13px;cursor:pointer;color:var(--muted)}
+  .tgl.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep)}
+  .del{border:1px solid var(--line-2);background:var(--surface);color:var(--muted);border-radius:8px;width:34px;height:34px;cursor:pointer}
+  .del:hover{border-color:var(--salmon);color:var(--salmon)}
+  .fullnote{padding:14px 16px;font-size:13.5px;color:var(--muted)}
+  .fullnote b{color:var(--accent-deep)}
+  .apps{padding:8px 16px 14px}
+  .agrp{margin-top:10px}
+  .agrp .ah{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+  .agrp .ah .gn{font:700 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .agrp .ah a{font:600 11px var(--sans);color:var(--accent);cursor:pointer;text-decoration:none}
+  .achecks{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:4px 14px}
+  .ac{display:flex;align-items:center;gap:8px;font:600 13px var(--sans);cursor:pointer;padding:4px 0}
+  .ac input{width:16px;height:16px;accent-color:var(--accent)}
+  .ac .d{color:var(--faint);font-weight:500;font-size:11.5px}
+  .schema{margin-top:8px;font-size:12px;color:var(--muted);background:var(--surface);border:1px dashed var(--line-2);border-radius:10px;padding:11px 14px;line-height:1.6}
+  .schema b{color:var(--accent-deep)} .schema code{font-family:var(--mono);font-size:.9em;color:var(--ink)}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--accent-deep);color:#fff;font:600 13px var(--sans);padding:9px 16px;border-radius:9px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+<div class="rm"><div class="wrap">
+  <p class="eyebrow">Set-up · Security</p>
+  <h1>Access &amp; Roles</h1>
+  <p class="lede">Define who can use which apps. Each <b>role</b> is granted a set of apps; the hub's <b>“View as”</b> switcher (top bar) shows only that role's apps. Give a bartender just Beverages, Orders &amp; Photos; give managers everything. Changes apply to the hub immediately.</p>
+  <div class="top"><button class="btn primary" onclick="AR.add()">＋ Add role</button><button class="btn" onclick="AR.restore()">↻ Restore default roles</button></div>
+  <div id="list"></div>
+  <div class="schema">Maps to Andy's schema → <b>roles</b> + <b>role_app</b> (role → allowed app) + <b>user.role_id</b>. Stored in <code>talon_roles_v1</code>; the app list comes from <code>talon_app_catalog_v1</code> (written by the hub). In production this is enforced server-side per authenticated user.</div>
+</div></div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+  const RKEY='talon_roles_v1', CKEY='talon_app_catalog_v1';
+  const GROUP_ORDER=['Set-up','Operate','Displays','Guest','Reference'];
+  // fallback catalog if the hub hasn't written one (e.g. opened standalone)
+  const CATALOG_FALLBACK=[
+    {id:'team',label:'Team',group:'Set-up',desc:'Guides, therapists, boats & crew'},{id:'activities',label:'Activities',group:'Set-up',desc:'Add-ons & pricing'},{id:'menu',label:'Menu Items',group:'Set-up',desc:'Breakfast & lunch menu'},{id:'beverages',label:'Beverages',group:'Set-up',desc:'Beverage catalog'},{id:'cocktails',label:'Cocktails',group:'Set-up',desc:'Signature cocktails'},{id:'massagemenu',label:'Massage Menu',group:'Set-up',desc:'Spa treatments'},{id:'fishtypes',label:'Fish Types',group:'Set-up',desc:'Species & recovery %'},{id:'packages',label:'Packages',group:'Set-up',desc:'Trip dates & rates'},{id:'settings',label:'Settings',group:'Set-up',desc:'Fees & policy'},{id:'vendors',label:'Vendors',group:'Set-up',desc:'Pilots & providers'},{id:'access',label:'Access & Roles',group:'Set-up',desc:'Who can use which apps'},
+    {id:'scheduling',label:'Scheduling',group:'Operate',desc:'Availability + calendar'},{id:'approvals',label:'Approvals',group:'Operate',desc:'Approve requests'},{id:'massagesched',label:'Massage Schedule',group:'Operate',desc:'Book therapist slots'},{id:'boats',label:'Boat assignments',group:'Operate',desc:'Home boat per group'},{id:'rooms',label:'Room assignments',group:'Operate',desc:'Guests to rooms'},{id:'flights',label:'Flight info',group:'Operate',desc:'Arrival/departure'},{id:'meals',label:'Meal & Bev Orders',group:'Operate',desc:'Breakfast + beverages'},{id:'fishproc',label:'Fish Processing',group:'Operate',desc:'Catch → split'},{id:'photos',label:'Guest photos',group:'Operate',desc:'Photo per guest'},{id:'daily',label:'Daily report',group:'Operate',desc:'Run sheet by individual'},
+    {id:'display',label:'Morning display',group:'Displays',desc:'Lobby slideshow'},{id:'sigdisp',label:'Evening Display',group:'Displays',desc:'Nightly rotation'},
+    {id:'booking',label:'Reservation',group:'Guest',desc:'Booking flow'},{id:'portal',label:'Guest Portal',group:'Guest',desc:'Self-service trip home'},
+    {id:'testdata',label:'Test data',group:'Reference',desc:'Load test guests'},{id:'guide',label:'Test guide',group:'Reference',desc:'Test scripts'}
+  ];
+  const DEFAULT_ROLES=[
+    {id:'admin',name:'Administrator',apps:'*',locked:true},
+    {id:'manager',name:'Manager',apps:'*'},
+    {id:'frontdesk',name:'Front desk',apps:['photos','rooms','flights','daily','booking','portal','approvals','scheduling']},
+    {id:'bar',name:'Lodge Services',apps:['meals','beverages','cocktails','photos','sigdisp']},
+    {id:'kitchen',name:'Kitchen',apps:['meals','menu','fishproc','fishtypes','daily']},
+    {id:'guide',name:'Captain / Guide',apps:['scheduling','daily','photos','fishproc','display']},
+    {id:'massage',name:'Massage',apps:['massagesched','massagemenu','photos']}
+  ];
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1400);}
+  function catalog(){let c=null;try{c=JSON.parse(localStorage.getItem(CKEY));}catch(e){}return (Array.isArray(c)&&c.length)?c:CATALOG_FALLBACK;}
+  let roles=[];try{roles=JSON.parse(localStorage.getItem(RKEY))||null;}catch(e){}
+  if(!roles||!roles.length){roles=JSON.parse(JSON.stringify(DEFAULT_ROLES));persist();}
+  (function(){const b=roles.find(x=>x.id==='bar'&&x.name==='Bartender');if(b){b.name='Lodge Services';persist();}})();
+  function persist(){try{localStorage.setItem(RKEY,JSON.stringify(roles));}catch(e){}}
+  const isFull=r=>r.apps==='*';
+  const has=(r,id)=>isFull(r)||(Array.isArray(r.apps)&&r.apps.indexOf(id)>=0);
+
+  function render(){
+    const cat=catalog();
+    el('list').innerHTML=roles.map(r=>{
+      const count=isFull(r)?cat.length:(r.apps||[]).length;
+      let body;
+      if(isFull(r)){body=`<div class="fullnote"><b>Full access</b> — this role sees every app. Turn off “Full access” to pick specific apps.</div>`;}
+      else{
+        body='<div class="apps">'+GROUP_ORDER.map(g=>{const items=cat.filter(a=>a.group===g);if(!items.length)return '';
+          return `<div class="agrp"><div class="ah"><span class="gn">${esc(g)}</span><a onclick="AR.groupAll('${r.id}','${g}',true)">all</a><a onclick="AR.groupAll('${r.id}','${g}',false)">none</a></div>
+            <div class="achecks">${items.map(a=>`<label class="ac"><input type="checkbox" ${has(r,a.id)?'checked':''} onchange="AR.toggleApp('${r.id}','${a.id}',this.checked)"> <span>${esc(a.label)}<span class="d"> · ${esc(a.desc)}</span></span></label>`).join('')}</div></div>`;
+        }).join('')+'</div>';
+      }
+      return `<div class="role"><div class="rhead">
+          <input class="name" value="${esc(r.name)}" ${r.locked?'readonly':''} oninput="AR.setName('${r.id}',this.value)">
+          ${r.locked?'<span class="lock">🔒 built-in</span>':''}
+          <span class="cnt">${count} app${count===1?'':'s'}</span>
+          <span class="sp"></span>
+          <button class="tgl ${isFull(r)?'on':''}" ${r.locked?'disabled style="opacity:.5;cursor:default"':''} onclick="AR.toggleFull('${r.id}')">Full access</button>
+          ${r.locked?'':`<button class="del" title="Delete role" onclick="AR.del('${r.id}')">✕</button>`}
+        </div>${body}</div>`;
+    }).join('');
+  }
+  const byId=id=>roles.find(r=>r.id===id);
+  window.AR={
+    setName(id,v){const r=byId(id);if(r&&!r.locked){r.name=v;persist();const c=document.querySelector('.role .cnt');}},
+    toggleFull(id){const r=byId(id);if(!r||r.locked)return;r.apps=isFull(r)?[]:'*';persist();render();},
+    toggleApp(id,appId,on){const r=byId(id);if(!r)return;if(isFull(r))r.apps=catalog().map(a=>a.id);r.apps=on?[...new Set([...(r.apps||[]),appId])]:(r.apps||[]).filter(x=>x!==appId);persist();render();},
+    groupAll(id,g,on){const r=byId(id);if(!r)return;if(isFull(r))r.apps=catalog().map(a=>a.id);const ids=catalog().filter(a=>a.group===g).map(a=>a.id);r.apps=on?[...new Set([...(r.apps||[]),...ids])]:(r.apps||[]).filter(x=>ids.indexOf(x)<0);persist();render();},
+    add(){const id='r'+Math.abs(Math.floor((performance.now()*1000))%1e9).toString(36);roles.push({id,name:'New role',apps:[]});persist();render();toast('Role added — name it and pick apps');},
+    del(id){const r=byId(id);if(!r||r.locked)return;if(!confirm('Delete the “'+r.name+'” role?'))return;roles=roles.filter(x=>x.id!==id);persist();render();toast('Role deleted');},
+    restore(){DEFAULT_ROLES.forEach(d=>{if(!roles.some(r=>r.id===d.id))roles.push(JSON.parse(JSON.stringify(d)));});persist();render();toast('Default roles restored');}
+  };
+  render();
+})();
+</script>
+</body></html>

@@ -1,0 +1,609 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Availability &amp; Scheduling</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 22px rgba(18,42,43,.06)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6}
+  *{box-sizing:border-box}
+  .rm{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(14px,3vw,30px);-webkit-font-smoothing:antialiased}
+  .rm .wrap{max-width:1120px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(20px,3vw,30px)/1.1 var(--sans);letter-spacing:-.02em;margin:0 0 4px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:13.5px;max-width:84ch}
+  code{font-family:var(--mono);font-size:.92em}
+  .bar{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line-2);border-radius:10px;box-shadow:var(--shadow);padding:12px 16px;margin-bottom:14px}
+  .bar .fld{display:flex;flex-direction:column;gap:4px}
+  .bar label{font:600 10px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+  select,input[type=text]{font:500 13.5px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:7px;padding:8px 10px}
+  select{min-width:230px}
+  #group{min-width:210px}
+  #group.need{border-color:var(--salmon);box-shadow:0 0 0 3px var(--salmon-soft)}
+  .guests{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line-2);border-radius:10px;box-shadow:var(--shadow);padding:9px 14px;margin:-4px 0 14px}
+  .guests .gl{font:600 10px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+  .guests .hint2{font-size:12.5px;color:var(--muted)}
+  .gchip{font:600 12.5px var(--sans);border:1px solid var(--line-2);background:var(--surface);color:var(--ink);border-radius:20px;padding:5px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .gchip:hover{border-color:var(--accent)}
+  .gchip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep)}
+  .gchip .tick{font:700 11px var(--mono)}
+  .guests .allbtn{font:600 11px var(--sans);border:1px solid var(--line-2);background:var(--surface);border-radius:6px;padding:5px 9px;cursor:pointer;color:var(--muted)}
+  .guests .cnt{font:800 12px var(--sans);color:var(--accent-deep);margin-left:auto;white-space:nowrap}
+  .stepper{display:inline-flex}.stepper button{width:34px;font-size:17px;border:1px solid var(--line-2);background:var(--surface-2);color:var(--ink);cursor:pointer}
+  .stepper button:first-child{border-radius:7px 0 0 7px}.stepper button:last-child{border-radius:0 7px 7px 0}
+  .stepper input{width:50px;text-align:center;border:1px solid var(--line-2);border-left:0;border-right:0;font:600 14px var(--sans);color:var(--ink);background:var(--surface)}
+  button{font:700 13px var(--sans);padding:8px 13px;border-radius:7px;border:1px solid transparent;cursor:pointer}
+  .btn-ghost{background:var(--surface);border-color:var(--line-2);color:var(--ink)}
+  .trip{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;margin:0 0 14px;font-size:13px;color:var(--muted)}
+  .trip .nm{font-weight:800;font-size:16px;color:var(--ink)}
+  .trip .rng{font:600 12px var(--mono);color:var(--accent-deep);background:var(--accent-soft);padding:3px 9px;border-radius:20px}
+  .trip .sr{font-size:11.5px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+  .card .hd{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .card .hd h2{font:700 12px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin:0}
+  .card .hd .desc{font-size:12px;color:var(--muted)}
+  .viewseg{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--line)}
+  .viewseg .vl{font:700 10px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-right:2px}
+  .viewseg button{font:700 12px var(--sans);border:1px solid var(--line-2);background:var(--surface);color:var(--ink);border-radius:20px;padding:6px 13px;cursor:pointer}
+  .viewseg button:hover{border-color:var(--accent)}
+  .viewseg button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  /* isolated view — larger, easier-to-read rows */
+  .cal.focus .cellbox{min-height:64px;padding:9px}
+  .cal.focus .actname{font-size:15px}.cal.focus .actsub{font-size:12px}
+  .cal.focus .bookbtn{font-size:12.5px;padding:8px 8px}
+  .cal.focus td.act,.cal.focus th.act{min-width:220px}
+  .gridwrap{overflow-x:auto}
+  table.cal{border-collapse:collapse;width:100%;min-width:820px}
+  table.cal th,table.cal td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:0;vertical-align:top}
+  table.cal th{background:var(--surface-2);padding:8px 10px;text-align:center;font:700 12px var(--sans)}
+  table.cal th .wd{font:800 13px var(--sans)}
+  table.cal th .dnum{font:600 11px var(--mono);color:var(--muted);display:block}
+  table.cal th .dt{font:600 9px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;margin-top:3px;display:inline-block;padding:1px 6px;border-radius:10px}
+  table.cal th .dt.stay{color:var(--accent-deep);background:var(--accent-soft)}table.cal th .dt.travel{color:var(--gold);background:var(--gold-soft)}
+  table.cal th.act,table.cal td.act{text-align:left;padding:9px 12px;position:sticky;left:0;background:var(--surface);min-width:184px;border-right:2px solid var(--line-2);z-index:1}
+  table.cal th.act{background:var(--surface-2)}
+  .actname{font-weight:700;font-size:13px}.actsub{font-size:11px;color:var(--faint)}
+  .cellbox{min-height:54px;padding:6px;display:flex;flex-direction:column;gap:4px}
+  .bk{font:600 10.5px var(--sans);background:var(--surface-2);border:1px solid var(--line-2);border-radius:5px;padding:2px 4px 2px 7px;display:flex;justify-content:space-between;align-items:center;gap:6px;color:var(--ink)}
+  .bk b{color:var(--faint);cursor:pointer;font-weight:700;padding:0 2px}.bk b:hover{color:var(--salmon)}
+  .bk.detail{align-items:flex-start;padding:6px 5px 6px 9px;font-size:12px;background:var(--surface);box-shadow:var(--shadow)}
+  .bk .bkmain{display:flex;flex-direction:column;gap:2px;min-width:0;cursor:pointer}
+  .bk .d2{font:600 10.5px var(--mono);color:var(--accent-deep)}
+  .bk.editing{flex-direction:column;align-items:stretch;gap:5px;background:var(--surface);border-color:var(--accent);box-shadow:var(--shadow);padding:7px 8px}
+  .be-h{font:700 9px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent-deep)}
+  .be-list{display:flex;flex-wrap:wrap;gap:4px}
+  .ge{font:600 11px var(--sans);background:var(--surface-2);border:1px solid var(--line-2);border-radius:20px;padding:2px 4px 2px 8px;display:inline-flex;align-items:center;gap:3px}
+  .ge button{border:0;background:none;color:var(--faint);cursor:pointer;font-size:12px;padding:0 2px}.ge button:hover{color:var(--salmon)}
+  .be-act{display:flex;gap:6px;justify-content:space-between;align-items:center}
+  .be-done{font:700 10px var(--sans);background:var(--accent);color:#fff;border:0;border-radius:6px;padding:4px 9px;cursor:pointer}
+  .be-del{font:700 10px var(--sans);background:none;border:0;color:var(--salmon);cursor:pointer;padding:4px 6px}
+  .bk.sfg{gap:4px}
+  .sfg .sfg-n{white-space:nowrap}
+  .sfg .sfg-g{font:600 8px var(--mono);color:var(--faint)}
+  .sfg-boat{font:600 10px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:5px;padding:1px 3px;max-width:74px}
+  .overflag2{display:block;margin-top:2px;font:800 9px var(--mono);color:#fff;background:var(--salmon);border-radius:20px;padding:1px 7px;width:fit-content}
+  .bookbtn{font:700 11px var(--sans);background:var(--accent-soft);color:var(--accent-deep);border:1px dashed var(--accent);border-radius:6px;padding:5px 6px;cursor:pointer;width:100%}
+  .bookbtn:hover{background:var(--accent);color:#fff}
+  .saltboat{font:600 11px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:6px;padding:4px 6px;width:100%;margin-bottom:4px}
+  .salt-trip{border:1px solid var(--line-2);border-radius:7px;padding:5px 6px;margin-bottom:5px;background:var(--surface-2)}
+  .salt-trip.short{border-color:var(--gold);border-style:dashed}
+  .salt-h{font:700 10.5px var(--mono);color:var(--accent-deep);display:flex;align-items:center;gap:5px;margin-bottom:4px}
+  .salt-h .warn{color:var(--salmon);font-weight:700}
+  .salt-h .rm{margin-left:auto;border:0;background:none;color:var(--faint);cursor:pointer;font-size:12px}.salt-h .rm:hover{color:var(--salmon)}
+  .salt-gs{display:flex;flex-wrap:wrap;gap:3px}
+  .salt-g{font:600 10.5px var(--sans);background:var(--surface);border:1px solid var(--line-2);border-radius:20px;padding:1px 4px 1px 7px;display:inline-flex;align-items:center;gap:3px}
+  .salt-g .gg{font:600 8px var(--mono);color:var(--faint)}
+  .salt-g b{border:0;background:none;color:var(--faint);cursor:pointer;font-size:11px}.salt-g b:hover{color:var(--salmon)}
+  .msl{display:flex;align-items:center;gap:5px;justify-content:center;margin-top:3px}
+  .msl .mnm{font:600 11px var(--sans);color:var(--ink)}
+  .msl .mtime{font:600 10.5px var(--mono);color:var(--accent-deep);background:var(--surface);border:1px solid var(--line-2);border-radius:5px;padding:2px 4px}
+  .stlab{font:600 11px var(--sans);text-align:center;padding:6px 4px;border-radius:6px}
+  .stlab.full{color:var(--salmon);background:var(--salmon-soft)}
+  .stlab.req{color:var(--gold);background:var(--gold-soft)}
+  .cellbox.na{background:repeating-linear-gradient(45deg,transparent,transparent 6px,var(--surface-2) 6px,var(--surface-2) 12px)}
+  .stlab.na{color:var(--faint);font-weight:500}
+  td.stay{background:rgba(14,124,111,.02)}
+  .board td,.board th{text-align:center;font-size:11.5px}
+  .board .rn{text-align:left;font-weight:700;font-size:12.5px;padding:9px 12px}
+  .board td{padding:7px 6px}
+  .chip{display:inline-block;font:600 10px var(--sans);border-radius:20px;padding:2px 8px;line-height:1.5}
+  .chip.g{background:var(--accent-soft);color:var(--accent-deep)}.chip.b{background:var(--gold-soft);color:var(--gold)}.chip.free{color:var(--faint)}
+  .chip.conflict{background:var(--salmon-soft);color:var(--salmon);border:1px solid var(--salmon);font-weight:700}
+  table.cal tr.sect td{background:var(--surface-2);font:700 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);padding:5px 12px;border-bottom:1px solid var(--line-2)}
+  table.cal td.conflict{background:var(--salmon-soft);outline:1px solid var(--salmon);outline-offset:-1px}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);padding:10px 16px}
+  .legend span{display:inline-flex;align-items:center;gap:6px}.sw{width:14px;height:14px;border-radius:4px;display:inline-block;border:1px solid var(--line-2)}
+  .note{margin:0;padding:11px 16px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);background:var(--surface-2)}
+  .note b{color:var(--ink)}
+  .warn{background:var(--gold-soft);border:1px solid var(--gold);border-radius:10px;padding:11px 15px;font-size:12.5px;color:var(--gold);margin-bottom:14px}
+  .warn b{color:var(--ink)}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;transition:.2s;z-index:20;pointer-events:none}.toast.show{opacity:1}
+</style>
+
+<div class="rm"><div class="wrap">
+  <p class="eyebrow">Talon Lodge &amp; Spa · Scheduling · Phase 2</p>
+  <h1>Availability &amp; Scheduling</h1>
+  <p class="lede">Pick a <b>package</b> — its real arrival→departure dates become the calendar — choose a <b>group</b>, then <b>tick the individual guests</b> on each booking
+  (every activity attaches to the person, not just the group). Bookings save against the actual date, so groups the same week compete for the same guides;
+  the engine assigns the <b>lead guide first</b>. Boats seated in <b>Boat Assignments</b> show on the master calendar, and a booked activity pulls that guest off the boat for the day.</p>
+
+  <div id="teamwarn"></div>
+
+  <div class="bar">
+    <div class="fld"><label>Package · trip dates</label><select id="pkg" onchange="D.setPkg(this.value)"></select></div>
+    <div class="fld"><label>Group <span style="color:var(--salmon)">*</span></label><select id="group" onchange="D.setGroup(this.value)"></select></div>
+    <div class="fld"><label>Saltwater trips / day</label><div class="stepper"><button onclick="D.saltCap(-1)">−</button><input id="saltcap" value="2" readonly><button onclick="D.saltCap(1)">+</button></div></div>
+    <button class="btn-ghost" style="margin-left:auto" onclick="D.reset()">Clear all bookings</button>
+  </div>
+  <div class="guests" id="guestpick"></div>
+
+  <div class="trip" id="trip"></div>
+
+  <div class="card">
+    <div class="hd"><h2>Activity availability · this trip</h2><span class="desc" id="grpnote"></span></div>
+    <div class="viewseg" id="viewseg">
+      <span class="vl">View</span>
+      <button data-v="all" onclick="D.setView('all')">All</button>
+      <button data-v="adventure" onclick="D.setView('adventure')">Adventure activities</button>
+      <button data-v="spa" onclick="D.setView('spa')">Massage &amp; wellness</button>
+      <button data-v="sportfishing" onclick="D.setView('sportfishing')">Sportfishing</button>
+    </div>
+    <div class="gridwrap"><table class="cal" id="cal"></table></div>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--accent-soft);border-style:dashed;border-color:var(--accent)"></i> book</span>
+      <span><i class="sw" style="background:var(--surface-2)"></i> a group's booking</span>
+      <span><i class="sw" style="background:var(--salmon-soft)"></i> full</span>
+      <span><i class="sw" style="background:var(--gold-soft)"></i> request only (party &gt; 6)</span>
+      <span><i class="sw" style="background:repeating-linear-gradient(45deg,transparent,transparent 3px,var(--surface-2) 3px,var(--surface-2) 6px)"></i> not offered</span>
+    </div>
+  </div>
+
+  <div class="card" id="sfcard" style="display:none">
+    <div class="hd"><h2>Sportfishing boats · this trip</h2><span class="desc">Home boat per day — use a guest’s <b>dropdown to move them to another boat</b> for that day, or <b>✕</b> to take them off. Over-capacity is allowed and flagged. Initial seating lives in <b>Boat Assignments</b>.</span></div>
+    <div class="gridwrap"><table class="cal focus" id="sfboats"></table></div>
+  </div>
+
+  <div class="card">
+    <div class="hd"><h2>Resource board · this trip</h2><span class="desc">What each guide, therapist &amp; boat holds — by date, for the selected package</span></div>
+    <div class="gridwrap"><table class="cal board" id="board"></table></div>
+    <p class="note" id="boardnote"></p>
+  </div>
+
+  <div class="card">
+    <div class="hd"><h2>Master resource calendar · all packages</h2><span class="desc" id="masterstat"></span></div>
+    <div class="gridwrap"><table class="cal board" id="master"></table></div>
+    <p class="note">The lodge-wide guard: every guide and every boat across <b>all packages and dates</b> at once, so a resource can never be held by two groups on the same day — including turnover days where one trip departs and the next arrives. Any clash glows <span style="color:var(--salmon);font-weight:600">red</span>.</p>
+  </div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1700);}
+
+  // ---- dates ----
+  const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const parseD=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);};
+  const addDays=(s,n)=>{const dt=parseD(s);dt.setDate(dt.getDate()+n);return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');};
+  const wd=s=>WD[parseD(s).getDay()], mdShort=s=>{const d=parseD(s);return MO[d.getMonth()]+' '+d.getDate();};
+  const fmtLong=s=>{const d=parseD(s);return WD[d.getDay()]+' '+MO[d.getMonth()]+' '+d.getDate();};
+
+  // ---- team (live from Team Management, else seed) ----
+  const TEAM_SEED={guides:[{id:'g1',name:'Ted Deering',lead_order:1,activities:['Freshwater Fishing (Boat/ATV/Plane)','ATV Safari','Kayak & Lunch','Whale Watching','Hiking'],delivery_boat_id:'b5',active:true},{id:'g2',name:'Holden Pucket',lead_order:2,activities:['Freshwater Fishing (Boat/ATV/Plane)','ATV Safari','Hiking'],delivery_boat_id:'',active:true}],therapists:[{id:'t1',name:'Lori Strachan',sessions_per_day:2,active:true},{id:'t2',name:'Mikalia Lockhart',sessions_per_day:2,active:true}],captains:[{id:'c1',name:'Cole Younger',active:true},{id:'c2',name:'Travis Stephenson',active:true},{id:'c3',name:'James Lecrone',active:true},{id:'c4',name:'Gavin Wolfe',active:true},{id:'c5',name:'Marjo Vidad',active:true},{id:'c6',name:'Ted Deering',active:true},{id:'c7',name:'Phil Younger',active:true}],deckhands:[{id:'d1',name:'Sam Parker',active:true},{id:'d2',name:'CJ Tacada',active:true},{id:'d3',name:'Emily Rose',active:true},{id:'d4',name:'Porter Baskin',active:true},{id:'d5',name:'Holden Pucket',active:true}],boats:[{id:'b1',name:'Raptor',captain_id:'c1',deckhand_id:'d1',active:true},{id:'b2',name:'Roamer',captain_id:'c2',deckhand_id:'d2',active:true},{id:'b3',name:'Retriever',captain_id:'c3',deckhand_id:'d3',active:true},{id:'b4',name:'Magnum',captain_id:'c4',deckhand_id:'d4',active:true},{id:'b5',name:'Pip',captain_id:'c6',deckhand_id:'d5',active:true},{id:'b6',name:'Muktuk',captain_id:'c5',deckhand_id:'',active:true},{id:'b7',name:'Raider',captain_id:'c7',deckhand_id:'',active:true}]};
+  function loadTeam(){try{const t=JSON.parse(localStorage.getItem('talon_team_v1'));if(t&&t.guides)return t;}catch(e){}return TEAM_SEED;}
+  const T=loadTeam();
+  const activeGuides=()=>T.guides.filter(g=>g.active!==false);
+  const activeTherapists=()=>T.therapists.filter(t=>t.active!==false);
+  const boatById=id=>(T.boats||[]).find(b=>b.id===id);
+  const boatActive=id=>{const b=boatById(id);return b&&b.active!==false;};
+  // ---- saltwater fleet (boats + crew, excluding guides' delivery skiffs) ----
+  const activeBoats=()=>(T.boats||[]).filter(b=>b.active!==false);
+  const capOf=b=>+((b&&b.capacity)||6);
+  const crewName=(arr,id)=>{const x=(T[arr]||[]).find(y=>y.id===id);return x&&x.active!==false?x.name:null;};
+  const deliveryBoatIds=()=>new Set(activeGuides().map(g=>g.delivery_boat_id).filter(Boolean));
+  const saltFleet=()=>activeBoats().filter(b=>!deliveryBoatIds().has(b.id));
+  const boatCrew=b=>({boat:b.name,cap:crewName('captains',b.captain_id),deck:crewName('deckhands',b.deckhand_id)});
+
+  // ---- packages (live from Package Management, else seed) ----
+  const PKG_SEED=[
+    {id:'sp1',series:'Standard',category:'Sportfishing',status:'published',arrival_start_date:'2027-05-24',nights:4,adventure_days_max:3},
+    {id:'sp2',series:'Winemaker Series',category:'Sportfishing',status:'published',arrival_start_date:'2027-05-28',nights:4,adventure_days_max:3},
+    {id:'sp3',series:'Visiting Chef Series',category:'Sportfishing',status:'published',arrival_start_date:'2027-06-01',nights:4,adventure_days_max:3},
+    {id:'sp4',series:'Standard',category:'Sportfishing',status:'published',arrival_start_date:'2027-06-05',nights:4,adventure_days_max:3}
+  ];
+  function loadPkgs(){try{const p=JSON.parse(localStorage.getItem('talon_packages_v1'));if(Array.isArray(p)&&p.length)return p;}catch(e){}return PKG_SEED;}
+  const PKGS=loadPkgs().filter(p=>(!p.status||p.status==='published')&&p.arrival_start_date&&p.nights).sort((a,b)=>a.arrival_start_date<b.arrival_start_date?-1:1);
+  const pkgName=p=>p.title_override||(p.series&&p.series!=='Standard'?p.series.replace(/ Series$/,''):(p.category||'Sportfishing'));
+  const pkgById=id=>PKGS.find(p=>p.id===id);
+
+  // ---- groups on a package (from the shared guest profiles the roster writes) ----
+  const loadProfiles=()=>{try{return JSON.parse(localStorage.getItem('talon_portal_profile'))||{};}catch(e){return {};}};
+  function groupsForPkg(pkgId){const pr=loadProfiles(),out=[];Object.keys(pr).forEach(k=>{const i=k.lastIndexOf('|');if(i>0&&k.slice(i+1)===pkgId)out.push({group:k.slice(0,i),count:(pr[k].guests||[]).length});});return out.sort((a,b)=>a.group<b.group?-1:1);}
+  const groupCount=(group,pkgId)=>{const pr=loadProfiles(),k=group+'|'+pkgId;return pr[k]&&pr[k].guests?pr[k].guests.length:0;};
+  const groupGuests=(group,pkgId)=>{const pr=loadProfiles(),k=group+'|'+pkgId;return (pr[k]&&pr[k].guests?pr[k].guests:[]).map(g=>((g.first||'')+' '+(g.last||'')).trim()).filter(Boolean);};
+  const firstName=n=>String(n||'').split(' ')[0];
+  const shortGroup=g=>String(g||'').replace(/ Group$/,'');
+
+  // ---- boat seating (from Boat Assignments) + activity-priority (a booked activity pulls a guest off the boat) ----
+  const loadSeat=()=>{try{return JSON.parse(localStorage.getItem('talon_boat_seating'))||{};}catch(e){return {};}};
+  const loadDaily=()=>{try{return JSON.parse(localStorage.getItem('talon_boat_daily'))||{};}catch(e){return {};}};
+  const isMassageB=b=>b.actId==='massage'||(/massage/i.test(b.name||'')&&!/spa/i.test(b.name||'')); // evening massage only — Day Spa pulls off the boat
+  const isSaltB=b=>b.actId==='saltwater';
+  const personIn=(b,name)=>(b.guestNames&&b.guestNames.length)?b.guestNames.includes(name):false;
+  const hasAdventureOn=(name,date)=>BOOK.some(b=>b.date===date&&!isMassageB(b)&&!isSaltB(b)&&personIn(b,name));
+  function tripArrivalFor(d){for(const p of PKGS){const a=p.arrival_start_date;const dep=addDays(a,p.nights);if(d>=a&&d<=dep)return {arrival:a,nights:+p.nights||4};}return null;}
+  // people home-seated on a boat for a given (stay) date, minus anyone pulled onto an adventure that day
+  function homeBoatOn(boatId,d){const t=tripArrivalFor(d);if(!t)return [];if(!(d>t.arrival&&d<addDays(t.arrival,t.nights)))return [];
+    const seat=loadSeat()[t.arrival]||{},daily=loadDaily()[d]||{};
+    return Object.keys(seat).filter(k=>{const ov=daily[k];return (ov!==undefined?ov:seat[k])===boatId;}).map(k=>{const i=k.indexOf('::');return {group:k.slice(0,i),name:k.slice(i+2)};}).filter(p=>!hasAdventureOn(p.name,d));}
+
+  // trip columns for a package: arrival(travel) .. middle(stay) .. departure(travel)
+  function columns(p){const out=[];for(let i=0;i<=p.nights;i++){const date=addDays(p.arrival_start_date,i);out.push({date,type:(i===0||i===p.nights)?'travel':'stay',tag:i===0?'arrival':i===p.nights?'departure':''});}return out;}
+
+  // ---- activities ----
+  const ACTS=[
+    {id:'fresh',name:'Freshwater Fishing',sub:'by boat / ATV — needs a delivery boat',cap:'Freshwater Fishing (Boat/ATV/Plane)',type:'guided',needsBoat:true,sect:'Guided adventures'},
+    {id:'freshplane',name:'Freshwater Fishing',sub:'by float plane',cap:'Freshwater Fishing (Boat/ATV/Plane)',type:'guided',sect:'Guided adventures'},
+    {id:'atv',name:'ATV Safari',sub:'guided',cap:'ATV Safari',type:'guided',sect:'Guided adventures'},
+    {id:'kayak',name:'Kayak & Lunch',sub:'Ted-only',cap:'Kayak & Lunch',type:'guided',sect:'Guided adventures'},
+    {id:'whale',name:'Whale Watching',sub:'Ted-only',cap:'Whale Watching',type:'guided',sect:'Guided adventures'},
+    {id:'hike',name:'Hiking',sub:'guided',cap:'Hiking',type:'guided',sect:'Guided adventures'},
+    {id:'massage',name:'Massage',sub:'during stay · 4 slots/day · evening (stays on the boat)',type:'massage',sect:'Spa & wellness'},
+    {id:'dayspa',name:'Day Spa',sub:'during stay · 2 guests/day · 10 AM–2 PM · off the boat',type:'dayspa',sect:'Spa & wellness'},
+    {id:'saltwater',name:'Additional Saltwater Day',sub:'travel days · 4–6 guests per boat · crew from fleet',type:'saltwater',sect:'Travel-day add-ons'}
+  ];
+  const actById=id=>ACTS.find(a=>a.id===id);
+
+  // ---- state + persisted bookings (global, by real date) ----
+  const BKEY='talon_bookings_v1';
+  const SALTKEY='talon_saltcap';
+  let saltCapInit=2;try{const v=+localStorage.getItem(SALTKEY);if(v>0)saltCapInit=v;}catch(e){}
+  const S={party:0,group:'',sel:[],pkgId:(PKGS[0]||{}).id,saltCap:saltCapInit};
+  let VIEW='all';
+  let EDITBK=null; // booking id whose inline roster editor is open
+  const SECT_VIEW={'Guided adventures':'adventure','Spa & wellness':'spa','Travel-day add-ons':'sportfishing'};
+  let BOOK=[];try{const b=JSON.parse(localStorage.getItem(BKEY));if(Array.isArray(b))BOOK=b;}catch(e){}
+  let bid=BOOK.reduce((m,b)=>Math.max(m,b.id||0),0)+1;
+  const saveBook=()=>{try{localStorage.setItem(BKEY,JSON.stringify(BOOK));}catch(e){}};
+
+  // ---- engine (keyed by date string) ----
+  // a guide who is ALSO a boat captain is unavailable to guide on any day his/her boat is fishing
+  const firstTok=s=>String(s||'').trim().toLowerCase().split(/\s+/)[0];
+  const samePerson=(a,b)=>{const na=String(a||'').trim().toLowerCase(),nb=String(b||'').trim().toLowerCase();return !!na&&!!nb&&(na===nb||firstTok(a)===firstTok(b));};
+  const boatsCaptainedBy=g=>(T.boats||[]).filter(b=>{const c=(T.captains||[]).find(x=>x.id===b.captain_id);return c&&samePerson(c.name,g.name);});
+  // boats this captain-guide is running that day, with why: saltwater charter, or the day's sportfishing seating
+  function guideBoatLabelsOn(g,date){const out=[];boatsCaptainedBy(g).forEach(b=>{
+    if(BOOK.some(x=>x.actId==='saltwater'&&x.date===date&&x.boatId===b.id))out.push(b.name+' · saltwater');
+    else if(homeBoatOn(b.id,date).length)out.push(b.name+' · sportfishing');});return out;}
+  const guideRunningBoat=(g,date)=>guideBoatLabelsOn(g,date).length>0;
+  const guidesFor=act=>activeGuides().filter(g=>g.activities.includes(act.cap)).sort((a,b)=>(a.lead_order||9)-(b.lead_order||9));
+  const guideBusy=(gid,date)=>BOOK.some(b=>b.date===date&&(b.guideIds||[]).includes(gid));
+  function freeGuides(act,date){return guidesFor(act).filter(g=>{
+    if(guideBusy(g.id,date))return false;
+    if(guideRunningBoat(g,date))return false;   // out running his/her fishing boat that day
+    if(act.needsBoat&&!boatActive(g.delivery_boat_id))return false;
+    return true;});}
+  const massageUsed=date=>BOOK.filter(b=>b.actId==='massage'&&b.date===date).reduce((s,b)=>s+b.guests,0);
+  const massageCap=()=>activeTherapists().length*2;
+  // configured massage times (Activities Management), else defaults; first N-per-slot rule fills time 1 then time 2
+  function massageTimes(){try{const acts=JSON.parse(localStorage.getItem('talon_activities_v1'))||[];const a=acts.find(x=>x.name&&/massage/i.test(x.name));if(a&&Array.isArray(a.times)&&a.times.length)return a.times;}catch(e){}return ['4:30 PM','5:30 PM'];}
+  const tmin=t=>{const m=String(t||'').match(/(\d+):(\d+)\s*(am|pm)?/i);if(!m)return 9999;let h=+m[1];const mn=+m[2],ap=(m[3]||'').toLowerCase();if(ap==='pm'&&h<12)h+=12;if(ap==='am'&&h===12)h=0;return h*60+mn;};
+  const bookingsOn=(actId,date)=>BOOK.filter(b=>b.actId===actId&&b.date===date);
+
+  function avail(act,date,dt){const party=S.party;
+    if(act.type==='guided'){
+      if(dt!=='stay')return {s:'na',t:'stay days only'};
+      if(act.needsBoat&&guidesFor(act).every(g=>!boatActive(g.delivery_boat_id)))return {s:'na',t:'no delivery boat'};
+      if(party>6)return {s:'req',t:'request only'};
+      const cap=freeGuides(act,date).length*3;
+      if(cap>=party)return {s:'ok',t:cap+' seats',seats:cap};
+      return {s:'full',t:cap>0?cap+' left':'full'};
+    }
+    if(act.type==='massage'){
+      if(dt!=='stay')return {s:'na',t:'stay days only'};
+      const left=massageCap()-massageUsed(date);
+      if(left>=party)return {s:'ok',t:left+' slots',seats:left};
+      return {s:'full',t:left>0?left+' left':'full'};
+    }
+    if(act.type==='dayspa'){
+      if(dt!=='stay')return {s:'na',t:'stay days only'};
+      const left=2-bookingsOn('dayspa',date).reduce((s,b)=>s+(b.guests||0),0);
+      if(left>=party)return {s:'ok',t:left+' slots',seats:left};
+      return {s:'full',t:left>0?left+' left':'full'};
+    }
+    if(act.type==='saltwater'){
+      if(dt!=='travel')return {s:'na',t:'travel days only'};
+      if(party<4)return {s:'na',t:'needs 4+ guests'};
+      if(party>6)return {s:'na',t:'max 6 — split the party'};
+      // a group gets one saltwater boat per travel day; once booked it's full for them
+      if(S.group&&BOOK.some(b=>b.actId==='saltwater'&&b.date===date&&b.group===S.group))return {s:'booked',t:'booked'};
+      const cap=Math.min(S.saltCap,saltFleet().length);
+      const used=bookingsOn('saltwater',date).length;
+      const left=cap-used;
+      if(left>0&&freeSaltBoats(date).length>0)return {s:'ok',t:left+' boat'+(left>1?'s':'')+' free',seats:left};
+      return {s:'full',t:'all boats booked'};
+    }
+  }
+  const saltUsedBoatIds=date=>new Set(bookingsOn('saltwater',date).map(b=>b.boatId));
+  const freeSaltBoats=date=>{const used=saltUsedBoatIds(date);return saltFleet().filter(b=>!used.has(b.id));};
+  // ---- cross-group saltwater: a boat trip holds up to 6 guests drawn from any groups ----
+  const SALT_CAP=6;
+  const saltGuestBooked=(date,name)=>bookingsOn('saltwater',date).some(b=>(b.guestNames||[]).includes(name));
+  const saltRoster=b=>b.roster||(b.guestNames||[]).map(n=>({name:n,group:b.group}));
+  function addSalt(date){
+    if(!S.group){toast('Select a group first');return;}
+    const pick=el('saltboat_'+date);const boatId=pick&&pick.value;if(!boatId){toast('Pick a boat');return;}
+    const boat=saltFleet().find(x=>x.id===boatId);if(!boat){toast('Pick a boat');return;}
+    const names=S.sel.filter(nm=>!saltGuestBooked(date,nm));
+    if(!names.length){toast('Those guests are already on a saltwater trip that day');return;}
+    let trip=BOOK.find(b=>b.actId==='saltwater'&&b.date===date&&b.boatId===boatId);
+    const room=SALT_CAP-(trip?trip.guestNames.length:0);
+    if(room<=0){toast(boat.name+' is full ('+SALT_CAP+')');return;}
+    const take=names.slice(0,room);
+    if(!trip){trip={id:bid++,date,actId:'saltwater',boatId,crew:boatCrew(boat),guestNames:[],roster:[],group:''};BOOK.push(trip);}
+    take.forEach(nm=>{trip.guestNames.push(nm);trip.roster.push({name:nm,group:S.group});});
+    trip.guests=trip.guestNames.length;trip.group=[...new Set(trip.roster.map(r=>shortGroup(r.group)))].join(' + ');
+    saveBook();render();
+    toast('Added '+take.map(firstName).join(', ')+' to '+boat.name+(take.length<names.length?' — '+boat.name+' now full':''));
+  }
+  function removeSaltGuest(id,name){const t=BOOK.find(b=>b.id===id);if(!t)return;
+    const newRoster=saltRoster(t).filter(r=>r.name!==name);
+    if(!newRoster.length){ // removing the last guest would delete an already-scheduled trip — guard it
+      const bn=(t.crew||{}).boat||'the boat';
+      if(!confirm(`${firstName(name)} is the last guest — removing them cancels the whole scheduled saltwater trip on ${bn}. Only do this if the group moved to an adventure and no one else was aboard. Continue?`))return;
+      BOOK=BOOK.filter(b=>b.id!==id);saveBook();render();toast('Saltwater trip removed');return;}
+    t.roster=newRoster;t.guestNames=newRoster.map(r=>r.name);t.guests=t.guestNames.length;t.group=[...new Set(t.roster.map(r=>shortGroup(r.group)))].join(' + ');
+    saveBook();render();toast('Removed '+firstName(name));}
+  function saltCellHTML(c){
+    const date=c.date;const trips=bookingsOn('saltwater',date);
+    let chips=trips.map(b=>{const load=b.guestNames.length;const byG={};saltRoster(b).forEach(r=>{(byG[r.group]=byG[r.group]||[]).push(r);});
+      const warn=load<4?`<span class="warn">needs ${4-load} more</span>`:'';
+      const gs=saltRoster(b).map(r=>`<span class="salt-g">${esc(firstName(r.name))} <span class="gg">${esc(shortGroup(r.group))}</span><b onclick="D.removeSaltGuest(${b.id},'${esc(r.name).replace(/'/g,"\\'")}')" title="Remove">✕</b></span>`).join('');
+      return `<div class="salt-trip ${load<4?'short':''}"><div class="salt-h">🐟 ${esc((b.crew||{}).boat||'boat')} ${load}/${SALT_CAP} ${warn}<button class="rm" onclick="D.releaseSalt(${b.id})" title="Remove whole trip">✕</button></div><div class="salt-gs">${gs}</div></div>`;}).join('');
+    const addable=S.group?S.sel.filter(nm=>!saltGuestBooked(date,nm)):[];
+    let add='';
+    if(!S.group){add='<span class="stlab na">select a group &amp; guests</span>';}
+    else if(!addable.length){add='<span class="stlab" style="color:var(--accent-deep);background:var(--accent-soft)">✓ all on a trip</span>';}
+    else{
+      const opts=[];trips.forEach(b=>{if(b.guestNames.length<SALT_CAP)opts.push({v:b.boatId,label:(b.crew||{}).boat+' · '+b.guestNames.length+'/'+SALT_CAP});});
+      const canNew=trips.length<Math.min(S.saltCap,saltFleet().length);
+      if(canNew)freeSaltBoats(date).forEach(b=>{const cr=boatCrew(b);opts.push({v:b.id,label:b.name+' · new'+(cr.cap?' ('+firstName(cr.cap)+')':'')});});
+      if(!opts.length){add='<span class="stlab full">all boats full</span>';}
+      else add=`<select class="saltboat" id="saltboat_${date}">${opts.map(o=>`<option value="${o.v}">${esc(o.label)}</option>`).join('')}</select>`
+        +`<button class="bookbtn" onclick="D.addSalt('${date}')">＋ Add ${addable.length===1?esc(firstName(addable[0])):addable.length+' guests'}</button>`;
+    }
+    return `<div class="cellbox">${chips}${add}</div>`;
+  }
+
+  function doBook(actId,date){
+    const g=(S.group||'').trim();
+    if(!g){el('group').classList.add('need');el('group').focus();toast('Select a group first');return;}
+    if(!S.sel.length){toast('Pick at least one guest for this booking');return;}
+    el('group').classList.remove('need');
+    const act=actById(actId);const av=avail(act,date,colType(date));if(av.s!=='ok')return;
+    // massage — one appointment per guest; rule: fill time slot 1 (one per therapist) then slot 2
+    if(act.type==='massage'){const times=massageTimes(),ths=activeTherapists(),per=Math.max(1,ths.length);let used=massageUsed(date);
+      S.sel.forEach(nm=>{const time=times[Math.min(Math.floor(used/per),times.length-1)];const th=ths[used%per]||ths[0];
+        BOOK.push({id:bid++,date,actId:'massage',name:'Massage',guests:1,group:g,guestNames:[nm],guestName:nm,time,assigneeType:'therapist',therapistId:th?th.id:'',assigneeName:th?th.name:'',guideIds:[],boatIds:[]});used++;});
+      saveBook();render();toast('Booked massage · '+S.sel.map(firstName).join(', '));return;}
+    const ADVNAME={fresh:'Freshwater Fishing by Boat',freshplane:'Freshwater Fishing by Float Plane'};
+    const b={id:bid++,date,actId,name:ADVNAME[actId]||act.name,guests:S.sel.length,group:g,guestNames:[...S.sel],guideIds:[],boatIds:[]};
+    if(act.type==='dayspa'){b.time='10:00 AM';b.name='Day Spa';}
+    if(act.type==='guided'){let rem=S.sel.length;for(const gd of freeGuides(act,date)){if(rem<=0)break;b.guideIds.push(gd.id);if(act.needsBoat&&gd.delivery_boat_id)b.boatIds.push(gd.delivery_boat_id);rem-=Math.min(3,rem);}b.assigneeName=b.guideIds.map(gname).join(' & ');}
+    BOOK.push(b);saveBook();render();toast('Booked · '+act.name+' · '+S.sel.map(firstName).join(', '));
+  }
+  function release(id){BOOK=BOOK.filter(b=>b.id!==id);saveBook();render();toast('Released');}
+  const colType=date=>{const c=(window.__cols||[]).find(x=>x.date===date);return c?c.type:'stay';};
+
+  // ---- render ----
+  function render(){
+    // package dropdown
+    el('pkg').innerHTML=PKGS.map(p=>`<option value="${p.id}" ${p.id===S.pkgId?'selected':''}>${esc(pkgName(p))} · ${esc(fmtLong(p.arrival_start_date))} · ${p.nights}n</option>`).join('')||'<option>No published packages</option>';
+    // group dropdown — groups booked onto the selected package
+    const grps=groupsForPkg(S.pkgId);
+    if(S.group&&!grps.some(g=>g.group===S.group))S.group='';
+    el('group').innerHTML=`<option value="">${grps.length?'Select a group…':'— load Test data for groups —'}</option>`
+      +grps.map(g=>`<option value="${esc(g.group)}" ${g.group===S.group?'selected':''}>${esc(g.group)} · ${g.count} guest${g.count!==1?'s':''}</option>`).join('');
+    renderGuests();
+    el('saltcap').value=S.saltCap;
+    const P=pkgById(S.pkgId)||PKGS[0];
+    if(!P){el('cal').innerHTML='<tbody><tr><td style="padding:20px">No published packages found. Add one in Package Management.</td></tr></tbody>';el('board').innerHTML='';el('trip').innerHTML='';return;}
+    const cols=columns(P);window.__cols=cols;
+    const depart=cols[cols.length-1].date, adv=cols.filter(c=>c.type==='stay').length;
+    el('trip').innerHTML=`<span class="nm">${esc(pkgName(P))}</span><span class="rng">${esc(mdShort(P.arrival_start_date))} → ${esc(mdShort(depart))}, ${parseD(depart).getFullYear()}</span><span class="sr">${P.nights} nights · ${adv} adventure day${adv!==1?'s':''} · arrival &amp; departure are travel days</span>`;
+    el('grpnote').innerHTML=!S.group?'<b style="color:var(--salmon)">select a group to book</b>':!S.sel.length?'<b style="color:var(--salmon)">pick at least one guest</b>':`Booking <b>${S.sel.length}</b> guest${S.sel.length!==1?'s':''} of ${esc(shortGroup(S.group))} · ${S.party>6?'over 6 → guided is request-only':S.party>3?'needs 2 guides per guided activity':'fits one guide'}`;
+    // team warning
+    const noBoat=activeGuides().filter(g=>g.activities.includes('Freshwater Fishing (Boat/ATV/Plane)')&&!boatActive(g.delivery_boat_id)).map(g=>g.name);
+    el('teamwarn').innerHTML=noBoat.length?`<div class="warn">⚠️ <b>${esc(noBoat.join(', '))}</b> can run freshwater fishing but ${noBoat.length>1?'have':'has'} <b>no delivery boat</b> — excluded from freshwater-by-boat/ATV until assigned one in Team Management.</div>`:'';
+    // calendar
+    let h='<thead><tr><th class="act">Activity</th>'+cols.map(c=>`<th><span class="wd">${wd(c.date)}</span><span class="dnum">${mdShort(c.date)}</span><span class="dt ${c.type}">${c.tag||c.type}</span></th>`).join('')+'</tr></thead><tbody>';
+    let curSect=null;
+    const visActs=ACTS.filter(a=>VIEW==='all'||SECT_VIEW[a.sect]===VIEW);
+    for(const act of visActs){
+      if(act.sect!==curSect){curSect=act.sect;h+=`<tr class="sect"><td class="act">${esc(curSect)}</td>${cols.map(()=>'<td></td>').join('')}</tr>`;}
+      h+=`<tr><td class="act"><div class="actname">${esc(act.name)}</div><div class="actsub">${esc(act.sub)}</div></td>`;
+      for(const c of cols)h+=`<td class="${c.type}">${cellHTML(act,c)}</td>`;
+      h+='</tr>';}
+    el('cal').className='cal'+(VIEW==='all'?'':' focus');
+    el('cal').innerHTML=h+'</tbody>';
+    [...el('viewseg').children].forEach(b=>{if(b.dataset&&b.dataset.v)b.classList.toggle('on',b.dataset.v===VIEW);});
+    renderBoard(cols);
+    renderMaster(cols);
+    renderSf(P);
+  }
+  // ---- master lodge-wide calendar (all packages/dates) + conflict guard ----
+  function masterDates(cols){
+    const set=new Set(BOOK.map(b=>b.date));
+    (cols||[]).forEach(c=>set.add(c.date));
+    return [...set].sort();
+  }
+  function renderMaster(cols){
+    const dates=masterDates(cols);
+    if(!dates.length){el('master').innerHTML='<tbody><tr><td class="act rn" style="padding:14px;color:var(--muted)">No bookings yet — book activities above and every guide &amp; boat appears here across all dates.</td></tr></tbody>';el('masterstat').textContent='';return;}
+    let conflicts=0;
+    const cell=(uses,cls)=>{
+      if(uses.length>1){conflicts++;return '<td class="conflict">'+uses.map(u=>`<span class="chip conflict">⚠ ${esc(u)}</span>`).join(' ')+'</td>';}
+      if(uses.length===1)return `<td><span class="chip ${cls}">${esc(uses[0])}</span></td>`;
+      return '<td><span class="chip free">—</span></td>';
+    };
+    // boats can be shared by groups within capacity — only a home trip clashing with a charter (or 2 charters) is a conflict
+    const boatCell=(home,charter)=>{
+      if(!home.length&&!charter.length)return '<td><span class="chip free">—</span></td>';
+      const homeChips=()=>{const byG={};home.forEach(p=>{(byG[p.group]=byG[p.group]||[]).push(firstName(p.name));});return Object.keys(byG).map(g=>({label:'🎣 '+shortGroup(g)+': '+byG[g].join(', '),group:g}));};
+      const conflict=(home.length&&charter.length)||charter.length>1;
+      const parts=[...homeChips().map(x=>x.label),...charter];
+      if(conflict){conflicts++;return '<td class="conflict">'+parts.map(p=>`<span class="chip conflict">⚠ ${esc(p)}</span>`).join(' ')+'</td>';}
+      return '<td>'+parts.map(p=>`<span class="chip b">${esc(p)}</span>`).join(' ')+'</td>';
+    };
+    let rows='';
+    // guides
+    rows+=`<tr class="sect"><td class="act">Guides — one activity per day</td>${dates.map(()=>'<td></td>').join('')}</tr>`;
+    activeGuides().sort((a,b)=>(a.lead_order||9)-(b.lead_order||9)).forEach(g=>{
+      rows+=`<tr><td class="act rn">${esc(g.name)}</td>`+dates.map(d=>{
+        const bs=BOOK.filter(x=>(x.guideIds||[]).includes(g.id)&&x.date===d);
+        const uses=bs.map(b=>actById(b.actId).name+' · '+((b.guestNames&&b.guestNames.length)?b.guestNames.map(firstName).join(', '):shortGroup(b.group)));
+        guideBoatLabelsOn(g,d).forEach(l=>uses.push('🚤 '+l));
+        return cell(uses,'g');
+      }).join('')+'</tr>';
+    });
+    // boats — home sportfishing seatings (per person, activity-priority applied) + saltwater charters + guide delivery use
+    rows+=`<tr class="sect"><td class="act">Boats — home sportfishing &amp; charters</td>${dates.map(()=>'<td></td>').join('')}</tr>`;
+    activeBoats().forEach(bt=>{
+      rows+=`<tr><td class="act rn">${esc(bt.name)}</td>`+dates.map(d=>{
+        const home=homeBoatOn(bt.id,d);
+        const charter=[...BOOK.filter(x=>x.actId==='saltwater'&&x.boatId===bt.id&&x.date===d).map(b=>{
+                         const byG={};saltRoster(b).forEach(r=>{(byG[r.group]=byG[r.group]||[]).push(firstName(r.name));});
+                         return '🐟 '+Object.keys(byG).map(g=>shortGroup(g)+': '+byG[g].join(', ')).join(' · ');}),
+                       ...BOOK.filter(x=>(x.boatIds||[]).includes(bt.id)&&x.date===d).map(b=>{
+                         const who=(b.guestNames&&b.guestNames.length)?b.guestNames.map(firstName).join(', '):shortGroup(b.group);
+                         return actById(b.actId).name+' · '+who;})];
+        return boatCell(home,charter);
+      }).join('')+'</tr>';
+    });
+    const head='<thead><tr><th class="act">Resource</th>'+dates.map(d=>`<th>${wd(d)}<span class="dnum">${mdShort(d)}</span></th>`).join('')+'</tr></thead>';
+    el('master').innerHTML=head+'<tbody>'+rows+'</tbody>';
+    el('masterstat').innerHTML=conflicts
+      ? `<span style="color:var(--salmon);font-weight:800">⚠ ${conflicts} double-booking${conflicts>1?'s':''} — resolve before confirming</span>`
+      : `<span style="color:var(--accent-deep);font-weight:700">✓ No double-bookings · ${dates.length} date${dates.length>1?'s':''} across all trips</span>`;
+  }
+  function renderGuests(){
+    const box=el('guestpick');if(!box)return;
+    if(!S.group){box.innerHTML='<span class="gl">Guests</span><span class="hint2">Select a group above, then choose exactly who’s on each booking — every activity attaches to the individual.</span>';return;}
+    const gs=groupGuests(S.group,S.pkgId);
+    if(!gs.length){box.innerHTML='<span class="gl">Guests</span><span class="hint2">No guest records for this group — load <b>Test data</b>.</span>';return;}
+    box.innerHTML='<span class="gl">On this booking</span>'
+      +gs.map(n=>`<button class="gchip ${S.sel.includes(n)?'on':''}" onclick="D.toggleGuest('${esc(n).replace(/'/g,"\\'")}')"><span class="tick">${S.sel.includes(n)?'✓':'＋'}</span>${esc(n)}</button>`).join('')
+      +`<button class="allbtn" onclick="D.wholeGroup()">✓ Whole group</button>`
+      +(S.sel.length?`<button class="allbtn" onclick="D.clearGuests()">Clear</button>`:'')
+      +`<span class="cnt">Party of ${S.sel.length}</span>`;
+  }
+  function cellHTML(act,c){
+    if(act.type==='saltwater'){if(c.type!=='travel')return `<div class="cellbox na"><span class="stlab na">travel days only</span></div>`;return saltCellHTML(c);}
+    const av=avail(act,c.date,c.type);const bks=bookingsOn(act.id,c.date);
+    if(av.s==='na'&&!bks.length)return `<div class="cellbox na"><span class="stlab na">${av.t}</span></div>`;
+    const unit=act.type==='massage'?' slot':'p';
+    const saltLabel=b=>b.crew?' · '+esc(b.crew.boat)+(b.crew.cap?' ('+esc(b.crew.cap.split(' ')[0])+(b.crew.deck?'/'+esc(b.crew.deck.split(' ')[0]):'')+')':''):'';
+    const who=b=>(b.guestNames&&b.guestNames.length)?b.guestNames.map(firstName).join(', '):(b.group+' · '+b.guests+unit+(b.guests>1&&act.type==='massage'?'s':''));
+    const focus=VIEW!=='all';
+    // in the isolated (focus) view, add a detail line: therapist+treatment for spa, guide+boat for adventures
+    const bkDetail=b=>{const d=[];
+      if(act.type==='massage'||act.type==='dayspa'){if(b.assigneeName)d.push('💆 '+esc(b.assigneeName));if(b.treatment)d.push(esc(b.treatment));}
+      else if(act.type==='guided'){const gs=(b.guideIds||[]).map(gname).join(', ');if(gs)d.push('👤 '+esc(gs));const bt=(b.boatIds||[]).map(id=>esc((boatById(id)||{}).name||'')).filter(Boolean);if(bt.length)d.push('🚤 '+bt.join(', '));}
+      return d.join(' · ');};
+    const chips=bks.map(b=>{
+      if(EDITBK===b.id){const names=(b.guestNames&&b.guestNames.length)?b.guestNames:[];
+        return `<span class="bk editing"><span class="be-h">${esc(shortGroup(b.group))} · edit who’s on this</span>`
+          +`<span class="be-list">${names.length?names.map(n=>`<span class="ge">${esc(firstName(n))}<button onclick="D.removeGuestFromBk(${b.id},'${esc(n).replace(/'/g,"\\'")}')" title="Remove from this booking">✕</button></span>`).join(''):'<span class="hint">group booking · no individual names</span>'}</span>`
+          +`<span class="be-act"><button class="be-done" onclick="D.editBk(${b.id})">Done</button><button class="be-del" onclick="D.release(${b.id})">Release all</button></span></span>`;}
+      const det=focus?bkDetail(b):'';
+      return `<span class="bk${focus?' detail':''}" title="Click to edit who’s on this · ${esc(b.group)}${b.guestNames&&b.guestNames.length?' — '+esc(b.guestNames.join(', ')):''}"><span class="bkmain" onclick="D.editBk(${b.id})"><span>${esc(shortGroup(b.group))} · ${esc(who(b))}${(act.type==='massage'||act.type==='dayspa')&&b.time?' · '+esc(b.time):''}${act.type==='guided'&&!focus?' · '+b.guideIds.map(gname).join('+'):''}${act.type==='saltwater'?saltLabel(b):''}</span>${det?`<span class="d2">${det}</span>`:''}</span><b onclick="D.release(${b.id})" title="Release">✕</b></span>`;}).join('');
+    let action='';
+    if(av.s==='ok'){
+      let salt='';
+      if(act.type==='saltwater'){const fb=freeSaltBoats(c.date);salt=fb.length?`<select class="saltboat" id="saltboat_${c.date}">${fb.map(b=>{const cr=boatCrew(b);return `<option value="${b.id}">${esc(b.name)}${cr.cap?' · '+esc(firstName(cr.cap)):''}</option>`;}).join('')}</select>`:'';}
+      action=salt+`<button class="bookbtn" onclick="D.book('${act.id}','${c.date}')">＋ Book${act.type==='saltwater'?' '+(c.tag||''):(act.type==='guided'||act.type==='massage'||act.type==='dayspa')?' · '+av.seats+(act.type==='massage'||act.type==='dayspa'?' slots':' seats'):''}</button>`;
+    }
+    else if(av.s==='full')action=`<span class="stlab full">Full</span>`;
+    else if(av.s==='booked')action=`<span class="stlab" style="color:var(--accent-deep);background:var(--accent-soft)">✓ Booked</span>`;
+    else if(av.s==='req')action=`<span class="stlab req">Request only</span>`;
+    else if(av.s==='na')action=`<span class="stlab na">${av.t}</span>`;
+    return `<div class="cellbox">${chips}${action}</div>`;
+  }
+  const gname=id=>{const g=(T.guides||[]).find(x=>x.id===id);return g?g.name.split(' ')[0]:id;};
+  // editable home-sportfishing boats grid — shown only in the Sportfishing view
+  function renderSf(P){
+    const card=el('sfcard');if(!card)return;
+    if(VIEW!=='sportfishing'){card.style.display='none';return;}
+    card.style.display='';
+    const cols=columns(P).filter(c=>c.type==='stay');
+    const boats=activeBoats();
+    const used=boats.filter(b=>cols.some(c=>homeBoatOn(b.id,c.date).length));
+    let h='<thead><tr><th class="act">Boat</th>'+cols.map(c=>`<th><span class="wd">${wd(c.date)}</span><span class="dnum">${mdShort(c.date)}</span></th>`).join('')+'</tr></thead><tbody>';
+    if(!used.length){el('sfboats').innerHTML=h+`<tr><td class="act">—</td><td colspan="${cols.length}" style="padding:16px;color:var(--muted)">No guests seated on boats for this trip yet — seat them in <b>Boat Assignments</b>.</td></tr></tbody>`;return;}
+    used.forEach(b=>{const cap=crewName('captains',b.captain_id),dh=crewName('deckhands',b.deckhand_id);const crew=(cap?cap.split(' ')[0]:'—')+(dh?' / '+dh.split(' ')[0]:'');
+      h+=`<tr><td class="act"><div class="actname">${esc(b.name)}</div><div class="actsub">${esc(crew)}</div></td>`;
+      const over=cols.map(c=>homeBoatOn(b.id,c.date).length>capOf(b));
+      cols.forEach((c,ci)=>{const ppl=homeBoatOn(b.id,c.date);
+        h+=`<td><div class="cellbox">${ppl.length?ppl.map(p=>`<span class="bk sfg"><span class="sfg-n">${esc(firstName(p.name))} <span class="sfg-g">${esc(shortGroup(p.group))}</span></span><select class="sfg-boat" title="Move to another boat for this day" onchange="D.moveOnBoat('${c.date}','${esc(p.group).replace(/'/g,"\\'")}','${esc(p.name).replace(/'/g,"\\'")}',this.value)">${activeBoats().map(bb=>`<option value="${bb.id}" ${bb.id===b.id?'selected':''}>${esc(bb.name)}</option>`).join('')}</select><b onclick="D.removeFromBoat('${c.date}','${esc(p.group).replace(/'/g,"\\'")}','${esc(p.name).replace(/'/g,"\\'")}')" title="Take off this boat for the day">✕</b></span>`).join(''):'<span class="stlab na">—</span>'}${over[ci]?`<span class="overflag2">⚑ ${ppl.length}/${capOf(b)} over</span>`:''}</div></td>`;});
+      h+=`</tr>`;});
+    el('sfboats').innerHTML=h+'</tbody>';
+  }
+  function renderBoard(cols){
+    const rows=[];
+    const showGuides=VIEW==='all'||VIEW==='adventure';
+    const showTherapists=VIEW==='spa';          // isolated spa view → therapist schedule replaces guides
+    const showSpa=VIEW==='all'||VIEW==='spa';
+    const showBoats=VIEW==='all'||VIEW==='sportfishing';
+    if(showGuides)activeGuides().sort((a,b)=>(a.lead_order||9)-(b.lead_order||9)).forEach(g=>rows.push({label:g.name+(g.lead_order===1?' · lead':''),cells:cols.map(c=>{const b=BOOK.find(x=>(x.guideIds||[]).includes(g.id)&&x.date===c.date);const who=b&&b.guestNames&&b.guestNames.length?b.guestNames.map(firstName).join(', '):(b?shortGroup(b.group):'');const rb=guideBoatLabelsOn(g,c.date);
+      return b?`<span class="chip g" title="${esc(b.group)}">${esc(actById(b.actId).name)} · ${esc(who)}${b.boatIds.includes(g.delivery_boat_id)?' · '+esc((boatById(g.delivery_boat_id)||{}).name||''):''}</span>`:rb.length?`<span class="chip b">🚤 ${esc(rb[0])}</span>`:'<span class="chip free">—</span>';})}));
+    if(showTherapists)activeTherapists().forEach(th=>rows.push({label:'💆 '+th.name,cells:cols.map(c=>{if(c.type!=='stay')return '<span class="chip free">—</span>';
+      const appts=BOOK.filter(b=>(b.actId==='massage'||b.actId==='dayspa')&&b.date===c.date&&(b.therapistId===th.id||(b.assigneeName&&b.assigneeName===th.name))).sort((a,b)=>tmin(a.time)-tmin(b.time));
+      if(!appts.length)return '<span class="chip free">—</span>';
+      return appts.map(b=>`<span class="chip g" title="${esc(b.name||'')}">${esc(firstName(b.guestName||(b.guestNames||[])[0]||b.group))} · ${esc(b.time||'')}${b.treatment?' · '+esc(b.treatment):''}</span>`).join(' ');})}));
+    if(showSpa){rows.push({label:'Day Spa · 2/day',cells:cols.map(c=>{if(c.type!=='stay')return '<span class="chip free">—</span>';const u=bookingsOn('dayspa',c.date).reduce((s,b)=>s+(b.guests||0),0);const who=bookingsOn('dayspa',c.date).flatMap(b=>(b.guestNames||[]).map(firstName));return u?`<span class="chip b">${u}/2</span> ${who.map(n=>`<span class="chip b" style="margin-top:2px">${esc(n)}</span>`).join(' ')}`:`<span class="chip free">0/2</span>`;})});
+    rows.push({label:'Massage · guest & time',cells:cols.map(c=>{if(c.type!=='stay')return '<span class="chip free">—</span>';
+      const ms=bookingsOn('massage',c.date).slice().sort((a,b)=>tmin(a.time)-tmin(b.time));const times=massageTimes();
+      if(!ms.length)return `<span class="chip free">0/${massageCap()}</span>`;
+      return `<div class="chip b">${ms.length}/${massageCap()}</div>`+ms.map(b=>{const nm=firstName(b.guestName||(b.guestNames||[])[0]||b.group);const opts=times.includes(b.time)?times:times.concat([b.time]);
+        return `<div class="msl"><span class="mnm">${esc(nm)}</span><select class="mtime" onchange="D.setMassageTime(${b.id},this.value)">${opts.map(t=>`<option ${t===b.time?'selected':''}>${esc(t)}</option>`).join('')}</select></div>`;}).join('');})});}
+    if(showBoats)rows.push({label:'Saltwater trips',cells:cols.map(c=>{if(c.type!=='travel')return '<span class="chip free">—</span>';const bs=bookingsOn('saltwater',c.date);const cap=Math.min(S.saltCap,saltFleet().length);if(!bs.length)return `<span class="chip free">0/${cap}</span>`;return `<span class="chip b">${bs.length}/${cap}</span> `+bs.map(b=>`<span class="chip b" style="margin-top:2px">${esc((b.crew||{}).boat||'?')}</span>`).join(' ');})});
+    let h='<thead><tr><th class="act">Resource</th>'+cols.map(c=>`<th>${wd(c.date)}<span class="dnum">${mdShort(c.date)}</span></th>`).join('')+'</tr></thead><tbody>';
+    h+=rows.map(r=>`<tr><td class="act rn">${esc(r.label)}</td>${r.cells.map(x=>`<td>${x}</td>`).join('')}</tr>`).join('');
+    el('board').innerHTML=h+'</tbody>';
+    el('boardnote').innerHTML=showTherapists
+      ? `Each therapist runs <b>2 sessions/day</b> (4:30 &amp; 5:30 → 4 massage slots) plus the separately-staffed <b>Day Spa</b> (10 AM–2 PM, off the boat). Edit any appointment time in the <b>Massage · guest &amp; time</b> row.`
+      : `Bookings are saved against the <b>real trip dates</b> and shared across every group that week — a guide holds <b>one activity per day</b> for up to 3 guests; when the lead is taken, <b>Kayak &amp; Whale</b> go dark (Ted-only). A guide who also captains a boat is out on days his boat is fishing.`;
+  }
+  window.D={
+    setView(v){VIEW=v;render();window.scrollTo({top:document.querySelector('.card').offsetTop-10,behavior:'smooth'});},
+    editBk(id){EDITBK=EDITBK===id?null:id;render();},
+    removeFromBoat(date,group,name){const d=loadDaily();d[date]=d[date]||{};d[date][group+'::'+name]='';try{localStorage.setItem('talon_boat_daily',JSON.stringify(d));}catch(e){}render();toast('Took '+firstName(name)+' off the boat for '+mdShort(date));},
+    moveOnBoat(date,group,name,boatId){const d=loadDaily();d[date]=d[date]||{};d[date][group+'::'+name]=boatId;try{localStorage.setItem('talon_boat_daily',JSON.stringify(d));}catch(e){}render();
+      const b=boatById(boatId),load=homeBoatOn(boatId,date).length,cap=capOf(b);
+      toast(load>cap?`⚑ ${b.name} now ${load}/${cap} on ${mdShort(date)} — over capacity, move someone off`:`${firstName(name)} → ${b.name} for ${mdShort(date)}`);},
+    removeGuestFromBk(id,name){const b=BOOK.find(x=>x.id===id);if(!b)return;
+      b.guestNames=(b.guestNames||[]).filter(n=>n!==name);b.guests=b.guestNames.length;
+      if(!b.guests){BOOK=BOOK.filter(x=>x.id!==id);EDITBK=null;saveBook();render();toast('Booking removed — no guests left');return;}
+      const act=actById(b.actId);
+      if(act&&act.type==='guided'){const need=Math.max(1,Math.ceil(b.guests/3));if((b.guideIds||[]).length>need)b.guideIds=b.guideIds.slice(0,need);if(act.needsBoat&&(b.boatIds||[]).length>need)b.boatIds=b.boatIds.slice(0,need);}
+      saveBook();render();toast('Removed '+firstName(name));},
+    setPkg(id){S.pkgId=id;S.group='';S.sel=[];S.party=0;render();},
+    setGroup(v){S.group=v;S.sel=[];S.party=0;if(v)el('group').classList.remove('need');render();},
+    toggleGuest(n){const i=S.sel.indexOf(n);if(i>=0)S.sel.splice(i,1);else S.sel.push(n);S.party=S.sel.length;render();},
+    wholeGroup(){S.sel=groupGuests(S.group,S.pkgId).slice();S.party=S.sel.length;render();},
+    clearGuests(){S.sel=[];S.party=0;render();},
+    saltCap(n){S.saltCap=Math.max(1,Math.min(saltFleet().length||1,S.saltCap+n));try{localStorage.setItem(SALTKEY,S.saltCap);}catch(e){}render();},
+    setMassageTime(id,val){const b=BOOK.find(x=>x.id===id);if(b){b.time=val;saveBook();render();toast('Massage time → '+val);}},
+    addSalt(date){addSalt(date);},
+    removeSaltGuest(id,name){removeSaltGuest(id,name);},
+    releaseSalt(id){const t=BOOK.find(b=>b.id===id);const bn=t?((t.crew||{}).boat||''):'';
+      if(!confirm(`Remove this already-scheduled saltwater trip${bn?' on '+bn:''}? Only remove a scheduled saltwater trip when the whole group has moved to an adventure and no one else was aboard.`))return;
+      BOOK=BOOK.filter(b=>b.id!==id);saveBook();render();toast('Saltwater trip removed');},
+    book(actId,date){doBook(actId,date);},
+    release(id){release(id);},
+    reset(){if(BOOK.length&&!confirm('Clear all '+BOOK.length+' saved bookings?'))return;BOOK=[];saveBook();render();toast('All bookings cleared');}
+  };
+  render();
+})();
+</script>
+</body></html>

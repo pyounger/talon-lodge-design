@@ -1,0 +1,234 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Test Data</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 10px 26px rgba(18,42,43,.07)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413;--shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.4)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.5;-webkit-font-smoothing:antialiased;padding:clamp(14px,3vw,30px)}
+  .wrap{max-width:980px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(21px,3vw,30px)/1.12 var(--sans);letter-spacing:-.02em;margin:0 0 6px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:13.5px;max-width:82ch}
+  .bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line-2);border-radius:10px;box-shadow:var(--shadow);padding:14px 16px;margin-bottom:14px}
+  .bar .msg{font-size:12.5px;color:var(--muted);flex:1;min-width:220px}.bar .msg b{color:var(--ink)}
+  .btn{font:700 12.5px var(--sans);border-radius:8px;padding:9px 14px;cursor:pointer;border:1px solid transparent}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-warn{background:var(--surface);border-color:var(--salmon);color:var(--salmon)}
+  .status{font-size:12.5px;color:var(--accent-deep);background:var(--accent-soft);border:1px solid var(--line-2);border-radius:8px;padding:8px 12px;margin-bottom:16px;display:none}
+  .status.show{display:block}
+  .totals{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+  .tot{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:11px 15px;flex:1;min-width:96px}
+  .tot .n{font:800 24px var(--sans);color:var(--accent-deep);line-height:1}.tot .l{font:600 9px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:3px}
+  .pkg{margin-bottom:16px}
+  .pkg .ph{display:flex;align-items:baseline;gap:10px;margin:0 2px 10px;flex-wrap:wrap}
+  .pkg .ph .pd{font:800 16px var(--sans)}
+  .pkg .ph .ps{font:600 11px var(--mono);color:var(--accent-deep);background:var(--accent-soft);border:1px solid var(--line-2);border-radius:20px;padding:2px 9px}
+  .pkg .ph .pm{font-size:12px;color:var(--muted)}
+  .grp{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}
+  .grp .hd{display:flex;align-items:center;gap:10px;padding:11px 15px;border-bottom:1px solid var(--line);background:var(--surface-2);flex-wrap:wrap}
+  .grp .hd .gn{font:800 15px var(--sans)}
+  .grp .hd .rm{font:600 10px var(--mono);color:var(--gold);background:var(--gold-soft);border:1px solid var(--line-2);border-radius:20px;padding:2px 9px}
+  .grp .hd .meta{font:600 11px var(--mono);color:var(--muted);margin-left:auto}
+  .grp .bd{padding:12px 15px}
+  .glist{display:flex;flex-direction:column;gap:6px}
+  .gr{display:flex;align-items:center;gap:9px;font-size:13px;padding:5px 0;border-bottom:1px solid var(--line)}
+  .gr:last-child{border-bottom:0}
+  .gr .nm{font-weight:600;min-width:150px}
+  .gr .nm .ld{font:700 8px var(--mono);letter-spacing:.06em;color:var(--accent-deep);background:var(--accent-soft);border-radius:20px;padding:1px 6px;margin-left:6px;vertical-align:1px}
+  .gr .rmc{font:600 10px var(--mono);color:var(--faint)}
+  .gr .dg{font:600 10px var(--mono);color:var(--muted)}
+  .gr .bt{font:700 10px var(--mono);border-radius:20px;padding:1px 8px;margin-left:auto;white-space:nowrap}
+  .gr .bt.raptor{color:var(--accent-deep);background:var(--accent-soft)}
+  .gr .bt.retriever{color:var(--salmon);background:var(--salmon-soft)}
+  .gr .bt.shore{color:var(--faint);background:var(--surface-2)}
+  .gr .diet{color:var(--salmon);cursor:help}
+  .reqs{margin-top:10px;border-top:1px dashed var(--line-2);padding-top:9px}
+  .reqs h4{font:700 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin:0 0 6px}
+  .rq{display:inline-flex;align-items:center;gap:6px;font-size:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:20px;padding:3px 10px;margin:0 6px 6px 0}
+  .rq .d{color:var(--muted);font-size:11px}
+  .rooms{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .rmb{background:var(--surface);border:1px solid var(--line);border-radius:9px;box-shadow:var(--shadow);padding:8px 12px;font-size:12px}
+  .rmb b{font:800 13px var(--sans);display:block}.rmb span{font:600 10px var(--mono);color:var(--faint)}
+  .note{font-size:12px;color:var(--faint);margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+  .note code{font-family:var(--mono);background:var(--surface-2);padding:1px 5px;border-radius:4px}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;transition:.2s;z-index:30;pointer-events:none}.toast.show{opacity:1}
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">Talon Lodge &amp; Spa · Admin · QA</p>
+  <h1>Test data — full lodge</h1>
+  <p class="lede">Loads the real <b>24-guest full-lodge group</b> from the roster spreadsheet — <b>6 groups, 24 named guests</b>
+  with rooms, dietary notes, gear sizes, and home-boat preferences, plus a handful of pending activity &amp; spa requests. The group is attached to
+  your <b>existing “arrive May 24” package</b> (your Package Management data is left untouched). This is your complete test group for
+  exercising <b>room, boat, activity, guide, therapist &amp; pilot assignments</b> without adding guest records by hand.</p>
+
+  <div class="bar">
+    <div class="msg"><b>One-click fixture.</b> Writes the package + 24-guest rosters + rooms + pending requests, then open <b>Boat Assignments</b>, <b>Approvals</b> or <b>Guest Portal</b>.</div>
+    <button class="btn btn-primary" onclick="TD.load()">⬇ Load full-lodge test group</button>
+    <button class="btn btn-warn" onclick="TD.clear()">Clear test data</button>
+  </div>
+  <div class="status" id="status"></div>
+  <div class="totals" id="totals"></div>
+  <div class="rooms" id="rooms"></div>
+  <div id="groups"></div>
+  <p class="note">Writes <code>talon_portal_profile</code>, <code>talon_rooms_v1</code>, <code>talon_portal_requests</code>, <code>talon_portal_trip</code>; clears <code>talon_bookings_v1</code> &amp; <code>talon_boat_seating</code>. Attaches the group to the <b>May-24 package already in <code>talon_packages_v1</code></b> (only seeds a package if you have none). Leaves your packages, Team, Activities &amp; Vendors untouched.
+  <b>Boats:</b> the sheet lists <b>Raptor</b> for 10 guests and <b>Retriever</b> for 4 — more than a 6-seat boat holds in one day — so those are stored as each guest's <b>home boat</b> preference and the live board is left empty for you to seat day-by-day in <b>Boat Assignments</b>. To match crew, set Raptor → Travis and Retriever → Gavin Wolfe in <b>Team</b>.</p>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1900);}
+  const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const parseD=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);};
+  const addDays=(s,n)=>{const dt=parseD(s);dt.setDate(dt.getDate()+n);return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');};
+  const fmtDay=s=>{const d=parseD(s);return WD[d.getDay()]+' '+MO[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();};
+  const md=s=>{const d=parseD(s);return MO[d.getMonth()]+' '+d.getDate();};
+  const icon=r=>r.kind==='massage'?'💆':/whale/i.test(r.name)?'🐋':/kayak/i.test(r.name)?'🛶':/atv/i.test(r.name)?'🏍️':/plane/i.test(r.name)?'🛩️':'🎣';
+  const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+
+  // ---- package: attach the roster to an EXISTING "arrive May 24" package (don't clobber Package Mgmt) ----
+  const DEFAULT_PKG={id:'sp1',title_override:'',series:'Standard',category:'Sportfishing',status:'published',arrival_start_date:'2027-05-24',nights:4,adventure_days_min:3,adventure_days_max:3,surcharge_per_person:0,
+    includes:['All Meals','Non-Alcoholic Beverages','Guided Adventure (Sportfishing)','4 Nights Lodging'],excludes:['Airfare','Alcohol','Fishing License','Fish Processing Fees','Taxes']};
+  const pkgName=p=>p.series&&p.series!=='Standard'?p.series.replace(/ Series$/,''):(p.category||'Sportfishing');
+  // find the May-24 package already built in Package Management; else the first package; else seed a fallback
+  function pickPkg(){
+    let arr=[];try{arr=JSON.parse(localStorage.getItem('talon_packages_v1'))||[];}catch(e){}
+    if(Array.isArray(arr)&&arr.length){const may24=arr.find(p=>/-05-24$/.test(p.arrival_start_date||''));return {pkg:may24||arr[0],existed:true};}
+    return {pkg:DEFAULT_PKG,existed:false};
+  }
+
+  // ---- room inventory (24 beds = full lodge) ----
+  const ROOMS=[
+    {id:'r-maincedar',name:'Main Cedar',building:'Cedar',detail:'Cedar 3 · 4 · 5',capacity:4},
+    {id:'r-cedar1',name:'Cedar 1',building:'Cedar',detail:'',capacity:2},
+    {id:'r-cedar2',name:'Cedar 2',building:'Cedar',detail:'',capacity:2},
+    {id:'r-mainspruce',name:'Main Spruce',building:'Spruce',detail:'Spruce 3 · 4 · 5',capacity:6},
+    {id:'r-spruce1',name:'Spruce 1',building:'Spruce',detail:'',capacity:2},
+    {id:'r-spruce2',name:'Spruce 2',building:'Spruce',detail:'',capacity:2},
+    {id:'r-bluff',name:'Bluff House',building:'Bluff House',detail:'Three Bedrooms',capacity:6}
+  ];
+
+  // ---- guests, by group. g(first,last,gender,age,boot,jacket,room,boat,captain,mate,email,phone,city,state,diet,lead) ----
+  const g=(first,last,gender,age,boot,jacket,room,boat,captain,mate,email,phone,city,state,diet,lead)=>
+    ({first,last,gender,age,boot,jacket,room,boat,captain,mate,email,phone,city,state,diet:diet||'',lead:!!lead});
+  const GROUPS=[
+    {group:'Gaines Group',guests:[
+      g('David','Rogers','Male',56,'13','XL','Main Cedar','Raptor','Travis','Sam Parker','dmr1914@gmail.com','248-894-5530','Las Vegas','NV',''),
+      g('Renee','Franklin','Female',60,'8','L','Main Cedar','Raptor','Travis','Sam Parker','ereneefranklin@aol.com','702-882-4546','Las Vegas','NV','Raw onions, chives, shallots — nothing onion-forward (cooked onions OK). Vinegar OK. Chocolate & alcohol.'),
+      g('Teresa','Gaines','Female',55,'8','L','Main Cedar','Raptor','Travis','Sam Parker','teresagaines20@gmail.com','201-390-7876','Vienna','VA','Gets seasick — will have medication.',true),
+      g('Yul','Hodge','Male',68,'10','XL','Main Cedar','Raptor','Travis','Sam Parker','yulbeecher@gmail.com','202-438-5208','Washington','DC','')
+    ]},
+    {group:'Gomez Group',guests:[
+      g('Bob','Gomez','Male',70,'8','XL','Main Spruce','Raptor','Travis','Sam Parker','bob@bobgomezgroup.com','480-695-3229','Scottsdale','AZ','',true),
+      g('Jeff','Langhorst','Male',70,'10','XL','Main Spruce','Retriever','Gavin Wolfe','CJ Taccad','j.langhorst@cox.net','602-616-2450','Scottsdale','AZ',''),
+      g('Jim','Schiffer','Male',63,'9','L','Main Spruce','Retriever','Gavin Wolfe','CJ Taccad','jschiffer1@cox.net','480-612-7424','Scottsdale','AZ',''),
+      g('Lisa','Young','Female',65,'6','S','Main Spruce','','','','lisad.young@outlook.com','602-885-2876','Scottsdale','AZ','No milk or ice cream (butter OK).'),
+      g('Lisa','Schiffer','Female',65,'10','L','Main Spruce','Retriever','Gavin Wolfe','CJ Taccad','lawschiffer@cox.net','602-318-3561','Scottsdale','AZ',''),
+      g('Marija','Langhorst','Female',68,'8','L','Main Spruce','Retriever','Gavin Wolfe','CJ Taccad','j.langhorst@cox.net','602-989-2528','Scottsdale','AZ','Small portions.')
+    ]},
+    {group:'Kerstetter Group',guests:[
+      g('Jennifer','Kerstetter','Female',60,'7','M','Cedar 2','Raptor','Travis','Sam Parker','Jenkerst@outlook.com','248-890-1273','Scottsville','VA','',true),
+      g('Kyle','Kerstetter','Male',60,'13','XXL','Cedar 2','Raptor','Travis','Sam Parker','kkdvm77@gmail.com','248-770-7065','Scottsville','VA','')
+    ]},
+    {group:'Lufkin Group',guests:[
+      g('Beau','Reinhard','Male',47,'11','L','Spruce 2','','','','sstewart@idahopower.com','208-870-9002','Boise','ID',''),
+      g('Devin','Stewart','Male',48,'9','XL','Spruce 1','','','','devinstewart77@gmail.com','208-589-5757','Idaho Falls','ID',''),
+      g('Onni','Lufkin','Female',44,'9','XL','Spruce 1','','','','onnilufkin81@gmail.com','208-881-4668','Idaho Falls','ID','',true),
+      g('Shelli','Reinhard','Female',47,'8','M','Spruce 2','','','','sstewart@idahopower.com','208-991-8797','Boise','ID','')
+    ]},
+    {group:'Marshall Group',guests:[
+      g('Chris','Marshall','Male',65,'13','XL','Bluff House','Raptor','Travis','Sam Parker','crm.alaska@pm.me','907-315-6529','Wasilla','AK','',true),
+      g('Chuck','Roesel','Male',65,'11','XL','Bluff House','Raptor','Travis','Sam Parker','searoe@hotmail.com','541-297-3789','Petersburg','AK',''),
+      g('Gwen','Younger','Female',65,'9','M','Bluff House','','','','gyounger@talonlodge.com','480-483-0205','Scottsdale','AZ',''),
+      g('Kathy','Marshall','Female',62,'9','L','Bluff House','Raptor','Travis','Sam Parker','klm63.alaska@pm.me','907-232-9070','Wasilla','AK',''),
+      g('Sally','Roesel','Female',60,'10','L','Bluff House','','','','sallyroesel@outlook.com','907-752-0404','Petersburg','AK',''),
+      g('Phil','Younger','Male','','','','Bluff House','','','','phil@talonlodge.com','480-483-0205','Scottsdale','AZ','Melon.')
+    ]},
+    {group:'McFarland Group',guests:[
+      g('Laurie','McFarland','Female',57,'8','M','Cedar 1','','','','lauriejohns123@gmail.com','602-550-6888','Scottsdale','AZ','',true),
+      g('Tim','McFarland','Male',63,'11','XL','Cedar 1','','','','tim@mcfarlandmachine.com','480-695-0819','Scottsdale','AZ','')
+    ]}
+  ];
+
+  // ---- sample pending requests layered on top (roster has none) ----
+  // [group, activityName, dayOffset(1-3), kind, [guest full names]]
+  const REQS=[
+    ['Gaines Group','ATV Kruzof Island Tour',1,'activity',['David Rogers','Yul Hodge']],
+    ['Kerstetter Group','Kayak & Lunch',1,'activity',['Jennifer Kerstetter','Kyle Kerstetter']],
+    ['Gomez Group','Freshwater Fishing by Float Plane',2,'activity',['Bob Gomez','Jeff Langhorst']],
+    ['Marshall Group','Massage',2,'massage',['Kathy Marshall','Gwen Younger']],
+    ['Lufkin Group','Whale & Wildlife Viewing',3,'activity',['Beau Reinhard','Devin Stewart','Onni Lufkin','Shelli Reinhard']]
+  ];
+
+  const boatClass=b=>b==='Raptor'?'raptor':b==='Retriever'?'retriever':'shore';
+  const reqsFor=grp=>REQS.filter(r=>r[0]===grp);
+
+  function render(){
+    const {pkg,existed}=pickPkg();const ARRIVAL=pkg.arrival_start_date;
+    const people=GROUPS.reduce((s,g)=>s+g.guests.length,0);
+    el('totals').innerHTML=[['Package',1],['Groups',GROUPS.length],['Guests',people],['Rooms',ROOMS.length],['Requests',REQS.length]]
+      .map(([l,n])=>`<div class="tot"><div class="n">${n}</div><div class="l">${l}</div></div>`).join('');
+    el('rooms').innerHTML=ROOMS.map(r=>{const n=GROUPS.reduce((s,g)=>s+g.guests.filter(x=>x.room===r.name).length,0);
+      return `<div class="rmb"><b>${esc(r.name)}</b><span>${esc(r.detail||r.building)} · ${n}/${r.capacity}</span></div>`;}).join('');
+    el('groups').innerHTML=`<div class="pkg"><div class="ph"><span class="pd">${fmtDay(ARRIVAL)}</span><span class="ps">${esc(pkgName(pkg))}</span><span class="pm">${GROUPS.length} groups · ${people} guests · full lodge${existed?' · attaches to your existing package':' · fallback package (none found)'}</span></div>`
+      +GROUPS.map(gp=>{
+        const roomset=[...new Set(gp.guests.map(x=>x.room))];
+        const nBoat=gp.guests.filter(x=>x.boat).length;
+        return `<div class="grp"><div class="hd"><span class="gn">${esc(gp.group)}</span>${roomset.map(r=>`<span class="rm">🏠 ${esc(r)}</span>`).join('')}<span class="meta">${gp.guests.length} guests · ${nBoat} on home boat</span></div>
+        <div class="bd"><div class="glist">`
+          +gp.guests.map(x=>`<div class="gr"><span class="nm">${esc(x.first)} ${esc(x.last)}${x.lead?'<span class="ld">LEAD</span>':''}</span>
+            <span class="rmc">${esc(x.room)}</span>
+            <span class="dg">${x.gender?esc(x.gender[0]):''}${x.age!==''?' · '+x.age:''}${x.jacket?' · '+esc(x.jacket):''}</span>
+            ${x.diet?`<span class="diet" title="${esc(x.diet)}">⚠ diet</span>`:''}
+            <span class="bt ${boatClass(x.boat)}">${x.boat?'🚤 '+esc(x.boat):'shore'}</span></div>`).join('')
+          +`</div>`
+          +(reqsFor(gp.group).length?`<div class="reqs"><h4>Pending requests</h4>`+reqsFor(gp.group).map(r=>`<span class="rq">${icon({name:r[1],kind:r[3]})} ${esc(r[1])} <span class="d">${md(addDays(ARRIVAL,r[2]))} · ${r[4].length}p</span></span>`).join('')+`</div>`:'')
+          +`</div></div>`;
+      }).join('')+`</div>`;
+    const cur=(()=>{try{return (JSON.parse(localStorage.getItem('talon_portal_requests'))||[]);}catch(e){return [];}})();
+    const prof=(()=>{try{return JSON.parse(localStorage.getItem('talon_portal_profile'))||{};}catch(e){return {};}})();
+    if(Object.keys(prof).length){el('status').classList.add('show');el('status').innerHTML=`✓ Loaded: <b>${Object.keys(prof).length}</b> groups in the database, <b>${cur.length}</b> pending requests. Open <b>Boat Assignments</b>, <b>Approvals</b> or <b>Guest Portal</b>.`;}
+    else el('status').classList.remove('show');
+  }
+
+  window.TD={
+    load(){
+      const {pkg,existed}=pickPkg();const ARRIVAL=pkg.arrival_start_date;
+      const reqs=[],profs={},now=new Date().toISOString();let rid=1;
+      GROUPS.forEach(gp=>{
+        profs[gp.group+'|'+pkg.id]={mode:'invite',guests:gp.guests.map((x,i)=>({
+          id:'gp'+slug(gp.group)+i,first:x.first,last:x.last,email:x.email,phone:x.phone,
+          city:x.city,state:x.state,gender:x.gender,age:x.age,boot:x.boot,jacket:x.jacket,
+          room:x.room,boatPref:x.boat,captain:x.captain,mate:x.mate,
+          allergies:x.diet,medical:x.diet,emerName:'',emerPhone:'',emerRel:'',license:null,
+          access:'managed',invite:'none',isLead:x.lead}))};
+      });
+      REQS.forEach(([group,name,day,kind,who])=>{
+        reqs.push({id:rid++,group,actId:slug(name),name,date:addDays(ARRIVAL,day),guests:who.length,guestNames:who,kind,status:'requested',source:'reservation',created:now});
+      });
+      const lead=GROUPS[0].guests.find(x=>x.lead)||GROUPS[0].guests[0];
+      try{
+        // only seed a package if none exist — never clobber packages already built in Package Management
+        if(!existed)localStorage.setItem('talon_packages_v1',JSON.stringify([DEFAULT_PKG]));
+        localStorage.setItem('talon_rooms_v1',JSON.stringify(ROOMS));
+        localStorage.setItem('talon_portal_requests',JSON.stringify(reqs));
+        localStorage.setItem('talon_portal_profile',JSON.stringify(profs));
+        localStorage.setItem('talon_portal_trip',JSON.stringify({group:GROUPS[0].group,pkgId:pkg.id,party:GROUPS[0].guests.length,lead:lead.first+' '+lead.last}));
+        localStorage.setItem('talon_bookings_v1','[]');
+        localStorage.setItem('talon_boat_seating','{}');
+        localStorage.setItem('talon_saltcap','2');
+        render();toast('Loaded full lodge → '+fmtDay(ARRIVAL)+' · 6 groups · 24 guests');
+      }catch(e){toast('Could not write to storage — dataset may be too large')}
+    },
+    clear(){if(!confirm('Clear the test group, rooms, requests, seatings and confirmed bookings? (Package, Team, Activities & Vendors are kept.)'))return;
+      ['talon_portal_requests','talon_portal_profile','talon_rooms_v1','talon_portal_trip','talon_bookings_v1','talon_boat_seating'].forEach(k=>localStorage.removeItem(k));
+      render();toast('Test data cleared');}
+  };
+  render();
+})();
+</script>
+</body></html>

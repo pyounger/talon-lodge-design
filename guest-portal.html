@@ -1,0 +1,720 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Guest Portal</title><style>html,body{margin:0;background:#eef3f1}@media(prefers-color-scheme:dark){html,body{background:#081210}}</style></head><body>
+<style>
+  :root{--paper:#eef3f1;--surface:#fff;--surface-2:#e6efeb;--ink:#12292a;--muted:#5a6f6b;--faint:#84958f;--line:#d6e2dd;--line-2:#c1d1cb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e0efe9;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6;--sky1:#0a544c;--sky2:#0e7c6f;--sky3:#2a9d8f;--bar:rgba(9,20,18,.86);--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--serif:ui-serif,Georgia,"Times New Roman",serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 12px 30px rgba(18,42,43,.08)}
+  @media (prefers-color-scheme:dark){:root{--paper:#081210;--surface:#0e1c1a;--surface-2:#14231f;--ink:#e9f1ed;--muted:#9bada9;--faint:#6f817c;--line:#1f322c;--line-2:#2e453e;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#0f2a26;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413;--sky1:#04211d;--sky2:#0a3a34;--sky3:#12564d;--shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px rgba(0,0,0,.45)}}
+  :root[data-theme="dark"]{--paper:#081210;--surface:#0e1c1a;--surface-2:#14231f;--ink:#e9f1ed;--muted:#9bada9;--faint:#6f817c;--line:#1f322c;--line-2:#2e453e;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#0f2a26;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413;--sky1:#04211d;--sky2:#0a3a34;--sky3:#12564d}
+  :root[data-theme="light"]{--paper:#eef3f1;--surface:#fff;--surface-2:#e6efeb;--ink:#12292a;--muted:#5a6f6b;--faint:#84958f;--line:#d6e2dd;--line-2:#c1d1cb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e0efe9;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6;--sky1:#0a544c;--sky2:#0e7c6f;--sky3:#2a9d8f}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased;line-height:1.55}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 clamp(12px,3vw,22px) 50px}
+  /* demo bar */
+  .demobar{background:#0a1413;color:#cfe0da;font-size:12px}
+  .demobar .in{max-width:1040px;margin:0 auto;padding:7px clamp(12px,3vw,22px);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .demobar select,.demobar input{font:inherit;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:6px;padding:3px 7px}
+  .demobar select option{color:#000}
+  .demobar .tag{font:600 9px var(--mono);letter-spacing:.12em;text-transform:uppercase;background:var(--gold);color:#1a1204;border-radius:20px;padding:2px 8px}
+  /* topbar */
+  .top{display:flex;align-items:center;gap:12px;padding:12px clamp(12px,3vw,22px);max-width:1040px;margin:0 auto}
+  .logo{font:800 16px var(--sans);letter-spacing:-.01em;display:flex;align-items:center;gap:9px}
+  .logo .mk{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--sky2),var(--sky3));display:grid;place-items:center;color:#fff;font-size:14px}
+  .logo small{display:block;font:600 9.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  .top .who{margin-left:auto;text-align:right;font-size:12px;color:var(--muted)}
+  .top .who b{color:var(--ink);font-size:13px}
+  /* hero */
+  .hero{position:relative;height:clamp(190px,26vw,280px);color:#fff;overflow:hidden;background:linear-gradient(160deg,#0a544c,#0e7c6f 48%,#2a9d8f);isolation:isolate}
+  .hero::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(120% 80% at 82% -20%,rgba(255,255,255,.28),transparent 55%),radial-gradient(90% 80% at 10% 130%,rgba(3,20,18,.55),transparent 60%),linear-gradient(0deg,rgba(6,20,18,.5),transparent 45%)}
+  .hero::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:44%;z-index:-1;background:linear-gradient(120deg,rgba(4,25,22,.55),transparent 40%),conic-gradient(from 200deg at 30% 120%,rgba(255,255,255,.12),transparent 30%);clip-path:polygon(0 55%,22% 34%,40% 52%,60% 26%,78% 46%,100% 30%,100% 100%,0 100%)}
+  .hero .in{max-width:1040px;margin:0 auto;height:100%;padding:0 clamp(12px,3vw,22px) clamp(18px,3vw,30px);display:flex;flex-direction:column;justify-content:flex-end;position:relative}
+  .hero .eyebrow{font:600 11px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.82);margin:0 0 6px}
+  .hero h1{font:600 clamp(24px,4.4vw,40px)/1.05 var(--serif);letter-spacing:.01em;margin:0;text-transform:uppercase;text-wrap:balance;max-width:16ch}
+  .hero .loc{font:italic 400 15px/1.3 var(--serif);color:rgba(255,255,255,.9);margin-top:6px}
+  /* alert */
+  .alert{display:flex;align-items:center;gap:12px;background:var(--sky2);color:#fff;border-radius:12px;padding:12px 16px;margin:16px 0;box-shadow:var(--shadow)}
+  .alert .b{font-weight:800}.alert .s{color:rgba(255,255,255,.85);font-size:13px}
+  .alert a{margin-left:auto;color:#fff;font:800 12.5px var(--sans);letter-spacing:.03em;text-decoration:underline;text-underline-offset:3px;cursor:pointer;white-space:nowrap}
+  /* summary strip */
+  .strip{display:flex;gap:22px;flex-wrap:wrap;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:14px 18px;margin-bottom:18px}
+  .strip .col .k{font:600 10px var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
+  .strip .col .v{font:700 14.5px var(--sans);color:var(--ink)}
+  .strip .days{margin-left:auto;text-align:right}.strip .days .n{font:800 30px var(--sans);line-height:1;color:var(--accent-deep)}.strip .days .l{font:600 9px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  /* tile grid */
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:760px){.tiles{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:460px){.tiles{grid-template-columns:1fr}}
+  .tile{border:0;padding:0;text-align:left;background:var(--surface);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;display:flex;flex-direction:column;transition:transform .12s,box-shadow .12s}
+  .tile:hover{transform:translateY(-3px);box-shadow:0 6px 14px rgba(18,42,43,.12),0 20px 40px rgba(18,42,43,.14)}
+  .tile .photo{position:relative;height:132px;background:linear-gradient(140deg,var(--g1),var(--g2));display:grid;place-items:center;isolation:isolate}
+  .tile .photo::after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(110% 80% at 80% -10%,rgba(255,255,255,.22),transparent 55%),radial-gradient(80% 90% at 0% 120%,rgba(0,0,0,.28),transparent 55%)}
+  .tile .emoji{font-size:46px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.28))}
+  .tile .badge{position:absolute;top:10px;right:10px;background:var(--gold);color:#1a1204;font:800 11px var(--mono);border-radius:20px;padding:2px 9px}
+  .tile .bar{background:var(--bar);color:#fff;padding:11px 14px}
+  .tile .bar .t{font:700 15px var(--sans);letter-spacing:-.01em;display:block}
+  .tile .bar .s{font:500 11.5px var(--sans);color:rgba(255,255,255,.72)}
+  /* faq */
+  .faq{text-align:center;margin:32px 0 6px}
+  .faq h3{font:700 20px var(--serif);margin:0 0 12px}
+  .faq button{font:800 12.5px var(--sans);letter-spacing:.03em;background:var(--salmon);color:#fff;border:0;border-radius:8px;padding:11px 20px;cursor:pointer}
+  /* section pages */
+  .back{display:inline-flex;align-items:center;gap:6px;font:700 13px var(--sans);color:var(--accent-deep);background:none;border:0;cursor:pointer;margin:16px 0 12px;padding:4px 0}
+  .pagehd{font:700 22px/1.1 var(--serif);margin:0 0 4px}
+  .pagesub{color:var(--muted);font-size:13.5px;margin:0 0 16px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:16px 18px}
+  .card h2{font:700 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-deep);margin:0 0 12px}
+  .kv{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+  .kv:last-child{border-bottom:0}.kv .k{color:var(--muted)}.kv .v{font-weight:700;text-align:right}
+  .due .big{font:800 24px var(--sans);color:var(--accent-deep)}
+  /* activity cards */
+  .acts{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:680px){.acts{grid-template-columns:1fr}}
+  .act{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+  .act .ph{height:110px;background:linear-gradient(140deg,var(--sky2),var(--sky3));display:grid;place-items:center;font-size:38px;color:rgba(255,255,255,.92)}
+  .act .bd{padding:13px 15px;display:flex;flex-direction:column;gap:7px;flex:1}
+  .act .nm{font:700 15.5px var(--sans);letter-spacing:-.01em}
+  .act .pr{font:700 12.5px var(--mono);color:var(--accent-deep)}
+  .act .ds{font-size:12.5px;color:var(--muted);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .act .days{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
+  .daybtn{font:700 11px var(--sans);border:1px dashed var(--accent);color:var(--accent-deep);background:var(--accent-soft);border-radius:7px;padding:5px 9px;cursor:pointer}
+  .daybtn:hover{background:var(--accent);color:#fff}
+  .daybtn.rq{border-style:solid;border-color:var(--gold);background:var(--gold-soft);color:var(--gold);cursor:default}
+  .daybtn.ap{border-style:solid;border-color:var(--accent);background:var(--accent);color:#fff;cursor:default}
+  .lbl{font:600 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .rq2{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .rq2:last-child{border-bottom:0}
+  .rq2 .ic{width:34px;height:34px;border-radius:9px;background:var(--surface-2);display:grid;place-items:center;font-size:17px;flex:0 0 auto}
+  .rq2 .m{min-width:0;flex:1}.rq2 .m .t{font-weight:700;font-size:13.5px}.rq2 .m .d{font-size:12px;color:var(--muted)}
+  .st{font:700 10px var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:20px;white-space:nowrap}
+  .st.requested{background:var(--gold-soft);color:var(--gold)}.st.approved{background:var(--accent-soft);color:var(--accent-deep)}
+  .rq2 .x{border:0;background:none;color:var(--faint);cursor:pointer;font-size:15px;padding:4px}
+  .empty{color:var(--muted);font-size:13px;padding:16px 0;text-align:center}
+  .banner{background:var(--gold-soft);border:1px solid var(--gold);border-radius:12px;padding:11px 15px;font-size:13px;color:var(--gold);margin-bottom:14px;display:flex;gap:9px}
+  .banner b{color:var(--ink)}
+  h3.sec{font:700 12px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:22px 0 10px}
+  .soon{text-align:center;padding:40px 20px;color:var(--muted)}
+  .soon .ic{font-size:44px;margin-bottom:10px}.soon h3{font:700 18px var(--sans);color:var(--ink);margin:0 0 6px}.soon p{margin:0 auto;max-width:46ch;font-size:13.5px}
+  .soon .chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+  .soon .chips span{font:600 11px var(--sans);background:var(--surface-2);border:1px solid var(--line);border-radius:20px;padding:4px 11px}
+  /* daily agenda */
+  .agenda{display:flex;flex-direction:column;gap:10px}
+  .ag-day{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+  .ag-date{padding:9px 14px;background:var(--surface-2);border-bottom:1px solid var(--line);font-size:13.5px;display:flex;align-items:center;gap:8px}
+  .ag-wd{font-weight:800}
+  .ag-tag{margin-left:auto;font:600 9px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:20px;background:var(--surface);border:1px solid var(--line-2);color:var(--faint)}
+  .ag-tag.stay{color:var(--accent-deep);background:var(--accent-soft)}
+  .ag-body{padding:4px 14px}
+  .ag-item{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--line)}
+  .ag-item:last-child{border-bottom:0}
+  .ag-ic{width:34px;height:34px;border-radius:9px;background:var(--surface-2);display:grid;place-items:center;font-size:17px;flex:0 0 auto}
+  .ag-m{flex:1;min-width:0}.ag-t{font-weight:700;font-size:13.5px}.ag-s{font-size:12px;color:var(--muted)}
+  .ag-empty{padding:11px 0;color:var(--faint);font-size:12.5px}
+  /* form primitives (guest details / flights / license) */
+  .frm{display:grid;gap:12px}
+  .fg{display:flex;flex-direction:column;gap:5px;min-width:0}
+  .fg label{font:600 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .fg input,.fg select,.fg textarea{font:inherit;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:9px;padding:9px 11px;width:100%}
+  .fg textarea{min-height:58px;resize:vertical;line-height:1.5}
+  .fg input:focus,.fg select:focus,.fg textarea:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+  .frow2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:520px){.frow2{grid-template-columns:1fr}}
+  .ghd{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+  .ghd .gn{font:700 15.5px var(--sans);letter-spacing:-.01em}
+  .ghd .rm{margin-left:auto;border:0;background:none;color:var(--faint);cursor:pointer;font:700 11.5px var(--sans)}
+  .ghd .rm:hover{color:var(--salmon)}
+  .chip{font:700 9px var(--mono);letter-spacing:.06em;text-transform:uppercase;border-radius:20px;padding:3px 8px;background:var(--surface-2);color:var(--muted)}
+  .chip.lead{background:var(--accent-soft);color:var(--accent-deep)}
+  .leadmail{align-self:flex-start;font:600 11.5px var(--sans);color:var(--accent-deep);background:none;border:0;padding:3px 0;cursor:pointer}
+  .leadmail:hover{text-decoration:underline;text-underline-offset:2px}
+  .fhint{font-size:11px;color:var(--faint)}
+  .addbtn{width:100%;font:700 13px var(--sans);color:var(--accent-deep);background:var(--surface);border:1px dashed var(--line-2);border-radius:12px;padding:13px;cursor:pointer;margin-top:2px}
+  .addbtn:hover{background:var(--accent-soft);border-color:var(--accent)}
+  .savenote{font-size:11.5px;color:var(--faint);margin:14px 2px 0;line-height:1.5}
+  .cards{display:grid;gap:14px}
+  /* access-mode toggle + invite flow */
+  .modeseg{display:flex;border:1px solid var(--line-2);border-radius:12px;overflow:hidden;margin-bottom:14px}
+  .modeseg>button{flex:1;background:var(--surface);border:0;border-right:1px solid var(--line-2);padding:12px 14px;cursor:pointer;text-align:left}
+  .modeseg>button:last-child{border-right:0}
+  .modeseg>button.on{background:var(--accent-soft)}
+  .modeseg .mt{font:700 13.5px var(--sans);color:var(--ink);display:block;margin-bottom:2px}
+  .modeseg>button.on .mt{color:var(--accent-deep)}
+  .modeseg .ms{font-size:11.5px;color:var(--muted);line-height:1.4}
+  @media(max-width:560px){.modeseg{flex-direction:column}.modeseg>button{border-right:0;border-bottom:1px solid var(--line-2)}.modeseg>button:last-child{border-bottom:0}}
+  .inv{font:700 9px var(--mono);letter-spacing:.06em;text-transform:uppercase;border-radius:20px;padding:3px 8px}
+  .inv.none{background:var(--surface-2);color:var(--muted)}
+  .inv.sent{background:var(--gold-soft);color:var(--gold)}
+  .inv.reg{background:var(--accent-soft);color:var(--accent-deep)}
+  .inviterow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:2px}
+  .sendbtn{font:700 12px var(--sans);background:var(--accent);color:#fff;border:0;border-radius:8px;padding:9px 13px;cursor:pointer}
+  .sendbtn:disabled{opacity:.5;cursor:not-allowed}
+  .ghostbtn{font:600 12px var(--sans);background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:8px 11px;cursor:pointer;color:var(--muted)}
+  .ghostbtn.sm{padding:4px 9px;font-size:11px}
+  .addrow{border:1px dashed var(--line-2);background:var(--surface)}
+  .acc{display:inline-flex;border:1px solid var(--line-2);border-radius:8px;overflow:hidden;flex:0 0 auto}
+  .acc button{font:700 10.5px var(--sans);background:var(--surface);border:0;border-right:1px solid var(--line-2);padding:5px 10px;cursor:pointer;color:var(--muted)}
+  .acc button:last-child{border-right:0}
+  .acc button.on{background:var(--accent);color:#fff}
+  .ptbl{display:grid;gap:9px}
+  .prow{display:grid;grid-template-columns:1.5fr .95fr 1.1fr auto auto;gap:10px;align-items:center;font-size:12.5px}
+  .prow .pn{font-weight:700;min-width:0;display:flex;align-items:center;gap:6px}
+  .prow .pa{color:var(--muted);font-size:11.5px}
+  .prow .pbar{height:7px;border-radius:20px;background:var(--surface-2);overflow:hidden}
+  .prow .pbar>span{display:block;height:100%;background:var(--accent);border-radius:20px}
+  .prow .pc{font:700 11px var(--mono);color:var(--accent-deep)}
+  @media(max-width:560px){.prow{grid-template-columns:1fr auto auto}.prow .pbar{grid-column:1/-1;order:5}}
+  /* fishing license rows */
+  .lic{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .lic:last-of-type{border-bottom:0}
+  .lic .thumb{width:44px;height:44px;border-radius:8px;object-fit:cover;border:1px solid var(--line-2);background:var(--surface-2);flex:0 0 auto}
+  .lic .who{flex:1;min-width:0}
+  .lic .who .nm{font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:6px}
+  .lic .who .sub{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lic .x{border:0;background:none;color:var(--faint);cursor:pointer;font-size:14px;padding:4px}
+  .lic .x:hover{color:var(--salmon)}
+  .filebtn{position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:6px;font:700 12px var(--sans);color:var(--accent-deep);background:var(--accent-soft);border:1px solid var(--line-2);border-radius:8px;padding:8px 13px;cursor:pointer;flex:0 0 auto}
+  .filebtn:hover{background:var(--accent);color:#fff}
+  .filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;transition:.2s;z-index:30;pointer-events:none}.toast.show{opacity:1}
+</style>
+
+<div class="demobar"><div class="in">
+  <span class="tag">Demo</span><span>Viewing as</span>
+  <select id="d_pkg" onchange="P.setPkg()"></select>
+  <select id="d_group" onchange="P.setGroup()" style="max-width:190px"></select>
+  <span>guest</span><select id="d_guest" onchange="P.setGuest()" style="max-width:180px"></select>
+  <span style="margin-left:auto;color:rgba(255,255,255,.5)">Production = a magic-link to one guest, no switcher.</span>
+</div></div>
+
+<div class="top">
+  <div class="logo"><span class="mk">🎣</span><span>Talon Lodge <small>Guest Portal</small></span></div>
+  <div class="who"><b id="who_name">—</b><br><span id="who_trip">—</span></div>
+</div>
+
+<div class="hero"><div class="in">
+  <p class="eyebrow">Your upcoming trip</p>
+  <h1 id="h_title">—</h1>
+  <div class="loc" id="h_loc">Talon Lodge &amp; Spa · Sitka, Alaska</div>
+</div></div>
+
+<div class="wrap"><div id="view"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1700);}
+
+  const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const parseD=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);};
+  const addDays=(s,n)=>{const dt=parseD(s);dt.setDate(dt.getDate()+n);return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');};
+  const wd=s=>WD[parseD(s).getDay()], mdShort=s=>{const d=parseD(s);return MO[d.getMonth()]+' '+d.getDate();};
+  const fmtLong=s=>{const d=parseD(s);return MO[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();};
+  const TODAY='2026-08-12';
+  const daysBetween=(a,b)=>Math.round((parseD(b)-parseD(a))/86400000);
+
+  const PKG_SEED=[
+    {id:'sp1',series:'Standard',category:'Sportfishing',status:'published',arrival_start_date:'2027-05-24',nights:4},
+    {id:'sp2',series:'Winemaker Series',category:'Sportfishing',status:'published',arrival_start_date:'2027-05-28',nights:4},
+    {id:'sp3',series:'Visiting Chef Series',category:'Sportfishing',status:'published',arrival_start_date:'2027-06-01',nights:4}
+  ];
+  const ACT_SEED=[
+    {id:2,name:'Freshwater Fishing by Float Plane',icon:'🛩️',desc:'Fly to remote streams filled with wild trout, steelhead and salmon.',priceText:'$1500–$1800 per person · 2 person min',availability:'any',offer:'both',status:'active'},
+    {id:3,name:'ATV Kruzof Island Tour',icon:'🏍️',desc:'Guided 4-seat ATV tour of Kruzof Island — bears, deer, and Shelikof Bay.',priceText:'$450–$550 per person · 2 person min',availability:'any',offer:'both',status:'active'},
+    {id:4,name:'Kayak & Lunch',icon:'🛶',desc:'Paddle the smooth waterways of Degroff Bay with a prepared boat lunch.',priceText:'$450 per person · 2 person min',availability:'any',offer:'both',status:'active'},
+    {id:8,name:'Whale & Wildlife Viewing',icon:'🐋',desc:'Humpback, gray, minke and orca whales in our waters year-round.',priceText:'$400–$450 per person · 4 person min',availability:'any',offer:'both',status:'active'},
+    {id:1,name:'Massage',icon:'💆',desc:'Our open-air massage pavilion — an unforgettable treatment experience.',priceText:'$125–$250 per session',availability:'stay',offer:'both',status:'active'},
+    {id:12,name:'Day Spa',icon:'🧖',desc:'A full spa day at the open-air pavilion (10 AM–2 PM), staffed separately from the evening massage slots.',priceText:'$225 per person · 2 guests/day',availability:'stay',offer:'both',status:'active'},
+    {id:11,name:'Additional Saltwater Day',icon:'🐟',desc:'Extra guided saltwater sportfishing on your arrival or departure day.',priceText:'Priced on request',availability:'arrival_departure',offer:'portal',status:'active'}
+  ];
+  const load=(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k));if(v&&(Array.isArray(v)?v.length:true))return v;}catch(e){}return f;};
+  const PKGS=load('talon_packages_v1',PKG_SEED).filter(p=>(!p.status||p.status==='published')&&p.arrival_start_date&&p.nights).sort((a,b)=>a.arrival_start_date<b.arrival_start_date?-1:1);
+  const ACTS=load('talon_activities_v1',ACT_SEED);
+  const SETTINGS=load('talon_settings_v1',{deposit:{amount:1000,per_person:true,cc_fee_pct:2.99}});
+  const DEP=(SETTINGS&&SETTINGS.deposit)||{amount:1000,per_person:true};
+  const pkgName=p=>p.title_override||(p.series&&p.series!=='Standard'?p.series.replace(/ Series$/,''):(p.category||'Sportfishing'));
+  const isMassage=a=>/massage/i.test(a.name)||/spa/i.test(a.name)||a.unit==='per_session';
+  const portalOK=a=>a.status!=='inactive'&&(!a.offer||a.offer==='both'||a.offer==='portal');
+  const iconFor=a=>a.icon||(isMassage(a)?'💆':'🎣');
+  const SCHED_NAMES={fresh:'Freshwater Fishing (boat/ATV)',freshplane:'Freshwater Fishing by Float Plane',atv:'ATV Safari',kayak:'Kayak & Lunch',whale:'Whale Watching',hike:'Hiking',massage:'Massage',dayspa:'Day Spa',saltwater:'Additional Saltwater Day'};
+
+  const TKEY='talon_portal_trip';
+  const trip=Object.assign({pkgId:(PKGS[0]||{}).id,group:'Younger Group',party:4,lead:'Cole Younger',viewGuest:''},load(TKEY,{}));
+  if(trip.viewGuest==null)trip.viewGuest='';
+  const saveTrip=()=>{try{localStorage.setItem(TKEY,JSON.stringify(trip));}catch(e){}};
+  const curPkg=()=>PKGS.find(p=>p.id===trip.pkgId)||PKGS[0];
+  function columns(){const p=curPkg();const out=[];for(let i=0;i<=p.nights;i++){const date=addDays(p.arrival_start_date,i);out.push({date,type:(i===0||i===p.nights)?'travel':'stay',tag:i===0?'arrival':i===p.nights?'departure':''});}return out;}
+  const eligibleDays=a=>{const av=a.availability||'any';return columns().filter(c=>av==='stay'?c.type==='stay':av==='arrival_departure'?c.type==='travel':true);};
+  function bookingNo(){let s=trip.group+'|'+trip.pkgId;let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))>>>0;return 'TL-'+(1000000+h%9000000);}
+
+  const RKEY='talon_portal_requests';
+  let REQ=load(RKEY,[]);if(!Array.isArray(REQ))REQ=[];
+  let rid=REQ.reduce((m,r)=>Math.max(m,r.id||0),0)+1;
+  const saveReq=()=>{try{localStorage.setItem(RKEY,JSON.stringify(REQ));}catch(e){}};
+  const myReq=kind=>REQ.filter(r=>r.group===trip.group&&(kind?r.kind===kind:true));
+  const reqFor=(actId,date)=>REQ.find(r=>r.group===trip.group&&r.actId===actId&&r.date===date);
+  function schedForGroup(kind){
+    const bk=load('talon_bookings_v1',[]);if(!Array.isArray(bk))return [];
+    const mine=myFullName();
+    const groupNames=new Set(curProfile().guests.map(g=>(g.first+' '+g.last).trim()).filter(Boolean));
+    const belongs=b=>{
+      if(mine)return (b.guestNames||[]).includes(mine)||b.guestName===mine; // this guest's own activities
+      if(b.group===trip.group)return true;                                   // whole-group view
+      return (b.guestNames||[]).some(n=>groupNames.has(n));                   // incl. cross-group boats carrying our guests
+    };
+    return bk.filter(belongs).map(b=>({sched:true,id:'s'+b.id,actId:b.actId,name:b.name||SCHED_NAMES[b.actId]||b.actId,date:b.date,time:b.time,assignee:b.assigneeName,assigneeType:b.assigneeType,guests:b.guests,guestNames:b.guestNames||[],status:'approved',kind:(b.actId==='massage'?'massage':'activity'),crew:b.crew,guideIds:b.guideIds})).filter(x=>kind?x.kind===kind:true);
+  }
+  const pendCount=kind=>myReq(kind).filter(r=>r.status==='requested').length;
+
+  // ---- home sportfishing boat (from Boat Assignments) shown on the agenda's stay days ----
+  const BOAT_FALLBACK={b1:'Raptor',b2:'Roamer',b3:'Retriever',b4:'Magnum',b5:'Pip',b6:'Muktuk',b7:'Raider'};
+  const boatNameById=id=>{const T=load('talon_team_v1',null);if(T&&T.boats){const b=T.boats.find(x=>x.id===id);if(b)return b.name;}return BOAT_FALLBACK[id]||'Boat';};
+  const allBookings=()=>{const b=load('talon_bookings_v1',[]);return Array.isArray(b)?b:[];};
+  // off the boat that day: adventures + Day Spa (evening massage keeps them on the water)
+  const isAdvBk=b=>b.actId!=='massage'&&b.actId!=='saltwater'&&!(/massage/i.test(b.name||'')&&!/spa/i.test(b.name||''));
+  const hasAdventureOnDate=(name,date)=>allBookings().some(b=>b.date===date&&isAdvBk(b)&&(b.guestNames||[]).includes(name));
+  function homeBoatItems(){
+    const seat=load('talon_boat_seating',{})||{};const daily=load('talon_boat_daily',{})||{};const P=curPkg();const dayMap=seat[P.arrival_start_date]||{};
+    if(!Object.keys(dayMap).length)return [];
+    const mine=myFullName(),groupNames=new Set(curProfile().guests.map(g=>(g.first+' '+g.last).trim()).filter(Boolean));
+    const items=[];
+    columns().filter(c=>c.type==='stay').forEach(c=>{const byBoat={};
+      Object.keys(dayMap).forEach(k=>{const i=k.indexOf('::');const nm=k.slice(i+2);
+        const ov=(daily[c.date]||{})[k];const boatId=(ov!==undefined)?ov:dayMap[k]; // per-day override wins
+        if(!boatId)return; // switched off the boat that day
+        const inScope=mine?nm===mine:groupNames.has(nm);if(!inScope)return;
+        if(hasAdventureOnDate(nm,c.date))return; // an adventure that day takes priority — off the boat
+        (byBoat[boatId]=byBoat[boatId]||[]).push(nm);});
+      Object.keys(byBoat).forEach(boatId=>items.push({sched:true,id:'hb'+boatId+c.date,actId:'fresh',name:'Sportfishing',date:c.date,guests:byBoat[boatId].length,names:byBoat[boatId],status:'approved',kind:'activity',crew:{boat:boatNameById(boatId)},boatOnly:true}));});
+    return items;
+  }
+  // a viewed guest with no boat and no adventure/spa on a stay day → Enjoying the Island
+  function islandItems(){
+    const mine=myFullName();if(!mine)return [];
+    const onBoat=new Set(homeBoatItems().map(i=>i.date));const items=[];
+    columns().filter(c=>c.type==='stay').forEach(c=>{
+      if(onBoat.has(c.date))return;
+      if(hasAdventureOnDate(mine,c.date))return;
+      items.push({sched:true,id:'is'+c.date,actId:'island',name:'Enjoying the Island',date:c.date,guests:1,status:'approved',kind:'activity',islandOnly:true});});
+    return items;
+  }
+
+  // ---- guest profile (details / flights / license), keyed per group+trip ----
+  const PROF_KEY='talon_portal_profile';
+  let PROFS=load(PROF_KEY,{});if(!PROFS||typeof PROFS!=='object'||Array.isArray(PROFS))PROFS={};
+  const saveProf=()=>{try{localStorage.setItem(PROF_KEY,JSON.stringify(PROFS));}catch(e){}};
+  const profKey=()=>trip.group+'|'+trip.pkgId;
+  const genId=()=>'g'+Math.random().toString(36).slice(2,9);
+  const newGuest=o=>Object.assign({id:genId(),first:'',last:'',email:'',phone:'',country:'United States',state:'',city:'',zip:'',addr1:'',addr2:'',boot:'',jacket:'',access:'invite',invite:'none',age:'',gender:'',allergyHas:'',allergies:'',medicalHas:'',medical:'',eventHas:'',eventDesc:'',emerName:'',emerPhone:'',emerRel:'',license:null},o||{});
+  function curProfile(){
+    let pr=PROFS[profKey()];
+    if(!pr||typeof pr!=='object'){pr={guests:[],flights:{arr:{},dep:{}},fish:{}};PROFS[profKey()]=pr;}
+    if(!Array.isArray(pr.guests))pr.guests=[];
+    if(!pr.flights)pr.flights={arr:{},dep:{}};pr.flights.arr=pr.flights.arr||{};pr.flights.dep=pr.flights.dep||{};
+    if(!pr.fish)pr.fish={};
+    if(!pr.mode)pr.mode='invite';
+    if(!pr.guests.length){
+      const parts=(trip.lead||'').trim().split(/\s+/);
+      pr.guests.push(newGuest({first:parts[0]||'',last:parts.slice(1).join(' '),isLead:true}));
+    }
+    if(!pr.guests.some(g=>g.isLead))pr.guests[0].isLead=true;
+    return pr;
+  }
+  const guestComplete=g=>!!(g.first&&g.first.trim()&&g.email&&g.email.trim());
+  // ---- which guest are we viewing the portal as? ('' = whole group / lead) ----
+  const viewGuestObj=()=>{if(!trip.viewGuest)return null;return curProfile().guests.find(g=>g.id===trip.viewGuest)||null;};
+  const myFullName=()=>{const g=viewGuestObj();return g?((g.first+' '+g.last).trim()):null;};
+  const scopeGuests=()=>{const vg=viewGuestObj();return vg?[vg]:curProfile().guests;};
+  function groupOptions(){const set=new Set();Object.keys(PROFS).forEach(k=>{const i=k.lastIndexOf('|');if(i>0&&k.slice(i+1)===trip.pkgId)set.add(k.slice(0,i));});if(trip.group)set.add(trip.group);return [...set].sort();}
+  const incompleteGuests=()=>scopeGuests().filter(g=>!guestComplete(g)).length;
+  const missingLicenses=()=>scopeGuests().filter(g=>!g.license).length;
+  const guestLabel=(g,i)=>esc((g.first+' '+g.last).trim())||('Guest '+(i+1));
+
+  // ---- tiles (the Viking-style image grid) ----
+  const TILES=[
+    {id:'details',t:'Guest Details',s:'Profile & preferences',e:'📋',g:['#3f5f3a','#6f9a56']},
+    {id:'flights',t:'Flights In & Out',s:'Manage your air',e:'✈️',g:['#2a6a8a','#58a6c4']},
+    {id:'billing',t:'Payments & Billing',s:'Deposit & balance',e:'💳',g:['#34506b','#5a7fa3']},
+    {id:'activities',t:'Adventures & Activities',s:'Request guided add-ons',e:'🎣',g:['#0d5b52','#2a9d8f']},
+    {id:'spa',t:'Spa & Massage',s:'Reserve a session',e:'💆',g:['#6d4b6b','#a9738f']},
+    {id:'license',t:'Fishing License',s:'Upload your license',e:'📄',g:['#7d5f2a','#c0972f']},
+    {id:'agenda',t:'Daily Agenda',s:'Your day-by-day',e:'🗓️',g:['#4a4a7a','#7d7ab0']},
+    {id:'bring',t:'Before You Go',s:'What to bring',e:'🎒',g:['#6a4a3a','#9c7350']},
+    {id:'photos',t:'Photos & Memories',s:'From your trip',e:'📸',g:['#2f6a5a','#57a088']}
+  ];
+
+  let PAGE='home';
+  function renderShell(){
+    el('d_pkg').innerHTML=PKGS.map(p=>`<option value="${p.id}" ${p.id===trip.pkgId?'selected':''}>${esc(pkgName(p))} · ${esc(mdShort(p.arrival_start_date))}</option>`).join('');
+    // group dropdown — groups on this package (from the loaded rosters)
+    const groups=groupOptions();
+    if(!groups.includes(trip.group))trip.group=groups[0]||trip.group;
+    el('d_group').innerHTML=groups.map(g=>`<option ${g===trip.group?'selected':''}>${esc(g)}</option>`).join('');
+    // party follows the roster
+    const pr=curProfile();if(pr.guests.length)trip.party=pr.guests.length;
+    // guest dropdown — whole group or one individual
+    if(trip.viewGuest&&!pr.guests.some(g=>g.id===trip.viewGuest))trip.viewGuest='';
+    el('d_guest').innerHTML=['<option value="">Whole group · lead</option>']
+      .concat(pr.guests.map(g=>`<option value="${g.id}" ${g.id===trip.viewGuest?'selected':''}>${esc((g.first+' '+g.last).trim())||'Guest'}${g.isLead?' · lead':''}</option>`)).join('');
+    const P=curPkg(),vg=viewGuestObj();
+    el('who_name').textContent=vg?(esc((vg.first+' '+vg.last).trim())||'Guest'):trip.group;
+    el('who_trip').innerHTML=(vg?'<span style="color:var(--gold)">Guest view</span> · ':'')+esc(pkgName(P))+' · '+esc(mdShort(P.arrival_start_date));
+    el('h_title').textContent='Preparing for your upcoming Alaska Adventure';
+    renderView();
+  }
+  function renderView(){
+    if(PAGE==='home')return renderHome();
+    if(PAGE==='activities')return renderModule('activity');
+    if(PAGE==='spa')return renderModule('massage');
+    if(PAGE==='billing')return renderBilling();
+    if(PAGE==='details')return renderDetails();
+    if(PAGE==='flights')return renderFlights();
+    if(PAGE==='license')return renderLicense();
+    if(PAGE==='agenda')return renderAgenda();
+    if(PAGE==='bring')return renderSoon('🎒','Before you go','Packing guidance for Southeast Alaska, plus everything you need to know before your trip begins.',['Packing list','Weather','Know before you go']);
+    if(PAGE==='photos')return renderSoon('📸','Photos & Memories','Your guides’ photos and videos from the water, plus your daily catch log with weights — collected here to take home.',['Photos & videos','Daily catch','Weights']);
+  }
+
+  const depositUnit=()=>+DEP.amount||0;
+  const depositDue=()=>DEP.per_person?depositUnit()*trip.party:depositUnit();
+
+  function renderHome(){
+    const P=curPkg(),cols=columns(),dep=cols[cols.length-1].date,vg=viewGuestObj();
+    const dtg=daysBetween(TODAY,P.arrival_start_date);
+    const tiles=TILES.map(x=>{
+      let n=0,bl='pending';
+      if(x.id==='activities')n=pendCount('activity');
+      else if(x.id==='spa')n=pendCount('massage');
+      else if(x.id==='details'){n=incompleteGuests();bl='to complete';}
+      else if(x.id==='license'){n=missingLicenses();bl='to upload';}
+      return `<button class="tile" style="--g1:${x.g[0]};--g2:${x.g[1]}" onclick="P.go('${x.id}')">
+        <div class="photo"><span class="emoji">${x.e}</span>${n?`<span class="badge">${n} ${bl}</span>`:''}</div>
+        <div class="bar"><span class="t">${esc(x.t)}</span><span class="s">${esc(x.s)}</span></div>
+      </button>`;
+    }).join('');
+    el('view').innerHTML=`
+      <div class="alert"><span>🔔</span><span><span class="b">Activity &amp; spa requests are open.</span> <span class="s">We review every request within 24 hours.</span></span><a onclick="P.go('activities')">BROWSE NOW</a></div>
+      <div class="strip">
+        <div class="col"><div class="k">Dates</div><div class="v">${mdShort(P.arrival_start_date)} – ${mdShort(dep)}, ${parseD(dep).getFullYear()}</div></div>
+        <div class="col"><div class="k">Booking</div><div class="v">${bookingNo()}</div></div>
+        <div class="col"><div class="k">${vg?'Guest':'Guests'}</div><div class="v">${vg?guestLabel(vg,0)+' <span style="color:var(--muted);font-weight:500">· '+esc(trip.group)+'</span>':esc(trip.group)+' · '+trip.party}</div></div>
+        <div class="days"><div class="n">${dtg>0?dtg:(dtg===0?'0':'—')}</div><div class="l">${dtg>0?'days to go':dtg===0?'arriving':'past'}</div></div>
+      </div>
+      <div class="tiles">${tiles}</div>
+      <div class="faq"><h3>Questions about your trip?</h3><button onclick="P.go('details')">Get in touch</button></div>`;
+  }
+
+  function backBar(title,sub){return `<button class="back" onclick="P.go('home')">← All sections</button><h2 class="pagehd">${esc(title)}</h2><p class="pagesub">${esc(sub)}</p>`;}
+
+  function renderModule(kind){
+    const list=ACTS.filter(a=>portalOK(a)&&(kind==='massage'?isMassage(a):!isMassage(a)));
+    const intro=kind==='massage'?'Reserve a session at our open-air massage pavilion for any day of your stay.':'Browse and request add-on adventures for your trip. We confirm your guide and boat when approved.';
+    let cards=list.map(a=>{
+      const days=eligibleDays(a).map(c=>{
+        const r=reqFor(a.id,c.date);const cls=r?(r.status==='approved'?'ap':'rq'):'';
+        const lbl=`${wd(c.date)} ${mdShort(c.date)}${c.tag?' · '+c.tag:''}`;
+        return r?`<span class="daybtn ${cls}">${r.status==='approved'?'✓ ':'• '}${lbl}</span>`:`<button class="daybtn" onclick="P.request(${a.id},'${c.date}','${kind}')">＋ ${lbl}</button>`;
+      }).join('');
+      return `<div class="act"><div class="ph">${iconFor(a)}</div><div class="bd">
+        <div class="nm">${esc(a.name)}</div><div class="pr">${esc(a.priceText||'Priced on request')}</div>
+        <div class="ds">${esc(a.desc||'')}</div><div class="lbl">Request a day</div>
+        <div class="days">${days||'<span class="lbl">Not offered on this trip’s dates</span>'}</div></div></div>`;
+    }).join('');
+    if(!list.length)cards=`<div class="empty">Nothing available for this trip.</div>`;
+    const mine=[...myReq(kind).filter(r=>r.status==='requested'),...schedForGroup(kind)].sort((a,b)=>a.date<b.date?-1:1);
+    const rows=mine.length?mine.map(r=>{
+      const nm=r.name||(ACTS.find(a=>a.id===r.actId)||{}).name||'Activity';const crew=r.crew?` · ${esc(r.crew.boat)}`:'';
+      return `<div class="rq2"><div class="ic">${r.sched?'🗓️':'🕓'}</div>
+        <div class="m"><div class="t">${esc(nm)}</div><div class="d">${wd(r.date)} ${mdShort(r.date)} · ${r.guests||trip.party} guests${crew}</div></div>
+        <span class="st ${r.status}">${r.status==='requested'?'Requested':'Scheduled'}</span>
+        ${r.sched?'':`<button class="x" onclick="P.cancel(${r.id})" title="Withdraw">✕</button>`}</div>`;
+    }).join(''):'<div class="empty">No requests yet — pick a day above.</div>';
+    el('view').innerHTML=backBar(kind==='massage'?'Spa & Massage':'Adventures & Activities',intro)
+      +`<div class="banner">⏱ <span><b>Reviewed within 24 hours.</b> Pick a day on any card to request it; you’ll see the status update below.</span></div>
+      <div class="acts">${cards}</div>
+      <h3 class="sec">Your ${kind==='massage'?'spa':'activity'} requests</h3><div class="card">${rows}</div>`;
+  }
+
+  function renderBilling(){
+    const P=curPkg();const balanceDate=addDays(P.arrival_start_date,-120);
+    el('view').innerHTML=backBar('Payments & Billing','Your deposit, balance, and how taxes and add-ons are handled.')
+      +`<div class="grid2">
+        <div class="card due"><h2>Deposit — due now</h2>
+          <div class="kv"><span class="k">Deposit</span><span class="v big">$${depositDue().toLocaleString()}</span></div>
+          <div class="kv"><span class="k">${DEP.per_person?`$${depositUnit().toLocaleString()} × ${trip.party} guests`:'per reservation'}</span><span class="v" style="color:var(--muted);font-weight:500">Awaiting payment</span></div>
+          <div class="kv"><span class="k">Card processing fee (if by card)</span><span class="v">${DEP.cc_fee_pct||2.99}%</span></div>
+        </div>
+        <div class="card"><h2>Balance</h2>
+          <div class="kv"><span class="k">Due 120 days before arrival</span><span class="v">${mdShort(balanceDate)}, ${parseD(balanceDate).getFullYear()}</span></div>
+          <div class="kv"><span class="k">State &amp; city taxes and fees</span><span class="v">added to balance</span></div>
+          <div class="kv"><span class="k">Activity add-ons</span><span class="v">payable at checkout</span></div>
+        </div></div>
+      <div class="soon" style="padding-top:26px"><p>Online payment &amp; downloadable invoices arrive with the billing integration.</p></div>`;
+  }
+
+  // ---- Guest Details ----
+  const GENDERS=['','Male','Female','Nonbinary','Prefer not to say'];
+  let addAccess='invite';
+  // a "Yes" answer with no description is invalid; unanswered/No are fine
+  const qOk=g=>[['allergyHas','allergies'],['medicalHas','medical'],['eventHas','eventDesc']].every(([h,d])=>g[h]!=='yes'||!!(g[d]&&String(g[d]).trim()));
+  const gChecks=g=>[!!(g.first&&g.first.trim()), /.+@.+\..+/.test(g.email||''), !!(g.emerName&&g.emerPhone), !!g.license, qOk(g)];
+  const gDone=g=>gChecks(g).filter(Boolean).length;
+  const gComplete=g=>gChecks(g).every(Boolean);
+  function accessToggle(g){const a=g.access||'invite';return `<span class="acc">`
+    +`<button type="button" class="${a==='invite'?'on':''}" onclick="P.setAccess('${g.id}','invite')" title="This guest gets their own portal">Own portal</button>`
+    +`<button type="button" class="${a==='managed'?'on':''}" onclick="P.setAccess('${g.id}','managed')" title="You manage this guest">I’ll manage</button></span>`;}
+  const DETAILS_CSS=`<style>
+    .subhd{font:800 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint,#7f918d);margin:15px 0 4px;border-top:1px solid var(--line,#e0e0e0);padding-top:12px}
+    .qa{margin:9px 0}
+    .qa .qq{font:600 13px var(--sans);margin-bottom:5px}
+    .qa .qopts{display:flex;gap:18px;margin-bottom:6px}
+    .qa .qopts label{display:flex;align-items:center;gap:6px;font:600 12.5px var(--sans);cursor:pointer}
+    .qa .qopts input{accent-color:var(--accent,#0e7c6f);width:15px;height:15px}
+    .qa .qdesc{width:100%;min-height:42px}
+    .qa .req{color:var(--salmon,#c25e39)}
+    .qa .qreq{font:600 11.5px var(--sans);color:var(--salmon,#c25e39);margin-top:3px}
+    .qa .qdesc.invalid{border-color:var(--salmon,#c25e39)!important;background:var(--salmon-soft,#f4e5de)}
+  </style>`;
+  function qaBlock(g,key,q,hasField,descField,ph){
+    const has=g[hasField]||((g[descField]&&String(g[descField]).trim())?'yes':'');
+    const descId=key+'_d_'+g.id, reqId=key+'_r_'+g.id;
+    const empty=!(g[descField]&&String(g[descField]).trim());
+    const box=has==='yes'
+      ? `<textarea id="${descId}" class="qdesc${empty?' invalid':''}" placeholder="Please describe — ${ph}" oninput="P.qdesc('${g.id}','${descField}','${reqId}','${descId}',this.value)">${esc(g[descField])}</textarea>
+         <div id="${reqId}" class="qreq"${empty?'':' style="display:none"'}>Required — please add details.</div>`
+      : '';
+    return `<div class="qa"><div class="qq">${q}${has==='yes'?' <span class="req">*</span>':''}</div>
+      <div class="qopts">
+        <label><input type="radio" name="${key}_${g.id}" ${has==='yes'?'checked':''} onchange="P.qset('${g.id}','${hasField}','${descField}','yes')"> Yes</label>
+        <label><input type="radio" name="${key}_${g.id}" ${has==='no'?'checked':''} onchange="P.qset('${g.id}','${hasField}','${descField}','no')"> No</label></div>
+      ${box}</div>`;
+  }
+  function guestCard(g,i,lead,forceFull){
+    const isLead=!!g.isLead;const access=isLead?'self':(g.access||'invite');const full=forceFull||isLead||access==='managed';
+    const nm=isLead?(esc((g.first+' '+g.last).trim())||'Group lead'):guestLabel(g,i);
+    const head=`<div class="ghd"><span class="gn">${nm}</span>`
+      +`${isLead?'<span class="chip lead">Lead · you</span>':forceFull?'<span class="chip">Their portal</span>':accessToggle(g)}`
+      +`${isLead||forceFull?'':`<button class="rm" onclick="P.removeGuest('${g.id}')" title="Remove guest">Remove ✕</button>`}</div>`;
+    let f=`<div class="frow2">
+        <div class="fg"><label>First name</label><input value="${esc(g.first)}" oninput="P.gset('${g.id}','first',this.value)"></div>
+        <div class="fg"><label>Last name</label><input value="${esc(g.last)}" oninput="P.gset('${g.id}','last',this.value)"></div></div>
+      <div class="fg"><label>Email ${isLead?'':'<span style="color:var(--salmon)">*</span>'}</label>
+        <input type="email" value="${esc(g.email)}" placeholder="${isLead?'you@example.com':access==='invite'?'guest@example.com — needed to invite':'email (optional — you can use yours)'}" oninput="P.gset('${g.id}','email',this.value)">
+        ${isLead?'':`<button type="button" class="leadmail" onclick="P.useLeadEmail('${g.id}')">↳ Use group lead email</button><span class="fhint">A child without their own email can share the group lead’s.</span>`}</div>`;
+    if(full){
+      f+=`<div class="fg"><label>Phone</label><input value="${esc(g.phone)}" placeholder="(555) 123-4567" oninput="P.gset('${g.id}','phone',this.value)"></div>
+        <h4 class="subhd">Mailing address</h4>
+        <div class="frow2">
+          <div class="fg"><label>Country</label><input value="${esc(g.country||'United States')}" oninput="P.gset('${g.id}','country',this.value)"></div>
+          <div class="fg"><label>State / Province</label><input value="${esc(g.state)}" placeholder="State" oninput="P.gset('${g.id}','state',this.value)"></div></div>
+        <div class="frow2">
+          <div class="fg"><label>City</label><input value="${esc(g.city)}" placeholder="City" oninput="P.gset('${g.id}','city',this.value)"></div>
+          <div class="fg"><label>Zip / Postal code</label><input value="${esc(g.zip)}" placeholder="Zip" oninput="P.gset('${g.id}','zip',this.value)"></div></div>
+        <div class="fg"><label>Address 1</label><input value="${esc(g.addr1)}" placeholder="Street address" oninput="P.gset('${g.id}','addr1',this.value)"></div>
+        <div class="fg"><label>Address 2</label><input value="${esc(g.addr2)}" placeholder="Apt, suite, etc. (optional)" oninput="P.gset('${g.id}','addr2',this.value)"></div>
+        <h4 class="subhd">Sizing (for gear)</h4>
+        <div class="frow2">
+          <div class="fg"><label>Age</label><input type="number" min="0" max="120" value="${esc(g.age)}" oninput="P.gset('${g.id}','age',this.value)"></div>
+          <div class="fg"><label>Gender</label><select onchange="P.gset('${g.id}','gender',this.value)">${GENDERS.map(x=>`<option value="${esc(x)}" ${x===g.gender?'selected':''}>${x||'—'}</option>`).join('')}</select></div></div>
+        <div class="frow2">
+          <div class="fg"><label>Boot size</label><input value="${esc(g.boot)}" placeholder="e.g. 10" oninput="P.gset('${g.id}','boot',this.value)"></div>
+          <div class="fg"><label>Jacket size</label><select onchange="P.gset('${g.id}','jacket',this.value)">${['','XS','S','M','L','XL','XXL','XXXL'].map(x=>`<option value="${x}" ${x===(g.jacket||'')?'selected':''}>${x||'—'}</option>`).join('')}</select></div></div>
+        <h4 class="subhd">Emergency contact</h4>
+        <div class="frow2">
+          <div class="fg"><label>Contact name</label><input value="${esc(g.emerName)}" placeholder="Full name" oninput="P.gset('${g.id}','emerName',this.value)"></div>
+          <div class="fg"><label>Contact phone</label><input value="${esc(g.emerPhone)}" placeholder="Phone number" oninput="P.gset('${g.id}','emerPhone',this.value)"></div></div>
+        <div class="fg"><label>Relationship to guest</label><input value="${esc(g.emerRel)}" placeholder="e.g. spouse, parent" oninput="P.gset('${g.id}','emerRel',this.value)"></div>
+        <h4 class="subhd">A few questions</h4>
+        ${qaBlock(g,'allergy','Do you have any food allergies we need to be aware of?','allergyHas','allergies','e.g. shellfish, tree nuts')}
+        ${qaBlock(g,'medical','Do you have any medical condition we need to be aware of?','medicalHas','medical','anything our guides & kitchen should know')}
+        ${qaBlock(g,'event','Are you celebrating a special event?','eventHas','eventDesc','e.g. anniversary, birthday, retirement')}
+        ${isLead?'':'<span class="fhint">You’re managing this guest — their details are yours to complete.</span>'}`;
+    }else{
+      const st=g.invite||'none';const canSend=!!((g.first||g.last)&&/.+@.+\..+/.test(g.email||''));
+      f+=`<div class="inviterow">
+          <span class="inv ${st==='registered'?'reg':st==='sent'?'sent':'none'}">${st==='registered'?'Registered':st==='sent'?'Invited':'Not invited'}</span>
+          <button class="sendbtn" ${canSend?'':'disabled'} onclick="P.sendInvite('${g.id}')">${st==='none'?'✉ Send portal invite':'↻ Resend invite'}</button>
+          ${st==='sent'?`<button class="ghostbtn" onclick="P.markReg('${g.id}')">Simulate registered</button>`:''}
+          <span class="fhint">They get their own login and complete their profile, medical &amp; license.</span></div>`;
+    }
+    return `<div class="card">${head}<div class="frm">${f}</div></div>`;
+  }
+  function progressPanel(pr){
+    const rows=pr.guests.map((g,i)=>{
+      const isLead=!!g.isLead;const access=isLead?'self':(g.access||'invite');
+      const total=gChecks(g).length,done=gDone(g),pct=Math.round(done/total*100);
+      const status=isLead?'You · lead':access==='managed'?'You manage':(g.invite==='registered'?'Registered':g.invite==='sent'?'Invited':'Not invited');
+      const remind=(!isLead&&access==='invite'&&(g.invite==='sent'||g.invite==='registered')&&done<total)?`<button class="ghostbtn sm" onclick="P.remind('${g.id}')">Remind</button>`:'<span></span>';
+      const flag=!qOk(g)?' <span class="qflag" title="A ‘Yes’ answer is missing its description">⚠ needs detail</span>':'';
+      return `<div class="prow"><span class="pn">${guestLabel(g,i)}${isLead?' <span class="chip lead">Lead</span>':''}${flag}</span>`
+        +`<span class="pa">${status}</span><span class="pbar"><span style="width:${pct}%"></span></span>`
+        +`<span class="pc">${done}/${total}</span>${remind}</div>`;
+    }).join('');
+    const complete=pr.guests.filter(gComplete).length;
+    return `<div class="card"><style>.qflag{font:700 10px var(--mono);color:var(--salmon,#c25e39);background:var(--salmon-soft,#f4e5de);border-radius:20px;padding:2px 7px;white-space:nowrap}</style><h2>Guest progress · ${complete} of ${pr.guests.length} complete</h2>`
+      +`<div class="ptbl">${rows}</div>`
+      +`<p class="fhint" style="margin-top:10px">A guest is complete with a name, email, emergency contact, fishing license &amp; any “Yes” questions described. A <span class="qflag">⚠ needs detail</span> flag means a Yes answer is missing its description. Nudge anyone still in progress with <b>Remind</b>.</p></div>`;
+  }
+  function renderDetails(){
+    const pr=curProfile(),lead=pr.guests.find(g=>g.isLead)||pr.guests[0];const aa=addAccess;const vg=viewGuestObj();
+    if(vg){
+      el('view').innerHTML=DETAILS_CSS+backBar('Guest Details','Your profile & preferences.')
+        +`<div class="banner">👤 <span>Viewing <b>${guestLabel(vg,0)}</b>’s own portal — the profile this guest completes after signing in.</span></div>`
+        +`<div class="cards">${guestCard(vg,pr.guests.indexOf(vg),lead,true)}</div>`;
+      return;
+    }
+    el('view').innerHTML=DETAILS_CSS+backBar('Guest Details','Choose who gets their own portal and who you’ll manage — and track everyone’s progress.')
+      +progressPanel(pr)
+      +`<h3 class="sec">Your guest list</h3>`
+      +`<div class="cards">${pr.guests.map((g,i)=>guestCard(g,i,lead)).join('')}</div>`
+      +`<div class="card addrow"><div class="ghd"><span class="gn">Add a guest</span></div>
+          <div class="frm">
+            <div class="frow2"><div class="fg"><label>First name</label><input id="ag_first" placeholder="First"></div>
+              <div class="fg"><label>Last name</label><input id="ag_last" placeholder="Last"></div></div>
+            <div class="fg"><label>Email</label><input id="ag_email" type="email" placeholder="guest@example.com"></div>
+            <div class="fg"><label>Access</label><span class="acc" id="ag_acc">
+              <button type="button" class="${aa==='invite'?'on':''}" onclick="P.pickAddAccess('invite')">Own portal</button>
+              <button type="button" class="${aa==='managed'?'on':''}" onclick="P.pickAddAccess('managed')">I’ll manage</button></span></div>
+            <button class="addbtn" onclick="P.addGuest2()">＋ Add guest</button>
+          </div></div>`
+      +`<p class="savenote">Each <b>Own portal</b> guest gets their own username &amp; password via the invite (a magic link in production); a child without an email can share the group lead’s. Guests you <b>manage</b> have no separate login — you complete their details here. This prototype simulates invites; live email &amp; logins arrive with the backend.</p>`;
+  }
+
+  // ---- Flights In & Out ----
+  // ---- flight/travel lookups (shared with the Flight Information admin tool) ----
+  const SCHED_KEY='talon_flight_schedule_v1', HOTELS_KEY='talon_sitka_hotels_v1';
+  const SCHED_SEED={arr:[{no:'AS 65',time:'12:35'},{no:'AS 61',time:'14:15'},{no:'AS 67',time:'16:05'},{no:'AS 63',time:'09:40'}],dep:[{no:'AS 66',time:'13:10'},{no:'AS 62',time:'15:25'},{no:'AS 68',time:'11:50'},{no:'AS 64',time:'17:20'}]};
+  const HOTEL_SEED=['Aspen Suites Hotel Sitka','Sitka Hotel','Totem Square Hotel & Marina','Westmark Sitka','Super 8 by Wyndham Sitka','Longliner Lodge & Suites','Cascade Inn'];
+  function loadSchedule(){let s=null;try{s=JSON.parse(localStorage.getItem(SCHED_KEY));}catch(e){}if(!s||!s.arr){s=JSON.parse(JSON.stringify(SCHED_SEED));try{localStorage.setItem(SCHED_KEY,JSON.stringify(s));}catch(e){}}return s;}
+  function loadHotels(){let h=null;try{h=JSON.parse(localStorage.getItem(HOTELS_KEY));}catch(e){}if(!Array.isArray(h)||!h.length){h=HOTEL_SEED.slice();try{localStorage.setItem(HOTELS_KEY,JSON.stringify(h));}catch(e){}}return h;}
+  const fmtT=t=>{if(!t)return '';const[h,m]=String(t).split(':').map(Number);const ap=h<12?'AM':'PM';return (h%12||12)+':'+String(m).padStart(2,'0')+' '+ap;};
+  const FLIGHT_CSS=`<style>
+    .fmode{font:700 11.5px var(--sans);padding:6px 12px;background:var(--surface,#fff);color:var(--muted,#667);border:0;border-right:1px solid var(--line-2,#ccc);cursor:pointer}
+    .fmode:last-child{border-right:0}.fmode.on{background:var(--accent,#0e7c6f);color:#fff}
+    .fchk{display:flex;align-items:center;gap:8px;font:600 13px var(--sans);cursor:pointer;margin-bottom:4px}
+    .fchk input{width:16px;height:16px;accent-color:var(--accent,#0e7c6f)}
+    .gfname{font:800 16px var(--sans);margin:0 0 8px;display:flex;align-items:center;gap:8px}
+    .gflead{font:700 9px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent-deep,#0a544c);background:var(--accent-soft,#e2efeb);border-radius:20px;padding:2px 7px}
+  </style>`;
+  function legCardP(g,legName,defDate){
+    const leg=g[legName]||{};const mode=leg.mode||'commercial';const sched=loadSchedule()[legName]||[];
+    const inSched=sched.some(f=>f.no===leg.flightNo&&f.time===leg.time);const manual=mode==='commercial'&&(leg.manual||(leg.flightNo&&!inSched));
+    let inner='';
+    if(mode==='commercial'){
+      inner=`<div class="fg"><label>Alaska flight</label><select onchange="P.flegPick('${g.id}','${legName}',this.value)"><option value="">— choose flight —</option>`
+        +sched.map(f=>`<option value="${esc(f.no)}|${esc(f.time)}" ${(!manual&&leg.flightNo===f.no&&leg.time===f.time)?'selected':''}>${esc(f.no)} · ${esc(fmtT(f.time))}</option>`).join('')
+        +`<option value="__other" ${manual?'selected':''}>Other / manual…</option></select></div>`
+        +(manual?`<div class="frow2"><div class="fg"><label>Airline</label><input value="${esc(leg.airline||'Alaska Airlines')}" oninput="P.fleg('${g.id}','${legName}','airline',this.value)"></div><div class="fg"><label>Flight #</label><input value="${esc(leg.flightNo)}" placeholder="AS 65" oninput="P.fleg('${g.id}','${legName}','flightNo',this.value)"></div></div><div class="fg"><label>${legName==='arr'?'Arrives':'Departs'} SIT</label><input type="time" value="${esc(leg.time)}" oninput="P.fleg('${g.id}','${legName}','time',this.value)"></div>`:'')
+        +`<div class="fg"><label>Date</label><input type="date" value="${esc(leg.date||defDate)}" oninput="P.fleg('${g.id}','${legName}','date',this.value)"></div>`;
+    }else{
+      inner=`<div class="frow2"><div class="fg"><label>Tail number</label><input value="${esc(leg.tail)}" placeholder="N123AB" oninput="P.fleg('${g.id}','${legName}','tail',this.value)"></div><div class="fg"><label>Est. ${legName==='arr'?'arrival':'departure'}</label><input type="time" value="${esc(leg.est||leg.time)}" oninput="P.fleg('${g.id}','${legName}','est',this.value)"></div></div><div class="fg"><label>Date</label><input type="date" value="${esc(leg.date||defDate)}" oninput="P.fleg('${g.id}','${legName}','date',this.value)"></div>`;
+    }
+    return `<div class="card" style="padding:12px 14px"><h2 style="font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);margin:0 0 9px">${legName==='arr'?'🛬 Arrival — into Sitka':'🛫 Departure — out of Sitka'}</h2>
+      <div style="display:inline-flex;border:1px solid var(--line-2,#ccc);border-radius:8px;overflow:hidden;margin-bottom:10px"><button class="fmode ${mode==='commercial'?'on':''}" onclick="P.flegMode('${g.id}','${legName}','commercial')">Commercial</button><button class="fmode ${mode==='jet'?'on':''}" onclick="P.flegMode('${g.id}','${legName}','jet')">Private jet</button></div>
+      ${inner}</div>`;
+  }
+  function stayCardP(g){
+    const hotels=loadHotels();
+    const block=(which,label,st)=>{st=st||{};const on=!!st.on;
+      return `<label class="fchk"><input type="checkbox" ${on?'checked':''} onchange="P.fstay('${g.id}','${which}','on',this.checked)"> ${label}</label>`
+        +(on?`<div class="frow2" style="margin:2px 0 10px 22px"><div class="fg"><label>Sitka hotel</label><select onchange="P.fstay('${g.id}','${which}','hotel',this.value)"><option value="">— choose —</option>${hotels.map(h=>`<option ${st.hotel===h?'selected':''}>${esc(h)}</option>`).join('')}<option value="__other" ${st.hotel&&!hotels.includes(st.hotel)?'selected':''}>Other…</option></select>${(st.hotel&&!hotels.includes(st.hotel))?`<input style="margin-top:4px" value="${esc(st.hotel==='__other'?'':st.hotel)}" placeholder="Hotel name" oninput="P.fstay('${g.id}','${which}','hotel',this.value)">`:''}</div><div class="fg"><label>Nights</label><input type="number" min="1" max="14" value="${esc(st.nights||1)}" oninput="P.fstay('${g.id}','${which}','nights',this.value)"></div></div>`:'');
+    };
+    return `<div class="card" style="padding:12px 14px"><h2 style="font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);margin:0 0 4px">🏨 Staying in Sitka?</h2><p style="font-size:12px;color:var(--muted);margin:0 0 9px">Arriving before the trip or staying after? Let us know where you’ll be.</p>${block('early','Arriving in Sitka early',g.sitkaEarly)}${block('late','Staying in Sitka later',g.sitkaLate)}</div>`;
+  }
+  function renderFlights(){
+    const guests=scopeGuests();const p=curPkg();const arrDate=p.arrival_start_date,depDate=addDays(p.arrival_start_date,+p.nights);
+    el('view').innerHTML=FLIGHT_CSS+backBar('Flights In & Out','Each traveler’s arrival & departure — commercial or private jet — plus any early or late Sitka hotel stay. We time your floatplane transfer from these.')
+      +`<div class="banner">🛩️ <span><b>Sitka (SIT) is your gateway.</b> Talon’s floatplane transfer is scheduled from these flight times — please keep them current.</span></div>`
+      +guests.map(g=>`<div style="margin-bottom:18px"><div class="gfname">${esc((g.first+' '+g.last).trim())||'Guest'}${g.isLead?' <span class="gflead">Lead</span>':''}</div><div class="grid2">${legCardP(g,'arr',arrDate)}${legCardP(g,'dep',depDate)}</div>${stayCardP(g)}</div>`).join('')
+      +`<p class="savenote">Flight details save automatically. We’ll confirm your transfer window by email once your flights are locked in.</p>`;
+  }
+
+  // ---- Fishing License ----
+  const FISH_PROC=['','Vacuum-sealed & flash frozen','Smoked','Canned','Combination','Decide at the lodge'];
+  const FISH_SHIP=['','Ship to my home','I’ll take it with me','Donate my catch','Decide at the lodge'];
+  function licRow(g,i){
+    const l=g.license,isImg=l&&l.type&&/^image\//.test(l.type);
+    const thumb=l?(isImg?`<img class="thumb" src="${l.dataUrl}" alt="">`:`<div class="thumb" style="display:grid;place-items:center;font-size:18px">📄</div>`)
+      :`<div class="thumb" style="display:grid;place-items:center;font-size:15px;color:var(--faint)">—</div>`;
+    return `<div class="lic">${thumb}
+      <div class="who"><div class="nm">${guestLabel(g,i)}${g.isLead?'<span class="chip lead">Lead</span>':''}</div>
+        <div class="sub">${l?esc(l.name)+' · uploaded '+esc(l.uploadedAt):'No license on file'}</div></div>
+      ${l?`<button class="x" onclick="P.licenseRemove('${g.id}')" title="Remove">✕</button>`:''}
+      <label class="filebtn">${l?'Replace':'Upload'}<input type="file" accept="image/*,application/pdf" onchange="P.licenseUpload('${g.id}',this)"></label>
+    </div>`;
+  }
+  function renderLicense(){
+    const pr=curProfile(),fish=pr.fish,vg=viewGuestObj();const guests=vg?[vg]:pr.guests;
+    el('view').innerHTML=backBar('Fishing License','Upload each guest’s Alaska sport-fishing license and tell us how you’d like your catch processed and shipped home.')
+      +`<div class="banner">📄 <span><b>Everyone 16 and older needs an Alaska sport-fishing license.</b> Buy online at adfg.alaska.gov, then upload each license here.</span></div>
+        <div class="card"><h2>Licenses</h2>${guests.map((g,i)=>licRow(g,pr.guests.indexOf(g))).join('')}
+          <p class="savenote">Stored on this device for the demo. In production, licenses upload to secure object storage (S3) — never kept in the browser.</p></div>
+        <div class="card" style="margin-top:14px"><h2>Fish processing &amp; shipping</h2><div class="frm">
+          <div class="frow2">
+            <div class="fg"><label>Processing</label><select onchange="P.fishset('processing',this.value)">${FISH_PROC.map(x=>`<option value="${esc(x)}" ${x===fish.processing?'selected':''}>${x||'Select…'}</option>`).join('')}</select></div>
+            <div class="fg"><label>Shipping</label><select onchange="P.fishset('shipping',this.value)">${FISH_SHIP.map(x=>`<option value="${esc(x)}" ${x===fish.shipping?'selected':''}>${x||'Select…'}</option>`).join('')}</select></div>
+          </div>
+          <div class="fg"><label>Shipping address</label><textarea placeholder="Where should we ship your processed catch?" oninput="P.fishset('address',this.value)">${esc(fish.address)}</textarea></div>
+          <div class="fg"><label>Notes for the processing team</label><input value="${esc(fish.notes)}" placeholder="Portion sizes, gifts to split out, etc." oninput="P.fishset('notes',this.value)"></div>
+        </div></div>`;
+  }
+
+  function renderAgenda(){
+    const cols=columns();const sched=schedForGroup().concat(homeBoatItems()).concat(islandItems());const mine=myFullName();
+    const T=load('talon_team_v1',null);
+    const gname=ids=>(ids&&T)?ids.map(id=>{const g=(T.guides||[]).find(x=>x.id===id);return g?g.name.split(' ')[0]:'';}).filter(Boolean).join(' & '):'';
+    const icon=s=>s.islandOnly?'🏝️':/spa/i.test(s.name)?'🧖':s.kind==='massage'?'💆':/whale/i.test(s.name)?'🐋':/kayak/i.test(s.name)?'🛶':/atv/i.test(s.name)?'🏍️':/plane/i.test(s.name)?'🛩️':/saltwater/i.test(s.name)?'🐟':'🎣';
+    const byDate={};sched.forEach(s=>{(byDate[s.date]=byDate[s.date]||[]).push(s);});
+    const days=cols.map(c=>{
+      const items=(byDate[c.date]||[]).slice().sort((a,b)=>(a.boatOnly?0:1)-(b.boatOnly?0:1));
+      const rows=items.length?items.map(s=>{
+        let sub;const fn=a=>(a||[]).map(n=>esc(String(n).split(' ')[0])).join(', ');
+        if(s.islandOnly){sub='No boat or activity booked — a free day to explore';}
+        else if(s.boatOnly){sub=mine?'Aboard '+esc(s.crew.boat):esc(s.crew.boat)+' · '+s.guests+' guest'+(s.guests>1?'s':'')+((s.names&&s.names.length)?' · '+fn(s.names):'');}
+        else{let who=s.assignee?esc(s.assignee):(s.crew?esc(s.crew.boat):(gname(s.guideIds)?'with '+esc(gname(s.guideIds)):''));if(s.assigneeType==='pilot'&&gname(s.guideIds))who+=' · guide '+esc(gname(s.guideIds));const t=s.time?esc(s.time)+' · ':'';const names=(!mine&&s.guestNames&&s.guestNames.length)?' · '+fn(s.guestNames):'';sub=`${t}${s.guests} guest${s.guests>1?'s':''}${names}${who?' · '+who:''}`;}
+        return `<div class="ag-item"><span class="ag-ic">${icon(s)}</span><div class="ag-m"><div class="ag-t">${esc(s.name)}</div><div class="ag-s">${sub}</div></div>${s.islandOnly?'<span class="ag-tag">Free</span>':'<span class="st approved">Confirmed</span>'}</div>`;
+      }).join(''):`<div class="ag-empty">${c.type==='travel'?'Travel day':'No activity scheduled yet'}</div>`;
+      return `<div class="ag-day"><div class="ag-date"><span class="ag-wd">${wd(c.date)}</span> ${mdShort(c.date)}<span class="ag-tag ${c.type}">${c.tag||c.type}</span></div><div class="ag-body">${rows}</div></div>`;
+    }).join('');
+    el('view').innerHTML=backBar('Daily agenda','Your confirmed day-by-day schedule. Activities appear here once the lodge approves your requests.')
+      +`<div class="agenda">${days}</div>`
+      +(sched.length?'':`<p class="savenote">Nothing confirmed yet. Request activities in <b>Adventures</b> or <b>Spa &amp; Massage</b> — once the lodge approves them, they appear on this agenda.</p>`);
+  }
+  function renderSoon(ic,title,desc,chips){
+    el('view').innerHTML=backBar(title,'')+`<div class="card"><div class="soon">
+      <div class="ic">${ic}</div><h3>${esc(title)}</h3><p>${esc(desc)}</p>
+      <div class="chips">${(chips||[]).map(c=>`<span>${esc(c)}</span>`).join('')}</div>
+      <p style="margin-top:16px;color:var(--faint);font-size:12px">Coming next in the portal build.</p></div></div>`;
+  }
+
+  window.P={
+    go(id){PAGE=id;renderShell();window.scrollTo({top:0,behavior:'smooth'});},
+    setPkg(){trip.pkgId=el('d_pkg').value;trip.viewGuest='';saveTrip();renderShell();},
+    setGroup(){trip.group=el('d_group').value;trip.viewGuest='';saveTrip();renderShell();},
+    setGuest(){trip.viewGuest=el('d_guest').value||'';saveTrip();renderShell();},
+    request(actId,date,kind){const a=ACTS.find(x=>x.id===actId);if(!a||reqFor(actId,date))return;REQ.push({id:rid++,group:trip.group,actId,name:a.name,date,guests:trip.party,kind,status:'requested',created:TODAY});saveReq();renderView();toast('Requested · '+a.name+' — we’ll confirm within 24 hours');},
+    cancel(id){REQ=REQ.filter(r=>r.id!==id);saveReq();renderView();toast('Request withdrawn');},
+    // guest details
+    setAccess(id,a){const pr=curProfile(),g=pr.guests.find(x=>x.id===id);if(g&&!g.isLead){g.access=a;if(a==='managed')g.invite='none';saveProf();renderView();toast(a==='managed'?'You’ll manage this guest':'This guest gets their own portal');}},
+    remind(id){const pr=curProfile(),g=pr.guests.find(x=>x.id===id);if(g)toast('Reminder sent to '+(g.email||g.first||'guest'));},
+    pickAddAccess(a){addAccess=a;const seg=el('ag_acc');if(seg)[...seg.children].forEach((b,i)=>b.classList.toggle('on',(i===0)===(a==='invite')));},
+    addGuest2(){const f=((el('ag_first')||{}).value||'').trim(),l=((el('ag_last')||{}).value||'').trim(),e=((el('ag_email')||{}).value||'').trim();if(!f&&!l){toast('Enter the guest’s name');return;}if(addAccess==='invite'&&!/.+@.+\..+/.test(e)){toast('Add an email to invite this guest');return;}curProfile().guests.push(newGuest({first:f,last:l,email:e,access:addAccess}));saveProf();renderView();toast('Guest added');},
+    gset(id,field,val){const pr=curProfile(),g=pr.guests.find(x=>x.id===id);if(g){g[field]=val;saveProf();}},
+    qset(id,hasField,descField,val){const pr=curProfile(),g=pr.guests.find(x=>x.id===id);if(!g)return;g[hasField]=val;if(val==='no')g[descField]='';saveProf();renderView();},
+    qdesc(id,descField,reqId,descId,val){const pr=curProfile(),g=pr.guests.find(x=>x.id===id);if(!g)return;g[descField]=val;saveProf();const empty=!val.trim();const req=document.getElementById(reqId),ta=document.getElementById(descId);if(req)req.style.display=empty?'':'none';if(ta)ta.classList.toggle('invalid',empty);},
+    sendInvite(id){const pr=curProfile(),g=pr.guests.find(x=>x.id===id);if(!g)return;if(!(g.first||g.last)||!/.+@.+\..+/.test(g.email||'')){toast('Add a name and email first');return;}g.invite='sent';saveProf();renderView();toast('Invite sent to '+g.email);},
+    markReg(id){const pr=curProfile(),g=pr.guests.find(x=>x.id===id);if(g){g.invite='registered';saveProf();renderView();toast((g.first||'Guest')+' registered (simulated)');}},
+    removeGuest(id){const pr=curProfile(),g=pr.guests.find(x=>x.id===id);if(!g||g.isLead)return;pr.guests=pr.guests.filter(x=>x.id!==id);saveProf();renderView();toast('Guest removed');},
+    useLeadEmail(id){const pr=curProfile(),lead=pr.guests.find(g=>g.isLead),g=pr.guests.find(x=>x.id===id);if(lead&&g){g.email=lead.email||'';saveProf();renderView();}},
+    // flights
+    fset(leg,field,val){const pr=curProfile();(pr.flights[leg]=pr.flights[leg]||{})[field]=val;saveProf();},
+    // fishing license
+    fishset(field,val){const pr=curProfile();pr.fish[field]=val;saveProf();},
+    licenseUpload(id,input){const f=input.files&&input.files[0];if(!f)return;if(f.size>5*1024*1024){toast('File too large — 5 MB max');input.value='';return;}const r=new FileReader();r.onload=()=>{const pr=curProfile(),g=pr.guests.find(x=>x.id===id);if(g){g.license={name:f.name,type:f.type||'',dataUrl:r.result,uploadedAt:TODAY};saveProf();renderView();toast('License uploaded');}};r.readAsDataURL(f);},
+    licenseRemove(id){const pr=curProfile(),g=pr.guests.find(x=>x.id===id);if(g){g.license=null;saveProf();renderView();toast('License removed');}},
+    // per-guest flights/travel (same model as the Flight Information admin tool)
+    fleg(gid,leg,field,val){const pr=curProfile(),g=pr.guests.find(x=>x.id===gid);if(!g)return;(g[leg]=g[leg]||{})[field]=val;saveProf();},
+    flegMode(gid,leg,mode){const pr=curProfile(),g=pr.guests.find(x=>x.id===gid);if(!g)return;(g[leg]=g[leg]||{}).mode=mode;saveProf();renderView();},
+    flegPick(gid,leg,val){const pr=curProfile(),g=pr.guests.find(x=>x.id===gid);if(!g)return;const L=g[leg]=g[leg]||{};L.mode='commercial';if(val==='__other'){L.manual=true;L.flightNo='';L.time='';L.airline=L.airline||'Alaska Airlines';}else if(val===''){L.manual=false;L.flightNo='';L.time='';}else{const[no,time]=val.split('|');L.manual=false;L.airline='Alaska Airlines';L.flightNo=no;L.time=time;}saveProf();renderView();},
+    fstay(gid,which,field,val){const pr=curProfile(),g=pr.guests.find(x=>x.id===gid);if(!g)return;const k=which==='early'?'sitkaEarly':'sitkaLate';const st=g[k]=g[k]||{};st[field]=(field==='nights'?(+val||1):(field==='on'?!!val:val));saveProf();if(field==='on'||field==='hotel')renderView();}
+  };
+  renderShell();
+})();
+</script>
+</body></html>

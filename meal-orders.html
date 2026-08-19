@@ -1,0 +1,227 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Meal & Beverage Orders</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 22px rgba(18,42,43,.06)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--gold:#e0b45e}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--gold:#b9892b}
+  *{box-sizing:border-box}
+  .rm{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(14px,3vw,30px);-webkit-font-smoothing:antialiased}
+  .rm .wrap{max-width:1080px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(20px,3vw,28px)/1.1 var(--sans);letter-spacing:-.02em;margin:0 0 4px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:13.5px;max-width:90ch}
+  .bar{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);padding:13px 16px;margin-bottom:14px}
+  .fld{display:flex;flex-direction:column;gap:5px}.fld label{font:700 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  select,input,textarea{font:600 13.5px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:8px 10px}
+  select:focus,input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+  .viewseg{display:inline-flex;border:1px solid var(--line-2);border-radius:9px;overflow:hidden;margin-bottom:16px;background:var(--surface);box-shadow:var(--shadow)}
+  .vseg{font:700 12.5px var(--sans);padding:9px 16px;background:var(--surface);color:var(--muted);border:0;border-right:1px solid var(--line-2);cursor:pointer}.vseg:last-child{border-right:0}.vseg.on{background:var(--accent);color:#fff}
+  .panel{background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+  .empty{padding:34px 16px;text-align:center;color:var(--muted);font-size:14px}
+  .guest{border-bottom:1px solid var(--line);padding:14px 16px}.guest:last-child{border-bottom:0}
+  .gname{font:800 15px var(--sans);margin-bottom:10px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .gname .boat{font:600 11px var(--mono);color:var(--accent-deep);background:var(--accent-soft);border-radius:20px;padding:2px 9px}
+  .gname .boat.off{color:var(--gold);background:var(--gold-soft)}
+  .cols{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+  @media(max-width:820px){.cols{grid-template-columns:1fr}}
+  .col h4{font:700 10.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin:0 0 7px}
+  .col .sub{font:700 10px var(--mono);color:var(--accent);margin:9px 0 4px}
+  .opt{display:flex;align-items:center;gap:8px;font:500 13px var(--sans);padding:3px 0;cursor:pointer}
+  .opt input{width:16px;height:16px;accent-color:var(--accent);flex:none}
+  .bevrow{display:flex;align-items:center;gap:8px;padding:2px 0}
+  .bevrow .bn{font-size:12.5px;flex:1;min-width:0}
+  .bevrow .cat{font:700 9px var(--mono);color:var(--faint);text-transform:uppercase}
+  .stepper{display:inline-flex;align-items:center;border:1px solid var(--line-2);border-radius:8px;overflow:hidden}
+  .stepper button{border:0;background:var(--surface);color:var(--ink);width:26px;height:28px;cursor:pointer;font-size:15px}
+  .stepper button:hover{background:var(--surface-2)}
+  .stepper .q{width:30px;text-align:center;font:700 13px var(--mono);border-left:1px solid var(--line-2);border-right:1px solid var(--line-2);line-height:28px}
+  .notes{margin-top:10px}.notes textarea{width:100%;min-height:38px}
+  .ordsum{font:600 11.5px var(--sans);color:var(--muted);margin-top:6px}
+  /* reports */
+  .report .rhead{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:2px solid var(--accent);flex-wrap:wrap}
+  .report .rhead .btn{margin-left:auto}
+  .rtitle{font:800 19px var(--sans)}.rsub{font:600 12.5px var(--sans);color:var(--muted);margin-top:2px}
+  .rbody{padding:6px 18px 18px}
+  .rt{width:100%;border-collapse:collapse;margin-bottom:6px}
+  .rt th{font:700 10px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+  .rt td{padding:8px 10px;border-bottom:1px solid var(--line);font-size:13.5px;vertical-align:top}
+  .rt .num{text-align:right;font:700 13.5px var(--mono);color:var(--accent-deep)}
+  .rt .mut{color:var(--faint);text-align:center;padding:16px}
+  .boatblk{margin:14px 0}
+  .boatblk h3{font:800 15px var(--sans);margin:0 0 2px;display:flex;align-items:baseline;gap:8px}
+  .boatblk h3 .c{font:600 12px var(--sans);color:var(--muted)}
+  .btn{font:700 12.5px var(--sans);border-radius:8px;padding:9px 14px;cursor:pointer;border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+  .btn:hover{background:var(--surface-2)}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .schema{margin-top:4px;font-size:12px;color:var(--muted);background:var(--surface);border:1px dashed var(--line-2);border-radius:10px;padding:11px 14px;line-height:1.6}
+  .schema b{color:var(--accent-deep)} .schema code{font-family:var(--mono);font-size:.9em;color:var(--ink)}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--accent-deep);color:#fff;font:600 13px var(--sans);padding:9px 16px;border-radius:9px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s;z-index:5}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media print{html,body{background:#fff}.rm{padding:0}.eyebrow,.lede,.bar,.viewseg,.schema,.toast,.no-print{display:none!important}h1{font-size:16px;margin:0 0 10px}.panel{box-shadow:none;border-color:#bbb}.report .rhead{border-color:#333}.rt,.boatblk{break-inside:avoid}}
+</style>
+<div class="rm"><div class="wrap">
+  <p class="eyebrow">Operate · Food & beverage</p>
+  <h1>Meal &amp; Beverage Orders</h1>
+  <p class="lede">Each night, take the next morning's <b>breakfast</b> and the day's <b>beverage</b> order — <b>per guest</b>. Night 1 → Day 1 (first activity day). Breakfast is free choice from that day's menu; beverages roll onto the <b>boat‑stocking list</b> by whichever boat the guest is on that day.</p>
+
+  <div class="bar">
+    <div class="fld"><label>Package</label><select id="pkg" onchange="MO.pick()"></select></div>
+    <div class="fld"><label>Group</label><select id="grp" onchange="MO.pick()"><option value="">—</option></select></div>
+    <div class="fld"><label>Day (ordered night before)</label><select id="day" onchange="MO.pick()"><option value="">—</option></select></div>
+  </div>
+
+  <div class="viewseg" id="viewseg">
+    <button class="vseg on" data-v="order" onclick="MO.setView('order')">Take order</button>
+    <button class="vseg" data-v="kitchen" onclick="MO.setView('kitchen')">Kitchen sheet</button>
+    <button class="vseg" data-v="boats" onclick="MO.setView('boats')">Boat stocking</button>
+  </div>
+
+  <div id="work"></div>
+
+  <div class="schema">Maps to Andy's schema → per‑person <b>meal_order</b> (<code>trip_id, group, person, day, breakfast_item_ids[], notes</code>) + <b>beverage_order</b> (<code>person, day, beverage_id, qty</code>). Boat stocking aggregates beverage_order by the person's boat assignment for that day.</div>
+</div></div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+  const PKEY='talon_packages_v1', PROF='talon_portal_profile', MENU='talon_menu_v1', BEV='talon_beverages_v1', OKEY='talon_meal_orders_v1', TEAM='talon_team_v1', SEATK='talon_boat_seating', DAILYK='talon_boat_daily';
+  const PKG_SEED=[{id:'sp1',series:'Standard',category:'Sportfishing',status:'published',arrival_start_date:'2027-05-24',nights:4}];
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1500);}
+  const parseD=s=>{const[y,m,d]=(s||'').split('-').map(Number);return new Date(y,(m||1)-1,d||1);};
+  const addDays=(s,n)=>{const dt=parseD(s);dt.setDate(dt.getDate()+n);return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');};
+  const MOn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const fmtD=s=>{const d=parseD(s);return MOn[d.getMonth()]+' '+d.getDate();};
+  const fmtDW=s=>{const d=parseD(s);return DOW[d.getDay()]+' '+MOn[d.getMonth()]+' '+d.getDate();};
+
+  function loadPkgs(){try{const p=JSON.parse(localStorage.getItem(PKEY));if(Array.isArray(p)&&p.length)return p;}catch(e){}return PKG_SEED;}
+  const PKGS=loadPkgs().filter(p=>(!p.status||p.status==='published')&&p.arrival_start_date&&p.nights).sort((a,b)=>a.arrival_start_date<b.arrival_start_date?-1:1);
+  const pkgById=id=>PKGS.find(p=>p.id===id);
+  const pkgLabel=p=>{const dep=addDays(p.arrival_start_date,+p.nights);return fmtD(p.arrival_start_date)+'–'+fmtD(dep)+' · '+(+p.nights)+'N · '+(p.series?p.series+' ':'')+(p.category||'Sportfishing');};
+  const loadProfiles=()=>{try{return JSON.parse(localStorage.getItem(PROF))||{};}catch(e){return {};}};
+  function groupsForPkg(pkgId){const pr=loadProfiles(),out=[];Object.keys(pr).forEach(k=>{const i=k.lastIndexOf('|');if(i>0&&k.slice(i+1)===pkgId)out.push(k.slice(0,i));});return out.sort();}
+  const groupGuests=(group,pkgId)=>{const pr=loadProfiles(),k=group+'|'+pkgId;return (pr[k]&&pr[k].guests?pr[k].guests:[]).map(g=>((g.first||'')+' '+(g.last||'')).trim()).filter(Boolean);};
+  const loadMenu=()=>{try{return JSON.parse(localStorage.getItem(MENU))||[];}catch(e){return [];}};
+  const loadBev=()=>{try{return JSON.parse(localStorage.getItem(BEV))||[];}catch(e){return [];}};
+  const loadTeam=()=>{try{return JSON.parse(localStorage.getItem(TEAM))||{};}catch(e){return {};}};
+  const boatName=id=>{const b=(loadTeam().boats||[]).find(x=>x.id===id);return b?b.name:'';};
+  const loadSeat=()=>{try{return JSON.parse(localStorage.getItem(SEATK))||{};}catch(e){return {};}};
+  const loadDaily=()=>{try{return JSON.parse(localStorage.getItem(DAILYK))||{};}catch(e){return {};}};
+  // guest's boat on a date: per-day override wins (''=off), else the seated home boat
+  function guestBoatOn(group,name,date,arrival){const key=group+'::'+name;const daily=loadDaily()[date];
+    if(daily&&Object.prototype.hasOwnProperty.call(daily,key))return daily[key]||'';
+    return (loadSeat()[arrival]||{})[key]||'';}
+
+  const loadOrders=()=>{try{return JSON.parse(localStorage.getItem(OKEY))||{};}catch(e){return {};}};
+  function saveOrders(m){try{const j=JSON.stringify(m);localStorage.setItem(OKEY,j);localStorage.setItem(OKEY+'__bak',j);return true;}catch(e){return false;}}
+  const oKey=(pkgId,g,name,day)=>pkgId+'::'+g+'::'+name+'::'+day;
+  function getOrder(g,name,day){const m=loadOrders();return m[oKey(S.pkgId,g,name,day)]||{pkgId:S.pkgId,group:g,guest:name,day,breakfast:[],beverages:{},notes:''};}
+  function putOrder(o){const m=loadOrders();m[oKey(o.pkgId,o.group,o.guest,o.day)]=o;saveOrders(m);}
+
+  // days available: Day 1..nights (each morning). activity/boat days are Day 1..nights-1
+  function daysFor(p){const out=[];for(let i=1;i<=(+p.nights);i++)out.push({day:'Day '+i,n:i,date:addDays(p.arrival_start_date,i),activity:i<(+p.nights)});return out;}
+  const dayNum=d=>{const m=/([0-9]+)/.exec(d||'');return m?+m[1]:0;};
+
+  let S={pkgId:'',group:'',day:''}, VIEW='order';
+  function initPkg(){el('pkg').innerHTML='<option value="">Select a package…</option>'+PKGS.map(p=>`<option value="${p.id}">${esc(pkgLabel(p))}</option>`).join('');if(PKGS.length===1)el('pkg').value=PKGS[0].id;}
+  function refresh(){const p=pkgById(S.pkgId);const grps=S.pkgId?groupsForPkg(S.pkgId):[];
+    el('grp').innerHTML='<option value="">'+(S.pkgId?(grps.length?'Select a group…':'— load Test data —'):'—')+'</option>'+grps.map(g=>`<option ${g===S.group?'selected':''}>${esc(g)}</option>`).join('');
+    const days=p?daysFor(p):[];
+    el('day').innerHTML='<option value="">'+(S.pkgId?'Select a day…':'—')+'</option>'+days.map(d=>`<option value="${d.day}" ${d.day===S.day?'selected':''}>${d.day} · ${fmtDW(d.date)}${d.activity?'':' · departure'}</option>`).join('');
+    if(!grps.includes(S.group))S.group='';if(!days.some(d=>d.day===S.day))S.day='';}
+
+  function dayInfo(){const p=pkgById(S.pkgId);return (daysFor(p)||[]).find(d=>d.day===S.day);}
+
+  window.MO={
+    pick(){S.pkgId=el('pkg').value;S.group=el('grp').value;S.day=el('day').value;refresh();S.group=el('grp').value;S.day=el('day').value;render();},
+    setView(v){VIEW=v;[...document.querySelectorAll('#viewseg .vseg')].forEach(b=>b.classList.toggle('on',b.getAttribute('data-v')===v));render();},
+    toggleBk(g,name,day,item,on){const o=getOrder(g,name,day);const s=new Set(o.breakfast);if(on)s.add(item);else s.delete(item);o.breakfast=[...s];putOrder(o);const c=el('sum_'+cssId(name));if(c)c.textContent=orderSummary(o);},
+    bev(g,name,day,bev,delta){const o=getOrder(g,name,day);const q=Math.max(0,(+o.beverages[bev]||0)+delta);if(q)o.beverages[bev]=q;else delete o.beverages[bev];putOrder(o);
+      const qe=el('q_'+cssId(name)+'_'+cssId(bev));if(qe)qe.textContent=q;const c=el('sum_'+cssId(name));if(c)c.textContent=orderSummary(o);},
+    notes(g,name,day,v){const o=getOrder(g,name,day);o.notes=v;putOrder(o);}
+  };
+  const cssId=s=>String(s).replace(/[^a-z0-9]/gi,'');
+  function orderSummary(o){const b=o.breakfast.length;const bev=Object.values(o.beverages).reduce((s,q)=>s+(+q||0),0);return `${b} breakfast item${b===1?'':'s'} · ${bev} beverage${bev===1?'':'s'}`;}
+
+  function render(){
+    const w=el('work');
+    if(!(S.pkgId&&S.day&&(VIEW!=='order'||S.group))){
+      w.innerHTML='<div class="panel"><div class="empty">Pick a <b>package</b>, '+(VIEW==='order'?'<b>group</b>, ':'')+'and <b>day</b>'+(VIEW==='order'?' to take orders':' to build the sheet')+'.<br><span style="font-size:12.5px">No groups? Open <b>Test data</b> first.</span></div></div>';
+      return;
+    }
+    if(VIEW==='order')return renderOrder();
+    if(VIEW==='kitchen')return renderKitchen();
+    return renderBoats();
+  }
+
+  function renderOrder(){
+    const w=el('work');const di=dayInfo();const p=pkgById(S.pkgId);const arrival=p.arrival_start_date;
+    const menu=loadMenu().filter(m=>m.type==='Breakfast'&&m.day===S.day);
+    const reg=menu.filter(m=>m.kind==='Regular'),cus=menu.filter(m=>m.kind==='Custom');
+    const bev=loadBev();const guests=groupGuests(S.group,S.pkgId);
+    const bevByCat={};bev.forEach(b=>{(bevByCat[b.category]=bevByCat[b.category]||[]).push(b);});
+    const cats=['Beer','Seltzer','Non-alcoholic','Mixer','Supplies','Other'].filter(c=>bevByCat[c]);
+    w.innerHTML=`<div class="panel"><div style="padding:12px 16px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap"><b>${esc(S.group)}</b><span style="color:var(--muted);font-size:12.5px">· ${esc(S.day)} breakfast · ${esc(fmtDW(di.date))}${di.activity?' · boat day':' · departure (no boats)'}</span></div>`
+      +guests.map(name=>{const o=getOrder(S.group,name,S.day);const bset=new Set(o.breakfast);
+        const boat=di.activity?guestBoatOn(S.group,name,di.date,arrival):'';const bn=boat?boatName(boat):'';
+        return `<div class="guest"><div class="gname">${esc(name)} ${di.activity?(bn?`<span class="boat">🚤 ${esc(bn)}</span>`:'<span class="boat off">not on a boat</span>'):''}<span class="ordsum" id="sum_${cssId(name)}" style="margin-left:auto">${orderSummary(o)}</span></div>
+          <div class="cols">
+            <div class="col"><h4>Breakfast — ${esc(S.day)}</h4>
+              <div class="sub">Mains</div>${reg.map(m=>optHTML(name,m.name,bset)).join('')||'<div class="ordsum">No mains for this day</div>'}
+              <div class="sub">Add-ons / mods</div>${cus.map(m=>optHTML(name,m.name,bset)).join('')||'<div class="ordsum">No add-ons</div>'}
+            </div>
+            <div class="col"><h4>Beverages ${di.activity?'(load onto the boat)':''}</h4>
+              ${cats.map(c=>`<div class="sub">${esc(c)}</div>`+bevByCat[c].map(b=>bevHTML(name,b,o)).join('')).join('')||'<div class="ordsum">No beverages in the catalog</div>'}
+            </div>
+          </div>
+          <div class="notes"><textarea placeholder="Notes for ${esc(name.split(' ')[0])} — e.g. eggs over easy, no onions" oninput="MO.notes('${esc(S.group)}','${esc(name)}','${esc(S.day)}',this.value)">${esc(o.notes)}</textarea></div>
+        </div>`;}).join('')
+      +`</div>`;
+  }
+  function optHTML(name,item,bset){return `<label class="opt"><input type="checkbox" ${bset.has(item)?'checked':''} onchange="MO.toggleBk('${esc(S.group)}','${esc(name)}','${esc(S.day)}','${esc(item).replace(/'/g,"\\'")}',this.checked)"> ${esc(item)}</label>`;}
+  function bevHTML(name,b,o){const q=+o.beverages[b.name]||0;const id=cssId(name)+'_'+cssId(b.name);
+    return `<div class="bevrow"><span class="bn">${esc(b.name)}</span><span class="stepper"><button onclick="MO.bev('${esc(S.group)}','${esc(name)}','${esc(S.day)}','${esc(b.name).replace(/'/g,"\\'")}',-1)">−</button><span class="q" id="q_${id}">${q}</span><button onclick="MO.bev('${esc(S.group)}','${esc(name)}','${esc(S.day)}','${esc(b.name).replace(/'/g,"\\'")}',1)">+</button></span></div>`;}
+
+  function ordersForDay(){const m=loadOrders();return Object.keys(m).map(k=>m[k]).filter(o=>o.pkgId===S.pkgId&&o.day===S.day);}
+
+  function renderKitchen(){
+    const w=el('work');const di=dayInfo();const orders=ordersForDay().filter(o=>o.breakfast&&o.breakfast.length);
+    const groups=groupsForPkg(S.pkgId);
+    let rows='';
+    groups.forEach(g=>{const gGuests=groupGuests(g,S.pkgId);gGuests.forEach(name=>{const o=orders.find(x=>x.group===g&&x.guest===name);if(o&&o.breakfast.length){
+      rows+=`<tr><td>${esc(name)}</td><td style="color:var(--muted)">${esc(g)}</td><td>${o.breakfast.map(esc).join(', ')}${o.notes?`<div style="color:var(--salmon);font-size:12px;margin-top:2px">✎ ${esc(o.notes)}</div>`:''}</td></tr>`;
+    }});});
+    // item tally
+    const tally={};orders.forEach(o=>o.breakfast.forEach(it=>{tally[it]=(tally[it]||0)+1;}));
+    const tallyRows=Object.keys(tally).sort().map(it=>`<tr><td>${esc(it)}</td><td class="num">${tally[it]}</td></tr>`).join('');
+    w.innerHTML=`<div class="panel report"><div class="rhead"><div><div class="rtitle">🍳 Breakfast — ${esc(S.day)}</div><div class="rsub">${esc(fmtDW(di.date))} · ${esc(pkgLabel(pkgById(S.pkgId)))} · by guest</div></div><button class="btn no-print" onclick="window.print()">🖨 Print</button></div>
+      <div class="rbody">
+        <table class="rt"><thead><tr><th>Guest</th><th>Group</th><th>Breakfast order</th></tr></thead><tbody>${rows||'<tr><td colspan="3" class="mut">No breakfast orders entered for this day yet.</td></tr>'}</tbody></table>
+        <h3 style="font:800 13px var(--sans);margin:16px 0 6px">Kitchen tally</h3>
+        <table class="rt"><thead><tr><th>Item</th><th class="num">Qty</th></tr></thead><tbody>${tallyRows||'<tr><td colspan="2" class="mut">—</td></tr>'}</tbody></table>
+      </div></div>`;
+  }
+
+  function renderBoats(){
+    const w=el('work');const di=dayInfo();const p=pkgById(S.pkgId);const arrival=p.arrival_start_date;
+    const orders=ordersForDay();
+    // aggregate beverages by boat (per guest's boat that day)
+    const byBoat={};const OFF='__off';
+    orders.forEach(o=>{const boat=di.activity?guestBoatOn(o.group,o.guest,di.date,arrival):'';const key=boat||OFF;
+      Object.keys(o.beverages||{}).forEach(bn=>{const q=+o.beverages[bn]||0;if(!q)return;byBoat[key]=byBoat[key]||{};byBoat[key][bn]=(byBoat[key][bn]||0)+q;});});
+    const bevMeta={};loadBev().forEach(b=>bevMeta[b.name]=b.category);
+    const boatKeys=Object.keys(byBoat).filter(k=>k!==OFF).sort((a,b)=>boatName(a)<boatName(b)?-1:1);
+    if(byBoat[OFF])boatKeys.push(OFF);
+    let blocks=boatKeys.map(k=>{const items=byBoat[k];const names=Object.keys(items).sort((a,b)=>{const ca=bevMeta[a]||'zz',cb=bevMeta[b]||'zz';return ca<cb?-1:ca>cb?1:(a<b?-1:1);});
+      const total=Object.values(items).reduce((s,q)=>s+q,0);
+      const rows=names.map(n=>`<tr><td>${esc(n)}</td><td style="color:var(--faint);font-size:11px;text-transform:uppercase">${esc(bevMeta[n]||'')}</td><td class="num">${items[n]}</td></tr>`).join('');
+      const label=k===OFF?'Not on a boat (lodge / adventure)':'🚤 '+esc(boatName(k)||'Unnamed boat');
+      return `<div class="boatblk"><h3>${label} <span class="c">· ${total} unit${total===1?'':'s'}</span></h3><table class="rt"><thead><tr><th>Beverage</th><th>Category</th><th class="num">Qty</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    }).join('');
+    if(!boatKeys.length)blocks='<div class="empty">No beverage orders entered for this day yet.</div>';
+    w.innerHTML=`<div class="panel report"><div class="rhead"><div><div class="rtitle">🚤 Boat Stocking — ${esc(S.day)}</div><div class="rsub">${esc(fmtDW(di.date))}${di.activity?'':' · departure day (no boats)'} · beverages by boat</div></div><button class="btn no-print" onclick="window.print()">🖨 Print</button></div>
+      <div class="rbody">${blocks}</div></div>`;
+  }
+
+  initPkg();S.pkgId=el('pkg').value;refresh();render();
+})();
+</script>
+</body></html>

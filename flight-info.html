@@ -1,0 +1,227 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Flight & Travel Information</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6;--sky:#2a6a8a;--sky-soft:#e3eef3;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 22px rgba(18,42,43,.06)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413;--sky:#5fa8c8;--sky-soft:#122a33;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--gold:#e0b45e;--sky:#5fa8c8;--sky-soft:#122a33}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--gold:#b9892b;--sky:#2a6a8a;--sky-soft:#e3eef3}
+  *{box-sizing:border-box}
+  .rm{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(14px,3vw,30px);-webkit-font-smoothing:antialiased}
+  .rm .wrap{max-width:1120px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(20px,3vw,28px)/1.1 var(--sans);letter-spacing:-.02em;margin:0 0 4px}
+  .lede{color:var(--muted);margin:0 0 18px;font-size:13.5px;max-width:90ch}
+  .bar{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);padding:13px 16px;margin-bottom:16px}
+  .fld{display:flex;flex-direction:column;gap:5px}
+  .fld label{font:700 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  select,input{font:600 13.5px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:8px 10px}
+  select:focus,input:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+  .sp{margin-left:auto}
+  .btn{font:700 12.5px var(--sans);border-radius:8px;padding:9px 14px;cursor:pointer;border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+  .btn:hover{background:var(--surface-2)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.primary:hover{filter:brightness(1.05)}
+  .btn.warn{border-color:var(--salmon);color:var(--salmon)}
+  .btn.sm{padding:6px 10px;font-size:11.5px}
+  .panel{background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+  .ghead{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+  .ghead h2{font:800 15px var(--sans);margin:0}
+  .ghead .meta{font-size:12px;color:var(--muted)}
+  .guest{border-bottom:1px solid var(--line);padding:13px 16px}
+  .guest:last-child{border-bottom:0}
+  .gname{font:700 14.5px var(--sans);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .gname .lead{font:700 9px var(--mono);letter-spacing:.05em;color:var(--accent-deep);background:var(--accent-soft);border-radius:20px;padding:2px 7px}
+  .gname .home{font:600 11px var(--sans);color:var(--faint);margin-left:auto}
+  .legs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:820px){.legs{grid-template-columns:1fr}}
+  .leg{border:1px solid var(--line-2);border-radius:10px;padding:11px 12px;background:var(--paper)}
+  .leg h3{font:700 10px var(--mono);letter-spacing:.05em;text-transform:uppercase;margin:0 0 9px}
+  .leg.arr h3{color:var(--sky)} .leg.dep h3{color:var(--salmon)}
+  .modeseg{display:inline-flex;border:1px solid var(--line-2);border-radius:8px;overflow:hidden;margin-bottom:10px}
+  .mseg{font:700 11.5px var(--sans);padding:6px 12px;background:var(--surface);color:var(--muted);border:0;cursor:pointer}
+  .mseg.on{background:var(--accent);color:#fff}
+  .frow{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:8px}
+  .frow.two{grid-template-columns:1fr 1fr}
+  .fg{display:flex;flex-direction:column;gap:3px}
+  .fg label{font:600 9.5px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--faint)}
+  .fg input,.fg select{padding:6px 8px;font-size:13px}
+  .stay{margin-top:11px;border-top:1px dashed var(--line-2);padding-top:10px;display:flex;flex-direction:column;gap:8px}
+  .chk{display:flex;align-items:center;gap:8px;font:600 12.5px var(--sans);color:var(--ink);cursor:pointer}
+  .chk input{width:16px;height:16px;accent-color:var(--accent)}
+  .staydetail{display:grid;grid-template-columns:2fr 1fr;gap:8px;margin:-2px 0 4px 24px}
+  @media(max-width:600px){.staydetail{grid-template-columns:1fr}}
+  .empty{padding:34px 16px;text-align:center;color:var(--muted);font-size:14px}
+  .banner{display:flex;gap:9px;align-items:flex-start;background:var(--sky-soft);border:1px solid var(--line-2);border-radius:10px;padding:10px 13px;margin-bottom:16px;font-size:12.5px;color:var(--ink)}
+  details.mng{margin-bottom:16px}
+  details.mng>summary{cursor:pointer;font:700 12.5px var(--sans);color:var(--accent-deep);background:var(--surface);border:1px solid var(--line-2);border-radius:10px;padding:11px 14px;list-style:none;display:flex;align-items:center;gap:8px}
+  details.mng>summary::-webkit-details-marker{display:none}
+  details.mng[open]>summary{border-radius:10px 10px 0 0;border-bottom:0}
+  .mngbody{border:1px solid var(--line-2);border-top:0;border-radius:0 0 10px 10px;padding:14px 16px;background:var(--surface);display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:760px){.mngbody{grid-template-columns:1fr}}
+  .mngbody h4{font:700 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin:0 0 8px}
+  .schedrow,.hotelrow{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+  .schedrow input,.hotelrow input{padding:5px 8px;font-size:12.5px}
+  .schedrow .no{width:78px}.schedrow .tm{width:96px}
+  .rmx{border:1px solid var(--line-2);background:var(--surface);color:var(--faint);border-radius:6px;width:26px;height:26px;cursor:pointer;flex:none}
+  .rmx:hover{border-color:var(--salmon);color:var(--salmon)}
+  .subh{font:700 10px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin:14px 0 6px}
+  .schema{margin-top:4px;font-size:12px;color:var(--muted);background:var(--surface);border:1px dashed var(--line-2);border-radius:10px;padding:11px 14px;line-height:1.6}
+  .schema b{color:var(--accent-deep)} .schema code{font-family:var(--mono);font-size:.9em;color:var(--ink)}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--accent-deep);color:#fff;font:600 13px var(--sans);padding:9px 16px;border-radius:9px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s;z-index:5}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+<div class="rm"><div class="wrap">
+  <p class="eyebrow">Operate · Guest logistics</p>
+  <h1>Flight &amp; Travel Information</h1>
+  <p class="lede">Arrival &amp; departure travel for <b>every individual guest</b> — Sitka (SIT) is the gateway and the floatplane transfer is timed off these. Each guest flies <b>commercial</b> (pick the Alaska flight) or by <b>private jet</b> (tail # + ETA), and may <b>arrive early or stay late in Sitka</b> (choose a hotel). Departure times drive the <b>Fish Processing</b> packing deadline — each guest's box must be ready before they fly out.</p>
+
+  <div class="banner">🛩️ <span><b>This is the admin view of the profile's travel section.</b> Guests can enter their own in the portal; you can review/adjust here. Use <b>Fill sample flights</b> to seed the package, then adjust anyone who differs. Real Alaska flight #s/times live in <b>Manage flight schedule</b> below — replace the placeholders once.</span></div>
+
+  <details class="mng"><summary>⚙️ Manage flight schedule &amp; Sitka hotels</summary>
+    <div class="mngbody">
+      <div>
+        <h4>Alaska Airlines · SIT arrivals</h4><div id="schedArr"></div>
+        <button class="btn sm" onclick="FL.addSched('arr')">＋ Add arrival flight</button>
+        <h4 style="margin-top:14px">Alaska Airlines · SIT departures</h4><div id="schedDep"></div>
+        <button class="btn sm" onclick="FL.addSched('dep')">＋ Add departure flight</button>
+        <p style="font-size:11.5px;color:var(--muted);margin:10px 0 0">These populate the flight dropdowns. Placeholders shown — replace with the real Alaska schedule you pulled.</p>
+      </div>
+      <div>
+        <h4>Sitka hotels (early / late stays)</h4><div id="hotels"></div>
+        <button class="btn sm" onclick="FL.addHotel()">＋ Add hotel</button>
+      </div>
+    </div>
+  </details>
+
+  <div class="bar">
+    <div class="fld"><label>Package</label><select id="pkg" onchange="FL.pick()"></select></div>
+    <div class="fld"><label>Group</label><select id="grp" onchange="FL.render()"><option value="">All groups</option></select></div>
+    <span class="sp"></span>
+    <button class="btn primary" onclick="FL.sample()">✈ Fill sample flights</button>
+    <button class="btn warn" onclick="FL.clearAll()">Clear flights</button>
+  </div>
+
+  <div id="work"></div>
+
+  <div class="schema">Maps to Andy's schema → per‑person <b>travel</b> rows on the guest profile: <code>leg[arr|dep]</code>, <code>mode[commercial|jet]</code>, <code>airline, flight_no, date, time</code> or <code>tail, est_time</code>; plus <code>sitka_early / sitka_late {hotel, nights}</code>. Lookups: <b>flight_schedule</b>, <b>sitka_hotels</b>. Read by Fish Processing reports &amp; the floatplane transfer scheduler.</div>
+</div></div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+  const PKEY='talon_packages_v1', PROF='talon_portal_profile', SCHED='talon_flight_schedule_v1', HOTELS='talon_sitka_hotels_v1';
+  const PKG_SEED=[{id:'sp1',series:'Standard',category:'Sportfishing',status:'published',arrival_start_date:'2027-05-24',nights:4}];
+  const SCHED_SEED={arr:[{no:'AS 65',time:'12:35'},{no:'AS 61',time:'14:15'},{no:'AS 67',time:'16:05'},{no:'AS 63',time:'09:40'}],
+                    dep:[{no:'AS 66',time:'13:10'},{no:'AS 62',time:'15:25'},{no:'AS 68',time:'11:50'},{no:'AS 64',time:'17:20'}]};
+  const HOTEL_SEED=['Aspen Suites Hotel Sitka','Sitka Hotel','Totem Square Hotel & Marina','Westmark Sitka','Super 8 by Wyndham Sitka','Longliner Lodge & Suites','Cascade Inn'];
+
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1600);}
+  const parseD=s=>{const[y,m,d]=(s||'').split('-').map(Number);return new Date(y,(m||1)-1,d||1);};
+  const addDays=(s,n)=>{const dt=parseD(s);dt.setDate(dt.getDate()+n);return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');};
+  const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const fmtD=s=>{if(!s)return '';const d=parseD(s);return MO[d.getMonth()]+' '+d.getDate();};
+  const fmtT=t=>{if(!t)return '';const[h,m]=t.split(':').map(Number);const ap=h<12?'AM':'PM';const h12=h%12||12;return h12+':'+String(m).padStart(2,'0')+' '+ap;};
+
+  function loadPkgs(){try{const p=JSON.parse(localStorage.getItem(PKEY));if(Array.isArray(p)&&p.length)return p;}catch(e){}return PKG_SEED;}
+  const PKGS=loadPkgs().filter(p=>(!p.status||p.status==='published')&&p.arrival_start_date&&p.nights).sort((a,b)=>a.arrival_start_date<b.arrival_start_date?-1:1);
+  const pkgById=id=>PKGS.find(p=>p.id===id);
+  const pkgLabel=p=>{const dep=addDays(p.arrival_start_date,+p.nights);return fmtD(p.arrival_start_date)+'–'+fmtD(dep)+' · '+(+p.nights)+'N · '+(p.series?p.series+' ':'')+(p.category||'Sportfishing');};
+
+  const loadProfiles=()=>{try{return JSON.parse(localStorage.getItem(PROF))||{};}catch(e){return {};}};
+  const saveProfiles=pr=>{try{localStorage.setItem(PROF,JSON.stringify(pr));return true;}catch(e){toast('Storage full — could not save');return false;}};
+  function loadSchedule(){let s=null;try{s=JSON.parse(localStorage.getItem(SCHED));}catch(e){} if(!s||!s.arr){s=JSON.parse(JSON.stringify(SCHED_SEED));localStorage.setItem(SCHED,JSON.stringify(s));}return s;}
+  function saveSchedule(s){try{localStorage.setItem(SCHED,JSON.stringify(s));}catch(e){}}
+  function loadHotels(){let h=null;try{h=JSON.parse(localStorage.getItem(HOTELS));}catch(e){} if(!Array.isArray(h)||!h.length){h=HOTEL_SEED.slice();localStorage.setItem(HOTELS,JSON.stringify(h));}return h;}
+  function saveHotels(h){try{localStorage.setItem(HOTELS,JSON.stringify(h));}catch(e){}}
+  function groupsForPkg(pkgId){const pr=loadProfiles(),out=[];Object.keys(pr).forEach(k=>{const i=k.lastIndexOf('|');if(i>0&&k.slice(i+1)===pkgId)out.push(k.slice(0,i));});return out.sort();}
+
+  let S={pkgId:''};
+  function initPkg(){el('pkg').innerHTML='<option value="">Select a package…</option>'+PKGS.map(p=>`<option value="${p.id}">${esc(pkgLabel(p))}</option>`).join('');if(PKGS.length===1)el('pkg').value=PKGS[0].id;}
+  function refreshGroups(){const grps=S.pkgId?groupsForPkg(S.pkgId):[];el('grp').innerHTML='<option value="">All groups</option>'+grps.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('');}
+
+  function legHTML(key,i,legName,leg,defDate){
+    leg=leg||{};const mode=leg.mode||'commercial';const sched=loadSchedule()[legName]||[];
+    const inSched=sched.some(f=>f.no===leg.flightNo&&f.time===leg.time);
+    const manual=mode==='commercial'&&(leg.manual||(leg.flightNo&&!inSched));
+    let inner='';
+    if(mode==='commercial'){
+      inner=`<div class="fg"><label>Alaska flight</label>
+        <select onchange="FL.pickFlight('${key}',${i},'${legName}',this.value)">
+          <option value="">— choose flight —</option>
+          ${sched.map(f=>`<option value="${esc(f.no)}|${esc(f.time)}" ${(!manual&&leg.flightNo===f.no&&leg.time===f.time)?'selected':''}>${esc(f.no)} · ${esc(fmtT(f.time))}</option>`).join('')}
+          <option value="__other" ${manual?'selected':''}>Other / manual…</option>
+        </select></div>`
+        +(manual?`<div class="frow two"><div class="fg"><label>Airline</label><input value="${esc(leg.airline||'Alaska Airlines')}" oninput="FL.setF('${key}',${i},'${legName}','airline',this.value)"></div><div class="fg"><label>Flight #</label><input value="${esc(leg.flightNo)}" placeholder="AS 65" oninput="FL.setF('${key}',${i},'${legName}','flightNo',this.value)"></div></div>
+          <div class="fg"><label>${legName==='arr'?'Arrives':'Departs'} SIT</label><input type="time" value="${esc(leg.time)}" oninput="FL.setF('${key}',${i},'${legName}','time',this.value)"></div>`:'')
+        +`<div class="fg"><label>Date</label><input type="date" value="${esc(leg.date||defDate)}" oninput="FL.setF('${key}',${i},'${legName}','date',this.value)"></div>`;
+    }else{
+      inner=`<div class="frow two"><div class="fg"><label>Tail number</label><input value="${esc(leg.tail)}" placeholder="N123AB" oninput="FL.setF('${key}',${i},'${legName}','tail',this.value)"></div>
+        <div class="fg"><label>Est. ${legName==='arr'?'arrival':'departure'} SIT</label><input type="time" value="${esc(leg.est||leg.time)}" oninput="FL.setF('${key}',${i},'${legName}','est',this.value)"></div></div>
+        <div class="fg"><label>Date</label><input type="date" value="${esc(leg.date||defDate)}" oninput="FL.setF('${key}',${i},'${legName}','date',this.value)"></div>`;
+    }
+    return `<div class="leg ${legName}"><h3>${legName==='arr'?'🛬 Arrival into Sitka (SIT)':'🛫 Departure from Sitka (SIT)'}</h3>
+      <div class="modeseg"><button class="mseg ${mode==='commercial'?'on':''}" onclick="FL.setMode('${key}',${i},'${legName}','commercial')">Commercial</button><button class="mseg ${mode==='jet'?'on':''}" onclick="FL.setMode('${key}',${i},'${legName}','jet')">Private jet</button></div>
+      ${inner}</div>`;
+  }
+  function stayHTML(key,i,which,label,st){
+    st=st||{};const on=!!st.on;const hotels=loadHotels();
+    return `<label class="chk"><input type="checkbox" ${on?'checked':''} onchange="FL.setStay('${key}',${i},'${which}','on',this.checked)"> ${label}</label>`
+      +(on?`<div class="staydetail"><div class="fg"><label>Sitka hotel</label><select onchange="FL.setStay('${key}',${i},'${which}','hotel',this.value)"><option value="">— choose —</option>${hotels.map(h=>`<option ${st.hotel===h?'selected':''}>${esc(h)}</option>`).join('')}<option value="__other" ${st.hotel&&!hotels.includes(st.hotel)?'selected':''}>Other…</option></select>${(st.hotel&&!hotels.includes(st.hotel))?`<input style="margin-top:4px" value="${esc(st.hotel==='__other'?'':st.hotel)}" placeholder="Hotel name" oninput="FL.setStay('${key}',${i},'${which}','hotel',this.value)">`:''}</div><div class="fg"><label>Nights</label><input type="number" min="1" max="14" value="${esc(st.nights||1)}" oninput="FL.setStay('${key}',${i},'${which}','nights',+this.value||1)"></div></div>`:'');
+  }
+
+  window.FL={
+    pick(){S.pkgId=el('pkg').value;refreshGroups();FL.render();},
+    setF(key,i,leg,field,val){const pr=loadProfiles();const g=pr[key]&&pr[key].guests&&pr[key].guests[i];if(!g)return;g[leg]=g[leg]||{};g[leg][field]=val;saveProfiles(pr);},
+    setMode(key,i,leg,mode){const pr=loadProfiles();const g=pr[key]&&pr[key].guests&&pr[key].guests[i];if(!g)return;g[leg]=g[leg]||{};g[leg].mode=mode;saveProfiles(pr);FL.render();},
+    pickFlight(key,i,leg,val){const pr=loadProfiles();const g=pr[key]&&pr[key].guests&&pr[key].guests[i];if(!g)return;g[leg]=g[leg]||{};g[leg].mode='commercial';
+      if(val==='__other'){g[leg].manual=true;g[leg].flightNo='';g[leg].time='';g[leg].airline=g[leg].airline||'Alaska Airlines';}
+      else if(val===''){g[leg].manual=false;g[leg].flightNo='';g[leg].time='';}
+      else{const[no,time]=val.split('|');g[leg].manual=false;g[leg].airline='Alaska Airlines';g[leg].flightNo=no;g[leg].time=time;}
+      saveProfiles(pr);FL.render();},
+    setStay(key,i,which,field,val){const pr=loadProfiles();const g=pr[key]&&pr[key].guests&&pr[key].guests[i];if(!g)return;const k=which==='early'?'sitkaEarly':'sitkaLate';g[k]=g[k]||{};g[k][field]=val;if(field==='hotel'&&val==='__other')g[k].hotel='__other';saveProfiles(pr);if(field==='on'||field==='hotel')FL.render();},
+    // schedule + hotel management
+    addSched(leg){const s=loadSchedule();s[leg].push({no:'',time:''});saveSchedule(s);renderMng();},
+    setSched(leg,i,field,val){const s=loadSchedule();s[leg][i][field]=val;saveSchedule(s);},
+    delSched(leg,i){const s=loadSchedule();s[leg].splice(i,1);saveSchedule(s);renderMng();},
+    addHotel(){const h=loadHotels();h.push('');saveHotels(h);renderMng();},
+    setHotel(i,val){const h=loadHotels();h[i]=val;saveHotels(h);},
+    delHotel(i){const h=loadHotels();h.splice(i,1);saveHotels(h);renderMng();},
+    sample(){
+      if(!S.pkgId){toast('Pick a package first');return;}
+      const pr=loadProfiles();const p=pkgById(S.pkgId);const arrDate=p.arrival_start_date,depDate=addDays(p.arrival_start_date,+p.nights);const sch=loadSchedule();
+      let gi=0;groupsForPkg(S.pkgId).forEach(gk=>{const gp=pr[gk+'|'+S.pkgId];if(!gp)return;
+        const a=sch.arr[gi%sch.arr.length]||{no:'AS 65',time:'12:35'},d=sch.dep[gi%sch.dep.length]||{no:'AS 66',time:'13:10'};
+        gp.guests.forEach(g=>{g.arr={mode:'commercial',airline:'Alaska Airlines',flightNo:a.no,time:a.time,date:arrDate};g.dep={mode:'commercial',airline:'Alaska Airlines',flightNo:d.no,time:d.time,date:depDate};});
+        gi++;});
+      saveProfiles(pr);FL.render();toast('Sample commercial flights filled');
+    },
+    clearAll(){if(!S.pkgId||!confirm('Clear all travel entries for this package? (Guest details & fish data are kept.)'))return;
+      const pr=loadProfiles();groupsForPkg(S.pkgId).forEach(gk=>{const gp=pr[gk+'|'+S.pkgId];if(gp)gp.guests.forEach(g=>{delete g.arr;delete g.dep;delete g.sitkaEarly;delete g.sitkaLate;});});
+      saveProfiles(pr);FL.render();toast('Travel cleared');},
+    render(){
+      const w=el('work');
+      if(!S.pkgId){w.innerHTML='<div class="panel"><div class="empty">Pick a package to enter guest travel.</div></div>';return;}
+      const pr=loadProfiles();const p=pkgById(S.pkgId);const only=el('grp').value;
+      let grps=groupsForPkg(S.pkgId);if(only)grps=grps.filter(g=>g===only);
+      if(!grps.length){w.innerHTML='<div class="panel"><div class="empty">No groups on this package. Open <b>Test data</b> and load the roster first.</div></div>';return;}
+      const arrDate=p.arrival_start_date,depDate=addDays(p.arrival_start_date,+p.nights);
+      w.innerHTML=grps.map(gk=>{const key=gk+'|'+S.pkgId;const gp=pr[key]||{guests:[]};
+        return `<div class="panel"><div class="ghead"><h2>${esc(gk)}</h2><span class="meta">· ${gp.guests.length} guests · arrive ${fmtD(arrDate)} · depart ${fmtD(depDate)}</span></div>`
+          +gp.guests.map((g,i)=>`<div class="guest"><div class="gname">${esc(g.first)} ${esc(g.last)}${g.isLead?'<span class="lead">LEAD</span>':''}<span class="home">${esc(g.city||'')}${g.state?', '+esc(g.state):''}</span></div>
+            <div class="legs">${legHTML(key,i,'arr',g.arr,arrDate)}${legHTML(key,i,'dep',g.dep,depDate)}</div>
+            <div class="stay">${stayHTML(key,i,'early','Arriving in Sitka early',g.sitkaEarly)}${stayHTML(key,i,'late','Staying in Sitka later',g.sitkaLate)}</div></div>`).join('')
+          +`</div>`;
+      }).join('');
+    }
+  };
+  function renderMng(){
+    const s=loadSchedule();
+    const row=(leg,f,i)=>`<div class="schedrow"><input class="no" value="${esc(f.no)}" placeholder="AS 65" oninput="FL.setSched('${leg}',${i},'no',this.value)"><input class="tm" type="time" value="${esc(f.time)}" oninput="FL.setSched('${leg}',${i},'time',this.value)"><button class="rmx" onclick="FL.delSched('${leg}',${i})">✕</button></div>`;
+    el('schedArr').innerHTML=s.arr.map((f,i)=>row('arr',f,i)).join('');
+    el('schedDep').innerHTML=s.dep.map((f,i)=>row('dep',f,i)).join('');
+    el('hotels').innerHTML=loadHotels().map((h,i)=>`<div class="hotelrow"><input value="${esc(h)}" placeholder="Hotel name" oninput="FL.setHotel(${i},this.value)" style="flex:1"><button class="rmx" onclick="FL.delHotel(${i})">✕</button></div>`).join('');
+  }
+  initPkg();S.pkgId=el('pkg').value;refreshGroups();renderMng();FL.render();
+})();
+</script>
+</body></html>

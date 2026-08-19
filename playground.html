@@ -1,0 +1,282 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Master-Record Playground</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{
+    --paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;
+    --line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;
+    --salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 24px rgba(18,42,43,.06);
+  }
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35);}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35);}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 24px rgba(18,42,43,.06);}
+  *{box-sizing:border-box}
+  .pg{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(16px,3vw,32px);-webkit-font-smoothing:antialiased}
+  .pg .wrap{max-width:1200px;margin:0 auto}
+  .pg .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  .pg h1{font:800 clamp(22px,3vw,32px)/1.1 var(--sans);letter-spacing:-.02em;margin:0 0 6px}
+  .pg .lede{color:var(--muted);margin:0 0 18px;font-size:14px;max-width:70ch}
+  .grid{display:grid;grid-template-columns:300px 1fr;gap:16px;align-items:start}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow)}
+  .card h2{font:700 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:0;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .plist{max-height:70vh;overflow:auto}
+  .prow{display:flex;gap:10px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);cursor:pointer}
+  .prow:hover{background:var(--surface-2)}
+  .prow.sel{background:var(--accent-soft)}
+  .prow.merged{opacity:.5}
+  .av{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font:700 13px var(--sans);flex:none}
+  .prow .nm{font-weight:700;font-size:14px}
+  .prow .sub{font-size:11.5px;color:var(--faint)}
+  .rcol{display:flex;flex-direction:column;gap:16px}
+  .pad{padding:14px}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .fld{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px}
+  label{font:600 10.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  input,select{font:500 14px var(--sans);padding:8px 10px;border:1px solid var(--line-2);border-radius:6px;background:var(--surface);color:var(--ink)}
+  input:focus,select:focus{outline:2px solid var(--accent);border-color:var(--accent)}
+  button{font:700 13px var(--sans);padding:8px 14px;border-radius:6px;border:1px solid transparent;cursor:pointer}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-ghost{background:var(--surface);border-color:var(--line-2);color:var(--ink)}
+  .btn-salmon{background:var(--salmon);color:#fff}
+  .btn-sm{padding:5px 10px;font-size:12px}
+  .result{margin-top:12px;border:1px solid var(--line);border-radius:6px;padding:12px;background:var(--surface-2)}
+  .pill{display:inline-block;font:700 10.5px var(--mono);letter-spacing:.04em;padding:3px 8px;border-radius:20px;text-transform:uppercase}
+  .pill.link{background:var(--accent-soft);color:var(--accent-deep)}
+  .pill.attach{background:var(--accent-soft);color:var(--accent-deep)}
+  .pill.review{background:var(--salmon-soft);color:var(--salmon)}
+  .pill.new{background:var(--surface-2);color:var(--muted);border:1px solid var(--line-2)}
+  .tier{font:700 10px var(--mono);color:var(--faint)}
+  .detail .nm{font:800 20px var(--sans);letter-spacing:-.01em}
+  .tag{display:inline-block;font:600 10.5px var(--sans);padding:3px 8px;border-radius:20px;background:var(--surface-2);border:1px solid var(--line-2);color:var(--muted);margin:2px 4px 2px 0}
+  .tag.agent{background:var(--salmon-soft);color:var(--salmon);border-color:transparent}
+  .tag.vip{background:#fbf0d8;color:var(--gold);border-color:transparent}
+  .hist{border-left:2px solid var(--line);margin:10px 0 0 6px;padding-left:14px}
+  .hev{position:relative;padding:8px 0;border-bottom:1px dashed var(--line)}
+  .hev:last-child{border-bottom:0}
+  .hev::before{content:"";position:absolute;left:-21px;top:13px;width:9px;height:9px;border-radius:50%;background:var(--accent);border:2px solid var(--surface)}
+  .hev .t{font-weight:700;font-size:13.5px}
+  .hev .m{font-size:12px;color:var(--muted)}
+  .role{font:700 9.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:4px;margin-left:6px}
+  .role.lead{background:var(--accent);color:#fff}.role.member{background:var(--surface-2);color:var(--muted);border:1px solid var(--line-2)}
+  .rev{padding:12px 14px;border-bottom:1px solid var(--line)}
+  .rev:last-child{border-bottom:0}
+  .rev .q{font-size:13px;margin-bottom:8px}
+  .muted{color:var(--muted);font-size:12.5px}
+  .empty{padding:24px 14px;color:var(--faint);font-size:13px;text-align:center}
+  .banner{font-size:12px;color:var(--salmon);background:var(--salmon-soft);border-radius:6px;padding:8px 10px;margin-top:8px}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:8px;font-size:13px;box-shadow:var(--shadow);opacity:0;transition:opacity .2s;z-index:50}
+  .toast.show{opacity:1}
+</style>
+
+<div class="pg"><div class="wrap">
+  <p class="eyebrow">Talon Lodge Platform · Interactive</p>
+  <h1>Master-Record Playground</h1>
+  <p class="lede">The real matching + merge logic, running live. Simulate a new arrival and watch it
+  auto-link, attach, flag for review, or create a new record. Work the review queue, and <b>merge two
+  records — then undo it</b>. Seeded with the Younger / Marshall / travel-agent cases. Nothing is saved; reload to reset.</p>
+
+  <div class="grid">
+    <div class="lcol" style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <h2>Master records (<span id="pcount"></span>)</h2>
+        <div class="plist" id="plist"></div>
+      </div>
+      <div class="card">
+        <h2>Review queue (<span id="rcount"></span>)</h2>
+        <div id="rqueue"></div>
+      </div>
+    </div>
+
+    <div class="rcol">
+      <div class="card">
+        <h2>New arrival — resolve against the master records</h2>
+        <div class="pad">
+          <div class="row">
+            <div class="fld"><label>First name</label><input id="in_first" placeholder="Phil"></div>
+            <div class="fld"><label>Last name</label><input id="in_last" placeholder="Younger"></div>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <div class="fld"><label>Email</label><input id="in_email" placeholder="phil@talonlodge.com"></div>
+            <div class="fld"><label>Phone</label><input id="in_phone" placeholder="602-515-8078"></div>
+            <div class="fld" style="max-width:170px"><label>Channel</label>
+              <select id="in_src"><option value="inquiry">Contact form</option><option value="lead">Lead</option><option value="reservation">Reservation</option><option value="guest">Guest list</option></select>
+            </div>
+          </div>
+          <div class="row" style="margin-top:12px">
+            <button class="btn-primary" onclick="App.resolve()">Resolve</button>
+            <button class="btn-ghost" onclick="App.fill('Phil','Younger','','')">Try: nickname only</button>
+            <button class="btn-ghost" onclick="App.fill('Phil','Younger','phil@newmail.com','602-515-8078')">Try: new email, same phone</button>
+            <button class="btn-ghost" onclick="App.fill('Robert','Newman','cheri@primetimeadventurestravel.com','')">Try: agent email</button>
+          </div>
+          <div id="result"></div>
+        </div>
+      </div>
+
+      <div class="card detail"><h2>Record detail</h2><div class="pad" id="detail"><div class="empty">Select a record on the left.</div></div></div>
+    </div>
+  </div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const NICK={robert:['bob','rob','bobby'],william:['will','bill'],richard:['rick','rich','dick'],james:['jim','jimmy'],michael:['mike'],steven:['steve','stephen'],christopher:['chris'],thomas:['tom'],kenneth:['ken'],daniel:['dan'],gregory:['greg'],david:['dave'],philip:['phil','phillip'],kimberly:['kim'],katherine:['kathy','kate','katie'],jennifer:['jen','jenny']};
+  const AMB=new Set(['chris','pat','alex','sam','jamie']);
+  const a2c={}; for(const c in NICK) for(const a of NICK[c]) if(!AMB.has(a)) a2c[a]=c;
+  const clean=s=>(s||'').toLowerCase().replace(/\(.*?\)/g,' ').replace(/[^a-z\s'-]/g,' ').replace(/\s+/g,' ').trim();
+  const canonF=f=>{const x=clean(f).split(' ')[0]||'';return a2c[x]||x;};
+  const nameKey=(f,l)=>{const F=canonF(f),L=clean(l);return F&&L?F+'|'+L:'';};
+  const nEmail=s=>{s=(s||'').trim().toLowerCase();return /.+@.+\..+/.test(s)?s:'';};
+  const nPhone=s=>{let d=(s||'').replace(/\D/g,'');if(d.length===11&&d[0]==='1')d=d.slice(1);return d.length===10?d:'';};
+  let uid=100;
+
+  const P=[
+    {id:1,first:'Philip',last:'Younger',status:'active',vip:true,aliases:['Phil'],emails:[{v:'phil@talonlodge.com',primary:true},{v:'phil@magnusadventures.com'}],phones:[{v:'6025158078',primary:true}],score:9.2,records:[
+      {type:'inquiry',t:'Website inquiry',m:'Reservation Form · talonlodge'},
+      {type:'lead',t:'Lead (Brochure)',m:'602-515-8078'},
+      {type:'reservation',t:'Younger Group',m:'arrive 2027-05-18 · 22 guests',role:'lead'},
+      {type:'profile',t:'Trip profile 2027',m:'boot 11 · king bed · no allergies'}]},
+    {id:2,first:'Gwen',last:'Younger',status:'active',aliases:[],emails:[{v:'gyounger@talonlodge.com',primary:true}],phones:[],records:[
+      {type:'reservation',t:'Marshall Group',m:'arrive 2027-05-25',role:'member'},
+      {type:'reservation',t:'Younger Group',m:'arrive 2027-05-18',role:'member'}]},
+    {id:3,first:'Chris',last:'Marshall',status:'active',aliases:[],emails:[{v:'crm.alaska@pm.me',primary:true}],phones:[{v:'9073156529',primary:true}],score:8.7,records:[
+      {type:'reservation',t:'Marshall Group',m:'arrive 2027-05-25 · 6 guests',role:'lead'}]},
+    {id:4,first:'Marla',last:'Butler',status:'active',aliases:[],emails:[{v:'marla@butlergroup.us',primary:true}],phones:[{v:'5302225211',primary:true}],records:[
+      {type:'reservation',t:'Butler Group',m:'arrive 2027-05-29 · 6 guests',role:'lead'}]},
+    {id:5,first:'Bruce',last:'McLellan',status:'active',aliases:[],emails:[{v:'cheri@primetimeadventurestravel.com',agent:true}],phones:[],records:[
+      {type:'reservation',t:'McLellan party',m:'booked by travel agent',role:'lead'}]},
+    {id:6,first:'Katie',last:'Walker',status:'active',aliases:[],emails:[{v:'cheri@primetimeadventurestravel.com',agent:true}],phones:[],records:[
+      {type:'reservation',t:'Walker party',m:'booked by same travel agent',role:'lead'}]},
+    {id:7,first:'Philip',last:'Younger',status:'active',aliases:[],emails:[{v:'p.younger@oldmail.com',primary:true}],phones:[],records:[
+      {type:'inquiry',t:'Website inquiry (2019)',m:'possible duplicate of #1'}]}
+  ];
+  const RQ=[{id:1,srcId:7,candId:1,reason:'Nickname-equivalent name + same last name, no shared email/phone (Tier 3)'}];
+  const undoStack=[];
+  let sel=1;
+
+  // agent email = one email on >=2 distinct people
+  function agentEmails(){const m={};P.forEach(p=>{if(p.status==='merged')return;p.emails.forEach(e=>{(m[e.v]=m[e.v]||new Set()).add(p.id);});});return new Set(Object.keys(m).filter(k=>m[k].size>=2));}
+  function findByEmail(em,agents){for(const p of P){if(p.status==='merged')continue;for(const e of p.emails){if(e.v===em&&!agents.has(em))return p;}}return null;}
+  function findByPhone(ph){const out=[];for(const p of P){if(p.status==='merged')continue;if(p.phones.some(x=>x.v===ph))out.push(p);}return out;}
+  function contactfulByName(k){return P.filter(p=>p.status!=='merged'&&(p.emails.length||p.phones.length)&&(nameKey(p.first,p.last)===k||p.aliases.some(a=>nameKey(a,p.last)===k)));}
+
+  function resolve(cand){
+    const agents=agentEmails();
+    const em=nEmail(cand.email),ph=nPhone(cand.phone),k=nameKey(cand.first,cand.last);
+    if(em&&!agents.has(em)){const hit=findByEmail(em,agents);if(hit)return{action:'auto_link',tier:1,person:hit,reason:'Exact email match'};}
+    if(ph){for(const p of findByPhone(ph)){if(k&&nameKey(p.first,p.last)===k)return{action:'auto_link',tier:2,person:p,reason:'Phone + nickname-equivalent name'};}}
+    const named=k?contactfulByName(k):[];
+    if(named.length===1){const has=em||ph;return has?{action:'review',tier:3,person:named[0],reason:'Name matches, but with a new email/phone — confirm'}:{action:'auto_attach',tier:3,person:named[0],reason:'Unique name match, no contact'};}
+    if(named.length>1)return{action:'review',tier:3,person:null,reason:'Name matches multiple people — pick one'};
+    if(em&&agents.has(em))return{action:'review',tier:null,person:null,reason:'Shared / travel-agent inbox — record on the group, not a person'};
+    return{action:'new',tier:null,person:null,reason:'No matching signal'};
+  }
+
+  const $=id=>document.getElementById(id);
+  const initials=p=>((p.first[0]||'')+(p.last[0]||'')).toUpperCase();
+  function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1800);}
+
+  function renderList(){
+    const live=P.filter(p=>p.status!=='merged');
+    $('pcount').textContent=live.length;
+    $('plist').innerHTML=P.map(p=>`<div class="prow ${p.id===sel?'sel':''} ${p.status==='merged'?'merged':''}" onclick="App.select(${p.id})">
+      <div class="av">${initials(p)}</div>
+      <div><div class="nm">${p.first} ${p.last}${p.status==='merged'?' <span class="tier">(merged)</span>':''}</div>
+      <div class="sub">${p.emails.length} email · ${p.records.length} record${p.records.length!==1?'s':''}</div></div></div>`).join('');
+    $('rcount').textContent=RQ.length;
+    $('rqueue').innerHTML=RQ.length?RQ.map(r=>{const s=P.find(x=>x.id===r.srcId),c=P.find(x=>x.id===r.candId);
+      return `<div class="rev"><div class="q"><b>${s.first} ${s.last}</b> may be <b>${c.first} ${c.last}</b><br><span class="muted">${r.reason}</span></div>
+      <button class="btn-primary btn-sm" onclick="App.merge(${r.candId},${r.srcId},${r.id})">Merge into ${c.first} ${c.last}</button>
+      <button class="btn-ghost btn-sm" onclick="App.dismiss(${r.id})">Not a match</button></div>`;}).join(''):'<div class="empty">Nothing to review.</div>';
+  }
+  function renderDetail(){
+    const p=P.find(x=>x.id===sel);if(!p){$('detail').innerHTML='<div class="empty">Select a record.</div>';return;}
+    const agents=agentEmails();
+    const emailTags=p.emails.map(e=>`<span class="tag ${agents.has(e.v)?'agent':''}">${e.v}${e.primary?' ★':''}${agents.has(e.v)?' · agent':''}</span>`).join('');
+    const phoneTags=p.phones.map(x=>`<span class="tag">${x.v}${x.primary?' ★':''}</span>`).join('')||'<span class="muted">—</span>';
+    const aliasTags=p.aliases.map(a=>`<span class="tag">“${a}”</span>`).join('')||'<span class="muted">none</span>';
+    const hist=p.records.map(r=>`<div class="hev"><div class="t">${r.t}${r.role?`<span class="role ${r.role}">${r.role}</span>`:''}</div><div class="m">${r.type} · ${r.m}</div></div>`).join('');
+    const merged=p.status==='merged';
+    $('detail').innerHTML=`
+      <div style="display:flex;gap:12px;align-items:center">
+        <div class="av" style="width:46px;height:46px;font-size:16px">${initials(p)}</div>
+        <div><div class="nm">${p.first} ${p.last}</div>
+        <div>${p.vip?'<span class="tag vip">VIP</span>':''}<span class="tag">${p.status}</span>${p.score?`<span class="tag">survey ${p.score}</span>`:''}</div></div>
+      </div>
+      ${merged?'<div class="banner">This record was merged into another. Use Undo in the review queue history.</div>':''}
+      <div style="margin-top:12px"><label>Emails</label><div>${emailTags}</div></div>
+      <div style="margin-top:8px"><label>Phones</label><div>${phoneTags}</div></div>
+      <div style="margin-top:8px"><label>Name variants (aliases)</label><div>${aliasTags}</div></div>
+      <div style="margin-top:14px"><label>History — every group, role &amp; record</label><div class="hist">${hist||'<div class="muted">No records.</div>'}</div></div>`;
+  }
+  function render(){renderList();renderDetail();}
+
+  window.App={
+    select(id){sel=id;render();},
+    fill(f,l,e,p){$('in_first').value=f;$('in_last').value=l;$('in_email').value=e;$('in_phone').value=p;this.resolve();},
+    resolve(){
+      const cand={first:$('in_first').value,last:$('in_last').value,email:$('in_email').value,phone:$('in_phone').value};
+      if(!cand.first&&!cand.last&&!cand.email){$('result').innerHTML='<div class="banner">Enter a name or email first.</div>';return;}
+      const r=resolve(cand);this._last={cand,r};
+      const cls={auto_link:'link',auto_attach:'attach',review:'review',new:'new'}[r.action];
+      const label={auto_link:'Auto-link',auto_attach:'Auto-attach',review:'Review',new:'New record'}[r.action];
+      $('result').innerHTML=`<div class="result">
+        <span class="pill ${cls}">${label}</span> ${r.tier?`<span class="tier">TIER ${r.tier}</span>`:''}
+        <div style="margin-top:8px">${r.reason}${r.person?` → <b>${r.person.first} ${r.person.last}</b>`:''}</div>
+        <div style="margin-top:10px"><button class="btn-primary btn-sm" onclick="App.apply()">Apply</button></div></div>`;
+    },
+    apply(){
+      const {cand,r}=this._last||{};if(!r)return;
+      const srcLabel={inquiry:'Website inquiry',lead:'Lead',reservation:'Reservation request',guest:'Guest-list entry'}[$('in_src').value];
+      const newRec={type:$('in_src').value,t:srcLabel,m:[cand.email,cand.phone].filter(Boolean).join(' · ')||'name only'};
+      if(r.action==='auto_link'||r.action==='auto_attach'){
+        const p=r.person;
+        if(cand.email&&nEmail(cand.email)&&!p.emails.some(e=>e.v===nEmail(cand.email)))p.emails.push({v:nEmail(cand.email)});
+        if(cand.phone&&nPhone(cand.phone)&&!p.phones.some(x=>x.v===nPhone(cand.phone)))p.phones.push({v:nPhone(cand.phone)});
+        const nk=nameKey(cand.first,cand.last);if(nk&&nameKey(p.first,p.last)!==nk&&!p.aliases.includes(cand.first))p.aliases.push(cand.first);
+        p.records.push(newRec);sel=p.id;toast('Linked to '+p.first+' '+p.last);
+      } else if(r.action==='new'){
+        const np={id:++uid,first:cand.first,last:cand.last,status:'active',aliases:[],emails:cand.email?[{v:nEmail(cand.email),primary:true}]:[],phones:cand.phone?[{v:nPhone(cand.phone),primary:true}]:[],records:[newRec]};
+        P.push(np);sel=np.id;toast('New master record created');
+      } else { // review
+        const np={id:++uid,first:cand.first,last:cand.last,status:'active',aliases:[],emails:cand.email?[{v:nEmail(cand.email),primary:!(r.person)}]:[],phones:cand.phone?[{v:nPhone(cand.phone),primary:true}]:[],records:[newRec]};
+        P.push(np);
+        if(r.person)RQ.push({id:++uid,srcId:np.id,candId:r.person.id,reason:r.reason});
+        sel=np.id;toast('Created + flagged for review');
+      }
+      $('result').innerHTML='';render();
+    },
+    merge(survId,loseId,rqId){
+      const s=P.find(x=>x.id===survId),l=P.find(x=>x.id===loseId);
+      undoStack.push({survId,loseId,rqId,snapS:JSON.parse(JSON.stringify(s)),snapL:JSON.parse(JSON.stringify(l)),rq:RQ.find(r=>r.id===rqId)});
+      l.emails.forEach(e=>{if(!s.emails.some(x=>x.v===e.v))s.emails.push(e);});
+      l.phones.forEach(p=>{if(!s.phones.some(x=>x.v===p.v))s.phones.push(p);});
+      const lk=nameKey(l.first,l.last);if(lk!==nameKey(s.first,s.last)&&!s.aliases.includes(l.first))s.aliases.push(l.first);
+      l.records.forEach(r=>s.records.push(r));
+      l.status='merged';l.emails=[];l.phones=[];l.records=[];
+      const i=RQ.findIndex(r=>r.id===rqId);if(i>=0)RQ.splice(i,1);
+      sel=survId;render();
+      toast('Merged. ');
+      showUndo();
+    },
+    dismiss(rqId){const i=RQ.findIndex(r=>r.id===rqId);if(i>=0)RQ.splice(i,1);render();toast('Marked “not a match”.');},
+    undo(){
+      const u=undoStack.pop();if(!u)return;
+      const s=P.find(x=>x.id===u.survId),l=P.find(x=>x.id===u.loseId);
+      Object.assign(s,u.snapS);Object.assign(l,u.snapL);
+      if(u.rq)RQ.push(u.rq);
+      render();toast('Merge undone — records restored.');
+      const b=document.getElementById('undobar');if(b)b.remove();
+    }
+  };
+  function showUndo(){
+    let b=document.getElementById('undobar');if(b)b.remove();
+    b=document.createElement('div');b.id='undobar';b.className='toast show';b.style.bottom='70px';
+    b.innerHTML='Merged. <button class="btn-sm" style="margin-left:8px;background:var(--paper);color:var(--ink)" onclick="App.undo()">Undo</button>';
+    document.body.appendChild(b);
+  }
+  render();
+})();
+</script>
+</body></html>

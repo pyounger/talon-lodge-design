@@ -1,0 +1,334 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Activities Management</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 22px rgba(18,42,43,.06)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b}
+  *{box-sizing:border-box}
+  .rm{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(14px,3vw,30px);-webkit-font-smoothing:antialiased}
+  .rm .wrap{max-width:1180px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(20px,3vw,30px)/1.1 var(--sans);letter-spacing:-.02em;margin:0 0 4px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:13.5px;max-width:76ch}
+  code{font-family:var(--mono);font-size:.92em}
+  .databar{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line-2);border-radius:10px;box-shadow:var(--shadow);padding:11px 14px;margin-bottom:16px}
+  .databar .dbmsg{font-size:12.5px;color:var(--muted);max-width:66ch}.databar .dbmsg b{color:var(--ink)}
+  .databar .dbbtns{display:flex;gap:8px;flex-wrap:wrap}
+  .grid{display:grid;grid-template-columns:330px 1fr;gap:16px;align-items:start}
+  @media(max-width:860px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow)}
+  .hd{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .hd h2{font:700 12px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin:0}
+  .list{max-height:76vh;overflow:auto}
+  .lrow{display:flex;gap:10px;align-items:center;padding:9px 12px;border-bottom:1px solid var(--line);cursor:pointer}
+  .lrow:hover{background:var(--surface-2)}.lrow.sel{background:var(--accent-soft)}
+  .ico{width:40px;height:40px;border-radius:8px;background:var(--surface-2);flex:none;display:grid;place-items:center;font-size:20px;overflow:hidden}
+  .ico img{width:100%;height:100%;object-fit:cover}
+  .lrow .n{font-weight:700;font-size:13.5px}.lrow .s{font-size:11.5px;color:var(--faint)}
+  .tag{display:inline-block;font:600 9.5px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:2px 6px;border-radius:20px;margin-left:6px;vertical-align:middle}
+  .tag.active{background:var(--accent-soft);color:var(--accent-deep)}
+  .tag.seasonal{background:#fbf0d8;color:var(--gold)}
+  .tag.inactive{background:var(--surface-2);color:var(--faint);border:1px solid var(--line-2)}
+  .tag.avail{background:var(--surface-2);color:var(--accent-deep);border:1px solid var(--line-2)}
+  .tag.portal{background:var(--accent-soft);color:var(--accent-deep);border:1px solid var(--accent)}
+  .tag.resv{background:var(--surface-2);color:var(--muted);border:1px solid var(--line-2)}
+  .form{padding:16px;display:flex;flex-direction:column;gap:14px}
+  .frow{display:flex;gap:12px;flex-wrap:wrap}
+  .fld{display:flex;flex-direction:column;gap:5px;flex:1;min-width:120px}
+  label{font:600 10.5px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+  input,select,textarea{font:500 14px var(--sans);padding:9px 11px;border:1px solid var(--line-2);border-radius:7px;background:var(--surface);color:var(--ink);width:100%}
+  textarea{resize:vertical;min-height:60px}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);border-color:var(--accent)}
+  .seclbl{font:600 10.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);border-top:1px solid var(--line);padding-top:12px}
+  .seg{display:inline-flex;border:1px solid var(--line-2);border-radius:8px;overflow:hidden;width:max-content}
+  .seg .segopt{background:var(--surface);color:var(--muted);border:0;border-right:1px solid var(--line-2);border-radius:0;padding:8px 16px;font:700 13px var(--sans);cursor:pointer}
+  .seg .segopt:last-child{border-right:0}
+  .seg .segopt.on{background:var(--accent);color:#fff}
+  button{font:700 13px var(--sans);padding:9px 15px;border-radius:7px;border:1px solid transparent;cursor:pointer}
+  .btn-primary{background:var(--accent);color:#fff}.btn-ghost{background:var(--surface);border-color:var(--line-2);color:var(--ink)}
+  .btn-danger{background:var(--surface);border-color:var(--salmon);color:var(--salmon)}
+  .btn-sm{padding:6px 11px;font-size:12px}
+  .photos{display:flex;flex-direction:column;gap:8px}
+  .prow{display:flex;gap:8px;align-items:center}
+  .prow img{width:52px;height:40px;object-fit:cover;border-radius:6px;background:var(--surface-2);flex:none}
+  .prow input{flex:1}
+  .mp{display:flex;gap:8px;align-items:center}.mp a{font-size:12px;color:var(--accent-deep);white-space:nowrap}
+  .actions{display:flex;gap:8px;border-top:1px solid var(--line);padding-top:14px;flex-wrap:wrap}
+  .json{margin-top:6px;font:500 11.5px/1.5 var(--mono);background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:10px;white-space:pre-wrap;color:var(--muted);display:none}
+  details summary{cursor:pointer;font-size:12px;color:var(--faint)}
+  .empty{padding:30px;text-align:center;color:var(--faint)}
+  .hint{font-size:11px;color:var(--faint)}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;transition:.2s;z-index:20}.toast.show{opacity:1}
+</style>
+
+<div class="rm"><div class="wrap">
+  <p class="eyebrow">Talon Lodge Platform · Asset Management</p>
+  <h1>Activities</h1>
+  <p class="lede">Add and edit activity add-ons — description, booking link, pricing, minimums, and the
+  Talon arrival-day vs within-package-stay rates. Each is an <code>asset</code> (type Activity) with its
+  details in the <code>properties</code> JSON. The exact price wording you enter is preserved verbatim;
+  the structured price fields are what the booking engine reads.</p>
+
+  <div class="databar">
+    <div class="dbmsg"><b>Working copy is in this browser only.</b> To keep your work and carry it to the
+    live system, <b>Export</b> the catalog and hand off the file — that JSON seeds production, so you only
+    enter this once.</div>
+    <div class="dbbtns">
+      <button class="btn-primary btn-sm" onclick="AM.exportJson()">⬇ Export catalog (activities.json)</button>
+      <button class="btn-ghost btn-sm" onclick="document.getElementById('importpick').click()">⬆ Import</button>
+      <input type="file" id="importpick" accept="application/json,.json" style="display:none" onchange="AM.importJson(this)">
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="hd"><h2>Activities (<span id="count"></span>)</h2><button class="btn-primary btn-sm" onclick="AM.new()">+ New</button></div>
+      <div class="list" id="list"></div>
+    </div>
+    <div class="card"><div class="hd"><h2 id="edhd">Edit activity</h2></div><div id="editor"></div></div>
+  </div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const KEY='talon_activities_v1';
+  const SEED=[
+    {id:1,name:'Massage',icon:'💆',desc:'Our open-air massage pavilion provides for an unbelievable Massage Treatment Experience',url:'http://www.talonlodge.com/alaska-resort-spa/',priceText:'$125 to $250 per session',priceFrom:125,priceTo:250,unit:'per_session',minPeople:null,arrivalPrice:null,withinPrice:null,season:'',availability:'stay',times:['4:30 PM','5:30 PM'],status:'active',sort:1,photos:[]},
+    {id:12,name:'Day Spa',icon:'🧖',desc:'A full spa day at the open-air pavilion (10 AM–2 PM), staffed separately from the evening massage slots.',url:'http://www.talonlodge.com/alaska-resort-spa/',priceText:'$225 per person · 2 guests/day',priceFrom:225,priceTo:null,unit:'per_person',minPeople:null,arrivalPrice:null,withinPrice:null,season:'',availability:'stay',times:['10:00 AM'],status:'active',sort:1.5,photos:[]},
+    {id:2,name:'Freshwater Fishing by Float Plane',icon:'🛩️',desc:'Experience Southeast Alaska from the air. This once-in-a-lifetime event will take you to some of the most beautiful and remote places in the Tongass National Forest. The streams that surround Talon Lodge are filled with wild trout, seasonal steelhead and seasonal salmon runs.',url:'http://www.talonlodge.com/freshwaterfishing',priceText:'Rates range from $1500 per person to $1800 per person. There is a two person minimum for each trip.',priceFrom:1500,priceTo:1800,unit:'per_person',minPeople:2,arrivalPrice:null,withinPrice:null,season:'',availability:'any',status:'active',sort:2,photos:[]},
+    {id:3,name:'ATV Kruzof Island Tour',icon:'🏍️',desc:'Guided tour of Kruzof Island on one of our 4-seat recreational vehicles. Search for a view of the Alaska Brown Bear, Sitka Blacktail Deer, and then end the adventure at majestic Shelikof Bay.',url:'http://www.talonlodge.com/activities/',priceText:'Arrival Day: $550 per person; two person minimum. Within Package Stay: $450 per person; two person minimum',priceFrom:450,priceTo:550,unit:'per_person',minPeople:2,arrivalPrice:550,withinPrice:450,season:'',availability:'any',status:'active',sort:3,photos:[]},
+    {id:4,name:'Kayak & Lunch',icon:'🛶',desc:'Travel to Degroff Bay and kayak in smooth waterways and enjoy a specially prepared boat lunch.',url:'https://www.talonlodge.com/alaska-fishing-and-adventures/',priceText:'$450 per person, 2 person minimum',priceFrom:450,priceTo:null,unit:'per_person',minPeople:2,arrivalPrice:null,withinPrice:null,season:'',availability:'any',status:'active',sort:4,photos:[]},
+    {id:5,name:'Float Plane Tour',icon:'🛩️',desc:'40-minute floatplane tour with a takeoff and landing at the dock of Talon Lodge (weather permitting).',url:'https://www.talonlodge.com',priceText:'$450 per person for 2 guests / $400 per person for 3 guests',priceFrom:400,priceTo:450,unit:'per_person',minPeople:2,arrivalPrice:null,withinPrice:null,season:'',availability:'any',status:'active',sort:5,photos:[]},
+    {id:6,name:'Cooking Class',icon:'👨‍🍳',desc:'You caught it, now you have to cook it! Talon Lodge chefs teach the fine art of preparing fish and other Alaska delights. Spend a few hours preparing your own meal under their watchful eyes and then take home what you have learned.',url:'http://www.talonlodge.com/cuisine-events/',priceText:'4 person minimum',priceFrom:null,priceTo:null,unit:'per_person',minPeople:4,arrivalPrice:null,withinPrice:null,season:'',availability:'stay',status:'active',sort:6,photos:[]},
+    {id:7,name:'Freshwater Fishing — By ATV',icon:'🎣',desc:'An unforgettable experience on Kruzof Island. Cruise through this old-growth rainforest and fish for trout, dolly varden, pink salmon (August) and silver salmon (August/Sept).',url:'http://www.talonlodge.com/activities/',priceText:'Arrival Day: $600 per person, two person minimum. Within Package Stay: $500 per person, two person minimum',priceFrom:500,priceTo:600,unit:'per_person',minPeople:2,arrivalPrice:600,withinPrice:500,season:'Aug & Sept',availability:'any',status:'seasonal',sort:7,photos:[]},
+    {id:8,name:'Whale & Wildlife Viewing',icon:'🐋',desc:'Humpback, Gray, Minke and Orca Whales reside in our waters, year-round. Keep your eye out for the occasional, massive, Blue Whale cruising through.',url:'http://www.talonlodge.com/activities/',priceText:'Arrival or Departure Day: $450 per person; four person minimum. Within Package Stay: $400 per person; four person minimum',priceFrom:400,priceTo:450,unit:'per_person',minPeople:4,arrivalPrice:450,withinPrice:400,season:'',availability:'any',status:'active',sort:8,photos:[]},
+    {id:9,name:'Hiking',icon:'🥾',desc:'The hiking opportunities in the Sitka area are amazing. From the experienced hiker to the casual stroller, there is a hike for you in Sitka! Talk to our guides about the best trail for you.',url:'http://www.talonlodge.com/activities/',priceText:'Price varies depending on group size. There are self-guided hiking trails available at no fee.',priceFrom:null,priceTo:null,unit:'per_group',minPeople:null,arrivalPrice:null,withinPrice:null,season:'',availability:'any',status:'active',sort:9,photos:[]},
+    {id:10,name:'Freshwater Fishing — By Boat',icon:'🎣',desc:'Access to freshwater streams by boat.',url:'http://www.talonlodge.com/activities/',priceText:'Arrival or Departure Day: $550 per person, two person minimum. Within Package Stay: $450 per person; four person minimum',priceFrom:450,priceTo:550,unit:'per_person',minPeople:2,arrivalPrice:550,withinPrice:450,season:'',availability:'any',status:'active',sort:10,photos:[]},
+    {id:11,name:'Additional Saltwater Sportfishing',icon:'🐟',desc:'Extra guided saltwater sportfishing on your arrival or departure day. Your package already includes saltwater fishing during the stay — this adds time on the water on travel days.',url:'http://www.talonlodge.com/activities/',priceText:'',priceFrom:null,priceTo:null,unit:'per_person',minPeople:null,arrivalPrice:null,withinPrice:null,season:'',availability:'arrival_departure',status:'active',sort:11,photos:[]}
+  ];
+  const UNITS=[['per_person','per person'],['per_session','per session'],['per_group','per group'],['per_day','per day']];
+  const STATUSES=['active','seasonal','inactive'];
+  const AVAIL=[['any','Any day'],['stay','During stay only'],['arrival_departure','Arrival & departure days only']];
+  const OFFER=[['both','Reservation + Portal'],['reservation','Reservation only'],['portal','Portal only']];
+  const offerShort=v=>({reservation:'reservation only',portal:'portal only'}[v]||'');
+  const availLabel=v=>(AVAIL.find(x=>x[0]===v)||[,'Any day'])[1];
+  const availShort=v=>({stay:'stay only',arrival_departure:'arrival/dep only'}[v]||'');
+
+  let acts=[], editing=null, draftPhotos=[];
+  try{acts=JSON.parse(localStorage.getItem(KEY))||null;}catch(e){}
+  if(!acts||!acts.length){ // nothing stored (or empty) — try the backup snapshot before re-seeding
+    let bak=null;try{bak=JSON.parse(localStorage.getItem(KEY+'__bak'))||null;}catch(e){}
+    acts=(bak&&bak.length)?bak:JSON.parse(JSON.stringify(SEED));persist();
+  }
+  else{ // self-heal: the standard Talon catalog can never disappear.
+    // Merge back any SEED activity missing by name (custom additions & edits are preserved).
+    // To hide a standard service, set its status to "inactive" — don't delete it.
+    let healed=false;
+    SEED.forEach(s=>{
+      if(!acts.some(a=>(a.name||'').trim().toLowerCase()===s.name.trim().toLowerCase())){
+        const c=JSON.parse(JSON.stringify(s));c.id=Math.max(0,...acts.map(a=>a.id||0))+1;acts.push(c);healed=true;
+      }});
+    if(healed)persist();
+  }
+  acts.sort((a,b)=>(a.sort||0)-(b.sort||0));
+  let nextId=Math.max(0,...acts.map(a=>a.id))+1;
+  function persist(){
+    try{
+      const json=JSON.stringify(acts);
+      localStorage.setItem(KEY,json);
+      try{localStorage.setItem(KEY+'__bak',json);}catch(e){} // best-effort rolling backup
+      return true;
+    }catch(e){
+      // Quota hit (almost always big photos). Save the catalog WITHOUT photos so no
+      // activity record is ever lost — photos degrade, the activities themselves survive.
+      try{localStorage.setItem(KEY,JSON.stringify(acts.map(a=>({...a,photos:[]}))));return 'lean';}
+      catch(e2){return false;}
+    }
+  }
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  const money=n=>'$'+Number(n).toLocaleString();
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1700);}
+  const unitLabel=u=>(UNITS.find(x=>x[0]===u)||[,'per person'])[1];
+
+  function priceSummary(a){
+    if(a.arrivalPrice||a.withinPrice){const parts=[];if(a.arrivalPrice)parts.push('arrival '+money(a.arrivalPrice));if(a.withinPrice)parts.push('in-stay '+money(a.withinPrice));return parts.join(' · ')+' '+unitLabel(a.unit)+(a.minPeople?` · min ${a.minPeople}`:'');}
+    if(a.priceFrom&&a.priceTo&&a.priceTo!==a.priceFrom)return `${money(a.priceFrom)}–${money(a.priceTo)} ${unitLabel(a.unit)}`+(a.minPeople?` · min ${a.minPeople}`:'');
+    if(a.priceFrom)return `${money(a.priceFrom)} ${unitLabel(a.unit)}`+(a.minPeople?` · min ${a.minPeople}`:'');
+    if(a.minPeople)return `min ${a.minPeople}`;
+    return 'price varies';
+  }
+
+  function renderList(){
+    el('count').textContent=acts.length;
+    el('list').innerHTML=acts.map(a=>`<div class="lrow ${editing&&editing.id===a.id?'sel':''}" onclick="AM.edit(${a.id})">
+      <div class="ico">${(a.display||'photo')==='icon'?(a.icon||'⭐'):(a.photos&&a.photos[0]?`<img src="${esc(a.photos[0])}" onerror="this.parentNode.textContent='📷'">`:'📷')}</div>
+      <div style="min-width:0"><div class="n">${esc(a.name)}<span class="tag ${a.status||'active'}">${a.status||'active'}</span>${availShort(a.availability)?`<span class="tag avail">${availShort(a.availability)}</span>`:''}${offerShort(a.offer)?`<span class="tag ${a.offer==='portal'?'portal':'resv'}">${offerShort(a.offer)}</span>`:''}</div>
+      <div class="s">${esc(priceSummary(a))}</div></div></div>`).join('')||'<div class="empty">No activities yet.</div>';
+  }
+  function renderEditor(){
+    if(!editing){el('editor').innerHTML='<div class="empty">Select an activity, or click <b>+ New</b>.</div>';el('edhd').textContent='Edit activity';return;}
+    const a=editing;el('edhd').textContent=a.id?('Edit — '+(a.name||'activity')):'New activity';
+    draftPhotos=(a.photos||[]).slice();if(!draftPhotos.length)draftPhotos=[''];
+    const disp=a.display||'photo';const off=a.offer||'both';
+    el('editor').innerHTML=`<div class="form">
+      <div class="frow">
+        <div class="fld" style="flex:3"><label>Activity name</label><input id="f_name" value="${esc(a.name)}" placeholder="Whale & Wildlife Viewing"></div>
+        <div class="fld" style="max-width:150px"><label>Status</label><select id="f_status">${STATUSES.map(s=>`<option ${a.status===s?'selected':''}>${s}</option>`).join('')}</select></div>
+      </div>
+      <div class="fld"><label>Details / description</label><textarea id="f_desc" placeholder="Shown to guests">${esc(a.desc)}</textarea></div>
+      <div class="fld"><label>Info / booking link</label>
+        <div class="mp"><input id="f_url" value="${esc(a.url)}" placeholder="https://www.talonlodge.com/activities/"><a href="${esc(a.url)||'#'}" target="_blank" rel="noopener">Open ↗</a></div></div>
+
+      <div class="seclbl">Availability &amp; pricing</div>
+      <div class="fld"><label>Available</label><select id="f_avail">${AVAIL.map(v=>`<option value="${v[0]}" ${(a.availability||'any')===v[0]?'selected':''}>${v[1]}</option>`).join('')}</select>
+        <span class="hint">Which trip days this can be booked. Also decides the rate: <b>arrival &amp; departure days</b> use the arrival-day price; <b>during stay</b> uses the within-stay price.</span></div>
+      <div class="fld"><label>Available times <span class="hint">(comma-separated — appointment slots the admin can assign)</span></label>
+        <input id="f_times" value="${esc((a.times||[]).join(', '))}" placeholder="e.g. 4:30 PM, 5:30 PM">
+        <span class="hint">Use for appointment activities — e.g. Massage <b>4:30 PM, 5:30 PM</b>; Day Spa <b>10:00 AM</b>. Leave blank for flexible-time adventures.</span></div>
+      <div class="fld"><label>Price (exact wording, shown to guests)</label><textarea id="f_ptext" placeholder="e.g. $450 per person, 2 person minimum">${esc(a.priceText)}</textarea>
+        <span class="hint">Kept verbatim — nothing is lost. The structured fields below are what the booking engine calculates from.</span></div>
+      <div class="frow">
+        <div class="fld"><label>Price from ($)</label><input id="f_from" type="number" min="0" step="1" value="${a.priceFrom??''}"></div>
+        <div class="fld"><label>Price to ($)</label><input id="f_to" type="number" min="0" step="1" value="${a.priceTo??''}"><span class="hint">Leave blank if single price</span></div>
+        <div class="fld"><label>Unit</label><select id="f_unit">${UNITS.map(u=>`<option value="${u[0]}" ${a.unit===u[0]?'selected':''}>${u[1]}</option>`).join('')}</select></div>
+        <div class="fld"><label>Min people</label><input id="f_min" type="number" min="0" step="1" value="${a.minPeople??''}"></div>
+      </div>
+      <div class="frow">
+        <div class="fld"><label>Arrival / departure-day price ($)</label><input id="f_arr" type="number" min="0" step="1" value="${a.arrivalPrice??''}"></div>
+        <div class="fld"><label>Within package-stay price ($)</label><input id="f_within" type="number" min="0" step="1" value="${a.withinPrice??''}"></div>
+        <div class="fld"><label>Season</label><input id="f_season" value="${esc(a.season)}" placeholder="e.g. Aug & Sept"></div>
+        <div class="fld" style="max-width:110px"><label>Sort order</label><input id="f_sort" type="number" min="0" step="1" value="${a.sort??''}"></div>
+      </div>
+
+      <div class="seclbl">Where guests can request this</div>
+      <div class="fld"><label>Offered on</label>
+        <div class="seg" id="offerseg">
+          <button type="button" class="segopt ${off==='both'?'on':''}" onclick="AM.setOffer('both')">Reservation + Portal</button>
+          <button type="button" class="segopt ${off==='reservation'?'on':''}" onclick="AM.setOffer('reservation')">Reservation only</button>
+          <button type="button" class="segopt ${off==='portal'?'on':''}" onclick="AM.setOffer('portal')">Portal only</button>
+        </div>
+        <span class="hint"><b>Portal only</b> hides this from the reservation booking flow — guests can request it solely from the Guest Portal after booking. <b>Reservation only</b> keeps it out of the portal. Either way, every request routes to the 24-hour admin review.</span></div>
+
+      <div class="seclbl">Display</div>
+      <div class="fld"><label>Show guests</label>
+        <div class="seg" id="dispseg">
+          <button type="button" class="segopt ${disp==='photo'?'on':''}" onclick="AM.setDisplay('photo')">🖼 Photo</button>
+          <button type="button" class="segopt ${disp==='icon'?'on':''}" onclick="AM.setDisplay('icon')">🔣 Icon</button>
+        </div>
+        <span class="hint">Talon Lodge uses <b>photos</b>. (Icons are available for properties that prefer them.)</span></div>
+      <div id="disp_photo" style="${disp==='icon'?'display:none':''}">
+        <div class="fld"><label>Photos</label><div class="photos" id="photos"></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:2px">
+            <button class="btn-ghost btn-sm" onclick="AM.pickFiles()">⬆ Upload from computer</button>
+            <button class="btn-ghost btn-sm" onclick="AM.addPhoto()">+ Add photo URL</button>
+            <input type="file" id="filepick" accept="image/*" multiple style="display:none" onchange="AM.upload(this)">
+          </div>
+          <span class="hint">Upload files, or paste URLs. (In production, uploads go to object storage and only the URL is stored; this demo embeds them in your browser, auto-resized.)</span></div>
+      </div>
+      <div id="disp_icon" style="${disp==='photo'?'display:none':''}">
+        <div class="fld" style="max-width:140px"><label>Icon (emoji)</label><input id="f_icon" value="${esc(a.icon)}" placeholder="🐋"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-primary" onclick="AM.save()">Save activity</button>
+        <button class="btn-ghost" onclick="AM.cancel()">Cancel</button>
+        ${a.id?`<button class="btn-danger" onclick="AM.del(${a.id})" style="margin-left:auto">Delete</button>`:''}
+      </div>
+      <details><summary>View as asset JSON (what gets stored)</summary><div class="json" style="display:block" id="jsonout"></div></details>
+    </div>`;
+    renderPhotos();updateJson();
+    ['f_name','f_icon','f_status','f_desc','f_url','f_avail','f_times','f_ptext','f_from','f_to','f_unit','f_min','f_arr','f_within','f_season','f_sort'].forEach(id=>el(id).addEventListener('input',updateJson));
+  }
+  const IMGDB=(()=>{let dbp=null;function open(){if(dbp)return dbp;dbp=new Promise((res,rej)=>{let r;try{r=indexedDB.open('talon-images',1);}catch(e){return rej(e);}r.onupgradeneeded=e=>{try{e.target.result.createObjectStore('photos');}catch(_){}};r.onsuccess=e=>res(e.target.result);r.onerror=()=>rej(r.error);});return dbp;}
+    return {put:(k,v)=>open().then(db=>new Promise((res,rej)=>{const tx=db.transaction('photos','readwrite');tx.objectStore('photos').put(v,k);tx.oncomplete=()=>res(true);tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error);})),
+      get:k=>open().then(db=>new Promise(res=>{const rq=db.transaction('photos','readonly').objectStore('photos').get(k);rq.onsuccess=()=>res(rq.result||null);rq.onerror=()=>res(null);})).catch(()=>null),
+      del:k=>open().then(db=>new Promise(res=>{const tx=db.transaction('photos','readwrite');tx.objectStore('photos').delete(k);tx.oncomplete=()=>res(true);tx.onerror=()=>res(false);})).catch(()=>false)};})();
+  function resolveIdb(root){[...(root||document).querySelectorAll('img[data-idb]')].forEach(img=>{const k=img.getAttribute('data-idb');img.removeAttribute('data-idb');IMGDB.get(k).then(v=>{if(v)img.src=v;else img.style.visibility='hidden';});});}
+  function renderPhotos(){
+    el('photos').innerHTML=draftPhotos.map((u,i)=>{
+      const isIdb=(u||'').indexOf('idb:')===0;const isData=(u||'').startsWith('data:');
+      const imgTag=isIdb?`<img data-idb="${esc(u.slice(4))}" onerror="this.style.visibility='hidden'">`:`<img src="${isData?u:esc(u)}" onerror="this.style.visibility='hidden'">`;
+      return `<div class="prow">${imgTag}
+        ${(isData||isIdb)?`<span style="flex:1;font-size:12.5px;color:var(--muted)">📷 Uploaded image</span>`:`<input value="${esc(u)}" placeholder="https://…/photo.jpg" oninput="AM.photoInput(${i},this.value)">`}
+        <button class="btn-ghost btn-sm" onclick="AM.removePhoto(${i})">✕</button></div>`;
+    }).join('');
+    resolveIdb(el('photos'));
+  }
+  function resizeImage(file,cb){
+    const fr=new FileReader();
+    fr.onload=()=>{const img=new Image();img.onload=()=>{
+      const max=1200;let w=img.width,h=img.height;
+      if(w>max||h>max){const s=Math.min(max/w,max/h);w=Math.round(w*s);h=Math.round(h*s);}
+      const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+      cb(c.toDataURL('image/jpeg',0.82));};img.onerror=()=>cb(null);img.src=fr.result;};
+    fr.readAsDataURL(file);
+  }
+  function num(id){const v=el(id).value.trim();return v===''?null:(+v);}
+  function collect(){
+    return {id:editing.id,name:el('f_name').value.trim(),icon:el('f_icon').value.trim(),status:el('f_status').value,
+      desc:el('f_desc').value.trim(),url:el('f_url').value.trim(),priceText:el('f_ptext').value.trim(),
+      priceFrom:num('f_from'),priceTo:num('f_to'),unit:el('f_unit').value,minPeople:num('f_min'),
+      arrivalPrice:num('f_arr'),withinPrice:num('f_within'),season:el('f_season').value.trim(),
+      availability:el('f_avail').value,times:el('f_times').value.split(',').map(s=>s.trim()).filter(Boolean),display:(editing.display||'photo'),offer:(editing.offer||'both'),sort:num('f_sort')||0,
+      photos:draftPhotos.map(p=>p.trim()).filter(Boolean)};
+  }
+  function assetShape(a){return {asset_type:'Activity',name:a.name,capacity:null,properties:{
+    icon:a.icon,description:a.desc,info_url:a.url,price_text:a.priceText,
+    price_from:a.priceFrom,price_to:a.priceTo,price_unit:a.unit,min_people:a.minPeople,
+    arrival_day_price:a.arrivalPrice,within_stay_price:a.withinPrice,season:a.season,
+    availability:a.availability||'any',available_times:a.times||[],display:a.display||'photo',offer_channel:a.offer||'both',status:a.status,sort_order:a.sort,photos:a.photos}};}
+  function updateJson(){const o=el('jsonout');if(o)o.textContent=JSON.stringify(assetShape(collect()),null,2);}
+
+  window.AM={
+    edit(id){editing=JSON.parse(JSON.stringify(acts.find(a=>a.id===id)));renderList();renderEditor();},
+    new(){editing={id:0,name:'',icon:'⭐',status:'active',desc:'',url:'',priceText:'',priceFrom:null,priceTo:null,unit:'per_person',minPeople:null,arrivalPrice:null,withinPrice:null,season:'',availability:'any',display:'photo',offer:'both',sort:(Math.max(0,...acts.map(a=>a.sort||0))+1),photos:[]};renderList();renderEditor();},
+    setOffer(v){editing.offer=v;const map={both:0,reservation:1,portal:2};[...document.querySelectorAll('#offerseg .segopt')].forEach((b,i)=>b.classList.toggle('on',i===map[v]));updateJson();},
+    setDisplay(v){editing.display=v;el('disp_photo').style.display=v==='icon'?'none':'';el('disp_icon').style.display=v==='photo'?'none':'';[...document.querySelectorAll('#dispseg .segopt')].forEach((b,i)=>b.classList.toggle('on',(i===0)===(v==='photo')));updateJson();},
+    cancel(){editing=null;renderList();renderEditor();},
+    addPhoto(){draftPhotos.push('');renderPhotos();},
+    pickFiles(){el('filepick').click();},
+    upload(input){const files=[...input.files];input.value='';files.forEach(f=>resizeImage(f,url=>{if(!url)return;const key='actphoto:'+Math.random().toString(36).slice(2,10);IMGDB.put(key,url).then(()=>{draftPhotos.push('idb:'+key);renderPhotos();updateJson();toast('Photo added — click Save to keep it');}).catch(()=>{draftPhotos.push(url);renderPhotos();updateJson();toast('Photo added — click Save to keep it');});}));},
+    removePhoto(i){const u=draftPhotos[i];draftPhotos.splice(i,1);if(!draftPhotos.length)draftPhotos=[''];renderPhotos();updateJson();if(u&&u.indexOf('idb:')===0)IMGDB.del(u.slice(4));},
+    photoInput(i,v){draftPhotos[i]=v;updateJson();},
+    save(){const d=collect();if(!d.name){toast('Activity name is required');return;}
+      if(d.id){const idx=acts.findIndex(a=>a.id===d.id);acts[idx]=d;}else{d.id=nextId++;acts.push(d);}
+      acts.sort((a,b)=>(a.sort||0)-(b.sort||0));
+      const ok=persist();editing=JSON.parse(JSON.stringify(d));renderList();renderEditor();
+      toast(ok===true?('Saved '+d.name):ok==='lean'?(d.name+' saved — but photos are too large for browser storage; use hosted URLs instead'):'Could not save — browser storage is full');},
+    del(id){if(!confirm('Delete this activity?\n\nStandard Talon services (Massage, Sportfishing, etc.) will reappear on reload — set their status to “Inactive” instead to hide them. Custom activities stay deleted.'))return;acts=acts.filter(a=>a.id!==id);persist();editing=null;renderList();renderEditor();toast('Deleted');},
+    exportJson(){
+      const doc={schema:'talon.assets.v1',asset_type:'Activity',property_slug:'talon-lodge',
+        note:'Canonical Activity asset catalog exported from Activities Management. Drop into database/seeders/data/activities.json and run AssetCatalogSeeder to seed production.',
+        exported_at:new Date().toISOString(),assets:acts.map(assetShape)};
+      const blob=new Blob([JSON.stringify(doc,null,2)],{type:'application/json'});
+      const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='activities.json';a.click();
+      setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+      const big=acts.some(x=>(x.photos||[]).some(p=>(p||'').startsWith('data:')));
+      toast(big?'Exported — note: uploaded photos are inline; move to S3 for prod':'Exported activities.json');
+    },
+    importJson(input){const f=input.files[0];input.value='';if(!f)return;
+      const fr=new FileReader();
+      fr.onload=()=>{try{
+        const doc=JSON.parse(fr.result);const list=Array.isArray(doc)?doc:(doc.assets||[]);if(!list.length)throw 0;
+        const mapped=list.map((a,i)=>{
+          if(a&&a.properties){const p=a.properties;return {id:i+1,name:a.name||'',icon:p.icon||'⭐',status:p.status||'active',desc:p.description||'',url:p.info_url||'',
+            priceText:p.price_text||'',priceFrom:p.price_from??null,priceTo:p.price_to??null,unit:p.price_unit||'per_person',minPeople:p.min_people??null,
+            arrivalPrice:p.arrival_day_price??null,withinPrice:p.within_stay_price??null,season:p.season||'',availability:p.availability||'any',display:p.display||'photo',sort:p.sort_order??(i+1),photos:Array.isArray(p.photos)?p.photos:[]};}
+          return {id:a.id||i+1,name:a.name||'',icon:a.icon||'⭐',status:a.status||'active',desc:a.desc||'',url:a.url||'',priceText:a.priceText||'',
+            priceFrom:a.priceFrom??null,priceTo:a.priceTo??null,unit:a.unit||'per_person',minPeople:a.minPeople??null,arrivalPrice:a.arrivalPrice??null,
+            withinPrice:a.withinPrice??null,season:a.season||'',availability:a.availability||'any',display:a.display||'photo',sort:a.sort??(i+1),photos:Array.isArray(a.photos)?a.photos:[]};
+        });
+        if(!confirm(`Import ${mapped.length} activity(ies)? This replaces your current working copy in this browser.`))return;
+        acts=mapped;acts.sort((a,b)=>(a.sort||0)-(b.sort||0));nextId=Math.max(0,...acts.map(a=>a.id))+1;persist();editing=null;renderList();renderEditor();
+        toast(`Imported ${acts.length} activity(ies)`);
+      }catch(e){toast('Could not read that file — expected an exported activities.json');}};
+      fr.readAsText(f);
+    },
+    reset(){if(!confirm('Reset to the built-in seed activities? Your working copy in this browser will be replaced.'))return;localStorage.removeItem(KEY);location.reload();}
+  };
+  renderList();renderEditor();
+})();
+</script>
+</body></html>

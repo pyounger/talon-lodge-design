@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Talon Lodge — Master-Record Management</title>
+<style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style>
+</head><body>
+<style>
+  :root{
+    --paper:#f3f6f5; --surface:#ffffff; --surface-2:#eaf1ee;
+    --ink:#122a2b; --muted:#586d6a; --faint:#7f918d;
+    --line:#d7e1de; --line-2:#c2cfcb;
+    --accent:#0e7c6f; --accent-deep:#0a544c; --accent-soft:#e2efeb;
+    --salmon:#c25e39; --salmon-soft:#f4e5de;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"Cascadia Code","SFMono-Regular",Consolas,"Liberation Mono",monospace;
+    --shadow:0 1px 2px rgba(18,42,43,.05),0 10px 28px rgba(18,42,43,.05);
+    --r:5px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#0a1413; --surface:#0f1e1c; --surface-2:#152522;
+      --ink:#e9f1ed; --muted:#9bada9; --faint:#72847f;
+      --line:#22352f; --line-2:#324a43;
+      --accent:#38b8a6; --accent-deep:#57c9b9; --accent-soft:#12302b;
+      --salmon:#e18a62; --salmon-soft:#33231b;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0a1413; --surface:#0f1e1c; --surface-2:#152522;
+    --ink:#e9f1ed; --muted:#9bada9; --faint:#72847f;
+    --line:#22352f; --line-2:#324a43;
+    --accent:#38b8a6; --accent-deep:#57c9b9; --accent-soft:#12302b;
+    --salmon:#e18a62; --salmon-soft:#33231b;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"]{
+    --paper:#f3f6f5; --surface:#ffffff; --surface-2:#eaf1ee;
+    --ink:#122a2b; --muted:#586d6a; --faint:#7f918d;
+    --line:#d7e1de; --line-2:#c2cfcb;
+    --accent:#0e7c6f; --accent-deep:#0a544c; --accent-soft:#e2efeb;
+    --salmon:#c25e39; --salmon-soft:#f4e5de;
+    --shadow:0 1px 2px rgba(18,42,43,.05),0 10px 28px rgba(18,42,43,.05);
+  }
+  *{box-sizing:border-box}
+  .rm{background:var(--paper); color:var(--ink); font-family:var(--sans); line-height:1.5;
+     padding:clamp(20px,4vw,56px); -webkit-font-smoothing:antialiased}
+  .rm .inner{max-width:1120px; margin:0 auto}
+  .rm-eyebrow{font:600 12px/1 var(--mono); letter-spacing:.18em; text-transform:uppercase; color:var(--accent); margin:0 0 14px}
+  .rm h1{font:800 clamp(28px,4.4vw,46px)/1.05 var(--sans); letter-spacing:-.022em; margin:0 0 12px; text-wrap:balance; max-width:22ch}
+  .rm .lede{font-size:clamp(15px,1.5vw,17px); color:var(--muted); margin:0; max-width:66ch}
+  .rm .lede b{color:var(--ink)}
+
+  .sect{margin-top:38px}
+  .sect > h2{font:800 18px/1.2 var(--sans); letter-spacing:-.01em; margin:0 0 4px}
+  .sect > .sub{font-size:13.5px; color:var(--faint); margin:0 0 18px}
+
+  figure{margin:0}
+  .figwrap{overflow-x:auto; border:1px solid var(--line); border-radius:var(--r); background:var(--surface); box-shadow:var(--shadow)}
+  .figwrap svg{display:block; width:100%; min-width:680px; height:auto; color:var(--ink)}
+  figcaption{font-size:12.5px; color:var(--faint); margin-top:10px; max-width:70ch}
+
+  /* svg element classes */
+  .node{fill:var(--surface); stroke:var(--line-2); stroke-width:1.2}
+  .node.soft{fill:var(--accent-soft); stroke:var(--accent)}
+  .node.dash{fill:none; stroke:var(--salmon); stroke-width:1.3; stroke-dasharray:5 4}
+  .arw{stroke:currentColor; stroke-width:1.5; fill:none}
+  .arw.teal{stroke:var(--accent); stroke-width:2}
+  .arw.salmon{stroke:var(--salmon); stroke-dasharray:5 4}
+  .t-title{fill:var(--ink); font:800 13px var(--sans)}
+  .t-sub{fill:var(--muted); font:500 10.5px var(--mono)}
+  .t-row{fill:var(--ink); font:600 11.5px var(--sans)}
+  .t-note{fill:var(--muted); font:500 10.5px var(--sans)}
+  .t-arw{fill:var(--muted); font:600 10.5px var(--sans)}
+  .t-arw.teal{fill:var(--accent-deep)}
+  .t-arw.salmon{fill:var(--salmon)}
+  .dot-t{fill:var(--accent)} .dot-s{fill:var(--salmon)} .dot-n{fill:var(--faint)}
+
+  /* decision table */
+  .tbl{width:100%; border-collapse:collapse; font-size:13.5px; border:1px solid var(--line); border-radius:var(--r); overflow:hidden}
+  .tbl th,.tbl td{text-align:left; padding:11px 13px; border-bottom:1px solid var(--line); vertical-align:top}
+  .tbl th{font:700 11px var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--faint); background:var(--surface-2)}
+  .tbl tr:last-child td{border-bottom:0}
+  .tbl td b{font-weight:700}
+  .pill{display:inline-block; font:600 11px var(--sans); padding:3px 9px; border-radius:20px; white-space:nowrap}
+  .pill.auto{background:var(--accent-soft); color:var(--accent-deep)}
+  .pill.rev{background:var(--salmon-soft); color:var(--salmon)}
+  .pill.new{background:var(--surface-2); color:var(--muted)}
+
+  /* timeline */
+  .person{border:1.5px solid var(--accent); border-radius:var(--r); background:var(--accent-soft); box-shadow:var(--shadow); overflow:hidden}
+  .person-hd{padding:15px 18px; display:flex; flex-wrap:wrap; gap:4px 14px; align-items:baseline}
+  .person-hd b{font:800 17px var(--sans); letter-spacing:-.01em}
+  .person-hd .id{font:600 11px var(--mono); color:var(--accent-deep)}
+  .person-hd .meta{font-size:12.5px; color:var(--accent-deep); width:100%}
+  .tl{background:var(--surface); border-top:1px solid var(--line); padding:8px 18px 18px}
+  .tl-row{display:grid; grid-template-columns:64px 1fr; gap:14px; padding:16px 0; border-bottom:1px dashed var(--line)}
+  .tl-row:last-child{border-bottom:0}
+  .tl-year{font:800 20px var(--sans); letter-spacing:-.01em; color:var(--accent); font-variant-numeric:tabular-nums}
+  .tl-body .g{font:700 14px var(--sans)}
+  .tl-body .d{font-size:12.5px; color:var(--muted); margin-top:2px}
+  .role{display:inline-block; font:700 10.5px var(--mono); letter-spacing:.05em; text-transform:uppercase; padding:3px 9px; border-radius:4px; margin-left:8px; vertical-align:2px}
+  .role.guest{background:var(--surface-2); color:var(--muted); border:1px solid var(--line-2)}
+  .role.lead{background:var(--accent); color:#fff}
+  .tl-foot{font-size:13px; color:var(--muted); margin-top:14px; padding-top:14px; border-top:1px solid var(--line)}
+  .tl-foot b{color:var(--ink)}
+
+  .callout{margin-top:16px; border:1px solid var(--line-2); border-left:3px solid var(--salmon); border-radius:4px; background:var(--surface); padding:13px 16px; font-size:13.5px; color:var(--muted)}
+  .callout b{color:var(--ink)}
+  .foot{margin-top:34px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--faint); display:flex; flex-wrap:wrap; gap:6px 18px; justify-content:space-between}
+  .foot code{font-family:var(--mono); color:var(--muted)}
+</style>
+
+<div class="rm">
+ <div class="inner">
+  <header>
+    <p class="rm-eyebrow">Talon Lodge Platform · Master-Record Management</p>
+    <h1>One person. One record. Every visit, forever.</h1>
+    <p class="lede">People arrive through <b>three different doors</b>, but the system keeps exactly <b>one master record per human being</b>. Every arrival is matched against who's already known; matches fold in, new people get a fresh record, and uncertain cases go to a human. From then on, a person's whole history — every group, every trip, every role — lives on that single record. <b>This is the spine of the entire platform.</b></p>
+  </header>
+
+  <!-- SECTION 1: FLOW -->
+  <section class="sect">
+    <h2>How a record enters and resolves</h2>
+    <p class="sub">Three intake channels → one matching engine → one master Person record.</p>
+    <figure>
+      <div class="figwrap">
+        <svg viewBox="0 0 1040 430" role="img" aria-label="Three intake channels — website contact form, reservation booking, and guest list — all feed one matching engine, which either auto-links to an existing master person record, sends uncertain matches to a review queue, or creates a new record. The master record then accrues groups, trips, and roles over time.">
+          <defs>
+            <marker id="ah" markerWidth="9" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="context-stroke"/></marker>
+          </defs>
+
+          <!-- intake channels -->
+          <rect class="node" x="18" y="40" width="236" height="86" rx="5"/>
+          <text class="t-title" x="34" y="66">1 · Website contact form</text>
+          <text class="t-note" x="34" y="86">Basic questions, 3 lodge sites.</text>
+          <text class="t-sub" x="34" y="106">name · email · phone · message</text>
+
+          <rect class="node" x="18" y="170" width="236" height="92" rx="5"/>
+          <text class="t-title" x="34" y="196">2 · Reservation booking</text>
+          <text class="t-note" x="34" y="216">Booker becomes the Group Lead.</text>
+          <text class="t-sub" x="34" y="236">name · email · phone · package</text>
+
+          <rect class="node" x="18" y="306" width="236" height="90" rx="5"/>
+          <text class="t-title" x="34" y="332">3 · Guest list</text>
+          <text class="t-note" x="34" y="352">Lead submits travelers (post-booking).</text>
+          <text class="t-sub" x="34" y="372">per guest: name · email · past-guest?</text>
+
+          <!-- arrows into engine -->
+          <line class="arw" x1="254" y1="83"  x2="348" y2="150" marker-end="url(#ah)"/>
+          <line class="arw" x1="254" y1="216" x2="348" y2="216" marker-end="url(#ah)"/>
+          <line class="arw" x1="254" y1="351" x2="348" y2="286" marker-end="url(#ah)"/>
+          <text class="t-arw" x="270" y="205">candidate</text>
+
+          <!-- engine -->
+          <rect class="node" x="350" y="40" width="352" height="356" rx="5"/>
+          <text class="t-title" x="370" y="70">MATCHING ENGINE</text>
+          <text class="t-sub" x="370" y="88">resolveGuestForCandidate()</text>
+          <line x1="350" y1="104" x2="702" y2="104" stroke="var(--line)" stroke-width="1"/>
+
+          <circle class="dot-t" cx="376" cy="146" r="5"/>
+          <text class="t-row" x="392" y="150">Tier 1 · exact email → auto-link</text>
+          <circle class="dot-t" cx="376" cy="196" r="5"/>
+          <text class="t-row" x="392" y="200">Tier 2 · phone + nickname → auto-link</text>
+          <circle class="dot-s" cx="376" cy="250" r="5"/>
+          <text class="t-row" x="392" y="246">Tier 3 · name + last name,</text>
+          <text class="t-row" x="392" y="262">no contact → review queue</text>
+          <circle class="dot-n" cx="376" cy="316" r="5"/>
+          <text class="t-row" x="392" y="320">No match → new master record</text>
+
+          <!-- engine -> master (happy path) -->
+          <line class="arw teal" x1="702" y1="216" x2="792" y2="216" marker-end="url(#ah)"/>
+          <text class="t-arw teal" x="706" y="206">resolved</text>
+
+          <!-- master record -->
+          <rect class="node soft" x="794" y="150" width="230" height="130" rx="5"/>
+          <text class="t-title" x="812" y="182">MASTER PERSON</text>
+          <text class="t-note" x="812" y="202">One record per human.</text>
+          <text class="t-sub" x="812" y="224">emails · phones · aliases</text>
+          <text class="t-sub" x="812" y="242">merge history (undo-safe)</text>
+
+          <!-- review queue -->
+          <rect class="node dash" x="794" y="30" width="230" height="86" rx="5"/>
+          <text class="t-title" x="812" y="58">MERGE REVIEW</text>
+          <text class="t-note" x="812" y="78">Staff: merge, or “not a match”.</text>
+          <text class="t-sub" x="812" y="98">every merge is reversible</text>
+
+          <!-- tier3 flag up to review -->
+          <line class="arw salmon" x1="676" y1="250" x2="794" y2="90" marker-end="url(#ah)"/>
+          <text class="t-arw salmon" x="690" y="150">Tier 3 flag</text>
+          <!-- review -> master confirm -->
+          <line class="arw salmon" x1="909" y1="116" x2="909" y2="150" marker-end="url(#ah)"/>
+          <text class="t-arw salmon" x="916" y="138">confirm</text>
+
+          <!-- master -> history accrues -->
+          <line class="arw" x1="909" y1="280" x2="909" y2="330" marker-end="url(#ah)"/>
+          <text class="t-arw" x="916" y="304">accrues</text>
+          <rect class="node" x="794" y="332" width="230" height="72" rx="5"/>
+          <text class="t-row" x="812" y="360">Groups · Trips · Roles</text>
+          <text class="t-note" x="812" y="382">full stay history, every year</text>
+        </svg>
+      </div>
+      <figcaption>The same <code>resolveGuestForCandidate()</code> engine runs for all three channels — a website inquiry, a booking, and every name on a guest list are matched identically. Auto-links (teal) are certain; Tier-3 (salmon, dashed) is uncertain and always waits for a human, and any merge can be undone.</figcaption>
+    </figure>
+  </section>
+
+  <!-- SECTION 2: DECISION -->
+  <section class="sect">
+    <h2>The matching decision</h2>
+    <p class="sub">What the engine does with each incoming candidate.</p>
+    <table class="tbl">
+      <thead><tr><th>Tier</th><th>Signal</th><th>Action</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td><b>1</b></td><td>Exact email match (normalized)</td><td><span class="pill auto">Auto-link</span></td><td>Email is the strongest identity signal — same address, same person.</td></tr>
+        <tr><td><b>2</b></td><td>Exact phone + nickname-equivalent name (Bob = Robert)</td><td><span class="pill auto">Auto-link</span></td><td>Two corroborating signals; nickname table resolves “Phil / Philip”.</td></tr>
+        <tr><td><b>3</b></td><td>Nickname-equiv name + same last name, <b>no</b> email/phone</td><td><span class="pill rev">Review queue</span></td><td>Plausible but unproven — a human confirms before merging.</td></tr>
+        <tr><td>—</td><td>No matching signal</td><td><span class="pill new">New record</span></td><td>A genuinely new person; a fresh master record is created.</td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><b>Safety:</b> every merge — automatic or human-confirmed — records the losing and surviving states and the exact records it re-pointed, so it can be <b>undone precisely</b>. Merges are the only action that rewrites data across records at once, so they are the only action with full reversibility.</div>
+  </section>
+
+  <!-- SECTION 3: ROLE OVER TIME -->
+  <section class="sect">
+    <h2>One person, many roles over time</h2>
+    <p class="sub">Role belongs to a person’s membership in a group — not to the person. So a guest can become a lead, and the record shows both.</p>
+    <div class="person">
+      <div class="person-hd">
+        <b>Phil Younger</b><span class="id">PERSON · master record</span>
+        <span class="meta">phil@…  ·  +1 (907) …  ·  aliases: “Phil”, “Philip”</span>
+      </div>
+      <div class="tl">
+        <div class="tl-row">
+          <div class="tl-year">2019</div>
+          <div class="tl-body">
+            <div class="g">Marshall Group <span class="role guest">Guest</span></div>
+            <div class="d">Added via the Marshall lead’s guest list. Received his own portal invite; managed his own profile, flights &amp; activities.</div>
+          </div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-year">2025</div>
+          <div class="tl-body">
+            <div class="g">Younger Group <span class="role lead">Group Lead</span></div>
+            <div class="d">Booked his own reservation → became Group Lead → submitted his own guest list (which created / linked the rest of his party the same way).</div>
+          </div>
+        </div>
+        <div class="tl-foot"><b>Same record, both times.</b> When you open Phil Younger you see the full arc: a guest of the Marshall group in 2019, and lead of his own group in 2025 — with every accommodation, boat, and activity from each trip.</div>
+      </div>
+    </div>
+    <div class="callout"><b>How it stays one record:</b> in 2025 Phil’s booking runs through the same matching engine, hits his 2019 email (Tier&nbsp;1), and <b>auto-links to the existing person</b> instead of creating a duplicate. A new group membership is added with role = <b>Lead</b>; the 2019 <b>Guest</b> membership is untouched. Nothing is ever overwritten — history only accumulates.</div>
+  </section>
+
+  <div class="foot">
+    <span>Talon Lodge Platform — master-record management</span>
+    <span><code>3 channels → match → 1 person → membership(role) per group/trip → history</code></span>
+  </div>
+ </div>
+</div>
+</body></html>

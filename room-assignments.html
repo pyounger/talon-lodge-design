@@ -1,0 +1,209 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Room Assignments</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 22px rgba(18,42,43,.06)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--gold:#e0b45e}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--gold:#b9892b}
+  *{box-sizing:border-box}
+  .rm{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(14px,3vw,30px);-webkit-font-smoothing:antialiased}
+  .rm .wrap{max-width:1000px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(20px,3vw,28px)/1.1 var(--sans);letter-spacing:-.02em;margin:0 0 4px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:13.5px;max-width:88ch}
+  .bar{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);padding:13px 16px;margin-bottom:14px}
+  .fld{display:flex;flex-direction:column;gap:5px}.fld label{font:700 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  select{font:600 13.5px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:8px 10px}
+  select:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+  .viewseg{display:inline-flex;border:1px solid var(--line-2);border-radius:9px;overflow:hidden;margin-bottom:16px;background:var(--surface);box-shadow:var(--shadow)}
+  .vseg{font:700 12.5px var(--sans);padding:9px 16px;background:var(--surface);color:var(--muted);border:0;border-right:1px solid var(--line-2);cursor:pointer}.vseg:last-child{border-right:0}.vseg.on{background:var(--accent);color:#fff}
+  .panel{background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+  .phead{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .phead h2{font:800 15px var(--sans);margin:0}.phead .desc{font-size:12.5px;color:var(--muted)}.phead .sp{margin-left:auto}
+  .occ{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px}
+  .rchip{display:flex;flex-direction:column;gap:1px;border:1px solid var(--line-2);border-radius:10px;padding:7px 12px;background:var(--surface-2);min-width:96px}
+  .rchip .rn{font:700 12.5px var(--sans)}
+  .rchip .rc{font:700 11px var(--mono);color:var(--accent-deep)}
+  .rchip.over{border-color:var(--salmon);background:var(--salmon-soft)}.rchip.over .rc{color:var(--salmon)}
+  .rchip.empty .rc{color:var(--faint)}
+  details.alloc{border-bottom:1px solid var(--line)}
+  details.alloc>summary{cursor:pointer;font:700 12.5px var(--sans);color:var(--accent-deep);padding:11px 16px;list-style:none;display:flex;align-items:center;gap:8px}
+  details.alloc>summary::-webkit-details-marker{display:none}
+  .allocbody{padding:4px 16px 14px;display:flex;gap:8px;flex-wrap:wrap}
+  .achip{font:600 12.5px var(--sans);border:1px solid var(--line-2);border-radius:20px;padding:6px 12px;background:var(--surface);color:var(--muted);cursor:pointer;user-select:none}
+  .achip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep)}
+  .achip .cap{font:600 10px var(--mono);opacity:.7;margin-left:4px}
+  .grow{padding:2px 0}
+  .grow .row{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .grow .row:last-child{border-bottom:0}
+  .gname{font:700 14px var(--sans);min-width:180px;flex:1}
+  .gname .lead{font:700 9px var(--mono);letter-spacing:.05em;color:var(--accent-deep);background:var(--accent-soft);border-radius:20px;padding:2px 7px;margin-left:6px}
+  .gmeta{font-size:12px;color:var(--faint)}
+  .rsel{min-width:190px}
+  .rsel.unassigned{border-color:var(--gold);background:var(--gold-soft)}
+  .note{margin:12px 16px;font-size:12px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:9px 12px}
+  .btn{font:700 12.5px var(--sans);border-radius:8px;padding:9px 14px;cursor:pointer;border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+  .btn:hover{background:var(--surface-2)}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  /* rooming list */
+  .rl{padding:6px 18px 18px}
+  .rlroom{border:1px solid var(--line);border-radius:10px;margin:12px 0;overflow:hidden;break-inside:avoid}
+  .rlroom .rh{display:flex;align-items:baseline;gap:10px;padding:10px 14px;background:var(--surface-2);border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .rlroom .rh .n{font:800 15px var(--sans)}.rlroom .rh .b{font-size:12px;color:var(--muted)}
+  .rlroom .rh .c{margin-left:auto;font:700 12px var(--mono);color:var(--accent-deep)}
+  .rlroom.over .rh .c{color:var(--salmon)}
+  .rlroom ul{margin:0;padding:8px 14px 10px 30px}
+  .rlroom li{font-size:14px;padding:2px 0}
+  .movebody{padding:6px 14px 10px}
+  .mv{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
+  .mv:last-child{border-bottom:0}
+  .mv .mvn{flex:1;min-width:150px;font:600 13.5px var(--sans)}
+  .mv .mg{font:600 11px var(--mono);color:var(--faint)}
+  .mv .lead{font:700 9px var(--mono);letter-spacing:.05em;color:var(--accent-deep);background:var(--accent-soft);border-radius:20px;padding:2px 7px;margin-left:4px}
+  .mv select{min-width:160px;font:600 12.5px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:7px;padding:6px 8px}
+  .mv.emptyrow{color:var(--faint)}
+  .rlroom .rh .move{font:600 10px var(--mono);color:var(--faint);text-transform:uppercase;letter-spacing:.05em}
+  .rhead{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:2px solid var(--accent);flex-wrap:wrap}
+  .rhead .btn{margin-left:auto}.rtitle{font:800 19px var(--sans)}.rsub{font:600 12.5px var(--sans);color:var(--muted);margin-top:2px}
+  .empty{padding:34px 16px;text-align:center;color:var(--muted);font-size:14px}
+  .schema{margin-top:4px;font-size:12px;color:var(--muted);background:var(--surface);border:1px dashed var(--line-2);border-radius:10px;padding:11px 14px;line-height:1.6}
+  .schema b{color:var(--accent-deep)} .schema code{font-family:var(--mono);font-size:.9em;color:var(--ink)}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--accent-deep);color:#fff;font:600 13px var(--sans);padding:9px 16px;border-radius:9px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s;z-index:5}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media print{html,body{background:#fff}.rm{padding:0}.eyebrow,.lede,.bar,.viewseg,.schema,.toast,.no-print{display:none!important}h1{font-size:16px;margin:0 0 10px}.panel{box-shadow:none;border-color:#bbb}.rhead{border-color:#333}.rlroom{break-inside:avoid}}
+</style>
+<div class="rm"><div class="wrap">
+  <p class="eyebrow">Operate · Lodging</p>
+  <h1>Room Assignments</h1>
+  <p class="lede">The reservation assigns the <b>room(s) to the group</b>. Here you place each <b>individual guest</b> into one of the group's rooms. Over‑capacity is accepted and flagged (never blocked). Every assignment attaches to the guest, so it flows to the daily report and rooming list.</p>
+
+  <div class="bar">
+    <div class="fld"><label>Package</label><select id="pkg" onchange="RA.pick()"></select></div>
+    <div class="fld"><label>Group</label><select id="grp" onchange="RA.pick()"><option value="">—</option></select></div>
+  </div>
+
+  <div class="viewseg" id="viewseg">
+    <button class="vseg on" data-v="assign" onclick="RA.setView('assign')">Assign guests</button>
+    <button class="vseg" data-v="all" onclick="RA.setView('all')">All rooms · move anyone</button>
+    <button class="vseg" data-v="list" onclick="RA.setView('list')">Rooming list</button>
+  </div>
+
+  <div id="work"></div>
+
+  <div class="schema">Maps to Andy's schema → group <b>room_allocation</b> (<code>trip_id, group, room_id</code>) from the reservation + per‑person <b>room_assignment</b> (<code>person_id, room_id</code>). Rooms lookup: <b>rooms</b> (<code>id, name, building, capacity</code>).</div>
+</div></div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+  const PKEY='talon_packages_v1', PROF='talon_portal_profile', ROOMS='talon_rooms_v1', ALLOC='talon_room_alloc_v1';
+  const PKG_SEED=[{id:'sp1',series:'Standard',category:'Sportfishing',status:'published',arrival_start_date:'2027-05-24',nights:4}];
+  const ROOM_SEED=[
+    {id:'r-maincedar',name:'Main Cedar',building:'Cedar',detail:'Cedar 3 · 4 · 5',capacity:4},
+    {id:'r-cedar1',name:'Cedar 1',building:'Cedar',detail:'',capacity:2},
+    {id:'r-cedar2',name:'Cedar 2',building:'Cedar',detail:'',capacity:2},
+    {id:'r-mainspruce',name:'Main Spruce',building:'Spruce',detail:'Spruce 3 · 4 · 5',capacity:6},
+    {id:'r-spruce1',name:'Spruce 1',building:'Spruce',detail:'',capacity:2},
+    {id:'r-spruce2',name:'Spruce 2',building:'Spruce',detail:'',capacity:2},
+    {id:'r-bluff',name:'Bluff House',building:'Bluff House',detail:'Three Bedrooms',capacity:6}
+  ];
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1500);}
+  const parseD=s=>{const[y,m,d]=(s||'').split('-').map(Number);return new Date(y,(m||1)-1,d||1);};
+  const addDays=(s,n)=>{const dt=parseD(s);dt.setDate(dt.getDate()+n);return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');};
+  const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const fmtD=s=>{if(!s)return '';const d=parseD(s);return MO[d.getMonth()]+' '+d.getDate();};
+
+  function loadPkgs(){try{const p=JSON.parse(localStorage.getItem(PKEY));if(Array.isArray(p)&&p.length)return p;}catch(e){}return PKG_SEED;}
+  const PKGS=loadPkgs().filter(p=>(!p.status||p.status==='published')&&p.arrival_start_date&&p.nights).sort((a,b)=>a.arrival_start_date<b.arrival_start_date?-1:1);
+  const pkgById=id=>PKGS.find(p=>p.id===id);
+  const pkgLabel=p=>{const dep=addDays(p.arrival_start_date,+p.nights);return fmtD(p.arrival_start_date)+'–'+fmtD(dep)+' · '+(+p.nights)+'N · '+(p.series?p.series+' ':'')+(p.category||'Sportfishing');};
+  function loadRooms(){let r=null;try{r=JSON.parse(localStorage.getItem(ROOMS));}catch(e){}if(!Array.isArray(r)||!r.length){r=JSON.parse(JSON.stringify(ROOM_SEED));try{localStorage.setItem(ROOMS,JSON.stringify(r));}catch(e){}}return r;}
+  const roomByName=n=>loadRooms().find(x=>x.name===n)||null;
+  const loadProfiles=()=>{try{return JSON.parse(localStorage.getItem(PROF))||{};}catch(e){return {};}};
+  const saveProfiles=pr=>{try{localStorage.setItem(PROF,JSON.stringify(pr));return true;}catch(e){toast('Storage full');return false;}};
+  function groupsForPkg(pkgId){const pr=loadProfiles(),out=[];Object.keys(pr).forEach(k=>{const i=k.lastIndexOf('|');if(i>0&&k.slice(i+1)===pkgId)out.push(k.slice(0,i));});return out.sort();}
+  const groupGuestObjs=(group,pkgId)=>{const pr=loadProfiles(),k=group+'|'+pkgId;return (pr[k]&&pr[k].guests)||[];};
+
+  const loadAlloc=()=>{try{return JSON.parse(localStorage.getItem(ALLOC))||{};}catch(e){return {};}};
+  const saveAlloc=a=>{try{localStorage.setItem(ALLOC,JSON.stringify(a));}catch(e){}};
+  function allocFor(group,pkgId){const a=loadAlloc();const key=group+'|'+pkgId;if(a[key])return a[key];
+    // default: derive from rooms the group's guests currently sit in (from reservation seed)
+    const set=[...new Set(groupGuestObjs(group,pkgId).map(g=>g.room).filter(Boolean))];
+    a[key]=set;saveAlloc(a);return set;}
+  function toggleAlloc(group,pkgId,name){const a=loadAlloc();const key=group+'|'+pkgId;const cur=a[key]||allocFor(group,pkgId);
+    a[key]=cur.includes(name)?cur.filter(x=>x!==name):[...cur,name];saveAlloc(a);}
+
+  let S={pkgId:'',group:''}, VIEW='assign';
+  function initPkg(){el('pkg').innerHTML='<option value="">Select a package…</option>'+PKGS.map(p=>`<option value="${p.id}">${esc(pkgLabel(p))}</option>`).join('');if(PKGS.length===1)el('pkg').value=PKGS[0].id;}
+  function refresh(){const grps=S.pkgId?groupsForPkg(S.pkgId):[];el('grp').innerHTML='<option value="">'+(S.pkgId?(grps.length?'Select a group…':'— load Test data —'):'—')+'</option>'+grps.map(g=>`<option ${g===S.group?'selected':''}>${esc(g)}</option>`).join('');if(!grps.includes(S.group))S.group='';}
+
+  function setGuestRoom(group,id,room){const pr=loadProfiles();const k=group+'|'+S.pkgId;const g=(pr[k]&&pr[k].guests||[]).find(x=>x.id===id);if(!g)return;g.room=room;saveProfiles(pr);}
+  const shortGroup=g=>String(g||'').replace(/\s+Group$/,'');
+  // lodge-wide: every guest across every group on the package
+  function allGuests(){const out=[];groupsForPkg(S.pkgId).forEach(gr=>{groupGuestObjs(gr,S.pkgId).forEach(g=>out.push({group:gr,g}));});return out;}
+  function occupancyAll(){const by={};allGuests().forEach(x=>{if(x.g.room)by[x.g.room]=(by[x.g.room]||0)+1;});return by;}
+
+  window.RA={
+    pick(){S.pkgId=el('pkg').value;S.group=el('grp').value;refresh();S.group=el('grp').value;render();},
+    setView(v){VIEW=v;[...document.querySelectorAll('#viewseg .vseg')].forEach(b=>b.classList.toggle('on',b.getAttribute('data-v')===v));render();},
+    toggleAlloc(name){toggleAlloc(S.group,S.pkgId,name);render();},
+    assign(id,room){setGuestRoom(S.group,id,room);render();},
+    move(group,id,room){setGuestRoom(group,id,room);render();}
+  };
+
+  function render(){
+    const w=el('work');
+    if(!S.pkgId||(VIEW!=='all'&&!S.group)){w.innerHTML='<div class="panel"><div class="empty">Pick a <b>package</b>'+(VIEW==='all'?'':' and <b>group</b>')+'.<br><span style="font-size:12.5px">'+(VIEW==='all'?'“All rooms” shows every group at once.':'No groups? Open <b>Test data</b> first.')+'</span></div></div>';return;}
+    if(VIEW==='all')return renderAll();
+    return VIEW==='assign'?renderAssign():renderList();
+  }
+
+  function renderAssign(){
+    const w=el('work');const rooms=loadRooms();const alloc=allocFor(S.group,S.pkgId);const guests=groupGuestObjs(S.group,S.pkgId);const occ=occupancyAll();
+    const allocRooms=rooms.filter(r=>alloc.includes(r.name));
+    const chips=allocRooms.map(r=>{const n=occ[r.name]||0;const over=n>r.capacity;return `<div class="rchip ${over?'over':(n?'':'empty')}"><span class="rn">${esc(r.name)}</span><span class="rc">${n}/${r.capacity}${over?' ⚑ over':''}</span></div>`;}).join('')||'<span class="desc" style="color:var(--muted)">No rooms held yet — open “Rooms held by this group” below.</span>';
+    const allocChips=rooms.map(r=>`<span class="achip ${alloc.includes(r.name)?'on':''}" onclick="RA.toggleAlloc('${esc(r.name).replace(/'/g,"\\'")}')">${esc(r.name)}<span class="cap">${r.capacity}</span></span>`).join('');
+    const options=name=>{const opts=allocRooms.map(r=>r.name);if(name&&!opts.includes(name))opts.push(name);
+      return `<option value="">— Unassigned —</option>`+opts.map(o=>`<option ${o===name?'selected':''}>${esc(o)}${roomByName(o)?'':' (not held)'}</option>`).join('');};
+    const rows=guests.map(g=>{const nm=((g.first||'')+' '+(g.last||'')).trim();const inRoom=g.room&&alloc.includes(g.room);
+      return `<div class="row"><span class="gname">${esc(nm)||'Guest'}${g.isLead?'<span class="lead">Lead</span>':''}</span>
+        <span class="gmeta">${esc([g.city,g.state].filter(Boolean).join(', '))}</span>
+        <select class="rsel ${g.room?'':'unassigned'}" onchange="RA.assign('${g.id}',this.value)">${options(g.room)}</select></div>`;}).join('');
+    w.innerHTML=`<div class="panel">
+      <div class="phead"><h2>${esc(S.group)}</h2><span class="desc">· ${esc(pkgLabel(pkgById(S.pkgId)))} · ${guests.length} guests</span></div>
+      <div class="occ">${chips}</div>
+      <details class="alloc"><summary>🏠 Rooms held by this group (from the reservation) — tap to edit</summary><div class="allocbody">${allocChips}</div></details>
+      <div class="grow">${rows||'<div class="empty">No guests in this group.</div>'}</div>
+      <div class="note">Rooms the reservation gave this group are lit above. Assign each guest to one — capacity shows on each room, and going over just flags it (⚑), never blocks.</div>
+    </div>`;
+  }
+
+  function renderList(){
+    const w=el('work');const rooms=loadRooms();const alloc=allocFor(S.group,S.pkgId);const guests=groupGuestObjs(S.group,S.pkgId);
+    const allocRooms=rooms.filter(r=>alloc.includes(r.name));
+    const byRoom={};guests.forEach(g=>{const r=g.room||'__un';(byRoom[r]=byRoom[r]||[]).push(g);});
+    const blocks=allocRooms.map(r=>{const list=byRoom[r.name]||[];const over=list.length>r.capacity;
+      return `<div class="rlroom ${over?'over':''}"><div class="rh"><span class="n">${esc(r.name)}</span><span class="b">${esc(r.building)}${r.detail?' · '+esc(r.detail):''}</span><span class="c">${list.length}/${r.capacity}${over?' ⚑ over capacity':''}</span></div>
+        <ul>${list.map(g=>`<li>${esc(((g.first||'')+' '+(g.last||'')).trim())}${g.isLead?' · lead':''}</li>`).join('')||'<li style="color:var(--faint)">— empty —</li>'}</ul></div>`;}).join('');
+    const un=(byRoom['__un']||[]);
+    const unBlock=un.length?`<div class="rlroom over"><div class="rh"><span class="n">Unassigned</span><span class="c">${un.length} guest${un.length===1?'':'s'}</span></div><ul>${un.map(g=>`<li>${esc(((g.first||'')+' '+(g.last||'')).trim())}</li>`).join('')}</ul></div>`:'';
+    w.innerHTML=`<div class="panel"><div class="rhead"><div><div class="rtitle">🏨 Rooming List</div><div class="rsub">${esc(S.group)} · ${esc(pkgLabel(pkgById(S.pkgId)))}</div></div><button class="btn no-print" onclick="window.print()">🖨 Print</button></div>
+      <div class="rl">${blocks||'<div class="empty">No rooms held — allocate rooms in the Assign view.</div>'}${unBlock}</div></div>`;
+  }
+
+  function renderAll(){
+    const w=el('work');const rooms=loadRooms();const guests=allGuests();
+    const byRoom={};guests.forEach(x=>{const r=x.g.room||'__un';(byRoom[r]=byRoom[r]||[]).push(x);});
+    const roomOpts=cur=>`<option value="">— Unassigned —</option>`+rooms.map(r=>`<option ${r.name===cur?'selected':''}>${esc(r.name)} (${(byRoom[r.name]||[]).length}/${r.capacity})</option>`).join('');
+    const moveRow=x=>{const nm=((x.g.first||'')+' '+(x.g.last||'')).trim();return `<div class="mv"><span class="mvn">${esc(nm)||'Guest'}${x.g.isLead?'<span class="lead">Lead</span>':''} <span class="mg">${esc(shortGroup(x.group))}</span></span><select onchange="RA.move('${esc(x.group).replace(/'/g,"\\'")}','${x.g.id}',this.value)">${roomOpts(x.g.room)}</select></div>`;};
+    const cards=rooms.map(r=>{const list=byRoom[r.name]||[];const over=list.length>r.capacity;
+      return `<div class="rlroom ${over?'over':''}"><div class="rh"><span class="n">${esc(r.name)}</span><span class="b">${esc(r.building)}${r.detail?' · '+esc(r.detail):''}</span><span class="c">${list.length}/${r.capacity}${over?' ⚑ overbooked':''}</span></div>
+        <div class="movebody">${list.map(moveRow).join('')||'<div class="mv emptyrow">— empty —</div>'}</div></div>`;}).join('');
+    const un=byRoom['__un']||[];
+    const unCard=un.length?`<div class="rlroom over"><div class="rh"><span class="n">Unassigned</span><span class="c">${un.length} to place ⚑</span></div><div class="movebody">${un.map(moveRow).join('')}</div></div>`:'';
+    const beds=rooms.reduce((s,r)=>s+r.capacity,0);
+    w.innerHTML=`<div class="panel"><div class="phead"><h2>All rooms · lodge-wide</h2><span class="desc">· ${esc(pkgLabel(pkgById(S.pkgId)))} · ${guests.length} guests / ${beds} beds · move anyone to any room; overbooked rooms flag ⚑</span></div><div class="rl">${cards}${unCard}</div></div>`;
+  }
+
+  initPkg();S.pkgId=el('pkg').value;refresh();render();
+})();
+</script>
+</body></html>

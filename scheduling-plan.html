@@ -1,0 +1,302 @@
+<title>Talon Lodge — Activity &amp; Massage Scheduling Plan</title>
+<style>
+  :root{
+    --paper:#f4f6f5; --surface:#ffffff; --surface-2:#eaf1ee; --sunken:#e4ebe8;
+    --ink:#122a2b; --muted:#516763; --faint:#7c8f8b; --line:#d8e1de; --line-2:#c4cfcb;
+    --accent:#0e7c6f; --accent-deep:#0a544c; --accent-soft:#e0efeb;
+    --gold:#b9892b; --gold-soft:#f6ecd6; --salmon:#c25e39; --salmon-soft:#f5e5de;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"Cascadia Code",Consolas,"SF Mono",monospace;
+    --shadow:0 1px 2px rgba(18,42,43,.05),0 10px 26px rgba(18,42,43,.07);
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --paper:#091311; --surface:#0f1e1c; --surface-2:#152522; --sunken:#0b1917;
+    --ink:#e9f1ed; --muted:#9cadaa; --faint:#6f817d; --line:#22352f; --line-2:#324a43;
+    --accent:#38b8a6; --accent-deep:#5ccbbb; --accent-soft:#123029;
+    --gold:#e0b45e; --gold-soft:#2c2413; --salmon:#e18a62; --salmon-soft:#332018;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.4);
+  }}
+  :root[data-theme="dark"]{
+    --paper:#091311; --surface:#0f1e1c; --surface-2:#152522; --sunken:#0b1917;
+    --ink:#e9f1ed; --muted:#9cadaa; --faint:#6f817d; --line:#22352f; --line-2:#324a43;
+    --accent:#38b8a6; --accent-deep:#5ccbbb; --accent-soft:#123029;
+    --gold:#e0b45e; --gold-soft:#2c2413; --salmon:#e18a62; --salmon-soft:#332018;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;margin:0;
+    padding:clamp(20px,4vw,52px) clamp(16px,4vw,32px);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:900px;margin:0 auto}
+  .eyebrow{font:600 11.5px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+  h1{font:800 clamp(27px,4.4vw,40px)/1.08 var(--sans);letter-spacing:-.02em;margin:0 0 14px;text-wrap:balance;max-width:20ch}
+  .thesis{font-size:clamp(15px,1.9vw,17px);color:var(--muted);max-width:64ch;margin:0 0 8px}
+  .thesis b{color:var(--ink)}
+  h2{font:800 20px/1.2 var(--sans);letter-spacing:-.01em;margin:0 0 4px;display:flex;align-items:baseline;gap:11px}
+  h2 .n{font:700 12px/1 var(--mono);color:var(--accent);border:1px solid var(--accent);border-radius:6px;padding:5px 7px;letter-spacing:.02em}
+  .sub{color:var(--muted);font-size:13.5px;margin:0 0 18px}
+  section{margin-top:44px;border-top:1px solid var(--line);padding-top:26px}
+  .lead-in{margin-top:30px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:680px){.grid2{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px}
+  .card h3{font:800 15.5px var(--sans);margin:0 0 2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .card .role{font:600 10px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:20px}
+  .role.lead{background:var(--accent-soft);color:var(--accent-deep)}
+  .role.second{background:var(--surface-2);color:var(--muted);border:1px solid var(--line-2)}
+  .role.cap{background:var(--gold-soft);color:var(--gold)}
+  .card ul{margin:10px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px}
+  .card li{font-size:13px;color:var(--ink);padding-left:16px;position:relative}
+  .card li::before{content:"";position:absolute;left:2px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+  .card li.no::before{background:var(--line-2)}.card li.no{color:var(--faint)}
+  .card .meta{font-size:12px;color:var(--muted);margin-top:4px}
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);background:var(--surface)}
+  table{border-collapse:collapse;width:100%;min-width:640px;font-size:13px}
+  th{text-align:left;font:600 9.5px/1.3 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint);
+    padding:11px 14px;border-bottom:1px solid var(--line);background:var(--surface-2);vertical-align:bottom}
+  td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink)}
+  tr:last-child td{border-bottom:0}
+  td .a{font-weight:700}
+  .pill{display:inline-block;font:600 10.5px var(--mono);letter-spacing:.02em;padding:2px 7px;border-radius:20px;white-space:nowrap}
+  .pill.stay{background:var(--accent-soft);color:var(--accent-deep)}
+  .pill.travel{background:var(--gold-soft);color:var(--gold)}
+  .pill.req{background:var(--salmon-soft);color:var(--salmon)}
+  figure{margin:22px 0 0}
+  figure svg{width:100%;height:auto;display:block;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+  figcaption{font-size:12px;color:var(--muted);margin-top:9px;text-align:center}
+  .flow{display:flex;flex-direction:column;gap:12px}
+  .flowrow{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:15px 17px}
+  .flowrow .b{font:800 13px var(--mono);color:#fff;background:var(--accent);width:30px;height:30px;border-radius:8px;display:grid;place-items:center;flex:none}
+  .flowrow.alt .b{background:var(--gold)}
+  .flowrow .ft{font-weight:800;font-size:15px;margin-bottom:2px}
+  .flowrow .fd{font-size:13.5px;color:var(--muted)}
+  .flowrow .fd code{font-family:var(--mono);font-size:12px;background:var(--surface-2);padding:1px 5px;border-radius:5px;color:var(--accent-deep)}
+  ol.phases{list-style:none;counter-reset:p;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+  ol.phases li{counter-increment:p;position:relative;padding:14px 16px 14px 54px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+  ol.phases li::before{content:counter(p);position:absolute;left:14px;top:14px;width:28px;height:28px;border-radius:8px;background:var(--accent-soft);color:var(--accent-deep);font:800 13px var(--mono);display:grid;place-items:center}
+  ol.phases .pt{font-weight:800;font-size:15px}
+  ol.phases .pd{font-size:13.5px;color:var(--muted);margin-top:2px}
+  ol.phases .done{background:var(--accent);color:#fff}
+  .tag-done{font:600 9.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent-deep);background:var(--accent-soft);border-radius:20px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+  .q{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:10px;box-shadow:var(--shadow);padding:13px 16px;margin-bottom:10px}
+  .q .ql{font:700 11px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--gold);margin-bottom:5px}
+  .q p{margin:0;font-size:13.5px;color:var(--ink)}.q p .m{color:var(--muted)}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:14px 0 0;font-size:12px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+  .callout{background:var(--accent-soft);border:1px solid var(--accent);border-radius:12px;padding:14px 18px;margin-top:22px}
+  .callout b{color:var(--ink)}.callout{color:var(--accent-deep);font-size:14px}
+  .foot{margin-top:44px;border-top:1px solid var(--line);padding-top:16px;font-size:12px;color:var(--faint)}
+  .foot code{font-family:var(--mono)}
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">Talon Lodge &amp; Spa · Scheduling Plan</p>
+  <h1>Activity &amp; massage scheduling</h1>
+  <p class="thesis">This is the hardest part of the platform, and it's worth naming why: availability isn't a fact we store — it's <b>derived every time</b> from who's working, what each person can run, and how many seats are left on a given day. A guest asks "can I get a massage Wednesday, or fish by float plane Thursday?" and the answer depends on <b>therapists, guides, and boats</b> — finite resources with hard caps — not on the activity itself.</p>
+  <p class="thesis">So the plan below models the <b>resources</b> first, states the <b>capacity rule</b> for each activity type, then derives a <b>live availability calendar</b> that feeds two booking paths: a guest <b>request</b> that places a hold, and an <b>admin</b> who confirms and assigns the actual guide or therapist.</p>
+
+  <section class="lead-in">
+    <h2><span class="n">01</span> The team — the resources that create availability</h2>
+    <p class="sub">Every bookable day traces back to these people and their capabilities. Guides book in order: <b>Ted first, then Holden</b>.</p>
+    <div class="grid2">
+      <div class="card">
+        <h3>Ted Deering <span class="role lead">Lead guide · book 1st</span></h3>
+        <div class="meta">Max 3 guests/day · one activity/day · runs the widest set</div>
+        <ul>
+          <li>Freshwater fishing — boat, ATV &amp; float plane</li>
+          <li>ATV Safari</li>
+          <li>Kayak &amp; Lunch</li>
+          <li>Whale watching</li>
+          <li>Hiking</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Holden Pucket <span class="role second">Second guide · book 2nd</span></h3>
+        <div class="meta">Max 3 guests/day · narrower set</div>
+        <ul>
+          <li>Freshwater fishing — boat, ATV &amp; float plane</li>
+          <li>ATV Safari</li>
+          <li>Hiking</li>
+          <li class="no">Kayak &amp; Lunch — not qualified</li>
+          <li class="no">Whale watching — not qualified</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Lori Strachan &amp; Mikalia Lockhart <span class="role cap">Massage therapists</span></h3>
+        <div class="meta">During stay only</div>
+        <ul>
+          <li>2 sessions each per day — <b>4:30</b> &amp; <b>5:30</b> → 4 massage slots/day total</li>
+          <li>Day Spa — <b>2 people/day</b>, 10 AM–2 PM — <b>staffed separately</b>, doesn't touch the 4 slots</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Saltwater captain &amp; boat <span class="role cap">Travel-day resource</span></h3>
+        <div class="meta">Arrival &amp; departure days only · own crew</div>
+        <ul>
+          <li>One boat per arrival day, one per departure day</li>
+          <li>Own captain/crew — <b>independent of Ted &amp; Holden</b>, so it never competes with the guided calendar</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout">⚠️ <b>Capacity insight worth flagging now:</b> Kayak &amp; Lunch and Whale watching can <b>only</b> be run by Ted. Their real daily capacity is 3 guests — and every day Ted is booked on something else, they show as unavailable. That single-qualified-guide constraint is the tightest bottleneck in the whole calendar.</div>
+  </section>
+
+  <section>
+    <h2><span class="n">02</span> Availability rules, by activity type</h2>
+    <p class="sub">Each row is a distinct rule set the engine applies before a day can be offered.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Activity</th><th>When it can run</th><th>Resource &amp; daily capacity</th><th>Group / party rules</th><th>Shows when</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="a">Massage</td>
+          <td><span class="pill stay">During stay</span></td>
+          <td>2 therapists × 2 sessions (4:30, 5:30) = <b>4 slots/day</b></td>
+          <td>Per person — each guest picks a slot</td>
+          <td>A slot is open that day</td>
+        </tr>
+        <tr>
+          <td class="a">Day Spa</td>
+          <td><span class="pill stay">During stay</span></td>
+          <td><b>2 people/day</b> (10–2); staffed separately</td>
+          <td>Per person</td>
+          <td>Fewer than 2 booked</td>
+        </tr>
+        <tr>
+          <td class="a">Additional Saltwater Day</td>
+          <td><span class="pill travel">Arrival &amp; departure days</span></td>
+          <td><b>1 boat</b> + own captain/crew, per travel day</td>
+          <td>Min <b>4</b>, all from the <b>same group</b></td>
+          <td>Party ≥ 4 — <b>hidden entirely if party is 2</b>; offered "upon request"</td>
+        </tr>
+        <tr>
+          <td class="a">Guided activities<br><span style="color:var(--muted);font-size:12px">fishing (boat/ATV/plane), ATV Safari, Kayak&nbsp;&amp;&nbsp;Lunch, Whale watching, Hiking</span></td>
+          <td><span class="pill stay">During stay</span></td>
+          <td>Guide takes <b>3 guests</b>, <b>one activity/day</b>; 2 guides → up to <b>6/day</b> (only guides qualified for that activity)</td>
+          <td>More than 3 → must be same group. More than 6 → <span class="pill req">request only</span></td>
+          <td>A qualified guide has capacity that day</td>
+        </tr>
+      </tbody>
+    </table></div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--accent)"></i> during stay</span>
+      <span><i class="dot" style="background:var(--gold)"></i> travel days only</span>
+      <span><i class="dot" style="background:var(--salmon)"></i> request-only path</span>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">03</span> How availability is derived</h2>
+    <p class="sub">The calendar is computed, never stored. Resources set capacity → holds and confirmed assignments consume it → what's left is what a guest sees.</p>
+    <figure>
+      <svg viewBox="0 0 860 250" role="img" aria-label="Resources set daily capacity; holds and assignments consume it; the remainder is shown as availability, which feeds a guest request or an admin booking, both ending in a confirmed assignment.">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <g font-family="var(--mono)" font-size="10.5" fill="var(--faint)" letter-spacing="1">
+          <text x="90" y="24" text-anchor="middle">RESOURCES</text>
+          <text x="330" y="24" text-anchor="middle">DAILY CAPACITY</text>
+          <text x="590" y="24" text-anchor="middle">LIVE AVAILABILITY</text>
+          <text x="790" y="24" text-anchor="middle">OUTCOME</text>
+        </g>
+        <!-- resources -->
+        <g>
+          <rect x="18" y="42" width="150" height="70" rx="10" fill="var(--surface-2)" stroke="var(--line-2)"/>
+          <text x="93" y="66" text-anchor="middle" font-family="var(--sans)" font-size="12.5" font-weight="700" fill="var(--ink)">Guides · Therapists</text>
+          <text x="93" y="84" text-anchor="middle" font-family="var(--sans)" font-size="12.5" font-weight="700" fill="var(--ink)">Boats</text>
+          <text x="93" y="102" text-anchor="middle" font-family="var(--sans)" font-size="10.5" fill="var(--muted)">+ what each can run</text>
+        </g>
+        <!-- capacity -->
+        <g>
+          <rect x="252" y="42" width="156" height="70" rx="10" fill="var(--surface)" stroke="var(--accent)"/>
+          <text x="330" y="70" text-anchor="middle" font-family="var(--sans)" font-size="12.5" font-weight="700" fill="var(--ink)">Seats per day,</text>
+          <text x="330" y="88" text-anchor="middle" font-family="var(--sans)" font-size="12.5" font-weight="700" fill="var(--ink)">per activity</text>
+        </g>
+        <!-- minus holds -->
+        <g font-family="var(--sans)" font-size="10.5" fill="var(--muted)">
+          <rect x="252" y="128" width="156" height="34" rx="8" fill="var(--gold-soft)" stroke="var(--gold)"/>
+          <text x="330" y="149" text-anchor="middle" fill="var(--gold)" font-weight="700">− holds &amp; assignments</text>
+        </g>
+        <!-- availability -->
+        <g>
+          <rect x="500" y="42" width="178" height="70" rx="10" fill="var(--accent-soft)" stroke="var(--accent)"/>
+          <text x="589" y="70" text-anchor="middle" font-family="var(--sans)" font-size="12.5" font-weight="800" fill="var(--accent-deep)">Availability calendar</text>
+          <text x="589" y="90" text-anchor="middle" font-family="var(--sans)" font-size="10.5" fill="var(--accent-deep)">green / held / full · per day</text>
+        </g>
+        <!-- outcomes -->
+        <g>
+          <rect x="712" y="40" width="130" height="46" rx="9" fill="var(--surface)" stroke="var(--line-2)"/>
+          <text x="777" y="60" text-anchor="middle" font-family="var(--sans)" font-size="11.5" font-weight="700" fill="var(--ink)">Guest request</text>
+          <text x="777" y="76" text-anchor="middle" font-family="var(--sans)" font-size="10" fill="var(--gold)">→ hold</text>
+          <rect x="712" y="96" width="130" height="46" rx="9" fill="var(--surface)" stroke="var(--line-2)"/>
+          <text x="777" y="116" text-anchor="middle" font-family="var(--sans)" font-size="11.5" font-weight="700" fill="var(--ink)">Admin books</text>
+          <text x="777" y="132" text-anchor="middle" font-family="var(--sans)" font-size="10" fill="var(--muted)">→ assign</text>
+          <rect x="712" y="178" width="130" height="40" rx="9" fill="var(--accent)" />
+          <text x="777" y="203" text-anchor="middle" font-family="var(--sans)" font-size="11.5" font-weight="800" fill="#fff">Assignment</text>
+        </g>
+        <!-- arrows -->
+        <g stroke="currentColor" color="var(--faint)" stroke-width="1.6" fill="none">
+          <line x1="168" y1="77" x2="248" y2="77" marker-end="url(#ar)"/>
+          <line x1="408" y1="77" x2="496" y2="77" marker-end="url(#ar)"/>
+          <line x1="330" y1="128" x2="330" y2="116" marker-end="url(#ar)"/>
+          <line x1="678" y1="66" x2="708" y2="63" marker-end="url(#ar)"/>
+          <line x1="678" y1="90" x2="708" y2="115" marker-end="url(#ar)"/>
+          <line x1="777" y1="86" x2="777" y2="174" marker-end="url(#ar)"/>
+          <line x1="777" y1="142" x2="777" y2="174" marker-end="url(#ar)"/>
+        </g>
+      </svg>
+      <figcaption>Availability = capacity − (holds + assignments), recomputed per day within the guest's stay. Confirming a request or an admin booking writes an <code style="font-family:var(--mono)">assignment</code> that locks the seat.</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2><span class="n">04</span> Two ways to book</h2>
+    <p class="sub">Both end in the same place — a confirmed assignment on the calendar — but they start differently.</p>
+    <div class="flow">
+      <div class="flowrow">
+        <div class="b">A</div>
+        <div><div class="ft">Guest requests through the booking engine</div>
+          <div class="fd">The guest picks an available day; the system places a <b>hold</b> (pending) so the seat can't be double-booked. Nothing is confirmed yet — it needs staff sign-off. Creates a <code>reservation_request</code> line + a pending <code>assignment</code>.</div></div>
+      </div>
+      <div class="flowrow">
+        <div class="b">→</div>
+        <div><div class="ft">Admin confirms &amp; assigns the specific guide / therapist</div>
+          <div class="fd">In the control panel the admin sees the hold, picks the resource (<b>Ted before Holden</b>; a therapist with an open slot), and confirms. The hold becomes a firm assignment; if nothing's available the admin can decline or offer another day.</div></div>
+      </div>
+      <div class="flowrow alt">
+        <div class="b">B</div>
+        <div><div class="ft">Admin books directly in the control panel</div>
+          <div class="fd">Staff can add an activity or massage to a reservation and assign the guide/therapist in one step — no guest request needed (walk-ups, phone bookings, comps).</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">05</span> Build plan</h2>
+    <p class="sub">Model the resources first, then the engine, then the two surfaces that read it.</p>
+    <ol class="phases">
+      <li><div class="pt">Team &amp; capability model <span class="tag-done">builds on existing schema</span></div><div class="pd">Add guides &amp; therapists as <code>assets</code>; record what each can run and the lead/second order via <code>asset_links</code>; store per-resource caps (guide = 3, therapist = 2 sessions, boat = 1). A "Team" admin to add/edit them — same Export→seed pipeline as Rooms/Activities.</div></li>
+      <li><div class="pt">Availability engine</div><div class="pd">The core function: for a day + activity + party, return available / held / full by walking capable resources, subtracting existing holds &amp; assignments, and applying the party rules (min-4 saltwater, 3-per-guide, &gt;6 request-only, mixed-group).</div></li>
+      <li><div class="pt">Guest activity calendar + request → hold</div><div class="pd">In the booking flow, each activity opens a calendar scoped to the guest's stay showing only truly bookable days. Selecting one places a hold and tells the guest it's pending confirmation.</div></li>
+      <li><div class="pt">Admin control panel — confirm, assign, direct-book</div><div class="pd">A day/resource board: pending holds to confirm with a suggested assignment (lead-first), plus direct booking. Everything writes to the one <code>assignments</code> table so the calendar stays truthful for the next guest.</div></li>
+      <li><div class="pt">Overbooking guards &amp; hold expiry</div><div class="pd">Atomic seat checks so two simultaneous requests can't take the last slot, and an auto-release so stale holds free up.</div></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><span class="n">06</span> Decisions</h2>
+    <p class="sub">Three are locked; two small ones remain before Phase 3.</p>
+    <div class="q" style="border-left-color:var(--accent)"><div class="ql" style="color:var(--accent-deep)">✓ Locked · Guide capacity</div><p><b>3 guests max per guide, one activity per day.</b> <span class="m">A guide runs a single activity each day — the tighter, cleaner calendar.</span></p></div>
+    <div class="q" style="border-left-color:var(--accent)"><div class="ql" style="color:var(--accent-deep)">✓ Locked · Saltwater crew</div><p><b>Separate captain &amp; boat crew.</b> <span class="m">Independent of Ted &amp; Holden, so the Additional Saltwater Day never competes with the guided-activity calendar.</span></p></div>
+    <div class="q" style="border-left-color:var(--accent)"><div class="ql" style="color:var(--accent-deep)">✓ Locked · Day Spa staffing</div><p><b>Staffed separately.</b> <span class="m">A Day Spa booking doesn't reduce the 4 daily massage slots (4:30 &amp; 5:30 stay intact).</span></p></div>
+    <div class="q"><div class="ql">Open · Mixed groups on a guide</div><p>Can a guide's 3 seats be filled by <b>two different small groups</b> (e.g. 2 + 1)? The rule says "more than 3 must be same group," which implies ≤3 <b>can</b> mix — confirm that's intended.</p></div>
+    <div class="q"><div class="ql">Open · Hold expiry &amp; the "request only" path</div><p>How long should a guest hold last before auto-releasing? And for parties over 6 (request-only), should the booking engine <b>collect the request</b> and route it straight to the admin queue with no availability shown?</p></div>
+  </section>
+
+  <div class="callout" style="border-color:var(--gold);background:var(--gold-soft);color:var(--gold)">
+    <b style="color:var(--ink)">Recommended first step:</b> build Phase 1 + 2 — the Team admin and the availability engine — with a small demo calendar so you can watch a day fill up (Ted → Holden → full) and see Kayak/Whale bottleneck on Ted. Everything after that reads the same engine.
+  </div>
+
+  <p class="foot">Talon Lodge &amp; Spa · scheduling plan · resources → capacity → availability → holds → assignments. Data model builds on the existing <code>assets</code> / <code>asset_links</code> / <code>assignments</code> schema.</p>
+</div>

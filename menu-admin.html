@@ -1,0 +1,161 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Menu Items</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--gold:#b9892b;--gold-soft:#f6ecd6;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 22px rgba(18,42,43,.06)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--gold:#e0b45e;--gold-soft:#2c2413;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--gold:#e0b45e}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--gold:#b9892b}
+  *{box-sizing:border-box}
+  .rm{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(14px,3vw,30px);-webkit-font-smoothing:antialiased}
+  .rm .wrap{max-width:1020px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(20px,3vw,28px)/1.1 var(--sans);letter-spacing:-.02em;margin:0 0 4px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:13.5px;max-width:86ch}
+  .bar{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);padding:12px 16px;margin-bottom:14px}
+  .fld{display:flex;flex-direction:column;gap:5px}.fld label{font:700 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  select,input{font:600 13.5px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:8px 10px}
+  select:focus,input:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+  .sp{margin-left:auto}
+  .btn{font:700 12px var(--sans);border-radius:7px;padding:8px 13px;cursor:pointer;border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+  .btn:hover{background:var(--surface-2)}.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .panel{background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+  table{width:100%;border-collapse:collapse}
+  th{font:700 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint);text-align:left;padding:10px 14px;border-bottom:1px solid var(--line)}
+  td{padding:6px 14px;border-bottom:1px solid var(--line);font-size:13.5px;vertical-align:middle}
+  tbody tr:hover{background:var(--surface-2)}
+  input.cell,select.cell{font:600 13px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:7px;padding:6px 8px;width:100%}
+  input.cell.name{font-weight:600}
+  .kind{font:700 9.5px var(--mono);letter-spacing:.04em;text-transform:uppercase;border-radius:20px;padding:2px 8px}
+  .kind.Regular{color:var(--accent-deep);background:var(--accent-soft)} .kind.Custom{color:var(--gold);background:var(--gold-soft)}
+  .icon{border:1px solid var(--line-2);background:var(--surface);color:var(--muted);border-radius:7px;width:30px;height:30px;cursor:pointer;font-size:13px}
+  .icon:hover{border-color:var(--salmon);color:var(--salmon)}
+  .star{border:1px solid var(--line-2);background:var(--surface);color:var(--faint);border-radius:7px;width:32px;height:30px;cursor:pointer;font-size:14px;line-height:1}
+  .star.on{color:var(--gold);border-color:var(--gold);background:var(--gold-soft)}
+  .star.has{color:var(--accent-deep);border-color:var(--accent);background:var(--accent-soft)}
+  .photoedit td{background:var(--surface-2);padding:12px 16px}
+  .pe{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap}
+  .pecol{display:flex;flex-direction:column;gap:8px;min-width:240px;flex:1}
+  .pecol label{font:700 10px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+  .pethumb{width:190px;height:114px;object-fit:cover;border-radius:8px;border:1px solid var(--line-2)}
+  .pethumb.ph{display:grid;place-items:center;color:var(--faint);font-size:12px;background:var(--surface)}
+  .filebtn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;font:700 12px var(--sans);color:#fff;background:var(--accent);border-radius:7px;padding:8px 12px;cursor:pointer}
+  .filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .dayhd td{background:var(--surface-2);font:800 12px var(--sans);color:var(--ink);border-top:2px solid var(--line-2)}
+  .foot{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .foot .note{font-size:12px;color:var(--muted)}
+  .schema{margin-top:16px;font-size:12px;color:var(--muted);background:var(--surface);border:1px dashed var(--line-2);border-radius:10px;padding:11px 14px;line-height:1.6}
+  .schema b{color:var(--accent-deep)} .schema code{font-family:var(--mono);font-size:.9em;color:var(--ink)}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--accent-deep);color:#fff;font:600 13px var(--sans);padding:9px 16px;border-radius:9px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+<div class="rm"><div class="wrap">
+  <p class="eyebrow">Admin setup · Food</p>
+  <h1>Menu Items</h1>
+  <p class="lede">The breakfast &amp; lunch menu by <b>package day</b>. <b>Regular</b> items are the mains a guest chooses from; <b>Custom</b> items are the mods, subs &amp; sides (e.g. <i>Sub Sausage</i>, <i>Wheat</i>, <i>No Lox</i>). The per-guest order (taken the night before) picks a main plus any custom mods for that morning.</p>
+
+  <div class="bar">
+    <div class="fld"><label>Day</label><select id="fday" onchange="MN.render()"><option value="">All days</option></select></div>
+    <div class="fld"><label>Type</label><select id="ftype" onchange="MN.render()"><option value="">All types</option><option>Breakfast</option><option>Lunch</option><option>Dinner</option></select></div>
+    <span class="sp"></span>
+    <button class="btn primary" onclick="MN.add()">＋ Add item</button>
+  </div>
+
+  <div class="panel">
+    <table>
+      <thead><tr><th>Menu name</th><th style="width:110px">Type</th><th style="width:95px">Day</th><th style="width:120px">Regular/Custom</th><th style="width:100px">Signature</th><th style="width:48px">Action</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="foot"><button class="btn" onclick="MN.restore()">↻ Restore standard menu</button><span class="note">Package: <b>4 Day</b>. Changes save automatically; “Restore” re-adds any standard menu item that’s gone missing.</span></div>
+  </div>
+
+  <div class="schema">Maps to Andy's schema → <b>menu_items</b>: <code>id, name, meal_type, package, day, kind[regular|custom]</code>. Read by the per-guest meal order.</div>
+</div></div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+  const KEY='talon_menu_v1', PKG='4 Day', DAYS=['Day 1','Day 2','Day 3','Day 4'];
+  const R='Regular',C='Custom',B='Breakfast',L='Lunch';
+  const S=(name,type,day,kind)=>({name,type,day,kind,pkg:PKG});
+  const SEED=[
+    S('Scrambled Eggs, Potato Hash, Bacon, Sourdough with Berry Compote',B,'Day 1',R),
+    S('Parfait - Greek Yogurt, Homemade Granola, and Berry Compote',B,'Day 1',R),
+    S('Oatmeal - Brown Sugar, Raisins, and Milk',B,'Day 1',R),
+    S('Sub Sausage',B,'Day 1',C),S('White',B,'Day 1',C),S('Wheat',B,'Day 1',C),S('Sub OM eggs',B,'Day 1',C),
+    S('Salmon Poke Bowl',L,'Day 1',R),
+    S('Oatmeal - Brown Sugar, Raisins, and Milk',B,'Day 2',R),
+    S('Parfait - Greek Yogurt, Homemade Granola, and Berry Compote',B,'Day 2',R),
+    S("Fisherman's Breakfast - Scram, Bacon, Sourdough",B,'Day 2',R),
+    S('Bread Pudding French Toast - Brown butter maple, Vanilla whip, Pecans, and Sausage',B,'Day 2',R),
+    S('White',B,'Day 2',C),S('Wheat',B,'Day 2',C),S('Side Eggs',B,'Day 2',C),S('Side Sausage',B,'Day 2',C),S('Side Toast - White',B,'Day 2',C),
+    S('Shrimp Tacos',L,'Day 2',R),S('Salmon Poke Bowl',L,'Day 2',R),S('Grilled Chicken Salad',L,'Day 2',R),
+    S("Fisherman's Breakfast - Scram, Bacon, Sourdough",B,'Day 3',R),
+    S('Homemade bagel with cream cheese, lox, capers, red onion, everything bagel seasoning, and a boiled egg',B,'Day 3',R),
+    S('Oatmeal - Brown Sugar, Raisins, and Milk',B,'Day 3',R),
+    S('Parfait - Greek Yogurt, Homemade Granola, and Berry Compote',B,'Day 3',R),
+    S('No CC',B,'Day 3',C),S('No Lox',B,'Day 3',C),S('Fruit',B,'Day 3',C),S('Bagel',B,'Day 3',C),
+    S('Biscuit',B,'Day 4',R),
+    S('Homemade Biscuit and Sausage Gravy with Bacon and an Over medium egg',B,'Day 4',R),
+    S("Fisherman's Breakfast - Scram, Bacon, Sourdough",B,'Day 4',R),
+    S('Parfait - Greek Yogurt, Homemade Granola, and Berry Compote',B,'Day 4',R),
+    S('Oatmeal - Brown Sugar, Raisins, and Milk',B,'Day 4',R),
+    S('2 Eggs',B,'Day 4',C),S('Gravy OTS',B,'Day 4',C),S('No gravy',B,'Day 4',C)
+  ].map((m,i)=>Object.assign({id:i+1},m));
+
+  let items=[]; let nextId=1; let OPEN=null;
+  function resizeImg(file,cb){const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const max=1400;let w=img.width,h=img.height;if(w>max){h=Math.round(h*max/w);w=max;}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);cb(c.toDataURL('image/jpeg',.82));};img.onerror=()=>cb(null);img.src=r.result;};r.readAsDataURL(file);}
+  // large-image store (IndexedDB) so photos don't blow the small localStorage quota
+  const IMGDB=(()=>{let dbp=null;function open(){if(dbp)return dbp;dbp=new Promise((res,rej)=>{let r;try{r=indexedDB.open('talon-images',1);}catch(e){return rej(e);}r.onupgradeneeded=e=>{try{e.target.result.createObjectStore('photos');}catch(_){}};r.onsuccess=e=>res(e.target.result);r.onerror=()=>rej(r.error);});return dbp;}
+    return {put:(k,v)=>open().then(db=>new Promise((res,rej)=>{const tx=db.transaction('photos','readwrite');tx.objectStore('photos').put(v,k);tx.oncomplete=()=>res(true);tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error);})),
+      get:k=>open().then(db=>new Promise(res=>{const rq=db.transaction('photos','readonly').objectStore('photos').get(k);rq.onsuccess=()=>res(rq.result||null);rq.onerror=()=>res(null);})).catch(()=>null),
+      del:k=>open().then(db=>new Promise(res=>{const tx=db.transaction('photos','readwrite');tx.objectStore('photos').delete(k);tx.oncomplete=()=>res(true);tx.onerror=()=>res(false);})).catch(()=>false)};})();
+  function resolveIdb(){[...document.querySelectorAll('img[data-idb]')].forEach(img=>{const k=img.getAttribute('data-idb');img.removeAttribute('data-idb');IMGDB.get(k).then(v=>{if(v)img.src=v;else{img.style.display='none';}});});}
+  try{items=JSON.parse(localStorage.getItem(KEY))||null;}catch(e){}
+  if(!items||!items.length){let bak=null;try{bak=JSON.parse(localStorage.getItem(KEY+'__bak'))||null;}catch(e){}items=(bak&&bak.length)?bak:JSON.parse(JSON.stringify(SEED));persist();}
+  nextId=Math.max(0,...items.map(t=>t.id||0))+1;
+  // every day needs a signature dish so it always has a photo slot for the evening display
+  if(ensureSig())persist();
+  function ensureSig(){const has={},first={};let changed=false;items.forEach(t=>{if(t.type==='Breakfast'&&t.kind==='Regular'){if(t.signature)has[t.day]=true;if(!(t.day in first))first[t.day]=t;}});Object.keys(first).forEach(d=>{if(!has[d]){first[d].signature=true;changed=true;}});return changed;}
+  function persist(){try{const j=JSON.stringify(items);localStorage.setItem(KEY,j);try{localStorage.setItem(KEY+'__bak',j);}catch(e){}return true;}catch(e){return false;}}
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1500);}
+  const dayNum=d=>{const m=/([0-9]+)/.exec(d||'');return m?+m[1]:99;};
+  el('fday').innerHTML='<option value="">All days</option>'+DAYS.map(d=>`<option>${d}</option>`).join('');
+
+  function render(){
+    const fd=el('fday').value, ft=el('ftype').value;
+    let list=items.slice().sort((a,b)=>dayNum(a.day)-dayNum(b.day)||(a.type<b.type?-1:a.type>b.type?1:0)||(a.kind<b.kind?-1:1)||(a.name<b.name?-1:1));
+    if(fd)list=list.filter(x=>x.day===fd); if(ft)list=list.filter(x=>x.type===ft);
+    let html='',lastDay='';
+    list.forEach(t=>{
+      if(t.day!==lastDay){lastDay=t.day;html+=`<tr class="dayhd"><td colspan="6">${esc(t.day)} · ${esc(PKG)} package</td></tr>`;}
+      html+=`<tr data-id="${t.id}">
+        <td><input class="cell name" value="${esc(t.name)}" oninput="MN.set(${t.id},'name',this.value)"></td>
+        <td><select class="cell" onchange="MN.set(${t.id},'type',this.value)">${[B,L,'Dinner'].map(x=>`<option ${x===t.type?'selected':''}>${x}</option>`).join('')}</select></td>
+        <td><select class="cell" onchange="MN.set(${t.id},'day',this.value)">${DAYS.map(x=>`<option ${x===t.day?'selected':''}>${x}</option>`).join('')}</select></td>
+        <td><select class="cell" onchange="MN.set(${t.id},'kind',this.value)">${[R,C].map(x=>`<option ${x===t.kind?'selected':''}>${x}</option>`).join('')}</select></td>
+        <td>${(t.type===B&&t.kind===R)?`<button class="star ${t.signature?'on':''}" title="Signature dish for ${esc(t.day)} — hero on the evening display" onclick="MN.sig(${t.id})">★</button>${t.signature?` <button class="star${t.photo?' has':''}" title="Signature photo (shown on the evening display)" onclick="MN.photo(${t.id})">📷</button>`:''}`:''}</td>
+        <td><button class="icon" title="Delete" onclick="MN.del(${t.id})">✕</button></td></tr>`;
+      if(OPEN===t.id&&t.type===B&&t.kind===R){html+=`<tr class="photoedit"><td colspan="6"><div class="pe"><div class="pecol"><label>Signature photo — travels with this menu item</label><input value="${esc(/^https?:/.test(t.photo||'')?t.photo:'')}" placeholder="Paste image URL…" oninput="MN.setPhotoUrl(${t.id},this.value)"><div style="display:flex;gap:8px"><label class="filebtn">⬆ Upload<input type="file" accept="image/*" onchange="MN.uploadPhoto(${t.id},this)"></label>${t.photo?`<button class="btn" onclick="MN.rmPhoto(${t.id})">Remove</button>`:''}</div></div>${t.photo?(t.photo.indexOf('idb:')===0?`<img class="pethumb" data-idb="${esc(t.photo.slice(4))}" alt="">`:`<img class="pethumb" src="${esc(t.photo)}" alt="">`):'<div class="pethumb ph">No photo yet</div>'}</div></td></tr>`;}
+    });
+    el('rows').innerHTML=html||'<tr><td colspan="6" style="text-align:center;color:var(--faint);padding:20px">No items match this filter.</td></tr>';
+    resolveIdb();
+  }
+  window.MN={
+    set(id,f,v){const t=items.find(x=>x.id===id);if(t){t[f]=v;persist();if(f==='day'||f==='type'||f==='kind')render();}},
+    sig(id){const t=items.find(x=>x.id===id);if(!t)return;const on=!t.signature;if(on)items.forEach(x=>{if(x.day===t.day&&x.type===t.type&&x.kind==='Regular')x.signature=false;});t.signature=on;if(!on&&OPEN===id)OPEN=null;persist();render();toast(on?'Signature dish set for '+t.day:'Signature cleared');},
+    photo(id){OPEN=(OPEN===id)?null:id;render();},
+    setPhotoUrl(id,v){const t=items.find(x=>x.id===id);if(!t)return;if(v.trim())t.photo=v.trim();else delete t.photo;persist();},
+    uploadPhoto(id,input){const f=input.files&&input.files[0];input.value='';if(!f)return;const t=items.find(x=>x.id===id);if(!t)return;
+      resizeImg(f,url=>{if(!url){toast('Could not read image');return;}const key='menu:'+id;
+        IMGDB.put(key,url).then(()=>{const old=t.photo;t.photo='idb:'+key;persist();render();toast('Photo added');})
+        .catch(()=>{t.photo=url;if(!persist()){delete t.photo;toast('Photo too large for storage — try a smaller image or a URL');return;}render();toast('Photo added');});});},
+    rmPhoto(id){const t=items.find(x=>x.id===id);if(!t)return;const p=t.photo;delete t.photo;persist();render();if(p&&p.indexOf('idb:')===0)IMGDB.del(p.slice(4));},
+    add(){const day=el('fday').value||'Day 1',type=el('ftype').value||B;const t={id:nextId++,name:'',type,day,kind:R,pkg:PKG};items.push(t);render();const inp=document.querySelector('tr[data-id="'+t.id+'"] input.name');if(inp)inp.focus();toast('Item added to '+day);},
+    del(id){const t=items.find(x=>x.id===id);if(!confirm('Delete “'+((t&&t.name)||'this item')+'”?\n\nStandard menu items return with “Restore standard menu”.'))return;items=items.filter(x=>x.id!==id);persist();render();toast('Deleted');},
+    restore(){let n=0;SEED.forEach(s=>{if(!items.some(t=>(t.name||'').trim().toLowerCase()===s.name.trim().toLowerCase()&&t.day===s.day&&t.type===s.type)){items.push(Object.assign({id:nextId++},s));n++;}});persist();render();toast(n?('Restored '+n+' items'):'Standard menu already complete');},
+    render
+  };
+  render();
+})();
+</script>
+</body></html>

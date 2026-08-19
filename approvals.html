@@ -1,0 +1,299 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Activity Approvals</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 10px 26px rgba(18,42,43,.07)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413;--shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.4)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.5;-webkit-font-smoothing:antialiased;padding:clamp(14px,3vw,30px)}
+  .wrap{max-width:940px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(21px,3vw,30px)/1.12 var(--sans);letter-spacing:-.02em;margin:0 0 6px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:13.5px;max-width:78ch}
+  .bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line-2);border-radius:10px;box-shadow:var(--shadow);padding:12px 16px;margin-bottom:16px}
+  .stat{font:800 26px var(--sans);color:var(--accent-deep);line-height:1}
+  .stat .l{display:block;font:600 9px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  .seg{display:inline-flex;border:1px solid var(--line-2);border-radius:8px;overflow:hidden;margin-left:auto}
+  .seg button{background:var(--surface);color:var(--muted);border:0;border-right:1px solid var(--line-2);padding:7px 13px;font:700 12.5px var(--sans);cursor:pointer}
+  .seg button:last-child{border-right:0}.seg button.on{background:var(--accent);color:#fff}
+  .btn{font:700 12px var(--sans);border-radius:7px;padding:7px 12px;cursor:pointer;border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+  .grp{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);margin-bottom:16px;overflow:hidden}
+  .grp>.hd{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line);background:var(--surface-2);flex-wrap:wrap}
+  .grp>.hd .gn{font:800 15px var(--sans)}
+  .grp>.hd .meta{font-size:12px;color:var(--muted)}
+  .grp>.hd .approveall{margin-left:auto;font:700 12px var(--sans);background:var(--accent);color:#fff;border:0;border-radius:7px;padding:7px 12px;cursor:pointer}
+  .req{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line)}
+  .req:last-child{border-bottom:0}
+  .req .ic{width:38px;height:38px;border-radius:10px;background:var(--surface-2);display:grid;place-items:center;font-size:18px;flex:0 0 auto}
+  .req .m{flex:1;min-width:0}
+  .req .m .t{font-weight:700;font-size:14px}
+  .req .m .d{font-size:12.5px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:2px}
+  .src{font:700 9px var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:20px;border:1px solid var(--line-2);color:var(--muted);background:var(--surface)}
+  .src.reservation{color:var(--accent-deep);border-color:var(--accent);background:var(--accent-soft)}
+  .src.portal{color:var(--gold);border-color:var(--gold);background:var(--gold-soft)}
+  .sla{font:700 10px var(--mono);letter-spacing:.03em;padding:2px 8px;border-radius:20px}
+  .sla.ok{background:var(--accent-soft);color:var(--accent-deep)}
+  .sla.warn{background:var(--gold-soft);color:var(--gold)}
+  .sla.over{background:var(--salmon-soft);color:var(--salmon)}
+  .req{align-items:flex-start}
+  .req .ic{margin-top:2px}
+  .assign{display:flex;gap:12px;flex-wrap:wrap;margin-top:9px}
+  .asg{display:flex;flex-direction:column;gap:3px}
+  .asg>span{font:600 9px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .asg select{font:600 12.5px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:7px;padding:6px 9px;min-width:130px}
+  .assign.pgwrap{flex-direction:column;gap:8px}
+  .pg{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;padding:8px 10px;background:var(--surface-2);border:1px solid var(--line);border-radius:9px}
+  .pg .pgn{font:700 11px var(--mono);color:var(--accent-deep);align-self:center;min-width:56px}
+  .req .acts{display:flex;gap:8px;flex:0 0 auto;margin-top:2px}
+  .approve{font:700 12px var(--sans);background:var(--accent);color:#fff;border:0;border-radius:7px;padding:8px 13px;cursor:pointer}
+  .decline{font:700 12px var(--sans);background:var(--surface);color:var(--salmon);border:1px solid var(--salmon);border-radius:7px;padding:8px 12px;cursor:pointer}
+  .st{font:700 10px var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:20px}
+  .st.approved{background:var(--accent-soft);color:var(--accent-deep)}
+  .st.declined{background:var(--salmon-soft);color:var(--salmon)}
+  .undo{font:600 12px var(--sans);background:none;border:0;color:var(--accent-deep);cursor:pointer}
+  .sec-t{font:700 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:26px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .empty{background:var(--surface);border:1px dashed var(--line-2);border-radius:12px;padding:34px 20px;text-align:center;color:var(--muted)}
+  .empty b{color:var(--ink)}
+  .empty code{font-family:var(--mono);font-size:12px;background:var(--surface-2);padding:1px 6px;border-radius:4px}
+  .note{font-size:12px;color:var(--faint);margin-top:18px;border-top:1px solid var(--line);padding-top:12px}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;transition:.2s;z-index:30;pointer-events:none}.toast.show{opacity:1}
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">Talon Lodge &amp; Spa · Admin</p>
+  <h1>Activity approvals</h1>
+  <p class="lede">Every activity &amp; spa request — from the reservation flow and the guest portal — lands here for review.
+  Approve to confirm it, or decline. Each request carries a <b>24-hour review clock</b>.</p>
+
+  <div class="bar">
+    <div><span class="stat" id="pendCount">0</span><span class="l">pending review</span></div>
+    <div class="seg" id="filter">
+      <button class="on" onclick="A.filter('all')">All</button>
+      <button onclick="A.filter('reservation')">Reservation</button>
+      <button onclick="A.filter('portal')">Portal</button>
+    </div>
+    <button class="btn" onclick="A.reload()">↻ Refresh</button>
+  </div>
+
+  <div id="view"></div>
+  <p class="note">Approving sets the request to <b>confirmed</b> and the guest sees it as <b>Scheduled</b> in their portal. Assigning the specific guide &amp; boat happens on the Scheduling calendar. In production this queue also sends the admin notification and tracks the SLA server-side.</p>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1700);}
+  const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const parseD=s=>{const[y,m,d]=String(s).split('-').map(Number);return new Date(y,m-1,d);};
+  const fmtDay=s=>{if(!s)return 'day TBD';const d=parseD(s);return WD[d.getDay()]+' '+MO[d.getMonth()]+' '+d.getDate();};
+  const iconFor=r=>r.kind==='massage'?'💆':/whale/i.test(r.name)?'🐋':/kayak/i.test(r.name)?'🛶':/atv/i.test(r.name)?'🏍️':/plane/i.test(r.name)?'🛩️':/saltwater/i.test(r.name)?'🐟':'🎣';
+
+  const KEY='talon_portal_requests';
+  let REQ=[];
+  function load(){try{const v=JSON.parse(localStorage.getItem(KEY));REQ=Array.isArray(v)?v:[];}catch(e){REQ=[];}}
+  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(REQ));}catch(e){}};
+  let FILTER='all';
+
+  // ---- team + scheduling bridge: approving consumes a guide/boat in talon_bookings_v1 ----
+  const TEAM_SEED={guides:[{id:'g1',name:'Ted Deering',lead_order:1,activities:['Freshwater Fishing (Boat/ATV/Plane)','ATV Safari','Kayak & Lunch','Whale Watching','Hiking'],delivery_boat_id:'b5',active:true},{id:'g2',name:'Holden Pucket',lead_order:2,activities:['Freshwater Fishing (Boat/ATV/Plane)','ATV Safari','Hiking'],delivery_boat_id:'',active:true}],
+    therapists:[{id:'t1',name:'Lori Strachan',sessions_per_day:2,active:true},{id:'t2',name:'Mikalia Lockhart',sessions_per_day:2,active:true}],
+    captains:[{id:'c1',name:'Cole Younger',active:true},{id:'c2',name:'Travis Stephenson',active:true},{id:'c3',name:'James Lecrone',active:true},{id:'c4',name:'Gavin Wolfe',active:true},{id:'c5',name:'Marjo Vidad',active:true},{id:'c6',name:'Ted Deering',active:true},{id:'c7',name:'Phil Younger',active:true}],
+    deckhands:[{id:'d1',name:'Sam Parker',active:true},{id:'d2',name:'CJ Tacada',active:true},{id:'d3',name:'Emily Rose',active:true},{id:'d4',name:'Porter Baskin',active:true},{id:'d5',name:'Holden Pucket',active:true}],
+    boats:[{id:'b1',name:'Raptor',captain_id:'c1',deckhand_id:'d1',active:true},{id:'b2',name:'Roamer',captain_id:'c2',deckhand_id:'d2',active:true},{id:'b3',name:'Retriever',captain_id:'c3',deckhand_id:'d3',active:true},{id:'b4',name:'Magnum',captain_id:'c4',deckhand_id:'d4',active:true},{id:'b5',name:'Pip',captain_id:'c6',deckhand_id:'d5',active:true},{id:'b6',name:'Muktuk',captain_id:'c5',deckhand_id:'',active:true},{id:'b7',name:'Raider',captain_id:'c7',deckhand_id:'',active:true}]};
+  function team(){try{const t=JSON.parse(localStorage.getItem('talon_team_v1'));if(t&&t.guides)return t;}catch(e){}return TEAM_SEED;}
+  const bookings=()=>{try{const v=JSON.parse(localStorage.getItem('talon_bookings_v1'));return Array.isArray(v)?v:[];}catch(e){return [];}};
+  const saveBookings=b=>{try{localStorage.setItem('talon_bookings_v1',JSON.stringify(b));}catch(e){}};
+  function mapAct(name){const n=(name||'').toLowerCase();
+    if(/spa\s*day|day\s*spa/.test(n))return {actId:'dayspa',cap:null,kind:'massage'};
+    if(/massage/.test(n))return {actId:'massage',cap:null,kind:'massage'};
+    if(/saltwater/.test(n))return {actId:'saltwater',cap:null,kind:'saltwater'};
+    if(/kayak/.test(n))return {actId:'kayak',cap:'Kayak & Lunch'};
+    if(/whale/.test(n))return {actId:'whale',cap:'Whale Watching'};
+    if(/fresh/.test(n)&&/(atv|boat)/.test(n))return {actId:'fresh',cap:'Freshwater Fishing (Boat/ATV/Plane)',needsBoat:true};
+    if(/float plane|by float plane|plane/.test(n)&&/fresh/.test(n))return {actId:'freshplane',cap:'Freshwater Fishing (Boat/ATV/Plane)'};
+    if(/atv/.test(n))return {actId:'atv',cap:'ATV Safari'};
+    if(/hik/.test(n))return {actId:'hike',cap:'Hiking'};
+    if(/plane|tour/.test(n))return {actId:'freshplane',cap:'Freshwater Fishing (Boat/ATV/Plane)'};
+    return {actId:'atv',cap:'ATV Safari'};}
+  const activeGuides=()=>team().guides.filter(g=>g.active!==false);
+  // a guide who is also a boat captain is unavailable to guide on any day his/her boat is fishing
+  const _firstTok=s=>String(s||'').trim().toLowerCase().split(/\s+/)[0];
+  const samePerson=(a,b)=>{const na=String(a||'').trim().toLowerCase(),nb=String(b||'').trim().toLowerCase();return !!na&&!!nb&&(na===nb||_firstTok(a)===_firstTok(b));};
+  const _addDays=(s,n)=>{const d=parseD(s);d.setDate(d.getDate()+n);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
+  const _pkgs=()=>{try{return JSON.parse(localStorage.getItem('talon_packages_v1'))||[];}catch(e){return [];}};
+  const _seat=()=>{try{return JSON.parse(localStorage.getItem('talon_boat_seating'))||{};}catch(e){return {};}};
+  const _daily=()=>{try{return JSON.parse(localStorage.getItem('talon_boat_daily'))||{};}catch(e){return {};}};
+  function _tripFor(d){for(const p of _pkgs()){const a=p.arrival_start_date;if(a&&d>=a&&d<=_addDays(a,+p.nights||4))return {arrival:a,nights:+p.nights||4};}return null;}
+  function boatFishingOn(boatId,date){
+    if(bookings().some(x=>x.actId==='saltwater'&&x.date===date&&x.boatId===boatId))return true; // saltwater charter
+    const t=_tripFor(date);if(!t||!(date>t.arrival&&date<_addDays(t.arrival,t.nights)))return false;
+    const seat=_seat()[t.arrival]||{},dly=_daily()[date]||{};
+    return Object.keys(seat).some(k=>{const ov=dly[k];return (ov!==undefined?ov:seat[k])===boatId;}); // sportfishing seating that day
+  }
+  const boatsCaptainedBy=g=>{const t=team();return (t.boats||[]).filter(b=>{const c=(t.captains||[]).find(x=>x.id===b.captain_id);return c&&samePerson(c.name,g.name);});};
+  const guideRunningBoat=(g,date)=>boatsCaptainedBy(g).some(b=>boatFishingOn(b.id,date));
+  function assignGuides(cap,date,guests,bk){if(!cap)return [];
+    const busy=new Set();bk.forEach(b=>{if(b.date===date)(b.guideIds||[]).forEach(id=>busy.add(id));});
+    const capable=activeGuides().filter(g=>(g.activities||[]).includes(cap)&&!busy.has(g.id)&&!guideRunningBoat(g,date)).sort((a,b)=>(a.lead_order||9)-(b.lead_order||9));
+    const need=Math.max(1,Math.ceil((guests||1)/3));return capable.slice(0,need).map(g=>g.id);}
+  function assignSaltBoat(date,bk){const t=team();const deliv=new Set(activeGuides().map(g=>g.delivery_boat_id).filter(Boolean));
+    const used=new Set();bk.forEach(b=>{if(b.date===date&&b.boatId)used.add(b.boatId);});
+    const boat=(t.boats||[]).filter(b=>b.active!==false&&!deliv.has(b.id)&&!used.has(b.id))[0];
+    if(!boat)return null;const cap=(t.captains||[]).find(c=>c.id===boat.captain_id),dh=(t.deckhands||[]).find(c=>c.id===boat.deckhand_id);
+    return {boatId:boat.id,crew:{boat:boat.name,cap:cap?cap.name:null,deck:dh?dh.name:null}};}
+  const guideNames=ids=>ids.map(id=>{const g=activeGuides().find(x=>x.id===id);return g?g.name.split(' ')[0]:id;});
+  // vendors (e.g. float-plane pilots) — external, not lodge staff
+  const VENDOR_SEED={pilots:[{id:'p1',name:'Sitka Air · Capt. Reyes'},{id:'p2',name:'Harris Aircraft · Capt. Dunn'}]};
+  function vendors(){try{const v=JSON.parse(localStorage.getItem('talon_vendors_v1'));if(v&&v.pilots)return v;}catch(e){}return VENDOR_SEED;}
+  const SLOTS=['6:00 AM','7:00 AM','8:00 AM','9:00 AM','10:00 AM','1:00 PM','2:00 PM','Full day'];
+  const DEFAULT_SLOT='8:00 AM';
+  const TREATMENTS=['Northern Release','Aurora Refresher','Denali Recovery','Denali Deep','Day Spa'];
+  const RES_LABEL={guide:'Guide',therapist:'Therapist',pilot:'Pilot · vendor',boat:'Boat & captain'};
+  function resType(name,kind){if(kind==='massage'||/massage/i.test(name)||/spa/i.test(name))return 'therapist';if(/plane/i.test(name))return 'pilot';if(/saltwater/i.test(name))return 'boat';return 'guide';}
+  function resOptions(type,cap,date){
+    if(type==='therapist')return (team().therapists||[]).filter(t=>t.active!==false).map(t=>({id:t.id,name:t.name}));
+    if(type==='pilot')return (vendors().pilots||[]).filter(p=>p.active!==false).map(p=>({id:p.id,name:p.name}));
+    if(type==='boat'){const t=team();const deliv=new Set(activeGuides().map(g=>g.delivery_boat_id).filter(Boolean));const used=new Set();bookings().forEach(b=>{if(b.date===date&&b.boatId)used.add(b.boatId);});
+      return (t.boats||[]).filter(b=>b.active!==false&&!deliv.has(b.id)).map(b=>{const c=(t.captains||[]).find(x=>x.id===b.captain_id);return {id:b.id,name:b.name+(c?' · '+c.name.split(' ')[0]:'')+(used.has(b.id)?' · busy':''),busy:used.has(b.id)};});}
+    const busy=new Set();bookings().forEach(b=>{if(b.date===date)(b.guideIds||[]).forEach(id=>busy.add(id));});
+    return activeGuides().filter(g=>(g.activities||[]).includes(cap)).sort((a,b)=>(a.lead_order||9)-(b.lead_order||9)).map(g=>{const onBoat=guideRunningBoat(g,date);return {id:g.id,name:g.name.split(' ')[0]+(g.lead_order===1?' · lead':'')+(onBoat?' · running boat':busy.has(g.id)?' · busy':''),busy:busy.has(g.id)||onBoat};});
+  }
+  const defOpt=opts=>((opts.find(o=>!o.busy)||opts[0]||{}).id||'');
+  const boatOptions=()=>{const t=team();return (t.boats||[]).filter(b=>b.active!==false).map(b=>{const c=(t.captains||[]).find(x=>x.id===b.captain_id);return {id:b.id,name:b.name+(c?' · '+c.name.split(' ')[0]:'')};});};
+  const boatNameOf=id=>{const t=team();const b=(t.boats||[]).find(x=>x.id===id);if(!b)return '';const c=(t.captains||[]).find(x=>x.id===b.captain_id);return b.name+(c?' · '+c.name.split(' ')[0]:'');};
+  // available times configured on the activity (Activities Management), else sensible defaults
+  const actsCatalog=()=>{try{const v=JSON.parse(localStorage.getItem('talon_activities_v1'));return Array.isArray(v)?v:[];}catch(e){return [];}};
+  function actTimes(name){const a=actsCatalog().find(x=>x.name&&x.name.toLowerCase()===String(name).toLowerCase());
+    if(a&&Array.isArray(a.times)&&a.times.length)return a.times;
+    if(/day\s*spa|spa\s*day/i.test(name))return ['10:00 AM'];if(/massage/i.test(name))return ['4:30 PM','5:30 PM'];return null;}
+  const slotsFor=r=>actTimes(r.name)||SLOTS;
+  function mkBooking(r,a,bk){const m=mapAct(r.name),t=a.type,time=a.time||slotsFor(r)[0]||DEFAULT_SLOT;
+    const b={reqId:r.id,date:r.date,time,actId:m.actId,name:r.name,group:r.group,guests:r.guests||1,guideIds:[],boatIds:[],source:r.source,status:'confirmed',assigneeType:t};
+    // carry the individual guest name(s) so every downstream report can list people, not just the group
+    if(typeof a.guestIndex==='number'){b.guestIndex=a.guestIndex;b.guests=1;b.guestName=(r.guestNames&&r.guestNames[a.guestIndex])||('Guest '+(a.guestIndex+1));b.guestNames=[b.guestName];if(a.treatment)b.treatment=a.treatment;}
+    else if(r.guestNames&&r.guestNames.length){b.guestNames=r.guestNames.slice(0,b.guests);}
+    if(t==='guide'){let ids=(a.guideIds&&a.guideIds.length)?a.guideIds.slice():(a.resId?[a.resId]:[]);const need=Math.max(1,Math.ceil((r.guests||1)/3));
+      if(ids.length<need)assignGuides(m.cap,r.date,r.guests,bk).forEach(id=>{if(ids.length<need&&!ids.includes(id))ids.push(id);});
+      b.guideIds=ids;b.assigneeName=guideNames(ids).join(' + ');
+      if(a.boatId){b.boatIds=[a.boatId];b.boatName=boatNameOf(a.boatId);}}
+    else if(t==='pilot'){const p=vendors().pilots.find(x=>x.id===a.pilotId)||vendors().pilots[0];if(p){b.pilotId=p.id;b.assigneeName=p.name;}
+      b.guideIds=(a.guideIds&&a.guideIds.length)?a.guideIds.slice():[];if(b.guideIds.length)b.guideName=guideNames(b.guideIds).join(' + ');
+      if(a.boatId){b.boatIds=[a.boatId];b.boatName=boatNameOf(a.boatId);}}
+    else if(t==='therapist'){const th=(team().therapists||[]).find(x=>x.id===a.therapistId)||(team().therapists||[])[0];if(th){b.therapistId=th.id;b.assigneeName=th.name;}}
+    else if(t==='boat'){const tm=team();let bt=(tm.boats||[]).find(x=>x.id===a.resId);if(!bt){const s=assignSaltBoat(r.date,bk);if(s)bt=(tm.boats||[]).find(x=>x.id===s.boatId);}
+      if(bt){const cap=(tm.captains||[]).find(c=>c.id===bt.captain_id),dh=(tm.deckhands||[]).find(c=>c.id===bt.deckhand_id);b.boatId=bt.id;b.crew={boat:bt.name,cap:cap?cap.name:null,deck:dh?dh.name:null};b.assigneeName=bt.name+(cap?' · '+cap.name.split(' ')[0]:'');}}
+    return b;}
+  function defaultAssigns(r,type){const bk=bookings();
+    if(type==='therapist'){const slots=slotsFor(r),ths=(team().therapists||[]).filter(t=>t.active!==false);const per=Math.max(1,ths.length);return Array.from({length:r.guests||1}).map((_,i)=>({type:'therapist',time:slots[Math.min(Math.floor(i/per),slots.length-1)],therapistId:(ths[i%per]||{}).id,treatment:TREATMENTS[i%TREATMENTS.length],guestIndex:i}));}
+    const gd=slotsFor(r).indexOf(DEFAULT_SLOT)>=0?DEFAULT_SLOT:slotsFor(r)[0];
+    if(type==='pilot')return [{type:'pilot',time:gd,pilotId:((vendors().pilots||[]).filter(p=>p.active!==false)[0]||{}).id,guideIds:assignGuides(mapAct(r.name).cap,r.date,r.guests,bk).slice(0,1)}];
+    const opts=resOptions(type,mapAct(r.name).cap,r.date);return [{type,time:gd,resId:defOpt(opts)}];}
+  function confirmReq(r,assigns){const bk=bookings();if(bk.some(b=>b.reqId===r.id))return [];let bid=bk.reduce((m,b)=>Math.max(m,b.id||0),0)+1;
+    const made=assigns.map(a=>{const b=mkBooking(r,a,bk);b.id=bid++;bk.push(b);return b;});saveBookings(bk);return made;}
+  function removeBooking(reqId){const bk=bookings().filter(b=>b.reqId!==reqId);saveBookings(bk);}
+
+  function ageInfo(r){
+    const c=r.created?(String(r.created).includes('T')?new Date(r.created):parseD(r.created)):null;
+    if(!c||isNaN(c))return {txt:'',cls:'ok',label:'—'};
+    const hrs=(Date.now()-c.getTime())/3600000;
+    const remain=24-hrs;
+    const ago=hrs<1?'just now':hrs<24?Math.round(hrs)+'h ago':Math.round(hrs/24)+'d ago';
+    if(remain<0)return {txt:ago,cls:'over',label:'⏱ overdue'};
+    if(remain<6)return {txt:ago,cls:'warn',label:'⏱ '+Math.round(remain)+'h left'};
+    return {txt:ago,cls:'ok',label:'⏱ '+Math.round(remain)+'h left'};
+  }
+
+  function render(){
+    const all=REQ.filter(r=>FILTER==='all'||r.source===FILTER||(FILTER==='portal'&&!r.source));
+    const pending=all.filter(r=>r.status==='requested'||!r.status);
+    const approved=all.filter(r=>r.status==='approved');
+    const declined=all.filter(r=>r.status==='declined');
+    el('pendCount').textContent=REQ.filter(r=>r.status==='requested'||!r.status).length;
+
+    let h='';
+    if(!pending.length){
+      h+=`<div class="empty"><div style="font-size:34px;margin-bottom:8px">✓</div><b>No requests waiting.</b><br>
+        <span style="font-size:13px">Requests appear here when a guest picks activities in the <code>Reservation</code> flow or the <code>Guest Portal</code>. Go make some, then Refresh.</span></div>`;
+    }else{
+      // group pending by group
+      const groups={};pending.forEach(r=>{(groups[r.group||'Guest']=groups[r.group||'Guest']||[]).push(r);});
+      Object.keys(groups).sort().forEach(g=>{
+        const rows=groups[g].sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+        h+=`<div class="grp"><div class="hd"><span class="gn">${esc(g)}</span><span class="meta">${rows.length} request${rows.length>1?'s':''} pending</span>
+          <button class="approveall" onclick="A.approveGroup('${esc(g).replace(/'/g,"\\'")}')">✓ Approve all ${rows.length}</button></div>`;
+        rows.forEach(r=>{const a=ageInfo(r);const type=resType(r.name,r.kind);const slots=slotsFor(r);
+          const gDefTime=slots.indexOf(DEFAULT_SLOT)>=0?DEFAULT_SLOT:slots[0];
+          const timeSel=(id,def)=>`<select id="${id}">${slots.map(s=>`<option ${s===def?'selected':''}>${esc(s)}</option>`).join('')}</select>`;
+          let assignHtml;
+          if(type==='therapist'){const ths=(team().therapists||[]).filter(t=>t.active!==false);
+            assignHtml=`<div class="assign pgwrap">${Array.from({length:r.guests||1}).map((_,i)=>`<div class="pg"><span class="pgn">${esc((r.guestNames&&r.guestNames[i])||('Guest '+(i+1)))}</span>`
+              +`<label class="asg"><span>Time</span>${timeSel('mt_'+r.id+'_'+i,slots[Math.min(Math.floor(i/Math.max(1,ths.length)),slots.length-1)])}</label>`
+              +`<label class="asg"><span>Therapist</span><select id="mr_${r.id}_${i}">${ths.length?ths.map((t,j)=>`<option value="${t.id}" ${i%ths.length===j?'selected':''}>${esc(t.name)}</option>`).join(''):'<option value="">—</option>'}</select></label>`
+              +`<label class="asg"><span>Treatment</span><select id="mtr_${r.id}_${i}">${TREATMENTS.map((t,j)=>`<option ${i%TREATMENTS.length===j?'selected':''}>${esc(t)}</option>`).join('')}</select></label></div>`).join('')}</div>`;
+          }else if(type==='pilot'){const gopts=resOptions('guide',mapAct(r.name).cap,r.date);const gd=defOpt(gopts);const bopts=boatOptions();
+            assignHtml=`<div class="assign"><label class="asg"><span>Time</span>${timeSel('t_'+r.id,gDefTime)}</label>`
+              +`<label class="asg"><span>Pilot · vendor</span><select id="rp_${r.id}">${(vendors().pilots||[]).filter(p=>p.active!==false).map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')||'<option value="">— add pilots in Vendors —</option>'}</select></label>`
+              +`<label class="asg"><span>Guide</span><select id="rg_${r.id}">${gopts.length?gopts.map(o=>`<option value="${o.id}" ${o.id===gd?'selected':''}>${esc(o.name)}</option>`).join(''):'<option value="">— none —</option>'}</select></label>`
+              +`<label class="asg"><span>Boat</span><select id="rb_${r.id}"><option value="">None</option>${bopts.map(b=>`<option value="${b.id}">${esc(b.name)}</option>`).join('')}</select></label></div>`;
+          }else if(type==='guide'){const gopts=resOptions('guide',mapAct(r.name).cap,r.date);const gd=defOpt(gopts);const bopts=boatOptions();
+            assignHtml=`<div class="assign"><label class="asg"><span>Time</span>${timeSel('t_'+r.id,gDefTime)}</label>`
+              +`<label class="asg"><span>Guide</span><select id="r_${r.id}">${gopts.length?gopts.map(o=>`<option value="${o.id}" ${o.id===gd?'selected':''}>${esc(o.name)}</option>`).join(''):'<option value="">— none —</option>'}</select></label>`
+              +`<label class="asg"><span>Boat</span><select id="rb_${r.id}"><option value="">None</option>${bopts.map(b=>`<option value="${b.id}">${esc(b.name)}</option>`).join('')}</select></label></div>`;
+          }else{const opts=resOptions(type,mapAct(r.name).cap,r.date);const dId=defOpt(opts);
+            assignHtml=`<div class="assign"><label class="asg"><span>Time</span>${timeSel('t_'+r.id,gDefTime)}</label>`
+              +`<label class="asg"><span>${RES_LABEL[type]}</span><select id="r_${r.id}">${opts.length?opts.map(o=>`<option value="${o.id}" ${o.id===dId?'selected':''}>${esc(o.name)}</option>`).join(''):'<option value="">— none available —</option>'}</select></label></div>`;
+          }
+          h+=`<div class="req"><div class="ic">${iconFor(r)}</div>
+            <div class="m"><div class="t">${esc(r.name||'Activity')}${type==='therapist'&&(r.guests||1)>1?` <span class="src portal">${r.guests} appointments</span>`:''}</div>
+              <div class="d"><span>${fmtDay(r.date)}</span><span>· ${r.guests||1} guest${(r.guests||1)>1?'s':''}</span>
+                ${(type!=='therapist'&&r.guestNames&&r.guestNames.length)?`<span>· ${esc(r.guestNames.join(', '))}</span>`:''}
+                <span class="src ${r.source||'portal'}">${(r.source||'portal')}</span>
+                ${a.txt?`<span>· ${a.txt}</span>`:''}<span class="sla ${a.cls}">${a.label}</span></div>
+              ${assignHtml}</div>
+            <div class="acts"><button class="decline" onclick="A.decline(${r.id})">Decline</button>
+              <button class="approve" onclick="A.approve(${r.id})">✓ Approve</button></div></div>`;
+        });
+        h+=`</div>`;
+      });
+    }
+    // approved
+    if(approved.length){
+      const bkByReq={};bookings().forEach(b=>{if(b.reqId!=null)(bkByReq[b.reqId]=bkByReq[b.reqId]||[]).push(b);});
+      h+=`<div class="sec-t">Approved · ${approved.length}</div>`;
+      approved.sort((a,b)=>String(a.date).localeCompare(String(b.date))).forEach(r=>{
+        const bs=(bkByReq[r.id]||[]).sort((x,y)=>String(x.time).localeCompare(String(y.time)));
+        const desc=bs.map(b=>{const who=b.assigneeName||(b.guideIds&&b.guideIds.length?guideNames(b.guideIds).join('+'):'');
+          const g=(b.assigneeType==='pilot'&&b.guideIds&&b.guideIds.length)?' + '+guideNames(b.guideIds).join('+'):'';
+          const bt=b.boatName?' · '+b.boatName:'';
+          return (who||'assigned')+g+bt+(b.time?' @ '+b.time:'');}).join(' · ');
+        h+=`<div class="req" style="background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:8px">
+          <div class="ic">${iconFor(r)}</div>
+          <div class="m"><div class="t">${esc(r.name)} <span class="st approved">Approved</span></div>
+            <div class="d"><span>${esc(r.group)}</span><span>· ${fmtDay(r.date)}</span><span>· ${r.guests||1} guests</span>${desc?`<span class="src reservation">${esc(desc)}</span>`:''}<span class="src ${r.source||'portal'}">${r.source||'portal'}</span></div></div>
+          <button class="undo" onclick="A.unset(${r.id})">Undo</button></div>`;
+      });
+    }
+    // Declined requests are removed from the queue entirely — only requested & approved show.
+    el('view').innerHTML=h;
+    [...el('filter').children].forEach(b=>b.classList.toggle('on',b.textContent.trim().toLowerCase()===(FILTER==='all'?'all':FILTER)));
+  }
+
+  window.A={
+    filter(f){FILTER=f;render();},
+    reload(){load();render();toast('Refreshed');},
+    approve(id){const r=REQ.find(x=>x.id===id);if(!r)return;const type=resType(r.name,r.kind);let assigns;
+      if(type==='therapist'){assigns=[];for(let i=0;i<(r.guests||1);i++)assigns.push({type:'therapist',time:(el('mt_'+id+'_'+i)||{}).value,therapistId:(el('mr_'+id+'_'+i)||{}).value,treatment:(el('mtr_'+id+'_'+i)||{}).value,guestIndex:i});}
+      else if(type==='pilot'){const g=(el('rg_'+id)||{}).value;assigns=[{type:'pilot',time:(el('t_'+id)||{}).value,pilotId:(el('rp_'+id)||{}).value,guideIds:g?[g]:[],boatId:(el('rb_'+id)||{}).value||''}];}
+      else{assigns=[{type,time:(el('t_'+id)||{}).value,resId:(el('r_'+id)||{}).value,boatId:(el('rb_'+id)||{}).value||''}];}
+      const made=confirmReq(r,assigns);r.status='approved';r.reviewedAt=new Date().toISOString();save();render();
+      toast('Approved · '+r.name+(made.length>1?' · '+made.length+' sessions':(made[0]&&made[0].assigneeName?' → '+made[0].assigneeName:'')));},
+    decline(id){const r=REQ.find(x=>x.id===id);if(r){removeBooking(id);REQ=REQ.filter(x=>x.id!==id);save();render();toast('Declined & removed · '+r.name);}},
+    approveGroup(g){let n=0;REQ.forEach(r=>{if((r.group||'Guest')===g&&(r.status==='requested'||!r.status)){confirmReq(r,defaultAssigns(r,resType(r.name,r.kind)));r.status='approved';r.reviewedAt=new Date().toISOString();n++;}});save();render();toast('Approved '+n+' for '+g);},
+    unset(id){const r=REQ.find(x=>x.id===id);if(r){r.status='requested';removeBooking(id);save();render();toast('Back to pending — guide released');}}
+  };
+  load();render();
+})();
+</script>
+</body></html>

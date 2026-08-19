@@ -1,0 +1,247 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Team Management</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 22px rgba(18,42,43,.06)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6}
+  *{box-sizing:border-box}
+  .rm{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(14px,3vw,30px);-webkit-font-smoothing:antialiased}
+  .rm .wrap{max-width:1080px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(20px,3vw,30px)/1.1 var(--sans);letter-spacing:-.02em;margin:0 0 4px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:13.5px;max-width:80ch}
+  code{font-family:var(--mono);font-size:.92em}
+  .databar{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line-2);border-radius:10px;box-shadow:var(--shadow);padding:11px 14px;margin-bottom:16px}
+  .databar .dbmsg{font-size:12.5px;color:var(--muted);max-width:60ch}.databar .dbmsg b{color:var(--ink)}
+  .databar .dbbtns{display:flex;gap:8px;flex-wrap:wrap}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+  .tab{font:700 13px var(--sans);color:var(--muted);background:var(--surface);border:1px solid var(--line-2);border-radius:20px;padding:8px 15px;cursor:pointer;display:flex;align-items:center;gap:7px}
+  .tab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .tab .ct{font:700 11px var(--mono);background:rgba(0,0,0,.08);border-radius:20px;padding:1px 7px}
+  .tab.on .ct{background:rgba(255,255,255,.22)}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow)}
+  .hd{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--line);gap:10px;flex-wrap:wrap}
+  .hd h2{font:700 12px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin:0}
+  .hd .desc{font-size:12px;color:var(--muted)}
+  .body{padding:8px 6px}
+  .row{display:flex;gap:12px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .row:last-child{border-bottom:0}
+  .ord{display:flex;flex-direction:column;gap:1px;flex:none}
+  .ord button{width:22px;height:16px;padding:0;font-size:10px;line-height:1;border:1px solid var(--line-2);background:var(--surface-2);color:var(--muted);border-radius:4px;cursor:pointer}
+  .ordnum{font:700 12px var(--mono);color:var(--accent-deep);width:26px;text-align:center;flex:none}
+  .lead-badge{font:600 9px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent-deep);background:var(--accent-soft);border-radius:20px;padding:2px 7px}
+  input,select{font:500 14px var(--sans);padding:8px 10px;border:1px solid var(--line-2);border-radius:7px;background:var(--surface);color:var(--ink)}
+  input:focus,select:focus{outline:2px solid var(--accent);border-color:var(--accent)}
+  .nm{font-weight:700;min-width:150px;flex:1}
+  .caps{display:flex;flex-wrap:wrap;gap:6px;flex:2;min-width:220px}
+  .capchip{font:600 11.5px var(--sans);border:1px solid var(--line-2);border-radius:20px;padding:4px 10px;background:var(--surface);color:var(--muted);cursor:pointer;user-select:none}
+  .capchip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep)}
+  .crew{display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex:2;min-width:260px}
+  .crew label{font:600 9.5px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--faint)}
+  .photorow{display:flex;align-items:center;gap:7px}
+  .boatthumb{width:54px;height:38px;border-radius:7px;object-fit:cover;border:1px solid var(--line-2);background:var(--surface-2)}
+  .boatthumb.ph{display:grid;place-items:center;font-size:18px;color:var(--faint)}
+  .boatthumb.round{width:40px;height:40px;border-radius:50%}
+  .filebtn{position:relative;overflow:hidden;display:inline-flex;align-items:center;font:700 12px var(--sans);color:var(--accent-deep);background:var(--accent-soft);border:1px solid var(--line-2);border-radius:7px;padding:6px 11px;cursor:pointer}
+  .filebtn:hover{background:var(--accent);color:#fff}
+  .filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
+  .rmphoto{border:0;background:none;color:var(--faint);cursor:pointer;font-size:14px;padding:2px 4px}.rmphoto:hover{color:var(--salmon)}
+  button{font:700 13px var(--sans);padding:8px 13px;border-radius:7px;border:1px solid transparent;cursor:pointer}
+  .btn-primary{background:var(--accent);color:#fff}.btn-ghost{background:var(--surface);border-color:var(--line-2);color:var(--ink)}
+  .btn-sm{padding:6px 11px;font-size:12px}
+  .x{background:none;border:none;color:var(--salmon);font-size:16px;cursor:pointer;padding:2px 6px;flex:none;margin-left:auto}
+  .arch{background:var(--surface);border:1px solid var(--line-2);color:var(--muted);font:600 11.5px var(--sans);padding:5px 10px;border-radius:7px;cursor:pointer;flex:none;margin-left:auto}
+  .arch:hover{border-color:var(--salmon);color:var(--salmon)}
+  .row.former{opacity:.62;background:var(--surface-2)}
+  .row.former .nm,.row.former input,.row.former select{background:var(--surface-2)}
+  .former-b{font:600 9.5px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--salmon);background:var(--salmon-soft);border-radius:20px;padding:3px 9px;margin-left:auto}
+  .tglf{font:600 12px var(--sans);color:var(--muted);background:var(--surface-2);border:1px solid var(--line-2);border-radius:20px;padding:5px 12px;cursor:pointer;margin-left:auto}
+  .tglf.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep)}
+  .addbar{padding:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .hint{font-size:11.5px;color:var(--faint)}
+  .note{margin:10px 12px 4px;font-size:12px;color:var(--muted);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:9px 12px}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;transition:.2s;z-index:20}.toast.show{opacity:1}
+</style>
+
+<div class="rm"><div class="wrap">
+  <p class="eyebrow">Talon Lodge &amp; Spa · Team Management</p>
+  <h1>Team &amp; crew</h1>
+  <p class="lede">The people and boats that create activity availability — guides (with what each can run and the
+  booking order), massage therapists, and boat crew. Captains &amp; deckhands are assigned to boats but move
+  freely between them. Each is an <code>asset</code>; capabilities and boat crew are <code>asset_links</code>.
+  Read by the scheduling engine to work out what's bookable each day.</p>
+
+  <div class="databar">
+    <div class="dbmsg"><b>Working copy is in this browser only.</b> <b>Export</b> to carry the team to the live
+    system — that JSON seeds the crew &amp; capability tables.</div>
+    <div class="dbbtns">
+      <button class="btn-primary btn-sm" onclick="TM.exportJson()">⬇ Export (team.json)</button>
+      <button class="btn-ghost btn-sm" onclick="document.getElementById('importpick').click()">⬆ Import</button>
+      <button class="btn-ghost btn-sm" onclick="TM.reset()">Reset</button>
+      <input type="file" id="importpick" accept="application/json,.json" style="display:none" onchange="TM.importJson(this)">
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div class="card"><div class="hd" id="hd"></div><div class="body" id="body"></div></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const KEY='talon_team_v1';
+  const GUIDED=['Freshwater Fishing (Boat/ATV/Plane)','ATV Safari','Kayak & Lunch','Whale Watching','Hiking'];
+  const SEED={
+    guides:[
+      {id:'g1',name:'Ted Deering',lead_order:1,activities:GUIDED.slice(),delivery_boat_id:'b5'},
+      {id:'g2',name:'Holden Pucket',lead_order:2,activities:['Freshwater Fishing (Boat/ATV/Plane)','ATV Safari','Hiking'],delivery_boat_id:''}
+    ],
+    therapists:[
+      {id:'t1',name:'Lori Strachan',sessions_per_day:2},
+      {id:'t2',name:'Mikalia Lockhart',sessions_per_day:2}
+    ],
+    captains:['Cole Younger','Travis Stephenson','James Lecrone','Gavin Wolfe','Marjo Vidad','Ted Deering','Phil Younger'].map((n,i)=>({id:'c'+(i+1),name:n})),
+    deckhands:['Sam Parker','CJ Tacada','Emily Rose','Porter Baskin','Holden Pucket'].map((n,i)=>({id:'d'+(i+1),name:n})),
+    boats:[['Raptor','c1','d1',6],['Roamer','c2','d2',6],['Retriever','c3','d3',6],['Magnum','c4','d4',6],['Pip','c6','d5',4],['Muktuk','c5','',6],['Raider','c7','',6]].map((b,i)=>({id:'b'+(i+1),name:b[0],captain_id:b[1],deckhand_id:b[2],capacity:b[3]}))
+  };
+  let T;try{T=JSON.parse(localStorage.getItem(KEY));}catch(e){}
+  if(!T||!T.guides){T=JSON.parse(JSON.stringify(SEED));persist();}
+  ['guides','therapists','captains','deckhands','boats'].forEach(k=>{if(!Array.isArray(T[k]))T[k]=[];T[k].forEach(x=>{if(x.active===undefined)x.active=true;});});
+  T.boats.forEach(b=>{if(b.capacity==null)b.capacity=6;});
+  function persist(){try{localStorage.setItem(KEY,JSON.stringify(T));return true;}catch(e){return false;}}
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  const uid=p=>p+Math.random().toString(36).slice(2,6);
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1700);}
+  const byId=(arr,id)=>arr.find(x=>x.id===id);
+
+  const TABS=[['guides','Guides','🎣'],['therapists','Therapists','💆'],['boats','Boats','🚤'],['captains','Captains','⚓'],['deckhands','Deckhands','🪝']];
+  let TAB='guides', SHOW_FORMER=false;
+  const isActive=x=>x.active!==false;
+  const activeOf=k=>T[k].filter(isActive);
+  const visible=k=>T[k].filter(x=>isActive(x)||SHOW_FORMER);
+  const label1=k=>({guides:'guide',therapists:'therapist',captains:'captain',deckhands:'deckhand',boats:'boat'}[k]);
+  function rowActions(k,x){return isActive(x)
+    ? `<button class="arch" onclick="TM.archive('${k}','${x.id}')" title="Archive — keeps their history">⊘ Archive</button>`
+    : `<span class="former-b">Former${x.archived_on?' · left '+x.archived_on:''}</span><button class="btn-ghost btn-sm" onclick="TM.restore('${k}','${x.id}')">Restore</button>`;}
+  function formerToggle(k){const n=T[k].filter(x=>!isActive(x)).length;return n?`<button class="tglf ${SHOW_FORMER?'on':''}" onclick="TM.toggleFormer()">${SHOW_FORMER?'Hide':'Show'} former (${n})</button>`:'';}
+
+  function renderTabs(){el('tabs').innerHTML=TABS.map(([k,label,ic])=>`<button class="tab ${TAB===k?'on':''}" onclick="TM.tab('${k}')">${ic} ${label} <span class="ct">${activeOf(k).length}</span></button>`).join('');}
+
+  function render(){
+    renderTabs();
+    ({guides:rGuides,therapists:rTherapists,boats:rBoats,captains:rCaptains,deckhands:rDeckhands}[TAB])();
+  }
+
+  function rGuides(){
+    el('hd').innerHTML=`<h2>Guides</h2><span class="desc">Booking order (top = booked first) &amp; what each can run · 3 guests / one activity per day</span>${formerToggle('guides')}`;
+    const gs=visible('guides').slice().sort((a,b)=>(isActive(a)?0:1)-(isActive(b)?0:1)||(a.lead_order||99)-(b.lead_order||99));
+    const act=gs.filter(isActive);
+    el('body').innerHTML=gs.map((g,idx)=>{const on=isActive(g);const pos=act.indexOf(g);
+      return `<div class="row ${on?'':'former'}">
+      <div class="ord">${on?`<button onclick="TM.moveGuide('${g.id}',-1)" ${pos===0?'disabled':''}>▲</button><button onclick="TM.moveGuide('${g.id}',1)" ${pos===act.length-1?'disabled':''}>▼</button>`:''}</div>
+      <div class="ordnum">${on?pos+1:'–'}</div>
+      <input class="nm" value="${esc(g.name)}" oninput="TM.field('guides','${g.id}','name',this.value)" placeholder="Guide name">
+      ${on&&pos===0?'<span class="lead-badge">Lead · book 1st</span>':''}
+      <div class="caps">${GUIDED.map(a=>`<span class="capchip ${g.activities.includes(a)?'on':''}" onclick="TM.toggleCap('${g.id}','${esc(a).replace(/'/g,"\\'")}')">${esc(a)}</span>`).join('')}</div>
+      <div class="crew"><label>Delivery boat</label><select onchange="TM.field('guides','${g.id}','delivery_boat_id',this.value)"><option value="">— none —</option>${activeOf('boats').map(b=>`<option value="${b.id}" ${g.delivery_boat_id===b.id?'selected':''}>${esc(b.name)}</option>`).join('')}</select></div>
+      ${photoCtl('guides',g,'🎣',true)}
+      ${rowActions('guides',g)}
+    </div>`;}).join('')
+      +`<div class="note">Only guides with a capability chip lit can be assigned to that activity. <b>Kayak &amp; Lunch</b> and <b>Whale Watching</b> are Ted-only — the tightest bottleneck. <b>Delivery boat</b> is the boat a guide runs guests out on for freshwater-by-boat/ATV — e.g. Ted takes the <b>Pip</b> (he's also its captain), so booking that trip uses Ted <i>and</i> the Pip.</div>`
+      +`<div class="addbar"><button class="btn-primary btn-sm" onclick="TM.addGuide()">+ Add guide</button></div>`;
+  }
+  function rTherapists(){
+    el('hd').innerHTML=`<h2>Massage therapists</h2><span class="desc">During-stay only · 2 sessions each (4:30 &amp; 5:30) → 4 massage slots/day. Day Spa is staffed separately.</span>${formerToggle('therapists')}`;
+    el('body').innerHTML=visible('therapists').map(t=>`<div class="row ${isActive(t)?'':'former'}">
+      <input class="nm" value="${esc(t.name)}" oninput="TM.field('therapists','${t.id}','name',this.value)" placeholder="Therapist name">
+      <label class="hint">Sessions/day <input type="number" min="0" max="6" style="width:56px" value="${t.sessions_per_day}" oninput="TM.field('therapists','${t.id}','sessions_per_day',+this.value||0)"></label>
+      ${rowActions('therapists',t)}
+    </div>`).join('')
+      +`<div class="addbar"><button class="btn-primary btn-sm" onclick="TM.addSimple('therapists','Therapist',{sessions_per_day:2})">+ Add therapist</button></div>`;
+  }
+  function rCaptains(){simpleList('captains','Captain','⚓');}
+  function rDeckhands(){simpleList('deckhands','Deckhand','🪝');}
+  function simpleList(k,label){
+    el('hd').innerHTML=`<h2>${label}s</h2><span class="desc">Assign each to one or more boats — click to toggle. A ${label.toLowerCase()} can run more than one (e.g. the <b>Raider</b> spare when a boat's in for repair).</span>${formerToggle(k)}`;
+    el('body').innerHTML=visible(k).map(x=>`<div class="row ${isActive(x)?'':'former'}">
+      <input class="nm" value="${esc(x.name)}" oninput="TM.field('${k}','${x.id}','name',this.value)" placeholder="${label} name">
+      ${boatPicker(k,x.id)}
+      ${photoCtl(k,x,k==='captains'?'⚓':'🪝',true)}
+      ${rowActions(k,x)}
+    </div>`).join('')
+      +`<div class="addbar"><button class="btn-primary btn-sm" onclick="TM.addSimple('${k}','${label}')">+ Add ${label.toLowerCase()}</button></div>`;
+  }
+  function photoCtl(k,m,ph,round){const cls='boatthumb'+(round?' round':'');
+    return `<div class="crew" style="flex:0 0 auto"><label>Photo</label><div class="photorow">`
+      +(m.photo?`<img class="${cls}" src="${esc(m.photo)}" alt="">`:`<div class="${cls} ph">${ph||'📷'}</div>`)
+      +`<label class="filebtn">${m.photo?'Replace':'Upload'}<input type="file" accept="image/*" onchange="TM.uploadPhoto('${k}','${m.id}',this)"></label>`
+      +(m.photo?`<button class="rmphoto" onclick="TM.removePhoto('${k}','${m.id}')" title="Remove photo">✕</button>`:'')
+      +`</div></div>`;}
+  function boatPicker(k,id){const field=k==='captains'?'captain_id':'deckhand_id';const on=activeOf('boats').filter(b=>b[field]===id).length;
+    return `<div class="crew" style="flex:2;min-width:240px"><label>Boats${on?'':' <span style="color:var(--faint);text-transform:none;letter-spacing:0">· none</span>'}</label>`
+      +activeOf('boats').map(b=>{const sel=b[field]===id;return `<span class="capchip ${sel?'on':''}" onclick="TM.toggleBoat('${k}','${id}','${b.id}')">${sel?'✓ ':''}${esc(b.name)}</span>`;}).join('')+`</div>`;}
+  function rBoats(){
+    el('hd').innerHTML=`<h2>Boats</h2><span class="desc">Assign a captain &amp; deckhand to each — reassign any time as boats swap out</span>${formerToggle('boats')}`;
+    const capOpts=v=>`<option value="">— none —</option>`+activeOf('captains').map(c=>`<option value="${c.id}" ${v===c.id?'selected':''}>${esc(c.name)}</option>`).join('');
+    const deckOpts=v=>`<option value="">— none —</option>`+activeOf('deckhands').map(d=>`<option value="${d.id}" ${v===d.id?'selected':''}>${esc(d.name)}</option>`).join('');
+    el('body').innerHTML=visible('boats').map(b=>`<div class="row ${isActive(b)?'':'former'}">
+      <input class="nm" style="max-width:150px" value="${esc(b.name)}" oninput="TM.field('boats','${b.id}','name',this.value)" placeholder="Boat name">
+      <div class="crew" style="flex:0 0 auto"><label>Seats</label><input type="number" min="1" max="12" style="width:62px" value="${b.capacity||6}" oninput="TM.field('boats','${b.id}','capacity',+this.value||6)"></div>
+      <div class="crew"><label>Captain</label><select onchange="TM.field('boats','${b.id}','captain_id',this.value)">${capOpts(b.captain_id)}</select>
+        <label>Deckhand</label><select onchange="TM.field('boats','${b.id}','deckhand_id',this.value)">${deckOpts(b.deckhand_id)}</select></div>
+      ${photoCtl('boats',b,'🚤')}
+      ${rowActions('boats',b)}
+    </div>`).join('')
+      +`<div class="note">Crew assignment here is the current pairing; per-day swaps (boat issues, days off) happen on the scheduling calendar.</div>`
+      +`<div class="addbar"><button class="btn-primary btn-sm" onclick="TM.addSimple('boats','Boat',{captain_id:'',deckhand_id:'',capacity:6})">+ Add boat</button></div>`;
+  }
+
+  window.TM={
+    tab(k){TAB=k;render();},
+    field(k,id,f,v){const x=byId(T[k],id);if(x){x[f]=v;persist();if(f!=='name')renderTabs();}},
+    toggleBoat(k,id,boatId){const field=k==='captains'?'captain_id':'deckhand_id';const b=byId(T.boats,boatId);if(b){b[field]=(b[field]===id)?'':id;persist();render();}},
+    toggleCap(id,a){const g=byId(T.guides,id);if(!g)return;const i=g.activities.indexOf(a);if(i>=0)g.activities.splice(i,1);else g.activities.push(a);persist();rGuides();},
+    moveGuide(id,dir){const gs=T.guides.slice().sort((a,b)=>(a.lead_order||99)-(b.lead_order||99));const idx=gs.findIndex(g=>g.id===id);const j=idx+dir;if(j<0||j>=gs.length)return;
+      [gs[idx].lead_order,gs[j].lead_order]=[gs[j].lead_order||j+1,gs[idx].lead_order||idx+1];persist();render();},
+    addGuide(){const n=(T.guides.reduce((m,g)=>Math.max(m,g.lead_order||0),0))+1;T.guides.push({id:uid('g'),name:'',lead_order:n,activities:[]});persist();rGuides();renderTabs();},
+    addSimple(k,label,extra){T[k].push(Object.assign({id:uid(k[0]),name:''},extra||{}));persist();render();},
+    uploadPhoto(k,id,input){const f=input.files&&input.files[0];input.value='';if(!f)return;if(!/^image\//.test(f.type)){alert('Please choose an image file.');return;}
+      const isPerson=k!=='boats';const MAX=isPerson?640:1600;
+      const fr=new FileReader();fr.onload=()=>{const img=new Image();img.onload=()=>{
+        let w=img.width,h=img.height;
+        let cv=document.createElement('canvas'),ctx=cv.getContext('2d');
+        if(isPerson){const s=Math.min(w,h);cv.width=cv.height=Math.min(s,MAX);ctx.drawImage(img,(w-s)/2,(h-s)/2,s,s,0,0,cv.width,cv.height);} // square crop for portraits
+        else{if(w>MAX){h=Math.round(h*MAX/w);w=MAX;}cv.width=w;cv.height=h;ctx.drawImage(img,0,0,w,h);}
+        let data;try{data=cv.toDataURL('image/jpeg',0.82);}catch(e){data=fr.result;}
+        const m=byId(T[k],id);if(m){m.photo=data;try{persist();}catch(e){alert('That photo is too large to store — try a smaller image.');m.photo=null;}render();}
+      };img.onerror=()=>alert('Could not read that image.');img.src=fr.result;};fr.readAsDataURL(f);},
+    removePhoto(k,id){const m=byId(T[k],id);if(m){m.photo=null;persist();render();}},
+    archive(k,id){const x=byId(T[k],id);if(!x)return;
+      if(!confirm('Archive this '+label1(k)+'?\n\nThey keep all their history (past trips, groups) and can be restored later — they just drop out of new bookings and any current boat crew.'))return;
+      x.active=false;x.archived_on=new Date().toISOString().slice(0,10);
+      if(k==='captains')T.boats.forEach(b=>{if(b.captain_id===id)b.captain_id='';});
+      if(k==='deckhands')T.boats.forEach(b=>{if(b.deckhand_id===id)b.deckhand_id='';});
+      persist();render();toast('Archived — history kept');},
+    restore(k,id){const x=byId(T[k],id);if(x){x.active=true;delete x.archived_on;persist();render();toast('Restored');}},
+    toggleFormer(){SHOW_FORMER=!SHOW_FORMER;render();},
+    exportJson(){const doc={schema:'talon.team.v1',property_slug:'talon-lodge',
+      note:'Team & crew exported from Team Management. Guides/therapists/captains/deckhands/boats seed the assets table (types Guide, MassageTherapist, Captain, Deckhand, Boat); guide capabilities and boat crew seed asset_links. Read by the scheduling engine.',
+      exported_at:new Date().toISOString(),
+      guides:T.guides.map(g=>({...g,delivery_boat:(byId(T.boats,g.delivery_boat_id)||{}).name||null})),therapists:T.therapists,captains:T.captains,deckhands:T.deckhands,
+      boats:T.boats.map(b=>({...b,captain:(byId(T.captains,b.captain_id)||{}).name||null,deckhand:(byId(T.deckhands,b.deckhand_id)||{}).name||null}))};
+      const blob=new Blob([JSON.stringify(doc,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='team.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);toast('Exported team.json');},
+    importJson(input){const f=input.files[0];input.value='';if(!f)return;const fr=new FileReader();fr.onload=()=>{try{const doc=JSON.parse(fr.result);if(!doc.guides&&!doc.boats)throw 0;
+      if(!confirm('Import this team? Replaces your working copy.'))return;
+      ['guides','therapists','captains','deckhands','boats'].forEach(k=>{T[k]=Array.isArray(doc[k])?doc[k].map(x=>({...x,id:x.id||uid(k[0])})):[];});
+      // re-link boat crew by name if ids don't resolve
+      T.boats.forEach(b=>{if(b.captain&&!byId(T.captains,b.captain_id)){const c=T.captains.find(x=>x.name===b.captain);if(c)b.captain_id=c.id;}
+        if(b.deckhand&&!byId(T.deckhands,b.deckhand_id)){const d=T.deckhands.find(x=>x.name===b.deckhand);if(d)b.deckhand_id=d.id;}});
+      persist();render();toast('Imported team');
+    }catch(e){toast('Could not read that file — expected an exported team.json');}};fr.readAsText(f);},
+    reset(){if(!confirm('Reset to the seeded team? Your working copy will be replaced.'))return;localStorage.removeItem(KEY);location.reload();}
+  };
+  render();
+})();
+</script>
+</body></html>

@@ -1,0 +1,353 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Fish Processing</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 22px rgba(18,42,43,.06)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--gold:#e0b45e}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--gold:#b9892b}
+  *{box-sizing:border-box}
+  .rm{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(14px,3vw,30px);-webkit-font-smoothing:antialiased}
+  .rm .wrap{max-width:1060px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(20px,3vw,28px)/1.1 var(--sans);letter-spacing:-.02em;margin:0 0 4px}
+  .lede{color:var(--muted);margin:0 0 18px;font-size:13.5px;max-width:88ch}
+  .bar{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);padding:13px 16px;margin-bottom:16px}
+  .fld{display:flex;flex-direction:column;gap:5px}
+  .fld label{font:700 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  select,input,textarea{font:600 13.5px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:8px 10px}
+  select:focus,input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+  .panel{background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+  .phead{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .phead h2{font:800 15px var(--sans);margin:0}
+  .phead .desc{font-size:12.5px;color:var(--muted)}
+  .phead .sp{margin-left:auto}
+  .guests{display:flex;gap:7px;flex-wrap:wrap;padding:11px 16px;border-bottom:1px solid var(--line);align-items:center}
+  .guests .gl{font:700 10px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+  .chip{font:600 12px var(--sans);background:var(--surface-2);border:1px solid var(--line-2);border-radius:20px;padding:3px 11px;color:var(--ink)}
+  table{width:100%;border-collapse:collapse}
+  th{font:700 10.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);text-align:left;padding:10px 16px;border-bottom:1px solid var(--line)}
+  th.num,td.num{text-align:right}
+  td{padding:6px 16px;border-bottom:1px solid var(--line);font-size:14px}
+  tbody tr:hover{background:var(--surface-2)}
+  input.cnt,input.wt,input.rec{text-align:right;width:82px}
+  td.filet{font:800 14px var(--mono);color:var(--accent-deep);font-variant-numeric:tabular-nums}
+  tr.zero td.filet{color:var(--faint);font-weight:600}
+  tfoot td{border-top:2px solid var(--line-2);border-bottom:0;padding:12px 16px;font-weight:800}
+  tfoot .tot{font:900 17px var(--mono);color:var(--accent-deep)}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--line)}
+  @media(max-width:720px){.split{grid-template-columns:1fr}}
+  .split .box{padding:14px 16px}
+  .split .box+.box{border-left:1px solid var(--line)}
+  @media(max-width:720px){.split .box+.box{border-left:0;border-top:1px solid var(--line)}}
+  .split h3{font:700 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin:0 0 10px}
+  .splitrow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .splitrow input{width:74px;text-align:center;font-weight:800}
+  .pershare{font:900 22px var(--mono);color:var(--accent-deep);font-variant-numeric:tabular-nums}
+  .pershare small{font:600 12px var(--sans);color:var(--muted);display:block;letter-spacing:0}
+  .recs{display:flex;flex-direction:column;gap:8px}
+  .rec{display:flex;align-items:center;gap:10px}
+  .rec .n{font:700 11px var(--mono);color:var(--faint);width:58px;flex:0 0 auto}
+  .rec select{flex:1 1 auto;min-width:0}
+  .rec .lbs{font:800 13px var(--mono);color:var(--accent-deep);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .foot{padding:13px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  textarea{width:100%;min-height:52px;resize:vertical}
+  .btn{font:700 12.5px var(--sans);border-radius:8px;padding:9px 15px;cursor:pointer;border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+  .btn:hover{background:var(--surface-2)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.primary:hover{filter:brightness(1.05)}
+  .savedtag{font:600 12px var(--sans);color:var(--accent-deep);background:var(--accent-soft);border-radius:20px;padding:3px 11px;display:none}
+  .savedtag.on{display:inline}
+  .empty{padding:34px 16px;text-align:center;color:var(--muted);font-size:14px}
+  .tripsum td{font-size:13.5px}
+  .tripsum .lbs{font:800 14px var(--mono);color:var(--accent-deep);font-variant-numeric:tabular-nums}
+  .tripsum .days{color:var(--faint);font-size:12px}
+  .schema{margin-top:4px;font-size:12px;color:var(--muted);background:var(--surface);border:1px dashed var(--line-2);border-radius:10px;padding:11px 14px;line-height:1.6}
+  .schema b{color:var(--accent-deep)} .schema code{font-family:var(--mono);font-size:.9em;color:var(--ink)}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--accent-deep);color:#fff;font:600 13px var(--sans);padding:9px 16px;border-radius:9px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s;z-index:5}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* view switch */
+  .viewseg{display:inline-flex;border:1px solid var(--line-2);border-radius:9px;overflow:hidden;margin-bottom:16px;background:var(--surface);box-shadow:var(--shadow)}
+  .vseg{font:700 12.5px var(--sans);padding:9px 16px;background:var(--surface);color:var(--muted);border:0;border-right:1px solid var(--line-2);cursor:pointer}
+  .vseg:last-child{border-right:0}
+  .vseg.on{background:var(--accent);color:#fff}
+  /* reports */
+  .report .rhead{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:2px solid var(--accent);flex-wrap:wrap}
+  .report .rhead .btn{margin-left:auto}
+  .rtitle{font:800 19px var(--sans);letter-spacing:-.01em}
+  .rsub{font:600 12.5px var(--sans);color:var(--muted);margin-top:2px}
+  .rbody{padding:14px 18px 18px}
+  .rnote{font-size:12.5px;color:var(--muted);margin-bottom:14px}
+  .grpt{border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:9px;break-inside:avoid}
+  .gtop{display:flex;align-items:baseline;gap:10px}
+  .gtop .gn{font:700 15px var(--sans)}
+  .gtop .gl{margin-left:auto;font:900 16px var(--mono);color:var(--accent-deep);font-variant-numeric:tabular-nums}
+  .gsub{font-size:12px;color:var(--muted);margin-top:2px}
+  .gdays{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .dchip{font:600 11.5px var(--mono);background:var(--surface-2);border:1px solid var(--line-2);border-radius:20px;padding:3px 10px}
+  .instr{background:var(--gold-soft);border:1px solid var(--gold);border-radius:10px;padding:11px 13px;margin-bottom:14px}
+  .instr .il{font:700 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-bottom:5px}
+  .instr .itxt{font:600 13.5px var(--sans);font-style:italic}
+  .bigrow{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .big{flex:1;min-width:130px;border:1px solid var(--line-2);border-radius:10px;padding:11px 14px;background:var(--surface-2)}
+  .big .bl{font:700 10px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+  .big .bv{font:900 24px var(--mono);color:var(--accent-deep);font-variant-numeric:tabular-nums}
+  .rsec{font:800 13px var(--sans);margin:18px 0 8px}
+  .rt{width:100%;border-collapse:collapse;margin-bottom:6px}
+  .rt th{font:700 10px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+  .rt td{padding:8px 10px;border-bottom:1px solid var(--line);font-size:13.5px}
+  .rt .num{text-align:right}
+  .rt .lbs{font:800 13.5px var(--mono);color:var(--accent-deep);font-variant-numeric:tabular-nums}
+  .rt .bx{font:800 13px var(--mono);color:var(--faint);width:40px}
+  .rt .dl{font:700 12.5px var(--mono);color:var(--salmon)}
+  .rt .mut{color:var(--faint);text-align:center;padding:16px}
+  @media print{
+    html,body{background:#fff}
+    .rm{padding:0}
+    .eyebrow,.lede,.bar,.viewseg,.schema,.toast,.no-print{display:none!important}
+    h1{font-size:16px;margin:0 0 10px}
+    .panel{box-shadow:none;border-color:#bbb}
+    .report .rhead{border-color:#333}
+    .rsec{break-after:avoid}
+    .rt,.grpt{break-inside:avoid}
+  }
+</style>
+<div class="rm"><div class="wrap">
+  <p class="eyebrow">Operate · Sportfishing</p>
+  <h1>Fish Processing</h1>
+  <p class="lede">At the end of each fishing day, log the group's catch once. The engine yields the filet weight per species (<code>count × avg weight × recovery%</code>), totals the day, and splits it into however many take‑home shares the group wants — <b>one named guest per share</b>. Each share's poundage lands on that guest's own record, so it rolls up per individual for the trip.</p>
+
+  <div class="bar">
+    <div class="fld"><label>Package</label><select id="pkg" onchange="FP.pick()"></select></div>
+    <div class="fld"><label>Group</label><select id="grp" onchange="FP.pick()"><option value="">—</option></select></div>
+    <div class="fld"><label>Fishing day</label><select id="date" onchange="FP.pick()"><option value="">—</option></select></div>
+  </div>
+
+  <div class="viewseg" id="viewseg">
+    <button class="vseg on" data-v="entry" onclick="FP.setView('entry')">Catch entry</button>
+    <button class="vseg" data-v="guest" onclick="FP.setView('guest')">Guest summary</button>
+    <button class="vseg" data-v="proc" onclick="FP.setView('proc')">Processing sheet</button>
+  </div>
+
+  <div id="work"></div>
+
+  <div class="schema">Maps to Andy's schema → <b>fish_catch</b> (<code>trip_id, group, catch_date, species_id, count, avg_weight, recovery_pct</code>) + <b>fish_catch_split</b> (<code>catch_date, share_index, person_id, lbs</code>). Every share row references a <code>person</code> — the catch funnels to the individual.</div>
+</div></div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+  const PKEY='talon_packages_v1', PROF='talon_portal_profile', FTYPE='talon_fish_types_v1', CKEY='talon_fish_catch_v1';
+  const PKG_SEED=[{id:'sp1',series:'Standard',category:'Sportfishing',status:'published',arrival_start_date:'2027-05-24',nights:4}];
+  const FT_SEED=[{name:'Chum Salmon',w:10,r:45},{name:'Halibut Large',w:40,r:40},{name:'Halibut Medium',w:20,r:40},{name:'Halibut Small',w:7,r:40},{name:'King Salmon',w:17,r:45},{name:'Ling Cod',w:15,r:25},{name:'Silver Salmon',w:7,r:40},{name:'Sockeye Salmon',w:7,r:40},{name:'Yellow-Eye',w:5,r:25}];
+
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  const num=v=>{const n=parseFloat(v);return isNaN(n)?0:n;};
+  const money2=n=>(Math.round(n*100)/100).toFixed(2);
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1600);}
+
+  const parseD=s=>{const[y,m,d]=(s||'').split('-').map(Number);return new Date(y,(m||1)-1,d||1);};
+  const addDays=(s,n)=>{const dt=parseD(s);dt.setDate(dt.getDate()+n);return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');};
+  const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const fmtD=s=>{const d=parseD(s);return MO[d.getMonth()]+' '+d.getDate();};
+  const fmtDW=s=>{const d=parseD(s);return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()]+' '+MO[d.getMonth()]+' '+d.getDate();};
+
+  function loadPkgs(){try{const p=JSON.parse(localStorage.getItem(PKEY));if(Array.isArray(p)&&p.length)return p;}catch(e){}return PKG_SEED;}
+  const PKGS=loadPkgs().filter(p=>(!p.status||p.status==='published')&&p.arrival_start_date&&p.nights).sort((a,b)=>a.arrival_start_date<b.arrival_start_date?-1:1);
+  const pkgById=id=>PKGS.find(p=>p.id===id);
+  function pkgLabel(p){const dep=addDays(p.arrival_start_date,+p.nights);return fmtD(p.arrival_start_date)+'–'+fmtD(dep)+' · '+(+p.nights)+'N · '+(p.series?p.series+' ':'')+(p.category||'Sportfishing');}
+  // fishing days = the stay nights between arrival and departure (exclude travel days)
+  function fishingDays(p){const out=[];for(let i=1;i<(+p.nights);i++)out.push(addDays(p.arrival_start_date,i));return out;}
+
+  const loadProfiles=()=>{try{return JSON.parse(localStorage.getItem(PROF))||{};}catch(e){return {};}};
+  function groupsForPkg(pkgId){const pr=loadProfiles(),out=[];Object.keys(pr).forEach(k=>{const i=k.lastIndexOf('|');if(i>0&&k.slice(i+1)===pkgId)out.push(k.slice(0,i));});return out.sort();}
+  const groupGuests=(group,pkgId)=>{const pr=loadProfiles(),k=group+'|'+pkgId;return (pr[k]&&pr[k].guests?pr[k].guests:[]).map(g=>((g.first||'')+' '+(g.last||'')).trim()).filter(Boolean);};
+
+  function loadTypes(){let t=null;try{t=JSON.parse(localStorage.getItem(FTYPE));}catch(e){} if(!t||!t.length)t=FT_SEED.map((s,i)=>({id:i+1,...s}));return t.slice().sort((a,b)=>(a.name||'').toLowerCase()<(b.name||'').toLowerCase()?-1:1);}
+  function loadCatch(){try{return JSON.parse(localStorage.getItem(CKEY))||{};}catch(e){return {};}}
+  function saveCatch(map){try{localStorage.setItem(CKEY,JSON.stringify(map));localStorage.setItem(CKEY+'__bak',JSON.stringify(map));return true;}catch(e){return false;}}
+
+  let S={pkgId:'',group:'',date:''}, rec=null, VIEW='entry';
+  const keyOf=()=>S.pkgId+'::'+S.group+'::'+S.date;
+  const fmtT=t=>{if(!t)return '';const[h,m]=String(t).split(':').map(Number);const ap=h<12?'AM':'PM';const h12=h%12||12;return h12+':'+String(m).padStart(2,'0')+' '+ap;};
+  // per-guest travel (from the profile written by Flight Information)
+  function guestObjs(){const pr=loadProfiles();const k=S.group+'|'+S.pkgId;return (pr[k]&&pr[k].guests)||[];}
+  function depInfo(name){const g=guestObjs().find(x=>((x.first||'')+' '+(x.last||'')).trim()===name);if(!g||!g.dep)return null;const d=g.dep;return {mode:d.mode||'commercial',airline:d.airline,flightNo:d.flightNo,tail:d.tail,time:(d.mode==='jet'?(d.est||d.time):d.time),date:d.date};}
+
+  function initPkg(){
+    el('pkg').innerHTML='<option value="">Select a package…</option>'+PKGS.map(p=>`<option value="${p.id}">${esc(pkgLabel(p))}</option>`).join('');
+    if(PKGS.length===1){el('pkg').value=PKGS[0].id;}
+  }
+  function refreshGroupDate(){
+    const p=pkgById(S.pkgId);
+    const grps=S.pkgId?groupsForPkg(S.pkgId):[];
+    el('grp').innerHTML='<option value="">'+(S.pkgId?(grps.length?'Select a group…':'— no groups; load Test data —'):'—')+'</option>'+grps.map(g=>`<option value="${esc(g)}"${g===S.group?' selected':''}>${esc(g)} · ${groupGuests(g,S.pkgId).length}</option>`).join('');
+    const days=p?fishingDays(p):[];
+    el('date').innerHTML='<option value="">'+(S.pkgId?'Select a day…':'—')+'</option>'+days.map(d=>`<option value="${d}"${d===S.date?' selected':''}>${esc(fmtDW(d))}</option>`).join('');
+    if(!grps.includes(S.group))S.group='';
+    if(!days.includes(S.date))S.date='';
+  }
+
+  function buildRec(){
+    const map=loadCatch(), k=keyOf(), types=loadTypes();
+    let r=map[k]?JSON.parse(JSON.stringify(map[k])):null;
+    const guests=groupGuests(S.group,S.pkgId);
+    if(!r){
+      r={pkgId:S.pkgId,group:S.group,date:S.date,lines:types.map(t=>({name:t.name,count:0,w:t.w,r:t.r})),
+         splitBy:guests.length||1,recipients:guests.slice(),special:'',saved:false};
+    }else{
+      // reconcile with current species list: keep saved lines, append any new species
+      const have=new Set(r.lines.map(l=>l.name.toLowerCase()));
+      types.forEach(t=>{if(!have.has(t.name.toLowerCase()))r.lines.push({name:t.name,count:0,w:t.w,r:t.r});});
+      r.recipients=r.recipients||[];r.saved=true;
+    }
+    rec=r;
+  }
+
+  const lineFilet=l=>num(l.count)*num(l.w)*num(l.r)/100;
+  const dayTotal=()=>rec.lines.reduce((s,l)=>s+lineFilet(l),0);
+  const perShare=()=>{const n=Math.max(1,parseInt(rec.splitBy)||1);return dayTotal()/n;};
+
+  function catchForGroup(){const map=loadCatch();return Object.keys(map).map(k=>map[k]).filter(r=>r&&r.pkgId===S.pkgId&&r.group===S.group).sort((a,b)=>a.date<b.date?-1:1);}
+  function perGuestTotals(){const t={};catchForGroup().forEach(r=>{const tot=(r.lines||[]).reduce((s,l)=>s+num(l.count)*num(l.w)*num(l.r)/100,0);const nn=Math.max(1,parseInt(r.splitBy)||1);const share=tot/nn;(r.recipients||[]).forEach(nm=>{if(!nm)return;(t[nm]=t[nm]||{lbs:0,days:0,byday:[]});t[nm].lbs+=share;t[nm].days++;t[nm].byday.push({date:r.date,lbs:share});});});return t;}
+  function speciesTotals(){const sp={};catchForGroup().forEach(r=>(r.lines||[]).forEach(l=>{const c=num(l.count);if(c>0){sp[l.name]=sp[l.name]||{count:0,filet:0};sp[l.name].count+=c;sp[l.name].filet+=c*num(l.w)*num(l.r)/100;}}));return sp;}
+
+  function renderGuestReport(){
+    const w=el('work');const guests=groupGuests(S.group,S.pkgId);const totals=perGuestTotals();const sp=speciesTotals();const p=pkgById(S.pkgId);
+    const spList=Object.keys(sp).sort();
+    const cards=guests.map(nm=>{const t=totals[nm]||{lbs:0,days:0,byday:[]};const d=depInfo(nm);
+      return `<div class="grpt"><div class="gtop"><span class="gn">${esc(nm)}</span><span class="gl">${money2(t.lbs)} lb</span></div>
+        <div class="gsub">Take‑home filet across ${t.days} day${t.days===1?'':'s'}${d&&d.time?` · departs ${d.mode==='jet'?'private jet '+esc((d.tail||'').trim()):esc(d.flightNo||'')} ${fmtT(d.time)}`:''}</div>
+        ${t.byday.length?`<div class="gdays">${t.byday.map(x=>`<span class="dchip">${fmtD(x.date)} · ${money2(x.lbs)} lb</span>`).join('')}</div>`:'<div class="gsub" style="color:var(--faint)">No fish assigned yet</div>'}</div>`;}).join('');
+    w.innerHTML=`<div class="panel report"><div class="rhead"><div><div class="rtitle">🎣 Fish Take‑Home Summary</div><div class="rsub">${esc(S.group)} · ${esc(pkgLabel(p))}</div></div><button class="btn no-print" onclick="window.print()">🖨 Print</button></div>
+      <div class="rbody"><div class="rnote">Each guest's share of the group's processed catch, funneled to them by name. Species landed this trip: ${spList.length?spList.map(esc).join(', '):'—'}.</div>${cards}</div></div>`;
+  }
+  function renderProcReport(){
+    const w=el('work');const totals=perGuestTotals();const recs=catchForGroup();const sp=speciesTotals();const p=pkgById(S.pkgId);
+    const boxes=Object.keys(totals).filter(nm=>totals[nm].lbs>0).sort((a,b)=>totals[b].lbs-totals[a].lbs);
+    const specials=[...new Set(recs.map(r=>(r.special||'').trim()).filter(Boolean))];
+    const grand=boxes.reduce((s,nm)=>s+totals[nm].lbs,0);
+    const boxRows=boxes.map((nm,idx)=>{const d=depInfo(nm);
+      return `<tr><td class="bx">${idx+1}</td><td>${esc(nm)}</td><td class="num lbs">${money2(totals[nm].lbs)} lb</td><td>${d?(d.mode==='jet'?('Jet '+(esc((d.tail||'').trim())||'—')):esc(d.flightNo||'—')):'—'}</td><td class="dl">${d&&d.time?fmtT(d.time):'—'}${d&&d.date?' · '+fmtD(d.date):''}</td></tr>`;}).join('');
+    const dayRows=recs.map(r=>{const tot=(r.lines||[]).reduce((s,l)=>s+num(l.count)*num(l.w)*num(l.r)/100,0);const nn=Math.max(1,parseInt(r.splitBy)||1);
+      const caught=(r.lines||[]).filter(l=>num(l.count)>0).map(l=>`${esc(l.name)} ×${num(l.count)}`).join(', ')||'—';
+      return `<tr><td>${fmtDW(r.date)}</td><td>${caught}</td><td class="num">${money2(tot)} lb</td><td class="num">${nn}</td><td>${(r.recipients||[]).filter(Boolean).map(esc).join(', ')||'—'}</td></tr>`;}).join('');
+    const spRows=Object.keys(sp).sort().map(n=>`<tr><td>${esc(n)}</td><td class="num">${sp[n].count}</td><td class="num">${money2(sp[n].filet)} lb</td></tr>`).join('');
+    w.innerHTML=`<div class="panel report"><div class="rhead"><div><div class="rtitle">📦 Fish Processing &amp; Packing Instructions</div><div class="rsub">${esc(S.group)} · ${esc(pkgLabel(p))}</div></div><button class="btn no-print" onclick="window.print()">🖨 Print</button></div>
+      <div class="rbody">
+        ${specials.length?`<div class="instr"><div class="il">Initial instructions</div>${specials.map(s=>`<div class="itxt">“${esc(s)}”</div>`).join('')}</div>`:''}
+        <div class="bigrow"><div class="big"><div class="bl">Boxes to pack (shares)</div><div class="bv">${boxes.length}</div></div><div class="big"><div class="bl">Total filet</div><div class="bv">${money2(grand)} lb</div></div></div>
+        <h3 class="rsec">Pack one box per named guest — ready before their departure</h3>
+        <table class="rt"><thead><tr><th>Box</th><th>Guest (recipient)</th><th class="num">Weight</th><th>Departure</th><th>Deadline (SIT)</th></tr></thead><tbody>${boxRows||'<tr><td colspan="5" class="mut">No shares assigned yet</td></tr>'}</tbody></table>
+        <h3 class="rsec">Per‑day catch &amp; split</h3>
+        <table class="rt"><thead><tr><th>Day</th><th>Species caught</th><th class="num">Filet</th><th class="num">Split by</th><th>Recipients</th></tr></thead><tbody>${dayRows||'<tr><td colspan="5" class="mut">No catch logged</td></tr>'}</tbody></table>
+        <h3 class="rsec">Total catch by species</h3>
+        <table class="rt"><thead><tr><th>Species</th><th class="num">Count</th><th class="num">Filet weight</th></tr></thead><tbody>${spRows||'<tr><td colspan="3" class="mut">—</td></tr>'}</tbody></table>
+      </div></div>`;
+  }
+
+  function render(){
+    const w=el('work');
+    if(VIEW!=='entry'){
+      if(!(S.pkgId&&S.group)){w.innerHTML='<div class="panel"><div class="empty">Pick a <b>package</b> and <b>group</b> to generate the report.<br><span style="font-size:12.5px">Departure times come from <b>Flight info</b>; catch from your entries.</span></div></div>';return;}
+      return VIEW==='guest'?renderGuestReport():renderProcReport();
+    }
+    if(!(S.pkgId&&S.group&&S.date)){
+      w.innerHTML='<div class="panel"><div class="empty">Pick a <b>package</b>, <b>group</b>, and <b>fishing day</b> to log the catch.<br><span style="font-size:12.5px">No groups showing? Open <b>Test data</b> first to load the guest roster.</span></div></div>';
+      return;
+    }
+    buildRec();
+    const guests=groupGuests(S.group,S.pkgId);
+    const n=Math.max(1,parseInt(rec.splitBy)||1);
+    const rows=rec.lines.map((l,i)=>{const f=lineFilet(l);return `
+      <tr class="${f<=0?'zero':''}">
+        <td>${esc(l.name)}</td>
+        <td class="num"><input class="cnt" type="number" min="0" step="1" value="${l.count}" oninput="FP.setLine(${i},'count',this.value)"></td>
+        <td class="num"><input class="wt" type="number" min="0" step="0.25" value="${l.w}" oninput="FP.setLine(${i},'w',this.value)"></td>
+        <td class="num"><input class="rec" type="number" min="0" max="100" step="1" value="${l.r}" oninput="FP.setLine(${i},'r',this.value)"></td>
+        <td class="num filet" id="f${i}">${money2(f)}</td>
+      </tr>`;}).join('');
+
+    const recRows=[];
+    for(let i=0;i<n;i++){
+      const val=rec.recipients[i]||'';
+      recRows.push(`<div class="rec"><span class="n">Share ${i+1}</span>
+        <select onchange="FP.setRecipient(${i},this.value)"><option value="">— choose guest —</option>${guests.map(g=>`<option value="${esc(g)}"${g===val?' selected':''}>${esc(g)}</option>`).join('')}</select>
+        <span class="lbs" id="lbs${i}">${money2(perShare())} lb</span></div>`);
+    }
+
+    w.innerHTML=`
+    <div class="panel">
+      <div class="phead"><h2>${esc(S.group)}</h2><span class="desc">· ${esc(fmtDW(S.date))} · ${esc(pkgLabel(pkgById(S.pkgId)))}</span><span class="sp"></span><span class="savedtag ${rec.saved?'on':''}" id="savedtag">✓ Saved</span></div>
+      <div class="guests"><span class="gl">Guests (${guests.length})</span>${guests.map(g=>`<span class="chip">${esc(g)}</span>`).join('')||'<span class="desc">no guests on this group</span>'}</div>
+      <table>
+        <thead><tr><th>Species</th><th class="num">Count</th><th class="num">Avg weight</th><th class="num">Recovery</th><th class="num">Filet weight</th></tr></thead>
+        <tbody>${rows}</tbody>
+        <tfoot><tr><td colspan="4" style="text-align:right">Day total (lbs of filet)</td><td class="num tot" id="daytot">${money2(dayTotal())}</td></tr></tfoot>
+      </table>
+      <div class="split">
+        <div class="box">
+          <h3>Split into take-home shares</h3>
+          <div class="splitrow"><label style="font-size:13px">Split fish count by</label><input type="number" min="1" step="1" value="${n}" oninput="FP.setSplit(this.value)"></div>
+          <div class="pershare" id="pershare">${money2(perShare())} lb<small>every share receives</small></div>
+        </div>
+        <div class="box">
+          <h3>One named recipient per share</h3>
+          <div class="recs">${recRows.join('')}</div>
+        </div>
+      </div>
+      <div style="padding:14px 16px;border-bottom:1px solid var(--line)">
+        <h3 style="font:700 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin:0 0 8px">Special instructions</h3>
+        <textarea placeholder="e.g. vacuum-pack halibut separately; ship Barrett's share to hotel" oninput="FP.setSpecial(this.value)">${esc(rec.special)}</textarea>
+      </div>
+      <div class="foot">
+        <button class="btn primary" onclick="FP.save()">Save catch &amp; split</button>
+        <button class="btn" onclick="FP.clear()">Clear this day</button>
+        <span class="desc" style="color:var(--muted);font-size:12px">Entries auto-save as you type; “Save” confirms and stamps the day.</span>
+      </div>
+    </div>
+    ${tripSummary()}`;
+  }
+
+  function tripSummary(){
+    const map=loadCatch(), byGuest={};
+    const guests=groupGuests(S.group,S.pkgId);guests.forEach(g=>byGuest[g]={lbs:0,days:0});
+    Object.keys(map).forEach(k=>{const r=map[k];if(r.pkgId!==S.pkgId||r.group!==S.group)return;
+      const tot=(r.lines||[]).reduce((s,l)=>s+num(l.count)*num(l.w)*num(l.r)/100,0);
+      const nn=Math.max(1,parseInt(r.splitBy)||1),share=tot/nn;
+      (r.recipients||[]).forEach(nm=>{if(nm&&byGuest[nm]!==undefined){byGuest[nm].lbs+=share;byGuest[nm].days++;}else if(nm){byGuest[nm]={lbs:share,days:1};}});
+    });
+    const names=Object.keys(byGuest);
+    const grand=names.reduce((s,nm)=>s+byGuest[nm].lbs,0);
+    if(grand<=0)return '<div class="schema" style="border-style:solid">Trip total will appear here once shares are assigned — each guest\'s filet poundage across every logged day of <b>'+esc(S.group)+'</b>.</div>';
+    const rows=names.filter(nm=>byGuest[nm].lbs>0||guests.includes(nm)).sort((a,b)=>byGuest[b].lbs-byGuest[a].lbs).map(nm=>`
+      <tr><td>${esc(nm)}</td><td class="num days">${byGuest[nm].days} day${byGuest[nm].days===1?'':'s'}</td><td class="num lbs">${money2(byGuest[nm].lbs)} lb</td></tr>`).join('');
+    return `<div class="panel tripsum">
+      <div class="phead"><h2>🎣 Trip total by guest</h2><span class="desc">· ${esc(S.group)} · all logged days</span><span class="sp"></span><span class="desc">Grand total ${money2(grand)} lb</span></div>
+      <table><thead><tr><th>Guest</th><th class="num">Days received</th><th class="num">Filet to take home</th></tr></thead><tbody>${rows}</tbody></table>
+    </div>`;
+  }
+
+  function persist(){const map=loadCatch();map[keyOf()]=rec;return saveCatch(map);}
+  function recompute(){
+    rec.lines.forEach((l,i)=>{const c=el('f'+i);if(c)c.textContent=money2(lineFilet(l));const tr=c&&c.closest('tr');if(tr)tr.classList.toggle('zero',lineFilet(l)<=0);});
+    const dt=el('daytot');if(dt)dt.textContent=money2(dayTotal());
+    const ps=el('pershare');if(ps)ps.innerHTML=money2(perShare())+' lb<small>every share receives</small>';
+    const n=Math.max(1,parseInt(rec.splitBy)||1);for(let i=0;i<n;i++){const e=el('lbs'+i);if(e)e.textContent=money2(perShare())+' lb';}
+  }
+
+  window.FP={
+    pick(){S.pkgId=el('pkg').value;S.group=el('grp').value;S.date=el('date').value;refreshGroupDate();S.group=el('grp').value;S.date=el('date').value;render();},
+    setView(v){VIEW=v;[...document.querySelectorAll('#viewseg .vseg')].forEach(b=>b.classList.toggle('on',b.getAttribute('data-v')===v));render();},
+    setLine(i,f,v){rec.lines[i][f]=num(v);rec.saved=false;const st=el('savedtag');if(st)st.classList.remove('on');persist();recompute();},
+    setSplit(v){rec.splitBy=Math.max(1,parseInt(v)||1);rec.recipients=rec.recipients.slice(0,rec.splitBy);rec.saved=false;persist();render();},
+    setRecipient(i,v){rec.recipients[i]=v;rec.saved=false;const st=el('savedtag');if(st)st.classList.remove('on');persist();
+      // live-refresh only the trip summary
+      const old=document.querySelector('.tripsum');if(old){const tmp=document.createElement('div');tmp.innerHTML=tripSummary();if(tmp.firstElementChild)old.replaceWith(tmp.firstElementChild);}},
+    setSpecial(v){rec.special=v;rec.saved=false;persist();},
+    save(){rec.saved=true;const ok=persist();render();toast(ok?('Saved — '+S.group+' · '+fmtD(S.date)):'Could not save (storage full)');},
+    clear(){if(!confirm('Clear all catch for '+S.group+' on '+fmtD(S.date)+'? This removes the day\'s entry.'))return;const map=loadCatch();delete map[keyOf()];saveCatch(map);render();toast('Day cleared');}
+  };
+
+  initPkg();S.pkgId=el('pkg').value;refreshGroupDate();render();
+})();
+</script>
+</body></html>

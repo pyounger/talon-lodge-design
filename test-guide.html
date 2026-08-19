@@ -1,0 +1,231 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Test Guide</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 10px 26px rgba(18,42,43,.07)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413;--shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.4)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6}
+  *{box-sizing:border-box}
+  .rm{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;padding:clamp(16px,3.5vw,44px) clamp(14px,3vw,30px);-webkit-font-smoothing:antialiased}
+  .rm .wrap{max-width:900px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  h1{font:800 clamp(24px,4vw,36px)/1.08 var(--sans);letter-spacing:-.02em;margin:0 0 10px;text-wrap:balance}
+  .lede{color:var(--muted);margin:0 0 4px;font-size:clamp(14px,1.8vw,15.5px);max-width:74ch}
+  code{font-family:var(--mono);font-size:.88em;background:var(--surface-2);padding:1px 5px;border-radius:4px;color:var(--accent-deep)}
+  .howto{background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;margin:16px 0 8px;font-size:13.5px}
+  .howto b{color:var(--ink)}
+  .howto ul{margin:8px 0 0;padding-left:18px;color:var(--muted)}.howto li{margin:3px 0}
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 6px}
+  .toc a{font:600 12px var(--sans);text-decoration:none;color:var(--accent-deep);background:var(--accent-soft);border:1px solid var(--line-2);border-radius:20px;padding:5px 12px}
+  .proc{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);margin:22px 0;overflow:hidden}
+  .proc>.hd{padding:16px 18px;border-bottom:1px solid var(--line);background:linear-gradient(var(--surface-2),var(--surface))}
+  .proc .num{font:800 12px var(--mono);color:var(--accent);letter-spacing:.05em}
+  .proc h2{font:800 19px/1.2 var(--sans);letter-spacing:-.01em;margin:4px 0 4px}
+  .proc .proves{font-size:13px;color:var(--muted);margin:0 0 12px}
+  .toolbtn{display:inline-flex;align-items:center;gap:7px;text-decoration:none;font:700 12.5px var(--sans);color:#fff;background:var(--accent);border-radius:8px;padding:8px 13px}
+  .toolbtn.ghost{color:var(--accent-deep);background:var(--accent-soft);border:1px solid var(--line-2)}
+  .setup{font-size:12.5px;color:var(--gold);background:var(--gold-soft);border:1px solid var(--gold);border-radius:8px;padding:8px 12px;margin:12px 18px 0}
+  .setup b{color:var(--ink)}
+  .tw{overflow-x:auto;padding:6px 18px 16px}
+  table.steps{border-collapse:collapse;width:100%;font-size:13.5px;min-width:560px}
+  table.steps th{text-align:left;font:700 10.5px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--faint);padding:8px 10px;border-bottom:1px solid var(--line-2)}
+  table.steps td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.steps td:first-child{width:26px;color:var(--faint);font:700 12px var(--mono);text-align:center}
+  table.steps .expect{color:var(--accent-deep)}
+  table.steps .expect::before{content:"✓ ";font-weight:800}
+  table.steps tr.neg .expect{color:var(--salmon)}
+  table.steps tr.neg .expect::before{content:"⛔ "}
+  em.v{font-style:normal;font-family:var(--mono);font-size:.92em;background:var(--surface-2);padding:1px 5px;border-radius:4px;color:var(--ink)}
+  .sec-t{font:700 12px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--accent-deep);margin:34px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .note{font-size:12.5px;color:var(--muted);padding:0 18px 16px}
+  .integ{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:10px 0}
+  .integ h3{font:700 14px var(--sans);margin:0 0 4px}
+  .integ p{margin:0;font-size:13px;color:var(--muted)}
+  .integ .path{font-family:var(--mono);font-size:12px;color:var(--accent-deep);display:block;margin-top:6px}
+  .warnbox{background:var(--salmon-soft);border:1px solid var(--salmon);border-radius:10px;padding:12px 15px;font-size:13px;color:var(--salmon);margin:8px 0 0}
+  .warnbox b{color:var(--ink)}
+  .notyet{list-style:none;padding:0;margin:0}
+  .notyet li{padding:11px 14px;border:1px dashed var(--line-2);border-radius:9px;margin-bottom:8px;font-size:13px;color:var(--muted)}
+  .notyet li b{color:var(--ink)}
+  .foot{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--faint)}
+</style>
+
+<div class="rm"><div class="wrap">
+  <p class="eyebrow">Talon Lodge &amp; Spa · QA</p>
+  <h1>Test guide — walk each process</h1>
+  <p class="lede">Concrete steps with example values for every tool built so far. Open a tool, follow its rows in order,
+  and check each <span style="color:var(--accent-deep)">✓ expected</span> result. Rows marked <span style="color:var(--salmon)">⛔</span>
+  are meant to fail — that's the guard working.</p>
+
+  <div class="howto">
+    <b>Before you start — how the demo data works.</b>
+    <ul>
+      <li>Each tool keeps its own working copy in your browser (localStorage). It's safe to click around — nothing touches the live site.</li>
+      <li>Every tool <b>seeds real sample data</b> on first open, so each test below stands on its own.</li>
+      <li>To start any tool fresh, use its <b>Reset</b> button (or reload after clearing) — noted where it matters.</li>
+      <li>Open each tool link in a <b>new tab</b> so you can keep this guide beside it.</li>
+    </ul>
+  </div>
+
+  <div class="toc">
+    <a href="#p1">1 · Team</a><a href="#p2">2 · Activities</a><a href="#p3">3 · Packages</a><a href="#p4">4 · Scheduling</a><a href="#p5">5 · Reservation</a><a href="#p6">6 · Settings</a><a href="#integ">Integration</a><a href="#notyet">Not yet testable</a>
+  </div>
+
+  <!-- 1 TEAM -->
+  <div class="proc" id="p1">
+    <div class="hd">
+      <span class="num">PROCESS 1</span>
+      <h2>Team — add, assign, and archive without losing history</h2>
+      <p class="proves">Proves: crew move between boats freely, and removing someone keeps their past (archive, not delete).</p>
+      <a class="toolbtn" href="https://claude.ai/code/artifact/89798156-6ec0-4392-9db7-69c46d2396d5" target="_blank" rel="noopener">Open Team Management ↗</a>
+    </div>
+    <div class="tw"><table class="steps">
+      <thead><tr><th>#</th><th>Do this (example)</th><th>You should see</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Open the <b>Boats</b> tab. Note <em class="v">Roamer</em> — captain <em class="v">Travis Stephenson</em>, deckhand <em class="v">CJ Tacada</em>.</td><td class="expect">6–7 boats, each with a captain/deckhand dropdown you can change.</td></tr>
+        <tr><td>2</td><td>On <em class="v">Roamer</em>, change the deckhand dropdown to <em class="v">Porter Baskin</em>.</td><td class="expect">Crew reassigns instantly — proves crew aren't locked to one boat.</td></tr>
+        <tr><td>3</td><td>Go to <b>Captains</b> tab → find <em class="v">Travis Stephenson</em> → click <b>⊘ Archive</b> → confirm.</td><td class="expect">Travis disappears from the active list; the count drops by one; <em class="v">Roamer</em>'s captain slot is now empty (a former employee can't crew a live boat).</td></tr>
+        <tr><td>4</td><td>Click <b>Show former (1)</b> at the top-right of the list.</td><td class="expect">Travis reappears greyed out, badged <em class="v">Former · left [today]</em>, with a <b>Restore</b> button.</td></tr>
+        <tr><td>5</td><td>Click <b>Restore</b> on Travis.</td><td class="expect">He returns to the active list; count goes back up. (His Roamer slot stays empty until you reassign — intentional.)</td></tr>
+        <tr><td>6</td><td>Go to <b>Guides</b> tab → on <em class="v">Holden Pucket</em>, toggle the capability chip <em class="v">Kayak &amp; Lunch</em> on.</td><td class="expect">Chip highlights — Holden is now capable of kayak trips (feeds the scheduling engine, Process 4).</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 2 ACTIVITIES -->
+  <div class="proc" id="p2">
+    <div class="hd">
+      <span class="num">PROCESS 2</span>
+      <h2>Activities — set where each one can be requested</h2>
+      <p class="proves">Proves: an activity can be hidden from the reservation flow and offered only on the guest portal.</p>
+      <a class="toolbtn" href="https://claude.ai/code/artifact/6e1ac243-000b-45b6-8d74-feeb19539b39" target="_blank" rel="noopener">Open Activities Management ↗</a>
+    </div>
+    <div class="tw"><table class="steps">
+      <thead><tr><th>#</th><th>Do this (example)</th><th>You should see</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Click <em class="v">Additional Saltwater Sportfishing</em> in the left list.</td><td class="expect">The editor opens with its details, pricing, and availability.</td></tr>
+        <tr><td>2</td><td>Scroll to <b>Where guests can request this</b> → click <b>Portal only</b> → click <b>Save activity</b>.</td><td class="expect">The list row gets a green <em class="v">portal only</em> tag.</td></tr>
+        <tr><td>3</td><td>Open <b>View as asset JSON</b> at the bottom of the editor.</td><td class="expect">The JSON shows <code>"offer_channel": "portal"</code> — this is what seeds production.</td></tr>
+        <tr><td>4</td><td>Set it back to <b>Reservation + Portal</b> → Save.</td><td class="expect">The <em class="v">portal only</em> tag disappears (the default is offered everywhere).</td></tr>
+        <tr><td>5</td><td>Click <b>+ New</b> → name it <em class="v">Bear Viewing Flight</em> → set <b>Portal only</b> → set a price → Save.</td><td class="expect">New activity appears tagged <em class="v">portal only</em>, ready to offer post-booking.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 3 PACKAGES -->
+  <div class="proc" id="p3">
+    <div class="hd">
+      <span class="num">PROCESS 3</span>
+      <h2>Packages — dates that drive the whole calendar</h2>
+      <p class="proves">Proves: a package's arrival date + nights define the bookable trip, and bulk edits apply in one click.</p>
+      <a class="toolbtn" href="https://claude.ai/code/artifact/d976f6c2-c723-4b3d-84c5-2f56ac5d0d19" target="_blank" rel="noopener">Open Package Management ↗</a>
+    </div>
+    <div class="tw"><table class="steps">
+      <thead><tr><th>#</th><th>Do this (example)</th><th>You should see</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Click a package (e.g. the <em class="v">May 24, 2027</em> Sportfishing one).</td><td class="expect">Editor shows arrival date, nights, series, and per-room rates.</td></tr>
+        <tr><td>2</td><td>Change <b>Nights</b> from <em class="v">4</em> to <em class="v">5</em>.</td><td class="expect">The title/date-range preview updates live (departure shifts a day later).</td></tr>
+        <tr><td>3</td><td>Change <b>Series</b> to <em class="v">Winemaker Series</em>.</td><td class="expect">The auto-title switches to the Winemaker naming.</td></tr>
+        <tr><td>4</td><td>In the top <b>bulk</b> databar, set surcharge to <em class="v">0</em> → click <b>Set on all</b>.</td><td class="expect">Every package's surcharge becomes $0 at once — no re-import, existing edits kept.</td></tr>
+        <tr><td>5</td><td>Click <b>Export</b>.</td><td class="expect">A <code>packages.json</code> downloads — the file that seeds production.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Deposit ($1,000/person) lives in <b>Settings</b> (Process 6), not per-package — so you set it once.</p>
+  </div>
+
+  <!-- 4 SCHEDULING -->
+  <div class="proc" id="p4">
+    <div class="hd">
+      <span class="num">PROCESS 4</span>
+      <h2>Availability &amp; scheduling — the hard part</h2>
+      <p class="proves">Proves: bookings sit on real package dates, need a name, fill lead-first, and can't double-book.</p>
+      <a class="toolbtn" href="https://claude.ai/code/artifact/12cf1a79-181d-446c-a3e4-d5dbedb03575" target="_blank" rel="noopener">Open Availability &amp; Scheduling ↗</a>
+    </div>
+    <div class="setup">⚙️ <b>Fresh start:</b> click <b>Clear all bookings</b> (top-right) before you begin, so counts start empty.</div>
+    <div class="tw"><table class="steps">
+      <thead><tr><th>#</th><th>Do this (example)</th><th>You should see</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Pick a package in the dropdown: <em class="v">Sportfishing · Mon May 24 · 4n</em>.</td><td class="expect">Columns become real dates: <em class="v">Mon May 24 (arrival)</em> … <em class="v">Fri May 28 (departure)</em>; middle days tagged <em class="v">stay</em>.</td></tr>
+        <tr class="neg"><td>2</td><td>Leave the group name blank. Set party <em class="v">4</em>. Try to <b>+ Book</b> ATV Safari on <em class="v">Tue May 25</em>.</td><td class="expect">Blocked — the name field flashes red, nothing books. Every booking needs a name.</td></tr>
+        <tr><td>3</td><td>Type group name <em class="v">Younger Group</em> → <b>+ Book</b> ATV Safari on <em class="v">Tue May 25</em>.</td><td class="expect">Cell shows <em class="v">Younger Group · 4p · Ted+Holden</em> — the engine assigned the lead guide first.</td></tr>
+        <tr><td>4</td><td>Look at <em class="v">Kayak &amp; Lunch</em> and <em class="v">Whale Watching</em> on the same <em class="v">Tue May 25</em>.</td><td class="expect">Both now say <b>Full</b> — Ted was the only guide for them and he's taken. That's the bottleneck.</td></tr>
+        <tr><td>5</td><td>Change the name to <em class="v">Smith Group</em> → <b>+ Book</b> Massage on <em class="v">Tue May 25</em>.</td><td class="expect">Books fine — massage is a separate resource. Two groups, same day, no conflict.</td></tr>
+        <tr><td>6</td><td>Set party to <em class="v">8</em>. Look at any guided activity on a stay day.</td><td class="expect">Shows <b>Request only</b> — parties over 6 route to admin, they don't auto-book.</td></tr>
+        <tr><td>7</td><td>Set party to <em class="v">2</em>. Look at <em class="v">Additional Saltwater Day</em> on <em class="v">Mon May 24</em>.</td><td class="expect"><b>needs 4+</b> — saltwater hides under the minimum. Bump to <em class="v">4</em> and it opens on travel days only.</td></tr>
+        <tr><td>8</td><td><b>Reload the page.</b></td><td class="expect">Your bookings are still there — they're saved against the real dates.</td></tr>
+        <tr><td>9</td><td>Check the <b>Resource board</b> below the calendar.</td><td class="expect">Each guide / massage-slots / saltwater row shows who holds what, by date and group.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 5 RESERVATION -->
+  <div class="proc" id="p5">
+    <div class="hd">
+      <span class="num">PROCESS 5</span>
+      <h2>Reservation booking — the guest's path</h2>
+      <p class="proves">Proves: the 9-step flow, the guest-email rule, the payment schedule, and the cancellation gate.</p>
+      <a class="toolbtn" href="https://claude.ai/code/artifact/04120614-1f3d-452c-8972-a4ea514e100d" target="_blank" rel="noopener">Open Reservation Booking ↗</a>
+    </div>
+    <div class="tw"><table class="steps">
+      <thead><tr><th>#</th><th>Do this (example)</th><th>You should see</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Pick a season/date card, e.g. <em class="v">May 24, 2027</em>, party <em class="v">4</em>. Advance through <b>Rooms</b> and pick one.</td><td class="expect">Each step advances; the running total reflects the package rate × party.</td></tr>
+        <tr><td>2</td><td><b>Your details:</b> enter the lead's name + email, e.g. <em class="v">phil@talonlodge.com</em>.</td><td class="expect">Accepts and moves to the Guests step.</td></tr>
+        <tr class="neg"><td>3</td><td><b>Guests:</b> add a guest name but leave their email blank → try <b>Continue</b>.</td><td class="expect">Blocked — guest email is required.</td></tr>
+        <tr><td>4</td><td>On that guest click <b>↳ Use group lead email</b>.</td><td class="expect">The lead's email fills in (for kids with no email) — now Continue works.</td></tr>
+        <tr><td>5</td><td><b>Activities:</b> add a couple, then go to <b>Review</b>.</td><td class="expect">Each activity shows its cost + <em class="v">fees payable upon checkout</em>.</td></tr>
+        <tr><td>6</td><td>Read the <b>payment schedule</b> at the bottom of Review.</td><td class="expect">Package rate, then <em class="v">$1,000/person due now</em>, balance <em class="v">due 120 days before arrival</em>, and a note that <em class="v">State &amp; City taxes &amp; fees are added to the balance</em>.</td></tr>
+        <tr><td>7</td><td>Click <b>Continue to deposit</b>.</td><td class="expect">A <b>Cancellation policy</b> pops up recommending travel insurance — you must click <b>I understand</b> to proceed.</td></tr>
+        <tr><td>8</td><td><b>Deposit:</b> choose <b>Credit card</b>.</td><td class="expect">A separate <em class="v">Card processing fee</em> line item appears; the clean $1,000/person deposit shows without it for other methods.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 6 SETTINGS -->
+  <div class="proc" id="p6">
+    <div class="hd">
+      <span class="num">PROCESS 6</span>
+      <h2>Settings — the global knobs</h2>
+      <p class="proves">Proves: deposit, card fee, and cancellation policy are set once and drive the booking flow.</p>
+      <a class="toolbtn" href="https://claude.ai/code/artifact/b2236645-68f6-4709-8cc0-03078cf41e16" target="_blank" rel="noopener">Open Settings ↗</a>
+    </div>
+    <div class="tw"><table class="steps">
+      <thead><tr><th>#</th><th>Do this (example)</th><th>You should see</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Find <b>Deposit basis</b> → confirm <em class="v">Per person</em>, amount <em class="v">$1,000</em>.</td><td class="expect">Switching to <em class="v">Flat</em> would make it $1,000 per reservation instead of per guest.</td></tr>
+        <tr><td>2</td><td>Check the <b>Card processing fee</b> %, e.g. <em class="v">2.99%</em>.</td><td class="expect">This is the rate the reservation deposit step adds as its separate line item.</td></tr>
+        <tr><td>3</td><td>Read the <b>Cancellation policy</b> text + link fields.</td><td class="expect">Editable policy text and the <code>talonlodge.com/cancelation-policy</code> link — this is what the gate in Process 5 shows. <b>Paste your real terms here.</b></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- INTEGRATION -->
+  <div class="sec-t" id="integ">Integration tests — how the tools feed each other</div>
+  <p class="note" style="padding:0 0 6px">These show the payoff of doing setup first. <b>They rely on the tools sharing one browser storage</b>, so run them from the real app or the same served folder. In the standalone demo files each tool has its own copy, so a change in one may not carry into another — that's expected, not a bug.</p>
+  <div class="integ">
+    <h3>A · Give Holden a delivery boat → freshwater fishing opens up</h3>
+    <p>In <b>Team</b>, on Holden Pucket set <b>Delivery boat</b> to any boat. Back in <b>Scheduling</b>, <em>Freshwater Fishing (by boat/ATV)</em> jumps from <b>3 seats to 6</b> (Holden can now run it alongside Ted), and the amber "no delivery boat" warning disappears.</p>
+    <span class="path">Team · delivery_boat_id  →  Scheduling · freshwater capacity</span>
+  </div>
+  <div class="integ">
+    <h3>B · Archive Ted → Kayak &amp; Whale go dark</h3>
+    <p>In <b>Team</b>, archive guide <em>Ted Deering</em>. In <b>Scheduling</b>, <em>Kayak &amp; Lunch</em> and <em>Whale Watching</em> can no longer be booked — Ted was the only guide capable of them. Restore him and they return.</p>
+    <span class="path">Team · active flag  →  Scheduling · capable-guide pool</span>
+  </div>
+  <div class="integ">
+    <h3>C · Add a package date → it appears everywhere</h3>
+    <p>In <b>Packages</b>, add a new published package with arrival <em>June 12, 2027</em>. It shows up as a new option in the <b>Scheduling</b> package dropdown and as a bookable date in <b>Reservation</b>.</p>
+    <span class="path">Packages · arrival_start_date  →  Scheduling + Reservation calendars</span>
+  </div>
+
+  <!-- NOT YET -->
+  <div class="sec-t" id="notyet">Not yet testable — building next</div>
+  <ul class="notyet">
+    <li><b>Guest Portal (Activity &amp; Massage modules)</b> — where guests request post-booking and watch Requested → Approved. Not built yet; it's the natural next piece.</li>
+    <li><b>Portal-only activities hiding from the reservation flow</b> — the setting exists (Process 2) and exports correctly, but the booking engine doesn't yet read it to hide those activities. Wiring pending.</li>
+    <li><b>Admin review queue + 24-hour notifications</b> — the rule is defined (every request notifies the admin and starts a 24h clock); the queue UI and the notification channel (email/SMS/in-app) aren't built.</li>
+    <li><b>True double-booking lock</b> — the demo stores holds in one browser tab, so there's no real race to test. The locked-transaction guarantee is enforced by the Laravel/Aurora backend, not the prototype.</li>
+  </ul>
+
+  <p class="foot">Talon Lodge &amp; Spa · test guide · six tools live, three integration flows, portal &amp; notifications next. Reference: the <a href="https://claude.ai/code/artifact/44ac49bb-bba4-4942-92eb-0c749fa9c923" target="_blank" rel="noopener" style="color:var(--accent-deep)">Booking &amp; Double-Booking map</a>.</p>
+</div></div>
+</body></html>

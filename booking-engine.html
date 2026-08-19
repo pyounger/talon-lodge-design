@@ -1,0 +1,631 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Reservation Booking</title></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 22px rgba(18,42,43,.06)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b}
+  *{box-sizing:border-box}
+  .be{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(14px,3vw,30px);-webkit-font-smoothing:antialiased}
+  .be .wrap{max-width:940px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(21px,3vw,30px)/1.12 var(--sans);letter-spacing:-.02em;margin:0 0 6px;max-width:22ch}
+  .subhead{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:13.5px;max-width:74ch}
+  .chip{font:600 11px var(--sans);border:1px solid var(--line-2);border-radius:20px;padding:3px 9px;color:var(--muted);background:var(--surface-2)}
+  .chip.price{color:var(--accent-deep);border-color:var(--accent);background:var(--accent-soft)}
+  .chip.ok{color:var(--accent-deep);border-color:var(--accent);background:var(--accent-soft)}
+  .chip.warn{color:var(--salmon);border-color:var(--salmon);background:var(--salmon-soft)}
+  .steps{display:flex;gap:6px;margin:0 0 18px;flex-wrap:wrap}
+  .steps .st{font:600 11.5px var(--sans);color:var(--faint);padding:5px 10px;border-radius:20px;border:1px solid var(--line);background:var(--surface)}
+  .steps .st.on{color:#fff;background:var(--accent);border-color:var(--accent)}.steps .st.done{color:var(--accent-deep);border-color:var(--accent);background:var(--accent-soft)}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:16px}
+  .frow{display:flex;gap:14px;flex-wrap:wrap}
+  .fld{display:flex;flex-direction:column;gap:5px;flex:1;min-width:140px}
+  label{font:600 10.5px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+  input,select,textarea{font:500 14px var(--sans);padding:9px 11px;border:1px solid var(--line-2);border-radius:7px;background:var(--surface);color:var(--ink);width:100%}
+  textarea{resize:vertical;min-height:56px}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);border-color:var(--accent)}
+  .hint{font-size:11.5px;color:var(--faint)}
+  .stepper{display:flex;align-items:stretch;gap:0;max-width:150px}
+  .stepper button{width:38px;font-size:18px;padding:0;border:1px solid var(--line-2);background:var(--surface-2);color:var(--ink)}
+  .stepper button:first-child{border-radius:7px 0 0 7px}.stepper button:last-child{border-radius:0 7px 7px 0}
+  .stepper input{text-align:center;border-radius:0;border-left:0;border-right:0;-moz-appearance:textfield}
+  .stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  button{font:700 13px var(--sans);padding:9px 15px;border-radius:7px;border:1px solid transparent;cursor:pointer}
+  .btn-primary{background:var(--accent);color:#fff}.btn-primary:disabled{opacity:.45;cursor:not-allowed}
+  .btn-ghost{background:var(--surface);border-color:var(--line-2);color:var(--ink)}
+  .btn-sm{padding:6px 12px;font-size:12.5px}
+  .back{background:none;border:none;color:var(--muted);cursor:pointer;font:600 13px var(--sans);padding:0;margin-bottom:12px}
+  .datecard{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border:1px solid var(--line);border-radius:10px;background:var(--surface);margin-bottom:10px;box-shadow:var(--shadow);cursor:pointer}
+  .datecard:hover{border-color:var(--accent)}
+  .datecard .pkgn{font:700 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent-deep);margin-bottom:3px}
+  .datecard .pkgn.special{color:var(--gold)}
+  .datecard .d{font:700 15.5px var(--sans)}.datecard .m{font-size:12.5px;color:var(--muted)}
+  .datecard .avail{font:600 12.5px var(--sans);color:var(--accent-deep);text-align:right;white-space:nowrap}
+  .rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+  .rcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+  .rcard.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft),var(--shadow)}
+  .rcard.dim{opacity:.55}
+  .rphoto{height:150px;overflow:hidden;display:grid;place-items:center;background:linear-gradient(135deg,#3a6b63,#0e7c6f);color:#fff;font-size:38px;position:relative}
+  .rphoto img{width:100%;height:150px;object-fit:cover;display:block}
+  .rphoto .tick,.aphoto .tick{position:absolute;top:8px;right:8px;background:var(--accent);color:#fff;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:15px;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+  .aphoto{height:92px;display:grid;place-items:center;font-size:40px;background:var(--surface-2);position:relative;overflow:hidden}
+  .aphoto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .aphoto .ph{opacity:.4;font-size:30px}
+  .rbody{padding:12px 13px;display:flex;flex-direction:column;gap:6px;flex:1;background:var(--surface)}
+  .rbody .t{font:700 15px var(--sans)}.rbody .d{font-size:12.5px;color:var(--muted)}
+  .rmeta{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+  .qtyrow{display:flex;align-items:center;gap:8px}.qtyrow .stepper{max-width:114px}.qtyrow .stepper button{width:32px;font-size:16px}
+  .rfoot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:6px}
+  a.mp{font-size:12px;color:var(--accent-deep);text-decoration:none;white-space:nowrap}
+  .selbar{position:sticky;top:8px;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--accent);border-radius:10px;padding:11px 15px;margin-bottom:14px;box-shadow:var(--shadow)}
+  .selbar.blocked{border-color:var(--salmon)}
+  .selbar .meter{font:600 13.5px var(--sans);color:var(--ink)}.selbar .meter b{color:var(--accent-deep)}
+  .selbar .sub{font-size:12px;color:var(--muted)}.selbar .sub.warnsub{color:var(--salmon);font-weight:600}
+  .summary{background:var(--accent-soft);border:1px solid var(--accent);border-radius:9px;padding:11px 14px;margin-bottom:16px;font-size:13.5px;color:var(--accent-deep);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .summary b{color:var(--ink)}
+  .seg{display:inline-flex;border:1px solid var(--line-2);border-radius:8px;overflow:hidden}
+  .seg .segopt{background:var(--surface);color:var(--muted);border:0;border-right:1px solid var(--line-2);border-radius:0;padding:7px 13px;font:700 12.5px var(--sans);cursor:pointer}
+  .seg .segopt:last-child{border-right:0}.seg .segopt.on{background:var(--accent);color:#fff}
+  .gcard{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:12px 14px;margin-bottom:10px}
+  .gcard.lead{background:var(--accent-soft);border-color:var(--accent)}
+  .gnum{width:26px;height:26px;border-radius:50%;background:var(--surface-2);color:var(--muted);display:grid;place-items:center;font:700 12px var(--mono);flex:none;margin-top:2px}
+  .gcard.lead .gnum{background:var(--accent);color:#fff}
+  .ginfo{flex:1;min-width:0}.ginfo .gname{font:700 14px var(--sans)}.ginfo .gsub{font-size:12.5px;color:var(--muted)}
+  .leadmail{background:none;border:none;color:var(--accent-deep);font:600 11.5px var(--sans);cursor:pointer;padding:2px 0;text-align:left;align-self:flex-start}
+  .leadmail:hover{text-decoration:underline}
+  .parts{display:flex;flex-direction:column;gap:6px}
+  .pchips{display:flex;flex-wrap:wrap;gap:6px}
+  .pchip{font:600 11.5px var(--sans);border:1px solid var(--line-2);border-radius:20px;padding:4px 10px;background:var(--surface);color:var(--muted);cursor:pointer}
+  .pchip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep)}
+  .pchip.dis{opacity:.5;cursor:not-allowed;text-decoration:line-through;background:var(--surface-2)}
+  .paylist{display:flex;flex-direction:column;gap:10px;max-width:620px}
+  .payopt{display:flex;align-items:center;gap:14px;text-align:left;width:100%;background:var(--surface);border:1px solid var(--line-2);border-radius:11px;box-shadow:var(--shadow);padding:14px 16px;cursor:pointer}
+  .payopt.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft),var(--shadow)}
+  .payico{font-size:26px;flex:none;width:34px;text-align:center}
+  .payinfo{flex:1;min-width:0}
+  .paytitle{font:700 15px var(--sans);display:flex;align-items:center;gap:8px}
+  .paytag{font-size:12px;color:var(--faint)}
+  .paydetail{font-size:13px;color:var(--muted);margin-top:3px}
+  .payradio{font-size:18px;color:var(--accent);flex:none}
+  .paynote{max-width:620px;margin:12px 0 0;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-size:12.5px;color:var(--muted)}
+  .paynote b{color:var(--ink)}
+  .depsum{max-width:620px;margin:14px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:12px 16px}
+  .depsum .li{display:flex;justify-content:space-between;gap:12px;font-size:14px;padding:4px 0}
+  .depsum .li .m{color:var(--muted);font-weight:400}
+  .depsum .li.tot{border-top:1px solid var(--line);margin-top:6px;padding-top:8px;font-weight:800;font-size:15px}
+  .paysched{max-width:640px;margin:12px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:13px 16px}
+  .paysched .pshd{font:700 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+  .paysched .li{display:flex;justify-content:space-between;gap:12px;font-size:14px;padding:4px 0}
+  .paysched .li .m{color:var(--muted);font-weight:400}
+  .paysched .li.note{padding-top:2px}.paysched .li.note .m{font-size:12px}
+  .paysched .li.checkout{border-top:1px dashed var(--line);margin-top:6px;padding-top:8px;color:var(--muted)}
+  .modal{position:fixed;inset:0;background:rgba(10,20,19,.55);display:flex;align-items:flex-start;justify-content:center;padding:34px 16px;overflow:auto;z-index:50}
+  .modal .sheet{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.35);max-width:560px;width:100%}
+  .modal .mhd{display:flex;align-items:center;justify-content:space-between;padding:15px 18px;border-bottom:1px solid var(--line)}
+  .modal .mhd h3{margin:0;font:800 18px var(--sans)}
+  .modal .x{background:none;border:none;font-size:20px;color:var(--muted);cursor:pointer;padding:0 4px}
+  .modal .mbody{padding:18px}
+  .modal .mbody p{font-size:13.5px;color:var(--ink);margin:0 0 12px;line-height:1.55}
+  .ins{display:flex;gap:11px;background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:12px 14px;margin:0 0 14px}
+  .ins .i{font-size:20px;flex:none}.ins .t{font-size:13px;color:var(--accent-deep)}.ins .t b{color:var(--ink)}
+  .modal .plink{display:inline-block;font-weight:700;font-size:13px;color:var(--accent-deep);margin-bottom:4px}
+  .modal .macts{display:flex;justify-content:flex-end;gap:10px;padding:14px 18px;border-top:1px solid var(--line)}
+  .pkgpick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+  @media(max-width:620px){.pkgpick{grid-template-columns:1fr}}
+  .pkgopt{text-align:left;background:var(--surface);border:1px solid var(--line-2);border-radius:10px;box-shadow:var(--shadow);padding:12px 14px;cursor:pointer}
+  .pkgopt.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft),var(--shadow)}
+  .pkgopt-n{font:700 14px var(--sans);color:var(--ink)}
+  .pkgopt-d{font-size:11.5px;color:var(--faint);margin-top:2px}
+  .pkgopt.on .pkgopt-n{color:var(--accent-deep)}
+  .pkgcard{margin-top:14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:14px 16px}
+  .pkgdesc{margin:0 0 12px;font-size:13.5px;color:var(--muted)}
+  .pkgincl{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:520px){.pkgincl{grid-template-columns:1fr}}
+  .pkgincl .colhd{font:700 11px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;margin-bottom:7px;color:var(--accent-deep)}
+  .pkgincl .col.ex .colhd{color:var(--salmon)}
+  .pkgincl ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
+  .pkgincl li{font-size:13px;color:var(--ink);padding-left:16px;position:relative}
+  .pkgincl .col li::before{content:'✓';position:absolute;left:0;color:var(--accent);font-weight:700}
+  .pkgincl .col.ex li::before{content:'✕';color:var(--salmon)}
+  .rev{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);overflow:hidden;max-width:640px}
+  .rev .sec{padding:13px 16px;border-bottom:1px solid var(--line)}
+  .rev .seclabel{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .rev .seclabel .lbl{font:600 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .rev .edit{background:none;border:none;color:var(--accent-deep);font:600 12px var(--sans);cursor:pointer;padding:0}
+  .rev .li{display:flex;justify-content:space-between;gap:12px;font-size:13.5px;padding:2px 0}
+  .rev .li .m{color:var(--muted)}
+  .rev .li.sub{margin-top:4px;padding-top:6px;border-top:1px dashed var(--line)}
+  .rev .total{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--accent-soft)}
+  .rev .total .g{font:800 19px var(--sans);color:var(--accent-deep)}
+  .actions{max-width:640px;margin:16px 0 0;display:flex;justify-content:flex-end;gap:10px}
+  .conf{text-align:center;padding:10px 0}.conf .big{font-size:44px}.conf h2{font:800 22px var(--sans);margin:8px 0 4px}
+  .matchbox{margin:16px auto;max-width:520px;border:1px solid var(--line);border-radius:9px;padding:14px;background:var(--surface);text-align:left}
+  .matchbox .li{display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:2px 0}.matchbox .li .m{color:var(--muted)}
+  .pill{display:inline-block;font:700 10.5px var(--mono);letter-spacing:.04em;padding:3px 8px;border-radius:20px;text-transform:uppercase}
+  .pill.link{background:var(--accent-soft);color:var(--accent-deep)}.pill.new{background:var(--surface-2);color:var(--muted);border:1px solid var(--line-2)}
+  .empty{padding:24px;text-align:center;color:var(--faint);border:1px dashed var(--line-2);border-radius:10px}
+  .admin{margin-top:22px;font-size:11.5px;color:var(--faint);border-top:1px solid var(--line);padding-top:12px}
+  .admin code{font-family:var(--mono);color:var(--muted)}
+</style>
+
+<div class="be"><div class="wrap">
+  <p class="eyebrow">Talon Lodge &amp; Spa · Reserve</p>
+  <h1 id="pkgTitle">Sportfishing Package</h1>
+  <div class="subhead" id="pkgChips"></div>
+  <p class="lede" id="pkgLede"></p>
+  <div class="steps" id="stepbar"></div>
+  <div id="stage"></div>
+  <div class="admin">How this maps: rooms &amp; activities are the <code>assets</code> (types Room and Activity)
+  from Rooms/Activities Management (read live). A date is offered only when the available rooms can seat the
+  party exactly. Submitting creates a <code>reservation_request</code> plus an <code>assignment</code> per
+  chosen activity, and resolves the guest to one <code>person</code>.</div>
+</div></div>
+<div id="modalHost"></div>
+
+<script>
+(function(){
+  // All Talon Sportfishing packages share these; the three series differ by name + arrival dates.
+  const PKG_INCLUDES=['All Meals','Non-Alcoholic Beverages','Guided Adventure (Sportfishing)','4 Nights Lodging'];
+  const PKG_EXCLUDES=['Airfare','Alcohol','Fishing License','Fish Processing Fees','Taxes'];
+  const PKG_DEFAULT=[
+    {id:'sportfishing',name:'Sportfishing Package',series:'Standard',category:'Sportfishing',nights:4,days:3,surcharge:300,
+      description:"Four nights of guided saltwater sportfishing out of Sitka, based from the lodge's private island setting.",
+      includes:PKG_INCLUDES,excludes:PKG_EXCLUDES},
+    {id:'winemaker',name:'Winemaker Series',series:'Winemaker Series',category:'Sportfishing',nights:4,days:3,surcharge:300,
+      description:"Our four-night guided sportfishing package hosted with a visiting winemaker — special wine dinners alongside your days on the water. Offered on select arrival dates.",
+      includes:PKG_INCLUDES,excludes:PKG_EXCLUDES,dates:['2027-05-28','2027-07-13','2027-08-06','2028-05-28','2028-07-13','2028-08-06']},
+    {id:'chef',name:'Visiting Chef Series',series:'Visiting Chef Series',category:'Sportfishing',nights:4,days:3,surcharge:300,
+      description:"Our four-night guided sportfishing package with a visiting guest chef crafting special menus throughout your stay. Offered on select arrival dates.",
+      includes:PKG_INCLUDES,excludes:PKG_EXCLUDES,dates:['2027-06-01','2027-07-09','2027-07-21','2028-06-01','2028-07-09','2028-07-21']}
+  ];
+  // Packages are managed in Package Management (talon_packages_v1); fall back to the defaults above.
+  // Supports both v2 (one row per departure, arrival_start_date) and older date-list shapes.
+  function mapPkg(p){
+    if(p.arrival_start_date!==undefined){
+      return {id:p.id,name:p.title_override||((!p.series||p.series==='Standard')?'Sportfishing Package':p.series),
+        series:p.series||'Standard',category:p.category||'Sportfishing',description:p.description||'',
+        nights:+p.nights||4,days:+(p.adventure_days_max||p.adventure_days_min)||3,surcharge:+p.surcharge_per_person||0,
+        includes:Array.isArray(p.includes)?p.includes:[],excludes:Array.isArray(p.excludes)?p.excludes:[],
+        dates:p.arrival_start_date?[p.arrival_start_date]:undefined};
+    }
+    return {id:p.id,name:p.name,series:p.series,category:p.category||'Sportfishing',description:p.description||'',
+      nights:+p.nights||4,days:+p.days||3,surcharge:+p.surcharge||0,
+      includes:Array.isArray(p.includes)?p.includes:[],excludes:Array.isArray(p.excludes)?p.excludes:[],
+      dates:(Array.isArray(p.dates)&&p.dates.length)?p.dates:undefined};}
+  let PKGS_FROM_STORE=false;
+  function loadPackages(){try{const s=JSON.parse(localStorage.getItem('talon_packages_v1'));if(s&&s.length){PKGS_FROM_STORE=true;return s.filter(p=>!p.status||p.status==='published').map(mapPkg);}}catch(e){}return PKG_DEFAULT;}
+  const PACKAGES=loadPackages();
+  const STANDARD=PACKAGES.find(p=>p.series==='Standard'||p.name==='Sportfishing Package')||PACKAGES[0];
+  // Each arrival date belongs to a package: the special series claim specific weeks; the rest are Standard.
+  const SPECIAL={};
+  PACKAGES.forEach(p=>{if(p.dates)p.dates.forEach(d=>{SPECIAL[d]=p;});});
+  const packageForDate=d=>SPECIAL[d]||STANDARD;
+  let PKG=STANDARD;
+  const SEASON={2027:{start:'2027-05-24',end:'2027-09-05'},2028:{start:'2028-05-22',end:'2028-09-03'}};
+  // when real packages are loaded, size each year's season to the actual departure dates
+  if(PKGS_FROM_STORE){const byYear={};Object.keys(SPECIAL).forEach(d=>{const y=d.slice(0,4);(byYear[y]=byYear[y]||[]).push(d);});
+    Object.keys(byYear).forEach(y=>{const ds=byYear[y].sort();SEASON[y]={start:ds[0],end:ds[ds.length-1]};});}
+  const SEED=[
+    {id:1,name:'Spruce 1',type:'Room',occMax:2,beds:'King Bed or 2 XL-Twin Beds',desc:'',mp:'https://my.matterport.com/show/?m=fZ7WSteBdvu',photo:'https://www.talonlodge.com/images/default.php?name=uploads/photos/frontend/tl-1562348077-orig.jpg'},
+    {id:2,name:'Spruce 2',type:'Room',occMax:2,beds:'2 XL-Full Beds',desc:'',mp:'https://my.matterport.com/show/?m=zBF8apFwvMr',photo:'https://www.talonlodge.com/images/default.php?name=uploads/photos/frontend/tl-1562580221-orig.jpg'},
+    {id:3,name:'Spruce House',type:'House',occMax:6,beds:'3 bedrooms',desc:'',mp:'https://my.matterport.com/show/?m=gnL2eSpd88R',photo:'https://www.talonlodge.com/images/default.php?name=uploads/photos/frontend/tl-1562347758-orig.jpg'},
+    {id:4,name:'Cedar 1',type:'Room',occMax:2,beds:'King Bed or 2 XL-Twin Beds',desc:'',mp:'https://my.matterport.com/show/?m=U8KMpVJSwYS',photo:'https://www.talonlodge.com/images/default.php?name=uploads/photos/frontend/tl-1562583793-orig.jpg'},
+    {id:5,name:'Cedar 2',type:'Room',occMax:2,beds:'2 XL-Full Beds',desc:'',mp:'https://my.matterport.com/show/?m=wf9bqSwZx2n',photo:'https://www.talonlodge.com/images/default.php?name=uploads/photos/frontend/tl-1728919934-orig.jpg'},
+    {id:6,name:'Cedar House',type:'House',occMax:4,beds:'3 bedrooms',desc:'',mp:'https://my.matterport.com/show/?m=NeThkDH6r2j',photo:'https://www.talonlodge.com/images/default.php?name=uploads/photos/frontend/tl-1562582891-orig.png'},
+    {id:7,name:'Bluff House',type:'House',occMax:6,beds:'3 bedrooms',desc:'Full kitchen, dining, living room, and a private hot tub.',mp:'https://my.matterport.com/show/?m=h89EwxHdVip',photo:'https://www.talonlodge.com/images/default.php?name=uploads/photos/frontend/tl-1562346480-orig.jpg'}
+  ];
+  // Activity assets (type Activity). Fallback mirror of the real catalog for when there is no
+  // saved Activities Management data; when talon_activities_v1 exists, loadActs() reads that instead.
+  // Quote-only activities (Cooking Class, Hiking, Additional Saltwater Sportfishing) are arranged
+  // on-property and omitted from this priced add-on step.
+  const ACT_SEED=[
+    {id:'a1',name:'Massage',emoji:'💆',unit:'guest',price:125,availability:'stay',min:null,desc:'Open-air massage pavilion — an unbelievable treatment experience.'},
+    {id:'a2',name:'Freshwater Fishing by Float Plane',emoji:'🛩️',unit:'guest',price:1500,availability:'any',min:2,desc:'Fly to remote Tongass streams for wild trout, steelhead and salmon.'},
+    {id:'a3',name:'ATV Kruzof Island Tour',emoji:'🏍️',unit:'guest',price:450,availability:'any',min:2,desc:'Guided Kruzof Island tour by 4-seat recreational vehicle to Shelikof Bay.'},
+    {id:'a4',name:'Kayak & Lunch',emoji:'🛶',unit:'guest',price:450,availability:'any',min:2,desc:'Paddle Degroff Bay’s smooth waterways with a prepared boat lunch.'},
+    {id:'a5',name:'Float Plane Tour',emoji:'🛩️',unit:'guest',price:400,availability:'any',min:2,desc:'40-minute floatplane tour from the Talon Lodge dock (weather permitting).'},
+    {id:'a6',name:'Freshwater Fishing — By ATV',emoji:'🎣',unit:'guest',price:500,availability:'any',min:2,desc:'Kruzof Island rainforest fishing — trout, dolly varden, salmon (Aug/Sept).'},
+    {id:'a7',name:'Whale & Wildlife Viewing',emoji:'🐋',unit:'guest',price:400,availability:'any',min:4,desc:'Humpback, gray, minke and orca whales in our waters year-round.'},
+    {id:'a8',name:'Freshwater Fishing — By Boat',emoji:'🎣',unit:'guest',price:450,availability:'any',min:2,desc:'Access remote freshwater streams by boat.'}
+  ];
+  const IMGDB=(()=>{let dbp=null;function open(){if(dbp)return dbp;dbp=new Promise((res,rej)=>{let r;try{r=indexedDB.open('talon-images',1);}catch(e){return rej(e);}r.onupgradeneeded=e=>{try{e.target.result.createObjectStore('photos');}catch(_){}};r.onsuccess=e=>res(e.target.result);r.onerror=()=>rej(r.error);});return dbp;}
+    return {get:k=>open().then(db=>new Promise(res=>{const rq=db.transaction('photos','readonly').objectStore('photos').get(k);rq.onsuccess=()=>res(rq.result||null);rq.onerror=()=>res(null);})).catch(()=>null)};})();
+  function resolveIdb(){[...document.querySelectorAll('img[data-idb]')].forEach(img=>{const k=img.getAttribute('data-idb');img.removeAttribute('data-idb');IMGDB.get(k).then(v=>{if(v)img.src=v;else if(img.onerror)img.onerror();});});}
+  const imgAttr=p=>p&&p.indexOf('idb:')===0?`data-idb="${esc(p.slice(4))}"`:`src="${esc(p)}"`;
+  function loadRooms(){try{const s=JSON.parse(localStorage.getItem('talon_rooms_v1'));if(s&&s.length){const mapped=s.map(r=>({id:r.id,name:r.name,type:r.type,occMax:r.occMax||r.occMin||2,beds:r.beds,desc:r.desc,mp:r.mp,photo:(r.photos&&r.photos[0])||''}));if(mapped.some(r=>r.photo))return mapped;}}catch(e){}return SEED;}
+  function loadActs(){try{const s=JSON.parse(localStorage.getItem('talon_activities_v1'));
+    if(s&&s.length){const mapped=s.map(a=>{
+      if(typeof a.price==='number'&&a.unit)return a;                 // already booking-model shape
+      const u=a.unit||'';                                            // Activities Management shape -> add-on model
+      const unit=u==='per_day'?'day':(u==='per_group'?'flat':'guest');
+      const avail=a.availability||'any';                             // rate follows the availability window
+      const price=avail==='arrival_departure'?(a.arrivalPrice??a.priceFrom??a.priceTo??0)
+                                             :(a.withinPrice??a.priceFrom??a.priceTo??0);
+      return {id:'act'+(a.id||a.name),name:a.name,emoji:a.icon||'⭐',unit,price:+price||0,
+        desc:a.desc||a.priceText||'',max:4,status:a.status,availability:avail,min:a.minPeople??null,
+        photo:(a.photos&&a.photos[0])||'',display:a.display||'photo'};
+    }).filter(a=>a.price>0&&a.status!=='inactive');                  // priced add-ons only (quote-only handled on-property)
+    if(mapped.length)return mapped;}
+  }catch(e){}return ACT_SEED;}
+  const availLabel=v=>({stay:'During stay',arrival_departure:'Arrival & departure days',any:'Any day'}[v]||'Any day');
+  const rooms=loadRooms().map(r=>({...r,price:r.type==='House'?6695:6195}));
+  const ACTS=loadActs();
+  const actById=id=>ACTS.find(a=>a.id===id);
+
+  // Deposit terms — a MANAGED setting (settings table in prod; talon_settings_v1 here). Never hardcode.
+  const DEP_DEFAULT={amount:1000,per_person:true,cc_fee_pct:2.99,methods:{card:true,check:true,ach:true},
+    check_payable_to:'Talon Lodge',
+    check_instructions:'We’ll email mailing instructions once you submit. Your dates are held for 10 days pending receipt.',
+    ach_note:'We’ll email a secure ACH payment link — no processing fee.',
+    cc_note:'You’ll be securely redirected to our payment processor; card details never touch Talon’s servers.',
+    terms:'A deposit confirms your reservation. The remaining balance is due before arrival.',
+    cancellation_policy:'Your deposit confirms your reservation and holds your dates. Cancellations and date changes are subject to Talon Lodge & Spa’s cancellation policy. Please review the full policy before you continue.',
+    travel_insurance:'We strongly recommend purchasing travel insurance to protect your trip investment against cancellations, delays, or interruptions. Remote Southeast Alaska travel can be affected by weather and flight schedules outside anyone’s control.',
+    cancellation_url:'https://www.talonlodge.com/cancelation-policy/'};
+  function loadDeposit(){try{const s=JSON.parse(localStorage.getItem('talon_settings_v1'));
+    if(s&&s.deposit)return Object.assign({},DEP_DEFAULT,s.deposit,{methods:Object.assign({},DEP_DEFAULT.methods,s.deposit.methods||{})});}catch(e){}return DEP_DEFAULT;}
+  const DEP=loadDeposit();
+  const depositUnit=()=>+DEP.amount||0;
+  const depositAmount=()=>DEP.per_person?depositUnit()*S.guests:depositUnit();
+
+  const addDays=(d,n)=>{const [y,m,day]=d.split('-').map(Number);return new Date(Date.UTC(y,m-1,day+n)).toISOString().slice(0,10);};
+  const fmtDate=d=>{const [y,m,day]=d.split('-').map(Number);return new Date(Date.UTC(y,m-1,day)).toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric',timeZone:'UTC'});};
+  const money=n=>'$'+n.toLocaleString();
+  const usd=n=>'$'+(+n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const roomById=id=>rooms.find(r=>r.id===id);
+  function arrivals(year){
+    // real packages define every departure → show exactly those dates; otherwise generate the season grid.
+    if(PKGS_FROM_STORE)return Object.keys(SPECIAL).filter(dt=>dt.slice(0,4)===String(year)).sort();
+    const set=new Set();let d=SEASON[year].start;while(d<=SEASON[year].end){set.add(d);d=addDays(d,4);}
+    Object.keys(SPECIAL).forEach(dt=>{if(dt.slice(0,4)===String(year))set.add(dt);});
+    return [...set].sort();}
+  function bookedFor(d){const idx=arrivals(new Date(d).getUTCFullYear()).indexOf(d);return rooms.filter((_,i)=>(i+idx)%4===0).map(r=>r.id);}
+  function availUnits(date){const booked=bookedFor(date);return rooms.filter(r=>!booked.includes(r.id)).slice().sort((a,b)=>a.occMax-b.occMax||a.id-b.id);}
+  const capacityOf=list=>list.reduce((s,r)=>s+r.occMax,0);
+  function canFit(units,target){let reach=new Set([0]);for(const u of units){for(const v of[...reach]){const s=v+u.occMax;if(s<=target)reach.add(s);}if(reach.has(target))return true;}return reach.has(target);}
+
+  const KNOWN=[{first:'Philip',last:'Younger',emails:['phil@talonlodge.com','phil@magnusadventures.com'],phone:'6025158078'}];
+  const nph=s=>{let d=(s||'').replace(/\D/g,'');if(d.length===11&&d[0]==='1')d=d.slice(1);return d.length===10?d:'';};
+  function resolve(email,phone,first,last){email=(email||'').toLowerCase().trim();phone=nph(phone);
+    for(const k of KNOWN){if(email&&k.emails.includes(email))return{action:'auto_link',who:k.first+' '+k.last,tier:1};if(phone&&k.phone===phone)return{action:'auto_link',who:k.first+' '+k.last,tier:2};}
+    return{action:'new',who:((first||'')+' '+(last||'')).trim()||'new guest',tier:null};}
+
+  const S={step:1,year:2027,from:SEASON[2027].start,to:SEASON[2027].end,guests:2,date:null,rooms:[],acts:{},req:null,guestChoice:'now',guestList:[],depMethod:null};
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  const evenUp=n=>{n=Math.max(2,Math.round((+n||2)));return n%2?n+1:n;};
+
+  // ---- party roster (lead = slot 0, then one slot per remaining spot) ----
+  function party(){const arr=[{i:0,label:(S.req?leadName():'Lead guest'),lead:true}];
+    for(let k=0;k<Math.max(0,S.guests-1);k++){const g=(S.guestList&&S.guestList[k])||{};const nm=((g.first||'')+' '+(g.last||'')).trim();
+      arr.push({i:k+1,label:nm||('Guest '+(k+2)),named:!!nm});}
+    return arr;}
+  const partyLabel=i=>{const p=party().find(x=>x.i===i);return p?p.label:('Guest '+(i+1));};
+
+  // ---- totals ---- (S.acts[id]: guest -> {parts:[slotIdx]}, day -> {days:n}, flat -> {})
+  const roomsSubtotal=()=>S.rooms.reduce((s,id)=>{const r=roomById(id);return s+r.occMax*r.price;},0);
+  const actParts=a=>{const e=S.acts[a.id];return (e&&e.parts)?e.parts:[];};
+  const actQtyOf=a=>{const e=S.acts[a.id];if(!e)return 0;if(a.unit==='flat')return 1;if(a.unit==='day')return e.days||1;return (e.parts?e.parts.length:0);};
+  const actDates=a=>{const e=S.acts[a.id];return (e&&e.dates)?e.dates:[];};
+  const nightsN=()=>PKG.nights||4;
+  function tripAdventureDays(){if(!S.date)return [];const out=[];for(let i=1;i<nightsN();i++)out.push(addDays(S.date,i));return out;}
+  const occupiesDay=a=>!/massage/i.test(a.name||'');
+  function eligibleDays(a){if(!S.date)return [];if(a.availability==='arrival_departure')return [S.date,addDays(S.date,nightsN())];return tripAdventureDays();}
+  function adventureOnDay(date,exceptId){for(const a of selectedActs()){if(a.id===exceptId||!occupiesDay(a))continue;if(actDates(a).includes(date))return a.name;}return null;}
+  const actLine=a=>a.unit==='flat'?a.price:(a.unit==='day'?a.price*actQtyOf(a):a.price*actParts(a).length*actDates(a).length);
+  const selectedActs=()=>ACTS.filter(a=>a.id in S.acts);
+  const actsSubtotal=()=>selectedActs().reduce((s,a)=>s+actLine(a),0);
+  const grandTotal=()=>roomsSubtotal()+actsSubtotal();
+  const actUnitLabel=a=>a.unit==='guest'?' / guest':a.unit==='day'?' / day':' / group';
+  const visibleActs=()=>ACTS.filter(a=>!(a.min&&a.min>S.guests));
+
+  const fmtShort=d=>{const [y,m,day]=d.split('-').map(Number);return new Date(Date.UTC(y,m-1,day)).toLocaleDateString('en-US',{month:'short',day:'numeric',timeZone:'UTC'});};
+  function updateHeader(){
+    const browsing=S.step<=2||!S.date;
+    if(browsing){el('pkgTitle').textContent='Available Packages & Dates';}
+    else{const dep=addDays(S.date,PKG.nights);
+      const depTxt=S.date.slice(5,7)===dep.slice(5,7)?String(+dep.slice(8,10)):fmtShort(dep);
+      el('pkgTitle').textContent=`${PKG.name} — ${fmtShort(S.date)}–${depTxt}, ${S.date.slice(0,4)}`;}
+    el('pkgLede').textContent=(browsing?STANDARD:PKG).description;
+    updateChips();
+  }
+  function updateChips(){el('pkgChips').innerHTML=[`<span class="chip">${PKG.category}</span>`,`<span class="chip">${PKG.nights} nights · ${PKG.days} adventure days</span>`,`<span class="chip">Double occupancy</span>`].join('');}
+  function inclExclPanel(){return `<div class="pkgincl">
+    <div class="col"><div class="colhd">✓ Package includes</div><ul>${PKG.includes.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+    <div class="col ex"><div class="colhd">✕ Does not include</div><ul>${PKG.excludes.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+  </div>`;}
+  function stepbar(){el('stepbar').innerHTML=[['1','Season & party'],['2','Arrival date'],['3','Rooms'],['4','Your details'],['5','Guests'],['6','Activities'],['7','Review'],['8','Deposit'],['9','Confirm']].map(([n,t])=>`<div class="st ${+n===S.step?'on':(+n<S.step?'done':'')}">${n}. ${t}</div>`).join('');}
+
+  function render(){updateHeader();stepbar();({1:searchStep,2:datesStep,3:roomsStep,4:formStep,5:guestsStep,6:activitiesStep,7:reviewStep,8:depositStep,9:confirmStep}[S.step])();resolveIdb();}
+
+  function searchStep(){
+    el('stage').innerHTML=`<div class="card"><div class="frow">
+      <div class="fld" style="max-width:150px"><label>Season (year)</label>
+        <select id="s_year" onchange="BE.yearChange()">${Object.keys(SEASON).map(y=>`<option ${+y===S.year?'selected':''}>${y}</option>`).join('')}</select></div>
+      <div class="fld"><label>Arrival from</label><input type="date" id="s_from" value="${S.from}" min="${SEASON[S.year].start}" max="${SEASON[S.year].end}" onchange="BE.setFrom(this.value)"></div>
+      <div class="fld"><label>Arrival to</label><input type="date" id="s_to" value="${S.to}" min="${SEASON[S.year].start}" max="${SEASON[S.year].end}" onchange="BE.setTo(this.value)"></div>
+      <div class="fld" style="max-width:170px"><label>Party size (double occ.)</label>
+        <div class="stepper"><button type="button" onclick="BE.bump(-2)">−</button>
+        <input type="number" id="s_guests" min="2" step="2" value="${S.guests}" onchange="BE.setGuests(this.value)">
+        <button type="button" onclick="BE.bump(2)">+</button></div></div>
+    </div>
+    <div class="hint" style="margin-top:8px">Defaults to the full ${S.year} season (${fmtDate(SEASON[S.year].start)} – ${fmtDate(SEASON[S.year].end)}). Party size is in twos — 2, 4, 6, 8…</div>
+    <div style="margin-top:14px"><button class="btn-primary" onclick="BE.search()">Show availability →</button></div></div>
+      <div class="pkgcard">${inclExclPanel()}</div>`;
+  }
+  function datesStep(){
+    const dates=arrivals(S.year).filter(d=>d>=S.from&&d<=S.to).filter(d=>canFit(availUnits(d),S.guests));
+    const rowsHtml=dates.map(d=>{const u=availUnits(d),cap=capacityOf(u);
+      const dp=packageForDate(d);
+      return `<div class="datecard" onclick="BE.pickDate('${d}')">
+        <div><div class="pkgn ${dp.series&&dp.series!=='Standard'?'special':''}">${esc(dp.name)}</div><div class="d">${fmtDate(d)}</div><div class="m">${dp.nights} nights · departs ${fmtDate(addDays(d,dp.nights))}</div>
+          <button type="button" class="mp" style="background:none;border:0;padding:3px 0 0;cursor:pointer;font:600 12px var(--sans);color:var(--accent-deep)" onclick="event.stopPropagation();BE.viewPkg('${d}')">ⓘ View package details</button></div>
+        <div class="avail">${u.length} room${u.length>1?'s':''} open · sleeps up to ${cap} →</div></div>`;}).join('');
+    el('stage').innerHTML=summaryBar()+(dates.length?`<div class="hint" style="margin:-4px 0 12px">Showing only dates that can seat a party of ${S.guests} exactly.</div>`+rowsHtml+`<div class="pkgcard">${inclExclPanel()}</div>`
+      :`<div class="empty">No arrival dates in this range can seat a party of ${S.guests}.<br><a href="#" onclick="BE.go(1);return false">Widen the dates or adjust the party size</a>.</div>`);
+  }
+  function roomsStep(){
+    const units=availUnits(S.date);
+    const selCap=capacityOf(S.rooms.map(roomById));
+    const remaining=S.guests-selCap;
+    const covered=remaining===0;
+    const fits=units.some(r=>!S.rooms.includes(r.id)&&r.occMax<=remaining);
+    const deadend=remaining>0&&!fits;
+    const roomsLine=S.rooms.length?S.rooms.map(id=>esc(roomById(id).name)).join(' + ')+(roomsSubtotal()?' · est. '+money(roomsSubtotal())+' (double occ.)':''):'Add rooms until your group is covered exactly — no more, no less.';
+    el('stage').innerHTML=`<button class="back" onclick="BE.go(2)">← Change date</button>
+      <div class="selbar ${deadend?'blocked':''}"><div>
+        <div class="meter">${covered?`Your party of <b>${S.guests}</b> is covered ✓`:`Sleeps <b>${selCap}</b> of ${S.guests} · <b>${remaining}</b> more to place`}</div>
+        <div class="sub ${deadend?'warnsub':''}">${deadend?`No open room fits your last ${remaining} guest${remaining===1?'':'s'} without going over. <a href="#" onclick="BE.go(1);return false" style="color:inherit;font-weight:700">Edit party size</a>, or remove a room and pick smaller accommodations.`:roomsLine}</div></div>
+        <button class="btn-primary" ${covered?'':'disabled'} onclick="BE.continueRooms()">Continue →</button></div>
+      <div class="rgrid">${units.filter(r=>S.rooms.includes(r.id)||r.occMax<=remaining).map(r=>{const sel=S.rooms.includes(r.id);const over=!sel&&r.occMax>remaining;const overBy=selCap+r.occMax-S.guests;
+        return `<div class="rcard ${sel?'sel':''} ${over?'dim':''}">
+        <div class="rphoto">${r.photo?`<img ${imgAttr(r.photo)} alt="${esc(r.name)}" loading="lazy" onerror="this.remove();this.parentNode.textContent='🛏️'">`:'🛏️'}${sel?'<div class="tick">✓</div>':''}</div>
+        <div class="rbody"><div class="t">${esc(r.name)} <span class="chip" style="font-weight:600">${esc(r.type)}</span></div>
+          <div class="d">${esc(r.desc||r.beds)}</div>
+          <div class="rmeta"><span class="chip">sleeps ${r.occMax}</span><span class="chip price">${money(r.price)} / person</span>${over?`<span class="chip warn">${covered?'party covered':overBy+' over'}</span>`:''}</div>
+          <div class="rfoot">${r.mp?`<a class="mp" href="${esc(r.mp)}" target="_blank" rel="noopener">🔄 360° tour ↗</a>`:'<span></span>'}
+          <button class="${sel?'btn-ghost':'btn-primary'} btn-sm" ${over?'disabled':''} onclick="BE.toggleRoom(${r.id})">${sel?'Remove':'Add room'}</button></div>
+        </div></div>`;}).join('')}</div>
+      <div class="pkgcard">${inclExclPanel()}</div>`;
+  }
+  function activitiesStep(){
+    // party size gates the catalog: hide anything requiring more people, and drop any now-invalid selections.
+    Object.keys(S.acts).forEach(id=>{const a=actById(id);if(!a||(a.min&&a.min>S.guests)){delete S.acts[id];return;}const e=S.acts[id];if(e&&e.dates){const elig=eligibleDays(a);e.dates=e.dates.filter(d=>elig.includes(d));}});
+    const vis=visibleActs(), hidden=ACTS.length-vis.length, nAdd=selectedActs().length, roster=party();
+    el('stage').innerHTML=`<button class="back" onclick="BE.go(5)">← Back to guests</button>
+      <div class="selbar"><div>
+        <div class="meter">Trip total so far: <b>${money(grandTotal())}</b></div>
+        <div class="sub">${S.rooms.map(id=>esc(roomById(id).name)).join(' + ')}${nAdd?` · ${nAdd} add-on${nAdd>1?'s':''}`:' · no add-ons yet'}</div></div>
+        <button class="btn-primary" onclick="BE.go(7)">${nAdd?'Continue to review →':'Skip / Continue →'}</button></div>
+      <p class="lede" style="margin:-2px 0 4px">Your package already includes <b>${PKG.days} guided adventure days</b>. Add any extras below — pick who's joining each one. All optional.</p>
+      <p class="hint" style="margin:0 2px 12px">💡 Activity fees are <b>payable upon checkout at the lodge</b> — they’re not part of your reservation deposit.</p>
+      ${hidden?`<p class="hint" style="margin:-6px 0 12px">${hidden} activit${hidden>1?'ies':'y'} require a larger group and aren't shown for a party of ${S.guests}.</p>`:''}
+      <div class="rgrid">${vis.map(a=>{const sel=a.id in S.acts;
+        return `<div class="rcard ${sel?'sel':''}">
+        <div class="aphoto">${(a.display||'photo')==='icon'?a.emoji:(a.photo?`<img ${imgAttr(a.photo)} alt="${esc(a.name)}" loading="lazy" onerror="this.remove();this.parentNode.insertAdjacentText('afterbegin','📷')">`:'<span class="ph">📷</span>')}${sel?'<div class="tick">✓</div>':''}</div>
+        <div class="rbody"><div class="t">${esc(a.name)}</div>
+          <div class="d">${esc(a.desc)}</div>
+          <div class="rmeta"><span class="chip">${availLabel(a.availability)}</span><span class="chip price">${money(a.price)}${actUnitLabel(a)}</span>${a.min?`<span class="chip">min ${a.min}</span>`:''}${sel?`<span class="chip ok">${money(actLine(a))} total</span>`:''}</div>
+          ${sel&&a.unit==='guest'?`<div class="parts"><div class="hint">Who's participating? <b>${actQtyOf(a)}</b> of ${S.guests}</div>
+            <div class="pchips">${roster.map(p=>{const on=actParts(a).includes(p.i);return `<button type="button" class="pchip ${on?'on':''}" onclick="BE.toggleActPart('${a.id}',${p.i})">${on?'✓ ':''}${esc(p.label)}${p.lead?' (you)':''}</button>`;}).join('')}</div>
+            ${a.min&&actQtyOf(a)<a.min?`<div class="hint" style="color:var(--salmon);margin-top:4px">Needs at least ${a.min} participants.</div>`:''}</div>`:''}
+          ${sel&&a.unit==='guest'?`<div class="parts" style="margin-top:8px"><div class="hint">Which day?${occupiesDay(a)?` <span style="color:var(--faint)">· one adventure per day</span>`:''}</div>
+            <div class="pchips">${eligibleDays(a).map(d=>{const on=actDates(a).includes(d);const tk=occupiesDay(a)?adventureOnDay(d,a.id):null;const dis=!!tk&&!on;return `<button type="button" class="pchip ${on?'on':''} ${dis?'dis':''}" ${dis?'disabled':''} onclick="BE.toggleActDay('${a.id}','${d}')" title="${dis?'Booked: '+esc(tk):''}">${on?'✓ ':''}${fmtShort(d)}${dis?' · '+esc(tk):''}</button>`;}).join('')}</div>
+            ${actDates(a).length===0?`<div class="hint" style="color:var(--salmon);margin-top:4px">Pick a day for this adventure.</div>`:''}</div>`:''}
+          ${sel&&a.unit==='day'?`<div class="qtyrow"><span class="hint">Days</span>
+            <div class="stepper"><button onclick="BE.actQty('${a.id}',-1)">−</button><input type="number" value="${actQtyOf(a)}" readonly><button onclick="BE.actQty('${a.id}',1)">+</button></div></div>`:''}
+          <div class="rfoot"><span></span><button class="${sel?'btn-ghost':'btn-primary'} btn-sm" onclick="BE.toggleAct('${a.id}')">${sel?'Remove':'Add'}</button></div>
+        </div></div>`;}).join('')}</div>`;
+  }
+  function formStep(){const sel=S.rooms.map(roomById);
+    el('stage').innerHTML=`<button class="back" onclick="BE.go(3)">← Back to rooms</button>
+      <div class="summary"><span>Requesting <b>${sel.map(r=>esc(r.name)).join(' + ')}</b> · <b>${fmtDate(S.date)}</b> · party of <b>${S.guests}</b> · est. ${money(grandTotal())}</span></div>
+      <div class="card" style="max-width:560px"><div class="frow"><div class="fld"><label>First name</label><input id="q_first" value="${esc(S.req?S.req.first:'')}"></div><div class="fld"><label>Last name</label><input id="q_last" value="${esc(S.req?S.req.last:'')}"></div></div>
+        <div class="frow" style="margin-top:12px"><div class="fld"><label>Email</label><input id="q_email" placeholder="you@example.com" value="${esc(S.req?S.req.email:'')}"></div><div class="fld"><label>Phone</label><input id="q_phone" value="${esc(S.req?S.req.phone:'')}"></div></div>
+        <div class="fld" style="margin-top:12px"><label>Notes (optional)</label><textarea id="q_notes" placeholder="Anything we should know?">${esc(S.req?S.req.notes:'')}</textarea></div>
+        <div style="margin-top:14px"><button class="btn-primary" onclick="BE.submitDetails()">Add your guests →</button></div></div>`;
+  }
+  function ensureGuestList(){const need=Math.max(0,S.guests-1);
+    if(!Array.isArray(S.guestList))S.guestList=[];
+    while(S.guestList.length<need)S.guestList.push({first:'',last:'',email:'',phone:'',access:'invite'});
+    if(S.guestList.length>need)S.guestList=S.guestList.slice(0,need);}
+  const leadName=()=>((S.req.first+' '+S.req.last).trim())||S.req.email||'Lead guest';
+  const namedCount=()=>1+S.guestList.filter(g=>(g.first||g.last)).length;
+  function guestRow(g,i){const acc=g.access||'invite';const m=(g.last||g.email)?resolve(g.email,g.phone,g.first,g.last):null;
+    return `<div class="gcard"><div class="gnum">${i+2}</div><div class="ginfo">
+      <div class="fld"><label>Portal access</label>
+        <div class="seg" style="width:max-content"><button type="button" class="segopt ${acc==='invite'?'on':''}" onclick="BE.guestAccess(${i},'invite')">Send portal invite</button><button type="button" class="segopt ${acc==='managed'?'on':''}" onclick="BE.guestAccess(${i},'managed')">I'll manage this guest</button></div>
+        <span class="hint">${acc==='invite'?'They get their own login to fill in their profile, medical &amp; license.':'No separate login — you’ll complete this guest’s details in your portal.'}</span></div>
+      <div class="frow" style="margin-top:10px"><div class="fld"><label>First name</label><input value="${esc(g.first)}" oninput="BE.guestField(${i},'first',this.value)" onchange="BE.guestRefresh()"></div>
+        <div class="fld"><label>Last name</label><input value="${esc(g.last)}" oninput="BE.guestField(${i},'last',this.value)" onchange="BE.guestRefresh()"></div></div>
+      <div class="frow" style="margin-top:8px"><div class="fld"><label>Email ${acc==='invite'?'<span style="color:var(--salmon)">*</span>':'<span class="hint" style="text-transform:none;letter-spacing:0">(optional)</span>'}</label><input value="${esc(g.email)}" placeholder="${acc==='invite'?'guest email — needed to send the invite':'email (optional)'}" oninput="BE.guestField(${i},'email',this.value)" onchange="BE.guestRefresh()">
+          ${acc==='invite'?`<button type="button" class="leadmail" onclick="BE.useLeadEmail(${i})">↳ Use group lead email${S.req?` (${esc(S.req.email)})`:''}</button><span class="hint">A child without their own email can share the group lead's.</span>`:''}</div>
+        <div class="fld"><label>Phone (optional)</label><input value="${esc(g.phone)}" oninput="BE.guestField(${i},'phone',this.value)" onchange="BE.guestRefresh()"></div></div>
+      ${m?`<div style="margin-top:7px">${m.action==='auto_link'?`<span class="chip ok">✓ Past Guest — ${esc(m.who)} (Tier ${m.tier})</span>`:`<span class="chip">New guest record</span>`}</div>`:''}
+    </div></div>`;}
+  function guestsStep(){
+    ensureGuestList();const choice=S.guestChoice||'now';
+    el('stage').innerHTML=`<button class="back" onclick="BE.go(4)">← Back to your details</button>
+      <p class="lede" style="margin-bottom:6px">Who's coming? Party of <b>${S.guests}</b>, double occupancy. Naming your guests lets us match returning visitors, set up each person's record, and assign them to activities next — but there's no rush.</p>
+      <div class="summary"><span><b>${namedCount()}</b> of ${S.guests} guests named</span>
+        <div class="seg"><button class="segopt ${choice==='now'?'on':''}" onclick="BE.setGuestChoice('now')">Add guest list now</button><button class="segopt ${choice==='later'?'on':''}" onclick="BE.setGuestChoice('later')">I'll add guests later</button></div></div>
+      <div class="gcard lead"><div class="gnum">1</div><div class="ginfo"><div class="gname">${esc(leadName())} <span class="chip ok">Group Lead</span></div><div class="gsub">${esc(S.req.email)}${S.req.phone?' · '+esc(S.req.phone):''}</div></div></div>
+      ${choice==='later'
+        ? `<div class="empty">Guests 2–${S.guests} will be added later. On confirmation we'll send <b>${esc((S.req.first||leadName()))}</b> a secure link to complete the guest list at your own pace.</div>`
+        : S.guestList.map((g,i)=>guestRow(g,i)).join('')}
+      <div style="margin-top:16px;display:flex;justify-content:flex-end"><button class="btn-primary" onclick="BE.continueGuests()">Continue to activities →</button></div>`;
+  }
+  function reviewStep(){
+    const sel=S.rooms.map(roomById),acts=selectedActs(),m=S.req.match;
+    el('stage').innerHTML=`<button class="back" onclick="BE.go(6)">← Back to activities</button>
+      <p class="lede" style="margin-bottom:12px">Please review everything before you send your request.</p>
+      ${m.action==='auto_link'?`<div class="summary"><span>👋 Welcome back, <b>${esc(m.who)}</b> — we matched you to your existing guest record (Tier ${m.tier}).</span></div>`:''}
+      <div class="rev">
+        <div class="sec"><div class="seclabel"><span class="lbl">Trip</span><button class="edit" onclick="BE.go(1)">Edit</button></div>
+          <div class="li"><span><b>${esc(PKG.name)}</b> <span class="m">· ${PKG.nights} nights · ${PKG.days} adventure days</span></span></div>
+          <div class="li"><span class="m">Arrive</span><span>${fmtDate(S.date)}</span></div>
+          <div class="li"><span class="m">Depart</span><span>${fmtDate(addDays(S.date,PKG.nights))}</span></div>
+          <div class="li"><span class="m">Party</span><span>${S.guests} guests · double occ.</span></div>
+          <div style="margin-top:8px">${inclExclPanel()}</div></div>
+        <div class="sec"><div class="seclabel"><span class="lbl">Rooms</span><button class="edit" onclick="BE.go(3)">Edit</button></div>
+          ${sel.map(r=>`<div class="li"><span>${esc(r.name)} <span class="m">· sleeps ${r.occMax} · ${money(r.price)}/person</span></span><span>${money(r.occMax*r.price)}</span></div>`).join('')}
+          <div class="li sub"><span class="m">Rooms subtotal</span><span>${money(roomsSubtotal())}</span></div></div>
+        <div class="sec"><div class="seclabel"><span class="lbl">Additional requested activities</span><button class="edit" onclick="BE.go(6)">${acts.length?'Edit':'Add'}</button></div>
+          ${acts.length?acts.map(a=>`<div class="li"><span>${a.emoji} ${esc(a.name)}${a.unit==='guest'?` <span class="m">· ${actDates(a).map(fmtShort).join(', ')||'no day'} · ${actParts(a).map(partyLabel).join(', ')||'no one'} · ${money(a.price)}/guest/day</span>`:(a.unit==='day'?` <span class="m">· ${actQtyOf(a)} day${actQtyOf(a)>1?'s':''} × ${money(a.price)}</span>`:' <span class="m">· whole group</span>')}</span><span>${money(actLine(a))}</span></div>`).join('')+`<div class="li sub"><span class="m">Requested activities · fees paid during checkout</span><span>${money(actsSubtotal())}</span></div>`:`<div class="li"><span class="m">None — just the package. </span><button class="edit" onclick="BE.go(6)">Browse activities</button></div>`}</div>
+        <div class="sec"><div class="seclabel"><span class="lbl">Lead contact</span><button class="edit" onclick="BE.go(4)">Edit</button></div>
+          <div class="li"><span>${esc((S.req.first+' '+S.req.last).trim())||'—'}</span></div>
+          <div class="li"><span class="m">Email</span><span>${esc(S.req.email)}</span></div>
+          ${S.req.phone?`<div class="li"><span class="m">Phone</span><span>${esc(S.req.phone)}</span></div>`:''}
+          ${S.req.notes?`<div class="li"><span class="m">Notes</span><span>${esc(S.req.notes)}</span></div>`:''}</div>
+        <div class="sec"><div class="seclabel"><span class="lbl">Guest list</span><button class="edit" onclick="BE.go(5)">Edit</button></div>
+          ${S.guestChoice==='later'
+            ? `<div class="li"><span class="m">${S.guests} guests · list to be completed later via the portal.</span></div>`
+            : `<div class="li"><span>1. ${esc(leadName())} <span class="m">· lead</span></span></div>`+
+              S.guestList.map((g,i)=>{const nm=((g.first+' '+g.last).trim());const gm=(g.last||g.email)?resolve(g.email,g.phone,g.first,g.last):null;
+                return `<div class="li"><span>${i+2}. ${nm?esc(nm):`<span class="m">Guest ${i+2} — to be added</span>`}${gm&&gm.action==='auto_link'?' <span class="chip ok" style="margin-left:4px">Past Guest</span>':''}</span></div>`;}).join('')+
+              `<div class="li sub"><span class="m">${namedCount()} of ${S.guests} named</span></div>`}</div>
+        <div class="total"><span style="font-size:12px;color:var(--muted)">Package rate · double occ. · confirmed at booking</span><span class="g">${money(roomsSubtotal())}</span></div>
+      </div>
+      <div class="paysched">
+        <div class="pshd">Payment schedule</div>
+        <div class="li"><span>Due now — deposit${DEP.per_person?` <span class="m">(${usd(depositUnit())} / person × ${S.guests})</span>`:''}</span><span><b>${usd(depositAmount())}</b></span></div>
+        <div class="li"><span>Balance due <span class="m">by ${fmtDate(addDays(S.date,-120))} · 120 days before arrival</span></span><span>${money(Math.max(0,roomsSubtotal()-depositAmount()))}</span></div>
+        <div class="li note"><span class="m">State &amp; City taxes and fees will be added to the balance invoice.</span></div>
+        ${acts.length?`<div class="li checkout"><span>Additional requested activities <span class="m">— fees paid during checkout</span></span><span>${money(actsSubtotal())}</span></div>`:''}
+      </div>
+      <div class="actions"><button class="btn-ghost" onclick="BE.go(6)">Back</button><button class="btn-primary" onclick="BE.showCancellation()">Continue to deposit →</button></div>`;
+  }
+  function depositStep(){
+    const per=DEP.per_person, unit=depositUnit(), amt=depositAmount(), feePct=+DEP.cc_fee_pct||0, fee=amt*feePct/100, m=S.depMethod;
+    const isCard=m==='card', total=amt+(isCard?fee:0);
+    const opt=(key,icon,title,tag,feeChip)=>!DEP.methods[key]?'':`<button type="button" class="payopt ${m===key?'on':''}" onclick="BE.setDepMethod('${key}')">
+      <div class="payico">${icon}</div>
+      <div class="payinfo"><div class="paytitle">${title} ${feeChip}</div><div class="paytag">${tag}</div></div>
+      <div class="payradio">${m===key?'●':'○'}</div></button>`;
+    // deposit is its own line; the card fee is a separate line, shown only when credit card is chosen
+    const breakdown=`<div class="depsum">
+      <div class="li"><span>Deposit${per?` <span class="m">(${usd(unit)} / person × ${S.guests})</span>`:''}</span><span>${usd(amt)}</span></div>
+      ${isCard?`<div class="li"><span>Credit-card processing fee <span class="m">(${feePct}%)</span></span><span>+ ${usd(fee)}</span></div>`:''}
+      <div class="li tot"><span>Total due now</span><span>${usd(total)}</span></div>
+      <div class="li" style="border-top:1px dashed var(--line);margin-top:6px;padding-top:8px"><span class="m">Balance ${money(Math.max(0,roomsSubtotal()-amt))} — due ${fmtDate(addDays(S.date,-120))} (120 days before arrival); State &amp; City taxes and fees added then. Activities payable at checkout.</span><span></span></div></div>`;
+    const note=m==='card'?DEP.cc_note:m==='check'?`Make checks payable to <b>${esc(DEP.check_payable_to)}</b>. ${esc(DEP.check_instructions)}`:m==='ach'?`${esc(DEP.ach_note)} We'll send it to <b>${esc(S.req.email)}</b>.`:'';
+    const cta=m==='card'?`Pay ${usd(total)}`:m==='check'?`Confirm — I'll mail a ${usd(amt)} check`:m==='ach'?`Email me an ACH link`:'Choose a payment method';
+    el('stage').innerHTML=`<button class="back" onclick="BE.go(7)">← Back to review</button>
+      <p class="lede" style="margin-bottom:4px">Secure your reservation with a <b>${usd(unit)}${per?' / person':''}</b> deposit. Choose how you'd like to pay${DEP.methods.check||DEP.methods.ach?' — no fee by check or bank transfer':''}.</p>
+      <p class="hint" style="margin:0 2px 14px">${esc(DEP.terms)}</p>
+      <div class="paylist">
+        ${opt('card','💳','Credit card','Pay now — secure checkout',`<span class="chip warn">+${feePct}% fee</span>`)}
+        ${opt('check','✉️','Check','No processing fee','<span class="chip ok">no fee</span>')}
+        ${opt('ach','🏦','ACH bank transfer','No processing fee','<span class="chip ok">no fee</span>')}
+      </div>
+      ${m?breakdown:'<p class="hint" style="margin:12px 2px 0">Choose a payment method to see the total.</p>'}
+      ${note?`<div class="paynote">${note}</div>`:''}
+      <div class="actions"><button class="btn-ghost" onclick="BE.go(7)">Back</button><button class="btn-primary" ${m?'':'disabled'} onclick="BE.payDeposit()">${cta}</button></div>`;
+  }
+  function confirmStep(){const sel=S.rooms.map(roomById),acts=selectedActs(),m=S.req.match;
+    const per=DEP.per_person, unit=depositUnit(), amt=depositAmount(), feePct=+DEP.cc_fee_pct||0, fee=amt*feePct/100, dm=S.depMethod;
+    const isCard=dm==='card', total=amt+(isCard?fee:0), paid=isCard;
+    const methodLine=dm==='card'?`Paid by credit card`:dm==='check'?`By check — payable to ${esc(DEP.check_payable_to)}`:`By ACH link — emailed to ${esc(S.req.email)}`;
+    const depStatus=paid?'<span class="pill link">Deposit received</span>':'<span class="pill new">Deposit pending</span>';
+    el('stage').innerHTML=`<div class="conf"><div class="big">${paid?'✓':'✈'}</div><h2>${paid?'Reservation confirmed':'Request received'}</h2>
+      <p class="lede" style="margin:0 auto;max-width:52ch">${paid?'Your deposit is in and your dates are locked. We\'ll follow up by email.':dm==='check'?'We\'ll hold your dates and email check mailing instructions.':'We\'ve emailed your secure ACH deposit link — your dates are held until it\'s paid.'}</p>
+      <div class="matchbox"><div style="font-weight:700;font-size:15px;margin-bottom:2px">${sel.map(r=>esc(r.name)).join(' + ')}</div>
+        <div class="m" style="color:var(--muted);font-size:13px;margin-bottom:8px">${PKG.category} · ${fmtDate(S.date)} · ${PKG.nights} nights · party of ${S.guests}</div>
+        <div class="li" style="border-top:1px solid var(--line);margin-top:8px;padding-top:8px;font-weight:700"><span>Package rate</span><span>${money(roomsSubtotal())}</span></div>
+        <div class="li" style="font-weight:700;margin-top:6px"><span>Deposit ${depStatus}</span><span></span></div>
+        <div class="li"><span class="m">Deposit${per?` (${usd(unit)}/person × ${S.guests})`:''}</span><span>${usd(amt)}</span></div>
+        ${isCard?`<div class="li"><span class="m">Credit-card fee (${feePct}%)</span><span>+ ${usd(fee)}</span></div><div class="li" style="font-weight:700"><span>Total paid</span><span>${usd(total)}</span></div>`:''}
+        <div class="li"><span class="m">${methodLine}</span></div>
+        <div class="li"><span class="m">Balance ${money(Math.max(0,roomsSubtotal()-amt))} — due ${fmtDate(addDays(S.date,-120))} (120 days before arrival); State &amp; City taxes and fees added then.</span><span></span></div>
+        <hr style="border:0;border-top:1px solid var(--line);margin:12px 0">
+        <div>Guest record: <span class="pill ${m.action==='auto_link'?'link':'new'}">${m.action==='auto_link'?'Linked':'New record'}</span>
+        ${m.action==='auto_link'?`<span style="font-size:13px"> — welcome back, <b>${esc(m.who)}</b> (Tier ${m.tier})</span>`:`<span style="font-size:13px"> — a master record will be created for <b>${esc(m.who)}</b></span>`}</div>
+        <div style="font-size:12.5px;color:var(--faint);margin-top:8px">A <code style="font-family:var(--mono)">reservation_request</code>${acts.length?`, ${acts.length} activity <code style="font-family:var(--mono)">assignment</code>${acts.length>1?'s':''}`:''}, and ${S.guestChoice==='later'?`your lead <code style="font-family:var(--mono)">person</code> record`:`<b>${namedCount()}</b> <code style="font-family:var(--mono)">person</code> record${namedCount()>1?'s':''}`} were created; on confirmation you'll get a Guest Portal invite${S.guestChoice==='later'?` to complete your guest list of ${S.guests}`:''}, and these become your assigned rooms &amp; activities.</div></div>
+      <button class="btn-ghost" onclick="BE.reset()">Start over</button></div>`;
+  }
+  function summaryBar(){return `<div class="summary"><span><b>${S.year}</b> · ${fmtDate(S.from)} – ${fmtDate(S.to)} · party of <b>${S.guests}</b></span>
+    <button class="btn-ghost btn-sm" onclick="BE.go(1)">Edit search</button></div>`;}
+
+  // On deposit, persist each activity/day as a PENDING request the admin approval queue reads.
+  // Group key = lead last name + " Group" (e.g. Cole Younger -> "Younger Group"), matching the portal.
+  function persistRequests(){try{
+    const key='talon_portal_requests';let arr=[];try{arr=JSON.parse(localStorage.getItem(key))||[];}catch(e){}if(!Array.isArray(arr))arr=[];
+    const group=((S.req.last||S.req.first||'Guest').trim())+' Group';
+    arr=arr.filter(r=>!(r.group===group&&r.source==='reservation'));
+    let nid=arr.reduce((m,r)=>Math.max(m,r.id||0),0)+1;const nowIso=new Date().toISOString();
+    selectedActs().forEach(a=>{
+      const kind=/massage/i.test(a.name)?'massage':'activity';
+      const names=(a.unit==='guest')?actParts(a).map(i=>partyLabel(i)):[];
+      const guests=(a.unit==='guest')?(actParts(a).length||S.guests):S.guests;
+      const dates=(a.unit==='guest'&&actDates(a).length)?actDates(a):[S.date];
+      dates.forEach(d=>arr.push({id:nid++,group,actId:a.id,name:a.name,date:d,guests,guestNames:names,kind,status:'requested',source:'reservation',created:nowIso}));
+    });
+    localStorage.setItem(key,JSON.stringify(arr));
+  }catch(e){}}
+
+  window.BE={
+    yearChange(){S.year=+el('s_year').value;S.from=SEASON[S.year].start;S.to=SEASON[S.year].end;render();},
+    setFrom(v){S.from=v;},setTo(v){S.to=v;},
+    setGuests(v){S.guests=evenUp(v);el('s_guests').value=S.guests;},
+    bump(delta){S.guests=evenUp(S.guests+delta);el('s_guests').value=S.guests;},
+    search(){S.from=el('s_from').value;S.to=el('s_to').value;S.guests=evenUp(el('s_guests').value);
+      if(S.from>S.to){alert('“Arrival from” must be on or before “Arrival to”.');return;}S.rooms=[];S.step=2;render();},
+    pickDate(d){S.date=d;PKG=packageForDate(d);S.rooms=[];S.step=3;render();},
+    toggleRoom(id){const i=S.rooms.indexOf(id);
+      if(i>=0){S.rooms.splice(i,1);}
+      else{const r=roomById(id),remaining=S.guests-capacityOf(S.rooms.map(roomById));
+        if(r.occMax>remaining){alert(`${r.name} sleeps ${r.occMax}, but only ${remaining} guest${remaining===1?'':'s'} remain to place — that would go over your party of ${S.guests}. Pick a smaller room, or go back and edit your party size.`);return;}
+        S.rooms.push(id);}
+      render();},
+    continueRooms(){if(capacityOf(S.rooms.map(roomById))!==S.guests)return;S.step=4;render();},
+    toggleAct(id){if(id in S.acts){delete S.acts[id];}
+      else{const a=actById(id);S.acts[id]=a.unit==='flat'?{}:(a.unit==='day'?{days:1}:{parts:party().map(p=>p.i),dates:[]});}render();},
+    toggleActPart(id,idx){const e=S.acts[id];if(!e||!e.parts)return;const j=e.parts.indexOf(idx);if(j>=0)e.parts.splice(j,1);else e.parts.push(idx);render();},
+    toggleActDay(id,date){const a=actById(id),e=S.acts[id];if(!e)return;e.dates=e.dates||[];const j=e.dates.indexOf(date);if(j>=0){e.dates.splice(j,1);}else{if(occupiesDay(a)&&adventureOnDay(date,id))return;e.dates.push(date);}render();},
+    actQty(id,delta){const a=actById(id),e=S.acts[id];if(!e)return;const max=a.max||4;e.days=Math.max(1,Math.min(max,(e.days||1)+delta));render();},
+    submitDetails(){const first=el('q_first').value.trim(),last=el('q_last').value.trim(),email=el('q_email').value.trim(),phone=el('q_phone').value.trim();
+      if(!last||!email){alert('Please enter at least a last name and email.');return;}
+      S.req={first,last,email,phone,notes:el('q_notes').value.trim(),match:resolve(email,phone,first,last)};S.step=5;render();},
+    setGuestChoice(v){S.guestChoice=v;render();},
+    guestField(i,k,v){if(S.guestList[i])S.guestList[i][k]=v;},
+    guestRefresh(){render();},
+    useLeadEmail(i){if(S.guestList[i]&&S.req){S.guestList[i].email=S.req.email;render();}},
+    guestAccess(i,a){if(S.guestList[i]){S.guestList[i].access=a;render();}},
+    continueGuests(){if(S.guestChoice==='now'){const bad=S.guestList.some(g=>(g.first||g.last)&&(g.access||'invite')==='invite'&&!(g.email||'').trim());
+      if(bad){alert('Each guest set to “Send portal invite” needs an email. Enter the guest’s own, tap “Use group lead email”, or switch them to “I’ll manage this guest”.');return;}}
+      S.step=6;render();},
+    showCancellation(){const url=esc(DEP.cancellation_url||'');
+      el('modalHost').innerHTML=`<div class="modal" onclick="if(event.target===this)BE.closeModal()"><div class="sheet">
+        <div class="mhd"><h3>Cancellation policy</h3><button class="x" onclick="BE.closeModal()">✕</button></div>
+        <div class="mbody">
+          <p>${esc(DEP.cancellation_policy||'')}</p>
+          <div class="ins"><div class="i">🛡️</div><div class="t"><b>Travel insurance.</b> ${esc(DEP.travel_insurance||'')}</div></div>
+          ${url?`<a class="plink" href="${url}" target="_blank" rel="noopener">Read the full cancellation policy ↗</a>`:''}
+        </div>
+        <div class="macts"><button class="btn-ghost" onclick="BE.closeModal()">Back</button><button class="btn-primary" onclick="BE.acceptCancellation()">I understand — continue →</button></div>
+      </div></div>`;},
+    acceptCancellation(){BE.closeModal();S.step=8;render();},
+    closeModal(){el('modalHost').innerHTML='';},
+    viewPkg(d){const p=packageForDate(d),dep=addDays(d,p.nights);
+      el('modalHost').innerHTML=`<div class="modal" onclick="if(event.target===this)BE.closeModal()"><div class="sheet">
+        <div class="mhd"><h3>${esc(p.name)}</h3><button class="x" onclick="BE.closeModal()">✕</button></div>
+        <div class="mbody">
+          <div style="font-size:12.5px;color:var(--muted);margin-bottom:10px">${esc(p.category)} · ${fmtDate(d)} – ${fmtDate(dep)} · ${p.nights} nights · ${p.days} adventure days</div>
+          <p style="font-size:13.5px;margin:0 0 14px">${esc(p.description)}</p>
+          <div class="pkgincl"><div class="col"><div class="colhd">✓ Package includes</div><ul>${p.includes.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+            <div class="col ex"><div class="colhd">✕ Does not include</div><ul>${p.excludes.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div></div>
+        </div>
+        <div class="macts"><button class="btn-ghost" onclick="BE.closeModal()">Close</button><button class="btn-primary" onclick="BE.closeModal();BE.pickDate('${d}')">Select this date →</button></div>
+      </div></div>`;},
+    finalize(){S.step=8;render();},
+    setDepMethod(v){S.depMethod=v;render();},
+    payDeposit(){if(!S.depMethod)return;persistRequests();S.step=9;render();},
+    go(step){if(step>=3&&!S.date)step=2;if(step>=5&&!S.req)step=4;S.step=step;render();},
+    reset(){S.step=1;S.date=null;S.rooms=[];S.acts={};S.req=null;S.guestChoice='now';S.guestList=[];S.depMethod=null;render();}
+  };
+  render();
+})();
+</script>
+
+</body></html>

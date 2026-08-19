@@ -1,0 +1,283 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Morning Display</title><style>html,body{margin:0;background:#04211d}</style></head><body>
+<style>
+  :root{
+    --bg1:#04211d;--bg2:#0a3a34;--bg3:#12564d;--ink:#f4f8f6;--dim:rgba(244,248,246,.78);--faint:rgba(244,248,246,.52);
+    --gold:#e6c06a;--line:rgba(244,248,246,.16);
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"Cascadia Code",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:#04211d;overflow:hidden;height:100vh;-webkit-font-smoothing:antialiased}
+  .screen{position:relative;height:100vh;width:100vw;overflow:hidden}
+  /* stage — full-bleed slides */
+  .stage{position:absolute;inset:0}
+  .slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;pointer-events:none}
+  .slide.on{opacity:1;pointer-events:auto}
+  .grad{position:absolute;inset:0;background:radial-gradient(120% 90% at 82% -10%,rgba(255,255,255,.10),transparent 55%),linear-gradient(160deg,var(--bg1),var(--bg2) 52%,var(--bg3))}
+  .grad::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:42%;opacity:.55;background:conic-gradient(from 200deg at 25% 120%,rgba(255,255,255,.10),transparent 30%);clip-path:polygon(0 60%,20% 38%,42% 56%,62% 30%,80% 50%,100% 34%,100% 100%,0 100%)}
+  .watermark{position:absolute;right:4vw;top:8vh;font-size:34vw;line-height:1;opacity:.06;filter:grayscale(1);pointer-events:none}
+  /* boat photo hero */
+  img.photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.02)}
+  .scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,18,15,.30) 0%,rgba(3,18,15,.05) 30%,rgba(3,18,15,.55) 62%,rgba(3,18,15,.94) 100%)}
+  .scrim.deep{background:linear-gradient(180deg,rgba(3,18,15,.72),rgba(3,18,15,.82))}
+  /* content */
+  .content{position:absolute;left:0;right:0;bottom:0;padding:0 4vw 8vh;z-index:2}
+  .center{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 4vw;z-index:2}
+  .eyebrow{font:700 1vw var(--mono);letter-spacing:.26em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2vh;display:flex;align-items:center;gap:.9vw}
+  .eyebrow .ic{font-size:1.7vw}
+  .title{font:600 clamp(40px,8.4vw,168px)/.94 var(--serif);letter-spacing:-.005em;margin:0;text-shadow:0 4px 30px rgba(0,0,0,.5)}
+  .crewrow{display:flex;align-items:center;gap:1.6vw;margin-top:2.2vh;flex-wrap:wrap}
+  .avatar{width:6vw;height:6vw;min-width:74px;min-height:74px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.85);box-shadow:0 8px 24px rgba(0,0,0,.45);background:linear-gradient(135deg,var(--bg3),#2a9d8f);display:grid;place-items:center;font:700 2vw var(--serif);color:#fff}
+  .crewtxt .cn{font:700 1.9vw/1 var(--sans)}
+  .crewtxt .cd{font:600 1.1vw var(--mono);letter-spacing:.04em;color:var(--dim);margin-top:.7vh}
+  .crewtxt .cd .role{color:var(--gold)}
+  /* guest grid */
+  .guests{margin-top:3.2vh;display:grid;grid-template-columns:repeat(auto-fill,minmax(17vw,1fr));gap:1.1vh 2.4vw;max-width:88vw}
+  .g{font:600 clamp(18px,2.15vw,44px)/1.1 var(--sans);display:flex;align-items:center;gap:.9vw;text-shadow:0 2px 14px rgba(0,0,0,.5)}
+  .g .dot{width:.7vw;height:.7vw;min-width:9px;min-height:9px;border-radius:50%;background:var(--gold);flex:0 0 auto}
+  .count{margin-top:2.4vh;font:700 1.15vw var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+  /* massage / spa */
+  .slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(24vw,1fr));gap:3vw;margin-top:3.4vh;max-width:90vw}
+  .slot .st{font:600 3vw/1 var(--serif);color:var(--gold);margin-bottom:1.8vh}
+  .appt{padding:1.5vh 0;border-top:1px solid var(--line)}
+  .appt .who{font:700 clamp(22px,2.4vw,50px)/1.05 var(--serif)}
+  .appt .det{font:600 1.35vw var(--sans);color:var(--dim);margin-top:.5vh}
+  .appt .tx{color:var(--gold)}
+  .meta{display:flex;gap:2.8vw;flex-wrap:wrap;margin-top:2.4vh;font:600 1.55vw var(--sans);color:var(--dim)}
+  .meta .role{font:700 .85vw var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-right:.5vw;display:block;margin-bottom:.4vh}
+  /* overlaid chrome */
+  .top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;gap:16px;padding:3vh 4vw;z-index:5;background:linear-gradient(180deg,rgba(3,18,15,.55),transparent)}
+  .brand{display:flex;align-items:center;gap:1vw}
+  .brand .mk{width:3vw;height:3vw;min-width:42px;min-height:42px;border-radius:12px;background:linear-gradient(135deg,var(--bg3),#2a9d8f);display:grid;place-items:center;font-size:1.6vw;box-shadow:0 8px 22px rgba(0,0,0,.4)}
+  .brand .t{font:800 1.5vw/1 var(--sans);letter-spacing:-.01em}
+  .brand .s{font:600 .72vw var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--faint);margin-top:.5vh}
+  .hdate{margin-left:auto;text-align:right}
+  .hdate .d{font:600 1.7vw/1 var(--serif);color:var(--gold)}
+  .hdate .l{font:600 .72vw var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-top:.6vh}
+  .foot{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;gap:1.2vw;padding:0 4vw 2.6vh;z-index:5}
+  .dots{display:flex;gap:.7vw;flex-wrap:wrap}
+  .dots i{width:1vw;height:.5vh;min-width:16px;min-height:5px;border-radius:20px;background:rgba(255,255,255,.28);transition:.35s}
+  .dots i.on{background:var(--gold);width:3.2vw}
+  .foot .pos{margin-left:auto;font:700 .95vw var(--mono);letter-spacing:.08em;color:var(--faint)}
+  /* control bar */
+  .bar{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;gap:10px;padding:9px 14px;background:rgba(3,15,13,.92);opacity:0;transition:opacity .25s;z-index:30;pointer-events:none}
+  body.show .bar{opacity:1;pointer-events:auto}
+  .bar .tag{font:700 9px var(--mono);letter-spacing:.14em;text-transform:uppercase;background:var(--gold);color:#241a05;border-radius:20px;padding:3px 9px}
+  .bar label{font:600 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+  .bar input,.bar button{font:600 13px var(--sans);color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:8px;padding:6px 10px;cursor:pointer}
+  .bar .sp{margin-left:auto}.bar .hint{font:500 11.5px var(--sans);color:rgba(255,255,255,.5)}
+  .none{text-align:center;width:100%}
+  .none .big{font:600 clamp(30px,5vw,96px) var(--serif)}
+  .none .sub{font:600 1.3vw var(--sans);color:var(--dim);margin-top:2vh}
+  @media (prefers-reduced-motion:reduce){.slide{transition:opacity .01s}}
+</style>
+
+<div class="bar">
+  <span class="tag">Display</span>
+  <label>Date</label><input type="date" id="date" onchange="DS.setDate(this.value)">
+  <button onclick="DS.prev()">‹ Prev</button>
+  <button id="pp" onclick="DS.toggle()">⏸ Pause</button>
+  <button onclick="DS.next()">Next ›</button>
+  <button onclick="DS.full()">⛶ Full screen</button>
+  <span class="sp hint">Rotates every 5s · Space = pause · ← → navigate · F = full screen</span>
+</div>
+
+<div class="screen">
+  <div class="stage" id="stage"></div>
+  <div class="top">
+    <div class="brand"><span class="mk">🎣</span><div><div class="t">Talon Lodge</div><div class="s">Boat &amp; Activity Schedule</div></div></div>
+    <div class="hdate"><div class="d" id="hdate">—</div><div class="l">Sitka, Alaska</div></div>
+  </div>
+  <div class="foot"><div class="dots" id="dots"></div><div class="pos" id="pos"></div></div>
+</div>
+
+<script>
+(function(){
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const WD=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const MO=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const parseD=s=>{const[y,m,d]=String(s).split('-').map(Number);return new Date(y,m-1,d);};
+  const addDays=(s,n)=>{const dt=parseD(s);dt.setDate(dt.getDate()+n);return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');};
+  const longDate=s=>{const d=parseD(s);return WD[d.getDay()]+', '+MO[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();};
+  const initials=n=>String(n||'').trim().split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase();
+
+  const load=(k,f)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?f:v;}catch(e){return f;}};
+  const TEAM_SEED={therapists:[{id:'t1',name:'Lori Strachan'},{id:'t2',name:'Mikalia Lockhart'}],
+    guides:[{id:'g1',name:'Ted Deering'},{id:'g2',name:'Holden Pucket'}],
+    captains:[{id:'c1',name:'Cole Younger'},{id:'c2',name:'Travis Stephenson'},{id:'c3',name:'James Lecrone'},{id:'c4',name:'Gavin Wolfe'},{id:'c5',name:'Marjo Vidad'},{id:'c6',name:'Ted Deering'},{id:'c7',name:'Phil Younger'}],
+    deckhands:[{id:'d1',name:'Sam Parker'},{id:'d2',name:'CJ Taccad'},{id:'d3',name:'Emily Rose'},{id:'d4',name:'Porter Baskin'},{id:'d5',name:'Holden Pucket'}],
+    boats:[{id:'b1',name:'Raptor',captain_id:'c1',deckhand_id:'d1'},{id:'b2',name:'Roamer',captain_id:'c2',deckhand_id:'d2'},{id:'b3',name:'Retriever',captain_id:'c3',deckhand_id:'d3'},{id:'b4',name:'Magnum',captain_id:'c4',deckhand_id:'d4'},{id:'b5',name:'Pip',captain_id:'c6',deckhand_id:'d5'},{id:'b6',name:'Muktuk',captain_id:'c5',deckhand_id:''},{id:'b7',name:'Raider',captain_id:'c7',deckhand_id:''}]};
+  const team=()=>{const t=load('talon_team_v1',null);return (t&&t.boats)?t:TEAM_SEED;};
+  const boats=()=>(team().boats||[]).filter(b=>b.active!==false);
+  const memberOf=(arr,id)=>(team()[arr]||[]).find(y=>y.id===id)||null;
+  const boatById=id=>(team().boats||[]).find(b=>b.id===id);
+  const bookings=()=>{const v=load('talon_bookings_v1',[]);return Array.isArray(v)?v:[];};
+  const seating=()=>load('talon_boat_seating',{})||{};
+  const daily=()=>load('talon_boat_daily',{})||{};
+  const packages=()=>{const v=load('talon_packages_v1',[]);return Array.isArray(v)?v:[];};
+  const pkgByArrival=a=>packages().find(p=>p.arrival_start_date===a);
+  const profiles=()=>load('talon_portal_profile',{})||{};
+  // first photo of the matching catalog activity (activities-admin stores an uploaded photos[] per activity)
+  const IMGDB=(()=>{let dbp=null;function open(){if(dbp)return dbp;dbp=new Promise((res,rej)=>{let r;try{r=indexedDB.open('talon-images',1);}catch(e){return rej(e);}r.onupgradeneeded=e=>{try{e.target.result.createObjectStore('photos');}catch(_){}};r.onsuccess=e=>res(e.target.result);r.onerror=()=>rej(r.error);});return dbp;}
+    return {get:k=>open().then(db=>new Promise(res=>{const rq=db.transaction('photos','readonly').objectStore('photos').get(k);rq.onsuccess=()=>res(rq.result||null);rq.onerror=()=>res(null);})).catch(()=>null)};})();
+  function resolveIdb(){[...document.querySelectorAll('img[data-idb]')].forEach(img=>{const k=img.getAttribute('data-idb');img.removeAttribute('data-idb');IMGDB.get(k).then(v=>{if(v)img.src=v;else if(typeof img.onerror==='function')img.onerror();else img.remove();});});}
+  const psrc=p=>p&&p.indexOf('idb:')===0?`data-idb="${esc(p.slice(4))}"`:`src="${esc(p)}"`;
+  function actPhoto(actId,name){const acts=load('talon_activities_v1',[]);if(!Array.isArray(acts))return '';
+    const n=(name||'').toLowerCase();
+    const match=a=>{const an=(a.name||'').toLowerCase();
+      if(actId==='atv'||/\batv\b/.test(n))return /atv/.test(an);
+      if(actId==='kayak'||/kayak/.test(n))return /kayak/.test(an);
+      if(actId==='whale'||/whale/.test(n))return /whale/.test(an);
+      if(actId==='hike'||/hik/.test(n))return /hik/.test(an);
+      if(actId==='freshplane'||/float\s*plane|by float/.test(n))return /float\s*plane|by float/.test(an);
+      if(actId==='fresh'||/freshwater/.test(n))return /freshwater/.test(an)&&!/float/.test(an);
+      if(actId==='dayspa'||/day\s*spa|spa\s*day/.test(n))return /day\s*spa|spa/.test(an);
+      if(actId==='massage'||/massage/.test(n))return /massage/.test(an);
+      if(actId==='saltwater'||/saltwater/.test(n))return /saltwater/.test(an);
+      return false;};
+    const a=acts.find(match)||acts.find(x=>(x.name||'').toLowerCase()===n);
+    return (a&&a.photos&&a.photos.find(p=>p))||'';}
+
+  const isSalt=b=>b.actId==='saltwater';
+  const isEveMassage=b=>b.actId==='massage'||(/massage/i.test(b.name||'')&&!/spa/i.test(b.name||''));
+  const isSpa=b=>b.actId==='massage'||b.actId==='dayspa'||/spa/i.test(b.name||'')||(b.assigneeType==='therapist'&&!isSalt(b));
+  const isAdventure=b=>!isSpa(b)&&!isSalt(b);
+  const pullsOffBoat=b=>!isSalt(b)&&!isEveMassage(b);
+  const hasAdventureOn=(name,date)=>bookings().some(b=>b.date===date&&pullsOffBoat(b)&&(b.guestNames||[]).includes(name));
+
+  function boatRoster(date){
+    const map={};const seat=seating(),dly=daily();
+    Object.keys(seat).forEach(arr=>{const p=pkgByArrival(arr);const nights=p?(+p.nights||4):4;
+      if(!(date>arr&&date<addDays(arr,nights)))return;
+      Object.keys(seat[arr]).forEach(k=>{const i=k.indexOf('::');const group=k.slice(0,i),nm=k.slice(i+2);
+        const ov=(dly[date]||{})[k];const boatId=(ov!==undefined)?ov:seat[arr][k];if(!boatId)return;
+        if(hasAdventureOn(nm,date))return;(map[boatId]=map[boatId]||[]).push({name:nm,group});});});
+    bookings().filter(b=>isSalt(b)&&b.date===date&&b.boatId).forEach(b=>{(b.guestNames&&b.guestNames.length?b.guestNames:[b.group]).forEach(nm=>(map[b.boatId]=map[b.boatId]||[]).push({name:nm,group:b.group,salt:true}));});
+    return map;
+  }
+  function guestsPresentOn(date){const out=[],prof=profiles();
+    Object.keys(prof).forEach(key=>{const i=key.lastIndexOf('|');const group=key.slice(0,i),pkgId=key.slice(i+1);
+      const p=packages().find(x=>x.id===pkgId);if(!p)return;const arr=p.arrival_start_date,nights=+p.nights||4;
+      if(!(date>arr&&date<addDays(arr,nights)))return;(prof[key].guests||[]).forEach(g=>{const nm=((g.first||'')+' '+(g.last||'')).trim();if(nm)out.push({name:nm,group});});});
+    return out;}
+  const tmin=t=>{const m=String(t||'').match(/(\d+):(\d+)\s*(am|pm)?/i);if(!m)return 9999;let h=+m[1];const mn=+m[2],ap=(m[3]||'').toLowerCase();if(ap==='pm'&&h<12)h+=12;if(ap==='am'&&h===12)h=0;return h*60+mn;};
+
+  function buildSlides(date){
+    const S=[];const roster=boatRoster(date);
+    boats().filter(b=>roster[b.id]&&roster[b.id].length).forEach(b=>{const cap=memberOf('captains',b.captain_id),dh=memberOf('deckhands',b.deckhand_id);
+      S.push({type:'boat',boat:b.name,photo:b.photo||b.image||'',cap:cap?cap.name:null,capPhoto:cap&&(cap.photo||cap.image)||'',deck:dh?dh.name:null,guests:roster[b.id],salt:roster[b.id].some(p=>p.salt)});});
+    const NAMEMAP={fresh:'Freshwater Fishing by Boat',freshplane:'Freshwater Fishing by Float Plane',atv:'ATV Safari',kayak:'Kayak & Lunch',whale:'Whale Watching',hike:'Hiking'};
+    const guideNamesOf=ids=>(ids||[]).map(id=>{const g=(team().guides||[]).find(x=>x.id===id);return g?g.name.split(' ')[0]:null;}).filter(Boolean).join(' & ');
+    bookings().filter(b=>isAdventure(b)&&b.date===date).sort((a,b)=>tmin(a.time)-tmin(b.time)).forEach(b=>{
+      const boat=(b.boatIds&&b.boatIds.length)?(boatById(b.boatIds[0])||{}).name:(b.boatName||'');
+      const gm=(b.guideIds&&b.guideIds[0])?((team().guides||[]).find(x=>x.id===b.guideIds[0])||{}):{};
+      S.push({type:'adv',name:b.name||NAMEMAP[b.actId]||'Activity',time:b.time,who:b.assigneeName||guideNamesOf(b.guideIds),guidePhoto:gm.photo||gm.image||'',photo:actPhoto(b.actId,b.name),boat,guests:(b.guestNames&&b.guestNames.length)?b.guestNames:[b.group+' · '+(b.guests||1)+' guests']});});
+    const ms=bookings().filter(b=>isSpa(b)&&b.date===date);
+    if(ms.length){const byT={};ms.forEach(b=>{(byT[b.time||'Time TBD']=byT[b.time||'Time TBD']||[]).push(b);});
+      S.push({type:'massage',photo:actPhoto('massage','Massage')||actPhoto('dayspa','Day Spa'),slots:Object.keys(byT).sort((a,b)=>tmin(a)-tmin(b)).map(t=>({time:t,appts:byT[t].map(b=>({who:b.guestName||(b.guestNames||[])[0]||b.group,ther:b.assigneeName,tx:b.treatment}))}))});}
+    const onBoat=new Set();Object.values(roster).forEach(list=>list.forEach(p=>onBoat.add(p.name)));
+    const busy=new Set();bookings().filter(b=>b.date===date&&pullsOffBoat(b)).forEach(b=>(b.guestNames||[]).forEach(n=>busy.add(n)));
+    const seen=new Set();const idle=guestsPresentOn(date).filter(p=>!onBoat.has(p.name)&&!busy.has(p.name)&&!seen.has(p.name)&&seen.add(p.name));
+    if(idle.length)S.push({type:'island',guests:idle});
+    return S;
+  }
+
+  const advIcon=n=>/whale/i.test(n)?'🐋':/kayak/i.test(n)?'🛶':/atv/i.test(n)?'🏍️':/plane/i.test(n)?'🛩️':/hik/i.test(n)?'🥾':/saltwater/i.test(n)?'🐟':'🎣';
+  const guestGrid=arr=>`<div class="guests">${arr.map(g=>`<div class="g"><span class="dot"></span>${esc(g.name||g)}</div>`).join('')}</div>`;
+  function slideHTML(s){
+    if(s.type==='boat'){
+      const slug=String(s.boat).toLowerCase().replace(/[^a-z0-9]+/g,'-');
+      const src=s.photo||('boats/'+slug+'.jpg');
+      // gradient always behind; photo layered on top and removed if it fails to load (so it falls back cleanly)
+      const bg=`<div class="grad"></div><div class="watermark">🚤</div><img class="photo" src="${esc(src)}" alt="" onerror="this.remove()"><div class="scrim"></div>`;
+      const av=s.capPhoto?`<img class="avatar" src="${esc(s.capPhoto)}" alt="">`:`<div class="avatar">${esc(initials(s.cap||''))||'⚓'}</div>`;
+      return `${bg}<div class="content">
+        <div class="eyebrow"><span class="ic">🚤</span> Sportfishing boat</div>
+        <h1 class="title">${esc(s.boat)}</h1>
+        <div class="crewrow">${av}<div class="crewtxt"><div class="cn">${esc(s.cap||'—')}</div><div class="cd"><span class="role">Captain</span>${s.deck?' · '+esc(s.deck)+' · Deckhand':''}</div></div></div>
+        ${guestGrid(s.guests)}
+        <div class="count">${s.guests.length} aboard</div></div>`;
+    }
+    if(s.type==='adv'){
+      const gav=s.who?(s.guidePhoto?`<img class="avatar" src="${esc(s.guidePhoto)}" alt="">`:`<div class="avatar">${esc(initials(s.who))||'🎣'}</div>`):'';
+      const inner=`<div class="eyebrow"><span class="ic">${advIcon(s.name)}</span> Adventure</div>
+        <h1 class="title">${esc(s.name)}</h1>
+        ${s.who?`<div class="crewrow">${gav}<div class="crewtxt"><div class="cn">${esc(s.who)}</div><div class="cd"><span class="role">Guide</span>${s.time?' · '+esc(s.time):''}${s.boat?' · '+esc(s.boat):''}</div></div></div>`:`<div class="meta">${s.time?`<span><span class="role">Time</span>${esc(s.time)}</span>`:''}${s.boat?`<span><span class="role">Boat</span>${esc(s.boat)}</span>`:''}</div>`}
+        ${guestGrid(s.guests.map(g=>({name:g})))}
+        <div class="count">${s.guests.length} guest${s.guests.length!==1?'s':''}</div>`;
+      if(s.photo)return `<div class="grad"></div><img class="photo" ${psrc(s.photo)} alt="" onerror="this.remove()"><div class="scrim"></div><div class="content">${inner}</div>`;
+      return `<div class="grad"></div><div class="watermark">${advIcon(s.name)}</div><div class="center">${inner}</div>`;
+    }
+    if(s.type==='massage'){
+      const spaInner=`<div class="eyebrow"><span class="ic">💆</span> Spa &amp; Massage</div>
+        <h1 class="title" style="font-size:clamp(34px,6vw,120px)">Today’s Spa Schedule</h1>
+        <div class="slots">${s.slots.map(sl=>`<div class="slot"><div class="st">${esc(sl.time)}</div>${sl.appts.map(a=>`<div class="appt"><div class="who">${esc(a.who)}</div><div class="det">${esc(a.ther||'therapist TBD')}${a.tx?' · <span class="tx">'+esc(a.tx)+'</span>':''}</div></div>`).join('')}</div>`).join('')}</div>`;
+      if(s.photo)return `<div class="grad"></div><img class="photo" ${psrc(s.photo)} alt="" onerror="this.remove()"><div class="scrim deep"></div><div class="center">${spaInner}</div>`;
+      return `<div class="grad"></div><div class="watermark">💆</div><div class="center">${spaInner}</div>`;
+    }
+    if(s.type==='island'){
+      return `<div class="grad"></div><div class="watermark">🏝️</div><div class="center">
+        <div class="eyebrow"><span class="ic">🏝️</span> Enjoying the lodge</div>
+        <h1 class="title">Stay Back</h1>
+        <div class="meta"><span>A relaxed day at Talon Lodge</span></div>
+        ${guestGrid(s.guests)}
+        <div class="count">${s.guests.length} guest${s.guests.length!==1?'s':''}</div></div>`;
+    }
+    return '';
+  }
+
+  let DATE=null,SLIDES=[],idx=0,timer=null,playing=true,SAMPLE=false;const PERIOD=5000;
+  function candidateDates(){const set=new Set(bookings().map(b=>b.date).filter(Boolean));const seat=seating();
+    Object.keys(seat).forEach(arr=>{const p=pkgByArrival(arr);const nights=p?(+p.nights||4):4;for(let i=1;i<nights;i++)set.add(addDays(arr,i));});
+    return [...set].sort();}
+  // built-in sample so the display rotates even with no data loaded (mirrors a real day's lineup)
+  const SAMPLE_DATE='2026-08-15';
+  function sampleSlides(){return [
+    {type:'boat',boat:'Roamer',cap:'Marjo Vidad',deck:'Emily Rose',guests:[{name:'Renee Savage'},{name:'Mark Savage'},{name:'John Feliciano'},{name:'Everett Welch'},{name:'Susan Welch'}]},
+    {type:'boat',boat:'Magnum',cap:'James Lecrone',deck:'Porter Baskin',guests:[{name:'Jourdi de Werd'},{name:'Jim Ziething'},{name:'Courtney Ziething'},{name:'Allen Daugherty'},{name:'Sharon Daugherty'},{name:'Michelle de Werd'}]},
+    {type:'boat',boat:'Retriever',cap:'Gavin Wolfe',deck:'CJ Taccad',guests:[{name:'Timothy Ruff'},{name:'Jessica Ruff'},{name:'Charlotte Ruff'},{name:'Timmy Ruff'},{name:'Dustin Haugland'},{name:'Jennifer Haugland'}]},
+    {type:'boat',boat:'Raptor',cap:'Travis Stephenson',deck:'Sam Parker',guests:[{name:'Jorge Gonzalez'},{name:'Michael Purmort'},{name:'Bret Barrett'},{name:'Marshall Ininns'},{name:'Brad Barrett'}]},
+    {type:'massage',slots:[{time:'4:30 PM',appts:[{who:'Mark Savage',ther:'Mikalia Lockhart',tx:'Northern Release'},{who:'Renee Savage',ther:'Lori Strachan',tx:'Aurora Refresher'}]},{time:'5:30 PM',appts:[{who:'Everett Welch',ther:'Lori Strachan',tx:'Denali Recovery'},{who:'Jorge Gonzalez',ther:'Mikalia Lockhart',tx:'Denali Deep'}]}]},
+    {type:'island',guests:[{name:'Allen Daugherty'},{name:'Sharon Daugherty'}]}
+  ];}
+  function rebuild(){
+    SLIDES=buildSlides(DATE);SAMPLE=false;
+    if(!SLIDES.length&&!candidateDates().length){DATE=SAMPLE_DATE;SLIDES=sampleSlides();SAMPLE=true;}
+    idx=0;el('hdate').textContent=longDate(DATE);el('date').value=DATE;
+    document.querySelector('.brand .s').textContent=SAMPLE?'Boat & Activity Schedule · sample':'Boat & Activity Schedule';
+    renderStage();restart();}
+  function renderStage(){
+    if(!SLIDES.length){el('stage').innerHTML=`<div class="slide on"><div class="grad"></div><div class="center none"><div class="big">No schedule for this day</div><div class="sub">${esc(longDate(DATE))} — assign boats &amp; approve activities, or choose another date.</div></div></div>`;el('dots').innerHTML='';el('pos').textContent='';return;}
+    el('stage').innerHTML=SLIDES.map((s,i)=>`<div class="slide${i===idx?' on':''}">${slideHTML(s)}</div>`).join('');resolveIdb();
+    el('dots').innerHTML=SLIDES.map((_,i)=>`<i class="${i===idx?'on':''}"></i>`).join('');updateChrome();
+  }
+  function show(i){const nodes=el('stage').querySelectorAll('.slide');if(nodes.length<2)return;nodes[idx]&&nodes[idx].classList.remove('on');idx=(i+SLIDES.length)%SLIDES.length;nodes[idx]&&nodes[idx].classList.add('on');updateChrome();}
+  function updateChrome(){[...el('dots').children].forEach((d,i)=>d.classList.toggle('on',i===idx));const s=SLIDES[idx]||{};const lbl={boat:'Boat',adv:'Adventure',massage:'Spa',island:'Stay back'}[s.type]||'';el('pos').textContent=SLIDES.length?`${lbl} · ${idx+1} / ${SLIDES.length}`:'';}
+  function restart(){clearInterval(timer);if(playing&&SLIDES.length>1)timer=setInterval(()=>show(idx+1),PERIOD);}
+
+  window.DS={setDate(d){if(d){DATE=d;rebuild();}},next(){show(idx+1);restart();},prev(){show(idx-1);restart();},
+    toggle(){playing=!playing;el('pp').textContent=playing?'⏸ Pause':'▶ Play';restart();},
+    full(){const e=document.documentElement;if(document.fullscreenElement)document.exitFullscreen();else e.requestFullscreen&&e.requestFullscreen();}};
+
+  let hideT;function showControls(){document.body.classList.add('show');clearTimeout(hideT);hideT=setTimeout(()=>document.body.classList.remove('show'),2600);}
+  document.addEventListener('mousemove',showControls);document.addEventListener('touchstart',showControls);
+  document.addEventListener('keydown',e=>{if(e.key===' '){e.preventDefault();DS.toggle();}else if(e.key==='ArrowRight')DS.next();else if(e.key==='ArrowLeft')DS.prev();else if(e.key.toLowerCase()==='f')DS.full();showControls();});
+
+  const TODAY='2026-08-15';const cands=candidateDates();
+  DATE=cands.includes(TODAY)?TODAY:(cands[0]||TODAY);
+  rebuild();showControls();
+
+  // ---- auto-refresh: pick up photo / schedule changes without a manual reload ----
+  const WATCH=['talon_activities_v1','talon_bookings_v1','talon_boat_seating','talon_boat_daily','talon_team_v1','talon_packages_v1','talon_portal_profile'];
+  const dataSig=()=>WATCH.map(k=>(localStorage.getItem(k)||'').length).join(',')+'|'+(localStorage.getItem('talon_activities_v1')||'').slice(0,4000);
+  let lastSig=dataSig();
+  function checkData(){const s=dataSig();if(s!==lastSig){lastSig=s;const keep=idx;rebuild();if(SLIDES[keep])show(keep);}}
+  setInterval(checkData,6000);
+  window.addEventListener('storage',checkData);        // instant when another tab/tool changes the data
+  window.addEventListener('focus',checkData);          // and when the display regains focus
+})();
+</script>
+</body></html>

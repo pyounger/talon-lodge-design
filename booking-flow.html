@@ -1,0 +1,200 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Booking & Double-Booking Protection</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 10px 26px rgba(18,42,43,.07)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413;--shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.4)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6}
+  *{box-sizing:border-box}
+  .rm{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;padding:clamp(16px,3.5vw,44px) clamp(14px,3vw,30px);-webkit-font-smoothing:antialiased}
+  .rm .wrap{max-width:940px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0 0 10px}
+  h1{font:800 clamp(24px,4vw,38px)/1.08 var(--sans);letter-spacing:-.02em;margin:0 0 10px;text-wrap:balance}
+  .lede{color:var(--muted);margin:0 0 6px;font-size:clamp(14px,1.8vw,16px);max-width:70ch}
+  h2{font:700 12px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--accent-deep);margin:0 0 4px}
+  .sechd{display:flex;align-items:baseline;gap:12px;margin:38px 0 14px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+  .sechd .n{font:800 13px var(--mono);color:var(--faint)}
+  .sechd p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+  p.body{font-size:14.5px;margin:0 0 14px;max-width:72ch}
+  code{font-family:var(--mono);font-size:.9em;background:var(--surface-2);padding:1px 5px;border-radius:4px;color:var(--accent-deep)}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:clamp(14px,2.5vw,24px);margin:0 0 16px}
+  figure{margin:0}figcaption{font-size:12.5px;color:var(--faint);text-align:center;margin-top:10px;font-style:italic}
+  svg.dia{display:block;width:100%;height:auto;color:var(--ink)}
+  .eq{font-family:var(--mono);font-size:14px;background:var(--surface-2);border:1px solid var(--line-2);border-left:3px solid var(--accent);border-radius:8px;padding:14px 16px;margin:0 0 8px;overflow-x:auto;line-height:1.7}
+  .eq b{color:var(--accent-deep)}.eq .h{color:var(--gold)}.eq .a{color:var(--salmon)}
+  table{border-collapse:collapse;width:100%;font-size:13.5px}
+  .tw{overflow-x:auto}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font:700 11px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--faint);background:var(--surface-2)}
+  td b{color:var(--ink)}td .cap{font-family:var(--mono);font-size:12px;color:var(--accent-deep)}
+  .layers{list-style:none;padding:0;margin:0;counter-reset:l}
+  .layers li{position:relative;padding:14px 16px 14px 56px;border:1px solid var(--line);border-radius:10px;background:var(--surface);margin-bottom:10px;font-size:14px}
+  .layers li::before{counter-increment:l;content:counter(l);position:absolute;left:14px;top:14px;width:28px;height:28px;border-radius:8px;background:var(--accent);color:#fff;font:800 14px var(--mono);display:flex;align-items:center;justify-content:center}
+  .layers li b{display:block;margin-bottom:2px}
+  .layers li .sub{color:var(--muted);font-size:13px}
+  .tag{display:inline-block;font:700 10px var(--mono);letter-spacing:.03em;text-transform:uppercase;padding:2px 7px;border-radius:20px;vertical-align:middle}
+  .tag.hold{background:var(--gold-soft);color:var(--gold)}.tag.conf{background:var(--accent-soft);color:var(--accent-deep)}.tag.rej{background:var(--salmon-soft);color:var(--salmon)}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .cols.three{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:720px){.cols,.cols.three{grid-template-columns:1fr}}
+  .mini{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .mini.hl{border-color:var(--gold);background:linear-gradient(var(--surface),var(--surface)) padding-box,var(--gold-soft)}
+  .mini h3{font:700 13px var(--sans);margin:0 0 6px;display:flex;align-items:center;gap:8px}
+  .mini p{margin:0;font-size:13px;color:var(--muted)}
+  .mini .badge{font:700 9px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);border-radius:20px;padding:1px 6px;margin-left:auto}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .callout{background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:13px 16px;font-size:13.5px;color:var(--accent-deep);margin:14px 0 0}
+  .callout b{color:var(--ink)}
+  .foot{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--faint)}
+</style>
+
+<div class="rm"><div class="wrap">
+  <p class="eyebrow">Talon Lodge &amp; Spa · Scheduling architecture</p>
+  <h1>How a booking is made — and how two groups can't grab the same guide</h1>
+  <p class="lede">An activity or massage request enters through one of <b>three doors</b>, becomes a <b>hold</b> that
+  reserves real capacity on a real date, and is confirmed into an <b>assignment</b>. The whole reserve step is a
+  single locked transaction, so the last seat can only be sold once.</p>
+
+  <!-- ===== 1. THREE PATHS ===== -->
+  <div class="sechd"><span class="n">01</span><div><h2>Three ways a booking starts</h2><p>At reservation, from the guest portal after booking, or by an admin — all funnel through the same capacity gate.</p></div></div>
+  <div class="card"><figure>
+    <svg class="dia" viewBox="0 0 900 400" role="img" aria-label="Three booking entry paths — the guest booking flow at reservation, the guest portal activity and massage modules after booking, and admin direct-book — all pass through one atomic reserve gate that produces a hold pending approval, confirmed by the admin into an assignment. The guest portal also reads the status of each item back: requested, approved, or declined.">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+        <marker id="arA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker>
+        <marker id="arG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--gold)"/></marker>
+      </defs>
+      <g font-family="var(--sans)" font-size="12.5">
+        <!-- source boxes -->
+        <rect x="24" y="40" width="212" height="56" rx="10" fill="var(--surface-2)" stroke="var(--line-2)"/><text x="130" y="63" text-anchor="middle" font-weight="700">Guest · booking flow</text><text x="130" y="80" text-anchor="middle" fill="var(--muted)" font-size="11">step 6 — during reservation</text>
+        <rect x="24" y="170" width="212" height="64" rx="10" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="1.5"/><text x="130" y="192" text-anchor="middle" font-weight="800" fill="var(--gold)">Guest Portal</text><text x="130" y="209" text-anchor="middle" fill="var(--muted)" font-size="11">Activity + Massage modules</text><text x="130" y="224" text-anchor="middle" fill="var(--muted)" font-size="10.5">request &amp; track — after booking</text>
+        <rect x="24" y="308" width="212" height="56" rx="10" fill="var(--surface-2)" stroke="var(--line-2)"/><text x="130" y="331" text-anchor="middle" font-weight="700">Admin · scheduling board</text><text x="130" y="348" text-anchor="middle" fill="var(--muted)" font-size="11">direct-book</text>
+        <!-- arrows to gate -->
+        <line x1="236" y1="68" x2="372" y2="176" stroke="currentColor" marker-end="url(#ar)"/>
+        <line x1="236" y1="200" x2="372" y2="200" stroke="var(--gold)" stroke-width="1.5" marker-end="url(#arG)"/>
+        <line x1="236" y1="336" x2="372" y2="224" stroke="currentColor" marker-end="url(#ar)"/>
+        <!-- gate -->
+        <rect x="372" y="150" width="172" height="100" rx="12" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text x="458" y="182" text-anchor="middle" font-weight="800" fill="var(--accent-deep)">ATOMIC RESERVE</text>
+        <text x="458" y="201" text-anchor="middle" font-size="11" fill="var(--accent-deep)">lock · re-check · insert</text>
+        <text x="458" y="230" text-anchor="middle" font-size="10.5" font-family="var(--mono)" fill="var(--muted)">§03 — sells the seat once</text>
+        <text x="458" y="278" text-anchor="middle" font-size="10.5" fill="var(--salmon)">full · party &gt; 6 · mixed group → Request (waitlist)</text>
+        <!-- outcomes -->
+        <line x1="544" y1="176" x2="604" y2="150" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arA)"/>
+        <rect x="604" y="122" width="180" height="56" rx="10" fill="var(--gold-soft)" stroke="var(--gold)"/><text x="694" y="145" text-anchor="middle" font-weight="700" fill="var(--gold)">HOLD · pending</text><text x="694" y="162" text-anchor="middle" font-size="11" fill="var(--muted)">reserves capacity now</text>
+        <line x1="694" y1="178" x2="694" y2="230" stroke="currentColor" marker-end="url(#ar)"/><text x="708" y="208" font-size="10.5" fill="var(--muted)">admin approves</text>
+        <rect x="604" y="230" width="180" height="56" rx="10" fill="var(--accent-soft)" stroke="var(--accent)"/><text x="694" y="253" text-anchor="middle" font-weight="700" fill="var(--accent-deep)">ASSIGNMENT · approved</text><text x="694" y="270" text-anchor="middle" font-size="11" fill="var(--muted)">confirmed &amp; scheduled</text>
+        <!-- feedback loop back to portal -->
+        <path d="M604,258 L560,258 L560,384 L130,384 L130,236" fill="none" stroke="var(--gold)" stroke-width="1.3" stroke-dasharray="6 4" marker-end="url(#arG)"/>
+        <text x="345" y="378" text-anchor="middle" font-size="11" fill="var(--gold)" font-weight="600">Guest Portal reads status back:  Requested → Approved  (or Declined)</text>
+      </g>
+    </svg>
+    <figcaption>All three doors share one capacity gate. The <b>Guest Portal</b> is the only one that's two-way — it submits requests <em>and</em> shows each item's live status back to the guest.</figcaption>
+  </figure></div>
+
+  <div class="cols three">
+    <div class="mini"><h3><span class="dot" style="background:var(--accent)"></span>Path A — Booking flow</h3><p>On the Activities step, while building the reservation, the guest picks activities for their trip days. Fits the rules → an instant <b>hold</b> under their group name.</p></div>
+    <div class="mini hl"><h3><span class="dot" style="background:var(--gold)"></span>Path B — Guest Portal<span class="badge">two-way</span></h3><p>After booking, the portal's <b>Activity</b> and <b>Massage</b> modules let the guest <b>request</b> more — and <b>watch each one</b> move from Requested to Approved. Some activities are <b>portal-only</b> (set per activity in Activity setup), so they appear here and never at reservation.</p></div>
+    <div class="mini"><h3><span class="dot" style="background:var(--faint)"></span>Path C — Admin direct-book</h3><p>The admin schedules straight onto the calendar and can do what guests can't: mixed group on a guide, override the lead-first pick, resolve a full day.</p></div>
+  </div>
+
+  <!-- ===== 2. LIFECYCLE ===== -->
+  <div class="sechd"><span class="n">02</span><div><h2>The life of a booking</h2><p>Every booking is a row that moves through states — and only two of them hold capacity.</p></div></div>
+  <div class="card"><figure>
+    <svg class="dia" viewBox="0 0 900 250" role="img" aria-label="Booking state machine: a request becomes a hold on reserve; a hold becomes an assignment on admin approval; holds and assignments both reserve capacity; released or cancelled returns capacity; over-capacity or party over six routes to a pending request that only an admin can turn into a hold.">
+      <defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <g font-family="var(--sans)" font-size="12.5" text-anchor="middle">
+        <rect x="236" y="24" width="404" height="128" rx="12" fill="none" stroke="var(--accent)" stroke-dasharray="4 4" opacity=".55"/>
+        <text x="438" y="16" text-anchor="middle" font-size="10.5" font-family="var(--mono)" fill="var(--accent-deep)">RESERVES CAPACITY (counts against availability)</text>
+        <rect x="24" y="60" width="150" height="56" rx="10" fill="var(--salmon-soft)" stroke="var(--salmon)"/><text x="99" y="84" font-weight="700" fill="var(--salmon)">REQUEST</text><text x="99" y="102" font-size="11" fill="var(--muted)">pending · no capacity</text>
+        <rect x="262" y="60" width="150" height="56" rx="10" fill="var(--gold-soft)" stroke="var(--gold)"/><text x="337" y="84" font-weight="700" fill="var(--gold)">HOLD</text><text x="337" y="102" font-size="11" fill="var(--muted)">reserved · unconfirmed</text>
+        <rect x="464" y="60" width="150" height="56" rx="10" fill="var(--accent-soft)" stroke="var(--accent)"/><text x="539" y="84" font-weight="700" fill="var(--accent-deep)">ASSIGNMENT</text><text x="539" y="102" font-size="11" fill="var(--muted)">approved · scheduled</text>
+        <rect x="710" y="60" width="166" height="56" rx="10" fill="var(--surface-2)" stroke="var(--line-2)"/><text x="793" y="84" font-weight="700">RELEASED / CANCELLED</text><text x="793" y="102" font-size="11" fill="var(--muted)">capacity returned</text>
+        <line x1="174" y1="88" x2="262" y2="88" stroke="currentColor" marker-end="url(#ar2)"/><text x="218" y="80" font-size="10.5" fill="var(--muted)">admin approves</text>
+        <line x1="412" y1="88" x2="464" y2="88" stroke="currentColor" marker-end="url(#ar2)"/><text x="438" y="80" font-size="10.5" fill="var(--muted)">confirm</text>
+        <line x1="614" y1="88" x2="710" y2="88" stroke="currentColor" marker-end="url(#ar2)"/>
+        <path d="M337,116 C337,150 793,150 793,118" fill="none" stroke="currentColor" marker-end="url(#ar2)" opacity=".7"/><text x="565" y="150" font-size="10.5" fill="var(--muted)">admin releases the hold</text>
+        <path d="M99,60 C99,30 262,30 300,58" fill="none" stroke="var(--accent)" stroke-width="1.3" marker-end="url(#ar2)" opacity=".9"/><text x="150" y="40" font-size="10.5" fill="var(--accent-deep)">fits → straight to hold</text>
+        <text x="204" y="196" text-anchor="start" font-size="11.5" fill="var(--muted)">A guest booking that fits the rules skips REQUEST and lands directly on HOLD. Only party&nbsp;&gt;&nbsp;6, mixed-group, or</text>
+        <text x="204" y="214" text-anchor="start" font-size="11.5" fill="var(--muted)">over-capacity waits as a REQUEST for the admin. Holds don't auto-expire — they hold until the admin releases them.</text>
+      </g>
+    </svg>
+    <figcaption>Only <span class="tag hold">Hold</span> and <span class="tag conf">Assignment</span> consume capacity. A <span class="tag rej">Request</span> is a waiting-room row; releasing either returns the seats.</figcaption>
+  </figure></div>
+  <p class="body">The <b>Guest Portal</b> is where the guest lives inside this state machine after booking. Its Activity and Massage
+  modules submit new requests <em>and</em> show each one's status — <span class="tag hold">Requested</span> while it's a pending
+  hold, <span class="tag conf">Approved</span> once the admin confirms it, or declined with alternatives offered. The guest
+  never sees the resource math or other groups — only their own items and exactly where each one stands.</p>
+  <div class="callout" style="background:var(--gold-soft);border-color:var(--gold)">⏱ <b>24-hour review SLA.</b> Every pending
+  request — whether it came from the portal or the reservation flow — <b>notifies the admin</b> the instant it lands and
+  starts a <b>24-hour review clock</b>. The admin review queue shows time remaining per request; anything nearing or past
+  24h <b>escalates</b> (flag + reminder) so no guest is left waiting on an answer. Approve → <span class="tag conf">Assignment</span>;
+  decline → released with alternatives offered back in the portal.</div>
+
+  <!-- ===== 3. THE INVARIANT ===== -->
+  <div class="sechd"><span class="n">03</span><div><h2>The rule the whole system defends</h2><p>One equation, checked inside a lock. Everything else is plumbing around it.</p></div></div>
+  <p class="body">Availability is never stored — it's <b>derived</b> for a resource on a date, every time it's asked:</p>
+  <div class="eq"><b>available(resource, date)</b> = capacity(resource) − Σ&nbsp;<span class="h">holds</span>(resource, date) − Σ&nbsp;<span class="conf" style="color:var(--accent-deep)">assignments</span>(resource, date)</div>
+  <div class="eq">a booking is allowed  ⟺  requested&nbsp;≤&nbsp;<b>available</b>  <span style="color:var(--faint)">AND</span>  rules pass <span style="color:var(--faint)">(during-stay · party ≤ guide cap · not mixed-group · saltwater ≥ 4 · has delivery boat)</span></div>
+  <p class="body">Because a hold counts the instant it's created — whether from the booking flow or a portal request — the seconds
+  between selecting an activity and confirming can't be used by anyone else to oversell it. The invariant to protect:
+  <b>for every (resource, date), holds + assignments never exceed capacity.</b></p>
+
+  <div class="tw card" style="padding:0"><table>
+    <thead><tr><th>Resource</th><th>Capacity per day</th><th>What one booking consumes</th></tr></thead>
+    <tbody>
+      <tr><td><b>Guide</b></td><td><span class="cap">1 activity / day · ≤ 3 guests</span></td><td>The guide's <b>whole day</b> — a guide runs one activity per day, so booking them blocks their other activities that date.</td></tr>
+      <tr><td><b>Massage</b></td><td><span class="cap">4 slots / day</span> (2 therapists × 2)</td><td>One slot per guest — pooled across both therapists, shared by all groups that day.</td></tr>
+      <tr><td><b>Saltwater boat</b></td><td><span class="cap">1 trip / day · min 4</span></td><td>The single boat + its separate crew, on a travel day only.</td></tr>
+      <tr><td><b>Delivery boat</b></td><td><span class="cap">1 / day</span></td><td>Tied to freshwater-by-boat/ATV — only a guide with a delivery boat (Ted → Pip) can run it.</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- ===== 4. DOUBLE BOOKING ===== -->
+  <div class="sechd"><span class="n">04</span><div><h2>Two requests, one seat — who wins</h2><p>The concurrency case: two groups book the last spot on Ted for the same day at the same instant — one from the portal, one from the booking flow.</p></div></div>
+  <div class="card"><figure>
+    <svg class="dia" viewBox="0 0 900 400" role="img" aria-label="Concurrency timeline. Request A opens a transaction and locks the Ted-May-25 row; Request B tries to lock the same row and blocks. A re-reads load 0 of 1, inserts its hold, commits, releasing the lock. B now acquires the lock, re-reads load 1 of 1, finds no room, and rolls back — rejected. The lock serializes the two, so the seat sells once.">
+      <defs><marker id="arg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--accent)"/></marker>
+        <marker id="ars" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--salmon)"/></marker>
+        <marker id="arm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <text x="120" y="26" text-anchor="middle" font-size="11" font-family="var(--mono)" fill="var(--accent-deep)" font-weight="700">REQUEST A · Younger (portal)</text>
+      <text x="450" y="26" text-anchor="middle" font-size="11" font-family="var(--mono)" fill="var(--faint)">ROW · Ted @ May 25</text>
+      <text x="780" y="26" text-anchor="middle" font-size="11" font-family="var(--mono)" fill="var(--salmon)" font-weight="700">REQUEST B · Smith (flow)</text>
+      <line x1="120" y1="38" x2="120" y2="384" stroke="var(--line-2)"/>
+      <line x1="780" y1="38" x2="780" y2="384" stroke="var(--line-2)"/>
+      <rect x="372" y="44" width="156" height="40" rx="8" fill="var(--surface-2)" stroke="var(--line-2)"/><text x="450" y="63" text-anchor="middle" font-size="11.5" font-weight="700">load 0 / 1 · unlocked</text><text x="450" y="77" text-anchor="middle" font-size="10" fill="var(--faint)">🔓</text>
+      <g font-family="var(--sans)" font-size="12" text-anchor="middle">
+        <text x="120" y="112" font-weight="700" fill="var(--accent-deep)">BEGIN + lock row</text><text x="120" y="128" font-size="10.5" fill="var(--muted)">SELECT … FOR UPDATE</text>
+        <line x1="164" y1="118" x2="372" y2="118" stroke="var(--accent)" marker-end="url(#arg)"/>
+        <rect x="372" y="100" width="156" height="40" rx="8" fill="var(--accent-soft)" stroke="var(--accent)"/><text x="450" y="119" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--accent-deep)">🔒 locked by A</text><text x="450" y="133" text-anchor="middle" font-size="10" fill="var(--muted)">load 0 / 1</text>
+        <text x="780" y="112" font-weight="700" fill="var(--salmon)">BEGIN + lock row</text>
+        <line x1="736" y1="118" x2="530" y2="118" stroke="var(--salmon)" stroke-dasharray="5 4" marker-end="url(#ars)"/>
+        <text x="655" y="150" text-anchor="middle" font-size="10.5" fill="var(--salmon)">⏳ blocks — waits for A</text>
+        <text x="120" y="196" font-weight="700" fill="var(--accent-deep)">reads 0/1 → room</text><text x="120" y="212" font-size="10.5" fill="var(--muted)">INSERT hold · COMMIT</text>
+        <line x1="164" y1="202" x2="372" y2="202" stroke="var(--accent)" marker-end="url(#arg)"/>
+        <rect x="372" y="184" width="156" height="40" rx="8" fill="var(--accent-soft)" stroke="var(--accent)"/><text x="450" y="203" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--accent-deep)">load 1 / 1 · unlocked</text><text x="450" y="217" text-anchor="middle" font-size="10" fill="var(--muted)">🔓 A committed</text>
+        <text x="120" y="238" font-size="11" fill="var(--accent-deep)">✓ Younger holds Ted</text>
+        <line x1="530" y1="270" x2="736" y2="270" stroke="var(--salmon)" marker-end="url(#ars)"/>
+        <text x="780" y="264" font-weight="700" fill="var(--salmon)">lock acquired</text><text x="780" y="280" font-size="10.5" fill="var(--muted)">re-reads 1 / 1</text>
+        <rect x="372" y="252" width="156" height="40" rx="8" fill="var(--salmon-soft)" stroke="var(--salmon)"/><text x="450" y="271" text-anchor="middle" font-size="11.5" font-weight="700" fill="var(--salmon)">load 1 / 1 · full</text><text x="450" y="285" text-anchor="middle" font-size="10" fill="var(--muted)">no room for B</text>
+        <text x="780" y="306" font-weight="700" fill="var(--salmon)">ROLLBACK</text><text x="780" y="322" font-size="10.5" fill="var(--muted)">rejected → alternatives</text>
+        <text x="780" y="344" font-size="11" fill="var(--salmon)">✗ Smith sees “full”</text>
+      </g>
+      <line x1="30" y1="52" x2="30" y2="360" stroke="var(--faint)" marker-end="url(#arm)" opacity=".6"/><text x="30" y="378" text-anchor="middle" font-size="10" font-family="var(--mono)" fill="var(--faint)">time</text>
+    </svg>
+    <figcaption>The row lock <b>serializes</b> the two transactions — no matter which door each came through. B can't even read the count until A commits, so B sees A's hold and is turned away. The seat is sold exactly once.</figcaption>
+  </figure></div>
+
+  <p class="body">That lock is the primary guarantee, but it's backed by layers so a race can't slip through another way:</p>
+  <ul class="layers">
+    <li><b>Atomic check-and-reserve <span style="font-weight:400;color:var(--muted)">(the lock above)</span></b><span class="sub">The availability re-check and the insert happen in one transaction that locks the <code>(resource, date)</code> row. Concurrent bookers serialize; the loser re-reads the updated count and is rejected. No “read-then-write” gap.</span></li>
+    <li><b>Database constraints as a backstop</b><span class="sub">A unique index on <code>(guide_id, date, activity)</code> makes a double guide-day <em>physically impossible</em> even if app logic is bypassed; the same for <code>(saltwater_boat, date)</code> and one hold per delivery boat per day. The DB refuses the second write.</span></li>
+    <li><b>The hold reserves during checkout &amp; approval</b><span class="sub">Because a hold counts against availability the instant it's created, the window between “guest requests” and “admin approves” can't be used to oversell. Holds persist until an admin releases them — no silent timeout drops a seat back into the pool.</span></li>
+    <li><b>Idempotency key on submit</b><span class="sub">A double-click or a network retry — common on the portal — carries the same key, so the reserve is applied at most once. One tap doesn't become two holds.</span></li>
+    <li><b>Edge cases escalate, never auto-book</b><span class="sub">Party&nbsp;&gt;&nbsp;6, mixed groups on a guide, and over-capacity days become <b>requests</b> the admin resolves by hand — they never quietly consume a resource. Archiving a guide (Team admin) surfaces their live holds for reassignment instead of vanishing them.</span></li>
+  </ul>
+
+  <div class="callout">🛟 <b>Prototype vs production.</b> Today's demo stores holds in the browser (<code>talon_bookings_v1</code>) — a single tab, so there's no real race. The guarantee described here is what the <b>Laravel/Aurora</b> backend enforces: the reserve is a DB transaction with <code>SELECT … FOR UPDATE</code> plus the unique constraints, so the check and the write are one indivisible step. The demo already models the <em>shape</em> — holds by real date, shared across groups — so wiring the booking flow <em>and</em> the guest portal to it is a swap of the storage layer, not the logic.</div>
+
+  <p class="foot">Talon Lodge &amp; Spa · booking &amp; availability model · three entry paths (booking flow · guest portal · admin) → one reserve gate → capacity − holds − assignments.</p>
+</div></div>
+</body></html>

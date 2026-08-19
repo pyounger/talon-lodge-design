@@ -1,0 +1,99 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Beverages</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--gold:#b9892b;--gold-soft:#f6ecd6;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 22px rgba(18,42,43,.06)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--gold:#e0b45e;--gold-soft:#2c2413;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--gold:#e0b45e}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--gold:#b9892b}
+  *{box-sizing:border-box}
+  .rm{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(14px,3vw,30px);-webkit-font-smoothing:antialiased}
+  .rm .wrap{max-width:920px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(20px,3vw,28px)/1.1 var(--sans);letter-spacing:-.02em;margin:0 0 4px}
+  .lede{color:var(--muted);margin:0 0 18px;font-size:13.5px;max-width:82ch}
+  .panel{background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+  .phead{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--line)}
+  .phead h2{font:800 15px var(--sans);margin:0;display:flex;align-items:center;gap:8px}
+  .phead .sp{margin-left:auto}
+  table{width:100%;border-collapse:collapse}
+  th{font:700 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint);text-align:left;padding:10px 16px;border-bottom:1px solid var(--line)}
+  td{padding:6px 16px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle}
+  tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:var(--surface-2)}
+  input.cell,select.cell{font:600 13.5px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:7px;padding:6px 9px;width:100%}
+  input.cell.name{font-weight:700}
+  .btn{font:700 12px var(--sans);border-radius:7px;padding:7px 12px;cursor:pointer;border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+  .btn:hover{background:var(--surface-2)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .icon{border:1px solid var(--line-2);background:var(--surface);color:var(--muted);border-radius:7px;width:32px;height:32px;cursor:pointer;font-size:14px}
+  .icon:hover{border-color:var(--salmon);color:var(--salmon)}
+  .foot{padding:12px 16px;border-top:1px solid var(--line);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .foot .note{font-size:12px;color:var(--muted)}
+  .schema{margin-top:16px;font-size:12px;color:var(--muted);background:var(--surface);border:1px dashed var(--line-2);border-radius:10px;padding:11px 14px;line-height:1.6}
+  .schema b{color:var(--accent-deep)} .schema code{font-family:var(--mono);font-size:.9em;color:var(--ink)}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--accent-deep);color:#fff;font:600 13px var(--sans);padding:9px 16px;border-radius:9px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+<div class="rm"><div class="wrap">
+  <p class="eyebrow">Admin setup · Provisioning</p>
+  <h1>Beverages</h1>
+  <p class="lede">The beverage catalog guests order from. Each night the next day's beverage order is taken <b>per guest</b>; it aggregates onto the <b>boat stocking list</b> by whichever boat that guest is on. Category drives how the stocking sheet groups items.</p>
+
+  <div class="panel">
+    <div class="phead"><h2>🍺 Beverage list</h2><span class="sp"></span><button class="btn primary" onclick="BV.add()">＋ Add beverage</button></div>
+    <table>
+      <thead><tr><th>Name</th><th>Details</th><th style="width:150px">Category</th><th style="width:56px">Action</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="foot"><button class="btn" onclick="BV.restore()">↻ Restore standard list</button><span class="note">Changes save automatically. “Restore” re-adds any standard beverage that’s gone missing (your edits are kept).</span></div>
+  </div>
+
+  <div class="schema">Maps to Andy's schema → <b>beverages</b> lookup: <code>id, name, details, category</code>. Referenced by per-guest <code>beverage_order</code> rows and aggregated to the boat stocking list.</div>
+</div></div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+  const KEY='talon_beverages_v1';
+  const CATS=['Beer','Seltzer','Non-alcoholic','Mixer','Supplies','Other'];
+  const SEED=[
+    ['Alaska Amber 6-Pack','Alaska Amber 6-pack','Beer'],
+    ['Alaska IPA - 6 pack','Alaska IPA - 6 pack','Beer'],
+    ['Alaska White - 6 pack','Alaska White - 6 pack','Beer'],
+    ['Alaskan Hard Seltzer - 6 pack','Alaskan Hard Seltzer - 6 Pack','Seltzer'],
+    ['Club Soda','Club Soda','Mixer'],
+    ['Coors Light 6-pack','Coors Light 6-pack','Beer'],
+    ['Heineken 0.0 (N/A) - 6 pack','Heineken 0.0 - 6 pack','Non-alcoholic'],
+    ['Ice','Ice','Supplies'],
+    ['Iced Tea','Iced Tea','Non-alcoholic'],
+    ['Limes','Limes','Supplies'],
+    ['Michelob Ultra - 6 pack','Michelob Ultra - 6 pack','Beer'],
+    ['Miller Light - 6 pack','Miller Light - 6 pack','Beer'],
+    ['Modelo 6-Pack','Modelo 6-Pack','Beer'],
+    ['Other Beverage','Review Breakfast Order','Other']
+  ].map((r,i)=>({id:i+1,name:r[0],details:r[1],category:r[2]}));
+
+  let items=[]; let nextId=1;
+  try{items=JSON.parse(localStorage.getItem(KEY))||null;}catch(e){}
+  if(!items||!items.length){let bak=null;try{bak=JSON.parse(localStorage.getItem(KEY+'__bak'))||null;}catch(e){}items=(bak&&bak.length)?bak:JSON.parse(JSON.stringify(SEED));persist();}
+  nextId=Math.max(0,...items.map(t=>t.id||0))+1;
+  function persist(){try{const j=JSON.stringify(items);localStorage.setItem(KEY,j);try{localStorage.setItem(KEY+'__bak',j);}catch(e){}return true;}catch(e){return false;}}
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1500);}
+  function render(){
+    items.sort((a,b)=>(a.name||'').toLowerCase()<(b.name||'').toLowerCase()?-1:1);
+    el('rows').innerHTML=items.map(t=>`<tr data-id="${t.id}">
+      <td><input class="cell name" value="${esc(t.name)}" oninput="BV.set(${t.id},'name',this.value)" placeholder="Beverage name"></td>
+      <td><input class="cell" value="${esc(t.details)}" oninput="BV.set(${t.id},'details',this.value)" placeholder="Details"></td>
+      <td><select class="cell" onchange="BV.set(${t.id},'category',this.value)">${CATS.map(c=>`<option ${c===t.category?'selected':''}>${c}</option>`).join('')}</select></td>
+      <td><button class="icon" title="Delete" onclick="BV.del(${t.id})">✕</button></td></tr>`).join('');
+  }
+  window.BV={
+    set(id,f,v){const t=items.find(x=>x.id===id);if(t){t[f]=v;persist();}},
+    add(){const t={id:nextId++,name:'',details:'',category:'Beer'};items.push(t);render();const inp=document.querySelector('tr[data-id="'+t.id+'"] input.name');if(inp)inp.focus();toast('Beverage added');},
+    del(id){const t=items.find(x=>x.id===id);if(!confirm('Delete “'+((t&&t.name)||'this beverage')+'”?\n\nStandard beverages return with “Restore standard list”.'))return;items=items.filter(x=>x.id!==id);persist();render();toast('Deleted');},
+    restore(){let n=0;SEED.forEach(s=>{if(!items.some(t=>(t.name||'').trim().toLowerCase()===s.name.toLowerCase())){items.push({id:nextId++,name:s.name,details:s.details,category:s.category});n++;}});persist();render();toast(n?('Restored '+n):'Standard list already complete');}
+  };
+  render();
+})();
+</script>
+</body></html>

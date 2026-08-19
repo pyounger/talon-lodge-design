@@ -1,0 +1,195 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Massage Schedule</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6;--spa:#6d4b6b;--spa-soft:#f0e7ef;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 22px rgba(18,42,43,.06)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--gold:#e0b45e;--spa:#a9738f;--spa-soft:#2a1f28;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--gold:#e0b45e;--spa:#a9738f;--spa-soft:#2a1f28}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--gold:#b9892b;--spa:#6d4b6b;--spa-soft:#f0e7ef}
+  *{box-sizing:border-box}
+  .rm{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(14px,3vw,28px);-webkit-font-smoothing:antialiased}
+  .rm .wrap{max-width:1000px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--spa);margin:0 0 8px}
+  h1{font:800 clamp(20px,3vw,28px)/1.1 var(--sans);letter-spacing:-.02em;margin:0 0 4px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:13.5px;max-width:90ch}
+  .bar{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);padding:13px 16px;margin-bottom:16px}
+  .fld{display:flex;flex-direction:column;gap:5px}.fld label{font:700 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  select{font:600 13.5px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:8px 10px}
+  select:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+  .panel{background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+  .phead{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .phead h2{font:800 15px var(--sans);margin:0}.phead .desc{font-size:12.5px;color:var(--muted)}
+  .thr{border-bottom:1px solid var(--line);padding:12px 16px}.thr:last-child{border-bottom:0}
+  .thr .tn{font:800 14.5px var(--sans);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .thr .tn .cap{font:600 11px var(--mono);color:var(--faint)}
+  .slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+  .slot{border:1px solid var(--line-2);border-radius:10px;padding:10px 12px;background:var(--paper)}
+  .slot .st{font:700 11px var(--mono);letter-spacing:.05em;color:var(--spa);margin-bottom:7px}
+  .slot.booked{background:var(--spa-soft);border-color:var(--spa)}
+  .slot .who{font:800 14px var(--sans)} .slot .trt{font:600 12.5px var(--sans);color:var(--muted)}
+  .slot .rm{float:right;border:1px solid var(--line-2);background:var(--surface);color:var(--faint);border-radius:6px;width:26px;height:26px;cursor:pointer}
+  .slot .rm:hover{border-color:var(--salmon);color:var(--salmon)}
+  .slot .frm{display:flex;flex-direction:column;gap:7px}
+  .slot .frm select{width:100%;padding:7px 9px;font-size:12.5px}
+  .slot .add{font:700 12px var(--sans);background:var(--accent);color:#fff;border:0;border-radius:7px;padding:8px;cursor:pointer}
+  .slot .add:hover{filter:brightness(1.05)}
+  .empty{padding:30px 16px;text-align:center;color:var(--muted);font-size:14px}
+  .list td{padding:8px 14px;border-bottom:1px solid var(--line);font-size:13.5px}.list th{font:700 10px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);text-align:left;padding:9px 14px;border-bottom:1px solid var(--line)}
+  .list table{width:100%;border-collapse:collapse}.list .t{font:700 12.5px var(--mono);color:var(--spa)}
+  .viewseg{display:inline-flex;border:1px solid var(--line-2);border-radius:9px;overflow:hidden;margin-bottom:16px;background:var(--surface);box-shadow:var(--shadow)}
+  .vseg{font:700 12.5px var(--sans);padding:9px 16px;background:var(--surface);color:var(--muted);border:0;border-right:1px solid var(--line-2);cursor:pointer}.vseg:last-child{border-right:0}.vseg.on{background:var(--spa);color:#fff}
+  .calwrap{overflow-x:auto;padding:12px 14px}
+  .cal{border-collapse:collapse;min-width:100%}
+  .cal thead th{font:700 10.5px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--faint);padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+  .cal td.rowlabel{font:700 12.5px var(--sans);padding:8px 10px;border:1px solid var(--line);white-space:nowrap;background:var(--surface-2);position:sticky;left:0}
+  .cal td.cell{border:1px solid var(--line);padding:5px;vertical-align:top;min-width:158px;cursor:pointer;position:relative}
+  .cal td.cell:hover{background:var(--surface-2)}
+  .cal td.cell.has{background:var(--spa-soft)}
+  .cal .chip b{display:block;font:700 13px var(--sans)}.cal .chip span{font-size:11.5px;color:var(--muted)}
+  .cal .x{position:absolute;top:3px;right:4px;border:0;background:none;color:var(--faint);cursor:pointer;font-size:12px}.cal .x:hover{color:var(--salmon)}
+  .cal .plus{color:var(--spa);font-weight:800}
+  .cal td.cell.edit{cursor:default;background:var(--surface)}
+  .cal td.cell.edit select{width:100%;margin-bottom:4px;font-size:12px;padding:5px 7px}
+  .cal .ce{display:flex;gap:4px}
+  .cal .mini{font:700 11px var(--sans);border:1px solid var(--line-2);background:var(--surface);border-radius:6px;padding:5px 8px;cursor:pointer;color:var(--ink)}
+  .cal .mini.save{background:var(--spa);color:#fff;border-color:var(--spa)}
+  .schema{margin-top:4px;font-size:12px;color:var(--muted);background:var(--surface);border:1px dashed var(--line-2);border-radius:10px;padding:11px 14px;line-height:1.6}
+  .schema b{color:var(--accent-deep)} .schema code{font-family:var(--mono);font-size:.9em;color:var(--ink)}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--spa);color:#fff;font:600 13px var(--sans);padding:9px 16px;border-radius:9px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s;z-index:5}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+<div class="rm"><div class="wrap">
+  <p class="eyebrow">Operate · Spa &amp; wellness</p>
+  <h1>Massage Schedule</h1>
+  <p class="lede">Book guests into therapist slots for the day and pick the <b>treatment from the Massage Menu</b>. Evening massage runs two sessions per therapist (4:40 &amp; 5:30); Day Spa is scheduled separately (it takes the guest off the boat). Bookings show on the guest's agenda, the daily report and confirmations.</p>
+
+  <div class="bar">
+    <div class="fld"><label>Package</label><select id="pkg" onchange="MS.pick()"></select></div>
+    <div class="fld"><label>Day</label><select id="date" onchange="MS.pick()"><option value="">—</option></select></div>
+    <div class="fld"><label>Therapist</label><select id="therapist" onchange="MS.pick()"><option value="">All therapists</option></select></div>
+  </div>
+
+  <div class="viewseg" id="viewseg">
+    <button class="vseg on" data-v="day" onclick="MS.setView('day')">Day schedule</button>
+    <button class="vseg" data-v="cal" onclick="MS.setView('cal')">Full package calendar</button>
+  </div>
+
+  <div id="work"></div>
+  <div class="schema">Maps to Andy's schema → massage <b>booking</b> (<code>trip_id, person, date, time, therapist_id, massage_type_id</code>) — reuses the shared bookings store so the daily report &amp; portal see it. Types from <b>massage_types</b>; therapists from the team.</div>
+</div></div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+  const PKEY='talon_packages_v1', PROF='talon_portal_profile', TEAM='talon_team_v1', TYPES='talon_massage_types_v1', BKEY='talon_bookings_v1';
+  const PKG_SEED=[{id:'sp1',series:'Standard',category:'Sportfishing',status:'published',arrival_start_date:'2027-05-24',nights:4}];
+  const EVE_TIMES=['16:40','17:30'], SPA_TIMES=['10:00','13:00'];
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1500);}
+  const parseD=s=>{const[y,m,d]=(s||'').split('-').map(Number);return new Date(y,(m||1)-1,d||1);};
+  const addDays=(s,n)=>{const dt=parseD(s);dt.setDate(dt.getDate()+n);return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');};
+  const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const fmtDW=s=>{const d=parseD(s);return DOW[d.getDay()]+' '+MO[d.getMonth()]+' '+d.getDate();};
+  const fmtT=t=>{if(!t)return '';const[h,m]=String(t).split(':').map(Number);const ap=h<12?'AM':'PM';return (h%12||12)+':'+String(m).padStart(2,'0')+' '+ap;};
+
+  function loadPkgs(){try{const p=JSON.parse(localStorage.getItem(PKEY));if(Array.isArray(p)&&p.length)return p;}catch(e){}return PKG_SEED;}
+  const PKGS=loadPkgs().filter(p=>(!p.status||p.status==='published')&&p.arrival_start_date&&p.nights).sort((a,b)=>a.arrival_start_date<b.arrival_start_date?-1:1);
+  const pkgById=id=>PKGS.find(p=>p.id===id);
+  const pkgLabel=p=>{const d=parseD(p.arrival_start_date);return MO[d.getMonth()]+' '+d.getDate()+' · '+(+p.nights)+'N · '+(p.series?p.series+' ':'')+(p.category||'Sportfishing');};
+  function stayDays(p){const out=[];for(let i=1;i<(+p.nights);i++)out.push(addDays(p.arrival_start_date,i));return out;}
+  const loadProfiles=()=>{try{return JSON.parse(localStorage.getItem(PROF))||{};}catch(e){return {};}};
+  function groupsForPkg(pkgId){const pr=loadProfiles(),out=[];Object.keys(pr).forEach(k=>{const i=k.lastIndexOf('|');if(i>0&&k.slice(i+1)===pkgId)out.push(k.slice(0,i));});return out.sort();}
+  function allGuests(){const out=[];groupsForPkg(S.pkgId).forEach(gr=>{const pr=loadProfiles();(pr[gr+'|'+S.pkgId].guests||[]).forEach(g=>{const nm=((g.first||'')+' '+(g.last||'')).trim();if(nm)out.push({group:gr,name:nm});});});return out;}
+  const loadTeam=()=>{try{return JSON.parse(localStorage.getItem(TEAM))||{};}catch(e){return {};}};
+  const therapists=()=>((loadTeam().therapists)||[]).filter(t=>t.active!==false);
+  const loadTypes=()=>{let t=null;try{t=JSON.parse(localStorage.getItem(TYPES));}catch(e){}return (Array.isArray(t)?t:[]).filter(x=>x.active!==false);};
+  const loadBook=()=>{try{return JSON.parse(localStorage.getItem(BKEY))||[];}catch(e){return [];}};
+  const saveBook=b=>{try{localStorage.setItem(BKEY,JSON.stringify(b));return true;}catch(e){toast('Could not save');return false;}};
+  const shortGroup=g=>String(g||'').replace(/\s+Group$/,'');
+
+  let S={pkgId:'',date:'',therapist:'',view:'day'}, OPEN=null;
+  function initPkg(){el('pkg').innerHTML='<option value="">Select a package…</option>'+PKGS.map(p=>`<option value="${p.id}">${esc(pkgLabel(p))}</option>`).join('');if(PKGS.length===1)el('pkg').value=PKGS[0].id;}
+  function refresh(){const p=pkgById(S.pkgId);const days=p?stayDays(p):[];el('date').innerHTML='<option value="">'+(S.pkgId?'Select a day…':'—')+'</option>'+days.map(d=>`<option value="${d}" ${d===S.date?'selected':''}>${esc(fmtDW(d))}</option>`).join('');if(!days.includes(S.date))S.date='';
+    el('therapist').innerHTML='<option value="">All therapists</option>'+therapists().map(t=>`<option value="${esc(t.id)}" ${t.id===S.therapist?'selected':''}>${esc(t.name)}</option>`).join('');if(!therapists().some(t=>t.id===S.therapist))S.therapist='';}
+
+  const cssId=s=>String(s).replace(/[^a-z0-9]/gi,'');
+  const bookingAt=(actId,therapistId,time)=>loadBook().find(b=>b.actId===actId&&b.date===S.date&&(therapistId===undefined||b.therapistId===therapistId)&&b.time===time);
+  function guestOpts(sel){return '<option value="">— guest —</option>'+allGuests().map(x=>{const v=x.group+'§'+x.name;return `<option value="${esc(v)}" ${v===sel?'selected':''}>${esc(x.name)} · ${esc(shortGroup(x.group))}</option>`;}).join('');}
+  function typeOpts(sel){const t=loadTypes();return '<option value="">— treatment —</option>'+t.map(x=>`<option value="${esc(x.name)}" ${x.name===sel?'selected':''}>${esc(x.name)} · ${x.minutes}m</option>`).join('');}
+
+  function slotHTML(actId,therapistId,time,key){
+    const b=bookingAt(actId,therapistId,time);
+    if(b){return `<div class="slot booked"><button class="rm" onclick="MS.remove(${b.id})" title="Remove">✕</button><div class="st">${esc(fmtT(time))}</div><div class="who">${esc(b.guestName||'')}</div><div class="trt">${esc(b.massageType||b.treatment||'Massage')}${b.group?' · '+esc(shortGroup(b.group)):''}</div></div>`;}
+    return `<div class="slot"><div class="st">${esc(fmtT(time))} · open</div><div class="frm"><select id="g_${key}">${guestOpts()}</select><select id="t_${key}">${typeOpts()}</select><button class="add" onclick="MS.book('${actId}','${therapistId||''}','${time}','${key}')">＋ Book</button></div></div>`;
+  }
+
+  window.MS={
+    pick(){S.pkgId=el('pkg').value;S.date=el('date').value;S.therapist=el('therapist').value;refresh();S.date=el('date').value;S.therapist=el('therapist').value;render();},
+    book(actId,therapistId,time,key){const g=el('g_'+key).value, ty=el('t_'+key).value;
+      if(!g){toast('Pick a guest');return;} if(!ty){toast('Pick a treatment');return;}
+      const[group,name]=g.split('§');const th=therapists().find(t=>t.id===therapistId);
+      const BOOK=loadBook();const id=Math.max(0,...BOOK.map(b=>b.id||0))+1;
+      BOOK.push({id,date:S.date,actId,name:actId==='dayspa'?'Day Spa':'Massage',guests:1,group,guestNames:[name],guestName:name,time,assigneeType:'therapist',therapistId:therapistId||'',assigneeName:th?th.name:'',massageType:ty,treatment:ty,guideIds:[],boatIds:[]});
+      saveBook(BOOK);render();toast(name.split(' ')[0]+' booked · '+ty);},
+    remove(id){const BOOK=loadBook().filter(b=>b.id!==id);saveBook(BOOK);render();toast('Removed');},
+    setView(v){S.view=v;OPEN=null;[...document.querySelectorAll('#viewseg .vseg')].forEach(b=>b.classList.toggle('on',b.getAttribute('data-v')===v));render();},
+    openCell(key){OPEN=key;render();},
+    closeCell(){OPEN=null;render();},
+    saveCell(actId,thId,time,date,key,existingId){
+      const g=el('cg_'+key).value, ty=el('ct_'+key).value;
+      if(!g){toast('Pick a guest');return;} if(!ty){toast('Pick a treatment');return;}
+      const[group,name]=g.split('§');const BOOK=loadBook();
+      if(existingId){const b=BOOK.find(x=>x.id===existingId);if(b){b.group=group;b.guestName=name;b.guestNames=[name];b.massageType=ty;b.treatment=ty;}}
+      else{const th=therapists().find(t=>t.id===thId);const id=Math.max(0,...BOOK.map(b=>b.id||0))+1;
+        BOOK.push({id,date,actId,name:actId==='dayspa'?'Day Spa':'Massage',guests:1,group,guestNames:[name],guestName:name,time,assigneeType:'therapist',therapistId:thId||'',assigneeName:th?th.name:'',massageType:ty,treatment:ty,guideIds:[],boatIds:[]});}
+      saveBook(BOOK);OPEN=null;render();toast('Saved');
+    }
+  };
+
+  function calCell(row,date){
+    const key=cssId(row.actId+(row.thId||'')+row.time+date);
+    const b=loadBook().find(x=>x.actId===row.actId&&x.date===date&&x.time===row.time&&(row.thId?x.therapistId===row.thId:true));
+    if(OPEN===key){
+      return `<td class="cell edit"><select id="cg_${key}">${guestOpts(b?(b.group+'§'+b.guestName):'')}</select><select id="ct_${key}">${typeOpts(b?(b.massageType||b.treatment):'')}</select><div class="ce"><button class="mini save" onclick="MS.saveCell('${row.actId}','${row.thId||''}','${row.time}','${date}','${key}',${b?b.id:'null'})">Save</button><button class="mini" onclick="MS.closeCell()">Cancel</button></div></td>`;
+    }
+    if(b){return `<td class="cell has" onclick="MS.openCell('${key}')"><button class="x" title="Delete" onclick="event.stopPropagation();MS.remove(${b.id})">✕</button><div class="chip"><b>${esc(b.guestName||'')}</b><span>${esc(b.massageType||b.treatment||'Massage')}</span></div></td>`;}
+    return `<td class="cell" onclick="MS.openCell('${key}')"><span class="plus">＋ add</span></td>`;
+  }
+  function renderCalendar(){
+    const w=el('work');const p=pkgById(S.pkgId);const days=stayDays(p);const ths=therapists().filter(t=>!S.therapist||t.id===S.therapist);const types=loadTypes();
+    if(!ths.length){w.innerHTML='<div class="panel"><div class="empty">No therapists — add them in <b>Team</b>.</div></div>';return;}
+    if(!types.length){w.innerHTML='<div class="panel"><div class="empty">No treatments — add them in <b>Massage Menu</b>.</div></div>';return;}
+    const rows=[];
+    ths.forEach(t=>EVE_TIMES.forEach(tm=>rows.push({actId:'massage',thId:t.id,time:tm,label:fmtT(tm)+' · '+t.name})));
+    if(!S.therapist)SPA_TIMES.forEach(tm=>rows.push({actId:'dayspa',thId:'',time:tm,label:fmtT(tm)+' · Day Spa'}));
+    rows.sort((a,b)=>a.time.localeCompare(b.time)||a.label.localeCompare(b.label));
+    const head='<tr><th>Time · therapist</th>'+days.map(d=>`<th>${esc(fmtDW(d))}</th>`).join('')+'</tr>';
+    const body=rows.map(r=>`<tr><td class="rowlabel">${esc(r.label)}</td>${days.map(d=>calCell(r,d)).join('')}</tr>`).join('');
+    w.innerHTML=`<div class="panel"><div class="phead"><h2>🗓️ Massage calendar</h2><span class="desc">· ${esc(pkgLabel(p))} · whole package${S.therapist?' · '+esc((ths[0]||{}).name):''} · click a cell to add or edit</span></div><div class="calwrap"><table class="cal"><thead>${head}</thead><tbody>${body}</tbody></table></div></div>`;
+  }
+
+  function render(){
+    const w=el('work');
+    if(!S.pkgId){w.innerHTML='<div class="panel"><div class="empty">Pick a <b>package</b> to schedule massage.<br><span style="font-size:12.5px">No guests? Open <b>Test data</b>. No treatments? Open <b>Massage Menu</b>.</span></div></div>';return;}
+    if(S.view==='cal')return renderCalendar();
+    if(!S.date){w.innerHTML='<div class="panel"><div class="empty">Pick a <b>day</b> for the day schedule — or switch to <b>Full package calendar</b>.</div></div>';return;}
+    return renderDay();
+  }
+  function renderDay(){
+    const w=el('work');
+    const ths=therapists().filter(t=>!S.therapist||t.id===S.therapist);const types=loadTypes();
+    let html='';
+    // evening massage per therapist
+    html+=`<div class="panel"><div class="phead"><h2>💆 Evening Massage</h2><span class="desc">· ${esc(fmtDW(S.date))} · two sessions per therapist</span></div>`;
+    if(!ths.length)html+='<div class="empty">No therapists — add them in <b>Team</b>.</div>';
+    else if(!types.length)html+='<div class="empty">No treatments — add them in <b>Massage Menu</b>.</div>';
+    else html+=ths.map(t=>`<div class="thr"><div class="tn">${esc(t.name)} <span class="cap">therapist</span></div><div class="slots">${EVE_TIMES.map(tm=>slotHTML('massage',t.id,tm,'m'+cssId(t.id)+cssId(tm))).join('')}</div></div>`).join('');
+    html+='</div>';
+    // day spa (not therapist-specific — only when viewing all)
+    if(!S.therapist)html+=`<div class="panel"><div class="phead"><h2>🧖 Day Spa</h2><span class="desc">· takes the guest off the boat · up to 2/day</span></div><div class="thr"><div class="slots">${SPA_TIMES.map((tm,i)=>slotHTML('dayspa',undefined,tm,'spa'+i)).join('')}</div></div></div>`;
+    // schedule list
+    const todays=loadBook().filter(b=>(b.actId==='massage'||b.actId==='dayspa')&&b.date===S.date&&(!S.therapist||(b.actId==='massage'&&b.therapistId===S.therapist))).sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+    html+=`<div class="panel list"><div class="phead"><h2>📋 Today's spa schedule</h2><span class="desc">· ${todays.length} booking${todays.length===1?'':'s'}</span></div><table><thead><tr><th>Time</th><th>Guest</th><th>Treatment</th><th>Therapist</th><th>Type</th></tr></thead><tbody>${todays.map(b=>`<tr><td class="t">${esc(fmtT(b.time))}</td><td>${esc(b.guestName||'')} <span style="color:var(--faint);font-size:12px">${esc(shortGroup(b.group))}</span></td><td>${esc(b.massageType||b.treatment||'Massage')}</td><td>${esc(b.assigneeName||'—')}</td><td>${b.actId==='dayspa'?'Day Spa':'Evening'}</td></tr>`).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--faint);padding:16px">No massage booked yet.</td></tr>'}</tbody></table></div>`;
+    w.innerHTML=html;
+  }
+  initPkg();S.pkgId=el('pkg').value;refresh();render();
+})();
+</script>
+</body></html>

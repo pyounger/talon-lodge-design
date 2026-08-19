@@ -1,0 +1,139 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Vendors</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 10px 26px rgba(18,42,43,.07)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413;--shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.4)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#e0b45e;--gold-soft:#2c2413}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#b9892b;--gold-soft:#f6ecd6}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.5;-webkit-font-smoothing:antialiased;padding:clamp(14px,3vw,30px)}
+  .wrap{max-width:900px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(21px,3vw,30px)/1.12 var(--sans);letter-spacing:-.02em;margin:0 0 6px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:13.5px;max-width:80ch}
+  .databar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line-2);border-radius:10px;box-shadow:var(--shadow);padding:12px 16px;margin-bottom:16px}
+  .databar .msg{font-size:12.5px;color:var(--muted);flex:1;min-width:220px}
+  .databar .msg b{color:var(--ink)}
+  .btn{font:700 12.5px var(--sans);border-radius:7px;padding:8px 13px;cursor:pointer;border:1px solid transparent}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-ghost{background:var(--surface);border-color:var(--line-2);color:var(--ink)}
+  .btn-sm{padding:6px 11px;font-size:12px}
+  .tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+  .tab{border:1px solid var(--line-2);background:var(--surface);color:var(--muted);border-radius:20px;padding:8px 15px;cursor:pointer;font:700 13px var(--sans);display:flex;align-items:center;gap:7px}
+  .tab.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .tab .n{font:700 10px var(--mono);opacity:.85}
+  .cathead{display:flex;align-items:baseline;gap:10px;margin:0 2px 12px}
+  .cathead h2{font:800 17px var(--sans);margin:0}
+  .cathead .s{font-size:12.5px;color:var(--muted)}
+  .vcard{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:14px 16px;margin-bottom:12px}
+  .vcard.off{opacity:.6}
+  .vhd{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .vhd .vn{font:800 15px var(--sans);flex:1;min-width:0}
+  .vhd .off-b{font:700 9px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);background:var(--surface-2);border:1px solid var(--line-2);border-radius:20px;padding:2px 8px}
+  .tgl{display:inline-flex;align-items:center;gap:6px;font:600 12px var(--sans);color:var(--muted);cursor:pointer}
+  .tgl input{accent-color:var(--accent);width:15px;height:15px}
+  .rm{border:0;background:none;color:var(--faint);cursor:pointer;font:700 12px var(--sans)}
+  .rm:hover{color:var(--salmon)}
+  .frm{display:grid;gap:11px}
+  .frow2{display:grid;grid-template-columns:1fr 1fr;gap:11px}@media(max-width:520px){.frow2{grid-template-columns:1fr}}
+  .fld{display:flex;flex-direction:column;gap:5px;min-width:0}
+  .fld label{font:600 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .fld input,.fld textarea{font:inherit;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:9px;padding:9px 11px;width:100%}
+  .fld textarea{min-height:44px;resize:vertical}
+  .fld input:focus,.fld textarea:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+  .addbtn{width:100%;font:700 13px var(--sans);color:var(--accent-deep);background:var(--surface);border:1px dashed var(--line-2);border-radius:12px;padding:13px;cursor:pointer}
+  .addbtn:hover{background:var(--accent-soft);border-color:var(--accent)}
+  .empty{padding:26px;text-align:center;color:var(--faint);border:1px dashed var(--line-2);border-radius:12px;margin-bottom:12px}
+  .note{font-size:12px;color:var(--faint);margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+  .note code{font-family:var(--mono);background:var(--surface-2);padding:1px 5px;border-radius:4px}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:8px;font-size:13px;opacity:0;transition:.2s;z-index:30;pointer-events:none}.toast.show{opacity:1}
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">Talon Lodge &amp; Spa · Admin</p>
+  <h1>Vendors</h1>
+  <p class="lede">Outside providers the lodge books but doesn’t employ — float-plane pilots, fish processors, ground transport.
+  The <b>Activity Approvals</b> screen assigns these vendors to guest activities (e.g. a pilot for a float-plane trip).</p>
+
+  <div class="databar">
+    <div class="msg"><b>Working copy is in this browser only.</b> Export the vendor list to hand off — that JSON seeds production.</div>
+    <button class="btn btn-primary btn-sm" onclick="VM.exportJson()">⬇ Export (vendors.json)</button>
+    <button class="btn btn-ghost btn-sm" onclick="document.getElementById('importpick').click()">⬆ Import</button>
+    <button class="btn btn-ghost btn-sm" onclick="VM.reset()">Reset</button>
+    <input type="file" id="importpick" accept="application/json,.json" style="display:none" onchange="VM.importJson(this)">
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div id="cat"></div>
+  <p class="note">Saved to <code>talon_vendors_v1</code>. Pilots here appear in the <b>Pilot · vendor</b> dropdown on the Approvals screen. Fish processing &amp; transport are captured now for the guest portal and ops later.</p>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1700);}
+  const uid=p=>(p||'v')+Math.random().toString(36).slice(2,8);
+
+  const KEY='talon_vendors_v1';
+  const CATS=[
+    {key:'pilots',label:'Float Plane Pilots',icon:'🛩️',sub:'External air-charter operators — assigned to float-plane activities.',aircraft:true},
+    {key:'processors',label:'Fish Processing',icon:'🐟',sub:'Fish processing, packing &amp; shipping vendors.'},
+    {key:'transport',label:'Ground Transport',icon:'🚐',sub:'Airport &amp; town transfers.'}
+  ];
+  const SEED={
+    pilots:[
+      {id:'p1',company:'Sitka Air',contact:'Capt. Reyes',phone:'907-555-0142',email:'ops@sitkaair.example',aircraft:'DHC-2 Beaver',notes:'',active:true},
+      {id:'p2',company:'Harris Aircraft',contact:'Capt. Dunn',phone:'907-555-0197',email:'dispatch@harrisair.example',aircraft:'DHC-3 Otter',notes:'',active:true}
+    ],
+    processors:[], transport:[]
+  };
+  const vname=v=>(v.company?v.company+(v.contact?' · '+v.contact:''):(v.contact||'New vendor'));
+
+  let V;
+  function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){V={};CATS.forEach(c=>V[c.key]=Array.isArray(s[c.key])?s[c.key]:[]);return;}}catch(e){}
+    V=JSON.parse(JSON.stringify(SEED));persist();}
+  function persist(){const out={schema:'talon.vendors.v1',property_slug:'talon-lodge'};CATS.forEach(c=>out[c.key]=(V[c.key]||[]).map(v=>Object.assign({},v,{name:vname(v)})));try{localStorage.setItem(KEY,JSON.stringify(out));}catch(e){}}
+
+  let TAB='pilots';
+  function renderTabs(){el('tabs').innerHTML=CATS.map(c=>`<button class="tab ${TAB===c.key?'on':''}" onclick="VM.tab('${c.key}')">${c.icon} ${c.label} <span class="n">${(V[c.key]||[]).length}</span></button>`).join('');}
+  function vcard(cat,v){const c=CATS.find(x=>x.key===cat);
+    return `<div class="vcard ${v.active===false?'off':''}">
+      <div class="vhd"><span class="vn">${esc(vname(v))}</span>${v.active===false?'<span class="off-b">Inactive</span>':''}
+        <label class="tgl"><input type="checkbox" ${v.active!==false?'checked':''} onchange="VM.field('${cat}','${v.id}','active',this.checked)"> Active</label>
+        <button class="rm" onclick="VM.remove('${cat}','${v.id}')" title="Remove vendor">Remove ✕</button></div>
+      <div class="frm">
+        <div class="frow2">
+          <div class="fld"><label>Company / operator</label><input value="${esc(v.company)}" placeholder="e.g. Sitka Air" oninput="VM.field('${cat}','${v.id}','company',this.value)" onchange="VM.refresh()"></div>
+          <div class="fld"><label>Contact${cat==='pilots'?' / pilot':''}</label><input value="${esc(v.contact)}" placeholder="${cat==='pilots'?'e.g. Capt. Reyes':'Contact name'}" oninput="VM.field('${cat}','${v.id}','contact',this.value)" onchange="VM.refresh()"></div>
+        </div>
+        <div class="frow2">
+          <div class="fld"><label>Phone</label><input value="${esc(v.phone)}" placeholder="Phone" oninput="VM.field('${cat}','${v.id}','phone',this.value)"></div>
+          <div class="fld"><label>Email</label><input type="email" value="${esc(v.email)}" placeholder="Email" oninput="VM.field('${cat}','${v.id}','email',this.value)"></div>
+        </div>
+        ${c&&c.aircraft?`<div class="fld"><label>Aircraft</label><input value="${esc(v.aircraft)}" placeholder="e.g. DHC-2 Beaver (float)" oninput="VM.field('${cat}','${v.id}','aircraft',this.value)"></div>`:''}
+        <div class="fld"><label>Notes</label><textarea placeholder="Insurance, capacity, seasonal availability…" oninput="VM.field('${cat}','${v.id}','notes',this.value)">${esc(v.notes)}</textarea></div>
+      </div></div>`;}
+  function render(){
+    renderTabs();
+    const c=CATS.find(x=>x.key===TAB);const list=V[TAB]||[];
+    el('cat').innerHTML=`<div class="cathead"><h2>${c.icon} ${c.label}</h2><span class="s">${c.sub}</span></div>`
+      +(list.length?list.map(v=>vcard(TAB,v)).join(''):`<div class="empty">No ${c.label.toLowerCase()} yet.</div>`)
+      +`<button class="addbtn" onclick="VM.add('${TAB}')">＋ Add ${TAB==='pilots'?'a pilot':'a vendor'}</button>`;
+  }
+
+  window.VM={
+    tab(k){TAB=k;render();},
+    refresh(){render();},
+    field(cat,id,key,val){const v=(V[cat]||[]).find(x=>x.id===id);if(v){v[key]=val;persist();}},
+    add(cat){(V[cat]=V[cat]||[]).push({id:uid(cat[0]),company:'',contact:'',phone:'',email:'',aircraft:'',notes:'',active:true});persist();render();},
+    remove(cat,id){if(!confirm('Remove this vendor?'))return;V[cat]=(V[cat]||[]).filter(x=>x.id!==id);persist();render();toast('Vendor removed');},
+    exportJson(){persist();const doc={schema:'talon.vendors.v1',property_slug:'talon-lodge'};CATS.forEach(c=>doc[c.key]=(V[c.key]||[]).map(v=>Object.assign({},v,{name:vname(v)})));
+      const blob=new Blob([JSON.stringify(doc,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='vendors.json';a.click();toast('Exported vendors.json');},
+    importJson(input){const f=input.files&&input.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const s=JSON.parse(r.result);V={};CATS.forEach(c=>V[c.key]=Array.isArray(s[c.key])?s[c.key]:[]);persist();render();toast('Imported vendors');}catch(e){toast('Could not read that file');}input.value='';};r.readAsText(f);},
+    reset(){if(!confirm('Reset to the built-in seed vendors? Your working copy is replaced.'))return;localStorage.removeItem(KEY);load();render();toast('Reset to seed');}
+  };
+  load();render();
+})();
+</script>
+</body></html>
