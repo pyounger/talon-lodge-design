@@ -301,7 +301,7 @@
   const saveProf=()=>{try{localStorage.setItem(PROF_KEY,JSON.stringify(PROFS));}catch(e){}};
   const profKey=()=>trip.group+'|'+trip.pkgId;
   const genId=()=>'g'+Math.random().toString(36).slice(2,9);
-  const newGuest=o=>Object.assign({id:genId(),first:'',last:'',email:'',phone:'',country:'United States',state:'',city:'',zip:'',addr1:'',addr2:'',boot:'',jacket:'',access:'invite',invite:'none',age:'',gender:'',allergyHas:'',allergies:'',medicalHas:'',medical:'',eventHas:'',eventDesc:'',emerName:'',emerPhone:'',emerRel:'',license:null},o||{});
+  const newGuest=o=>Object.assign({id:genId(),first:'',last:'',email:'',commsEmail:'',phone:'',country:'United States',state:'',city:'',zip:'',addr1:'',addr2:'',boot:'',jacket:'',access:'invite',invite:'none',age:'',gender:'',allergyHas:'',allergies:'',medicalHas:'',medical:'',eventHas:'',eventDesc:'',emerName:'',emerPhone:'',emerRel:'',license:null},o||{});
   function curProfile(){
     let pr=PROFS[profKey()];
     if(!pr||typeof pr!=='object'){pr={guests:[],flights:{arr:{},dep:{}},fish:{}};PROFS[profKey()]=pr;}
@@ -485,6 +485,33 @@
         <label><input type="radio" name="${key}_${g.id}" ${has==='no'?'checked':''} onchange="P.qset('${g.id}','${hasField}','${descField}','no')"> No</label></div>
       ${box}</div>`;
   }
+  // ---- Communications routing (group default + per-guest override) ----
+  function commsDefault(g,pr){const c=pr.comms||{};if(c.mode==='lead'){const L=pr.guests.find(x=>x.isLead);return (L&&L.email||'').trim();}if(c.mode==='planner')return (c.plannerEmail||'').trim();return (g.email||'').trim();}
+  function commsFor(g,pr){return (g.commsEmail&&g.commsEmail.trim())?g.commsEmail.trim():commsDefault(g,pr);}
+  function commsCard(pr){
+    const c=pr.comms=pr.comms||{mode:'each',plannerName:'',plannerEmail:''};
+    const lead=pr.guests.find(g=>g.isLead)||pr.guests[0];const leadMail=(lead&&lead.email||'').trim();
+    const opt=(val,label,sub)=>`<label class="cmo ${c.mode===val?'on':''}"><input type="radio" name="cmode" ${c.mode===val?'checked':''} onchange="P.commsMode('${val}')"><span><b>${label}</b>${sub?`<br><span class="chint">${sub}</span>`:''}</span></label>`;
+    let dest;
+    if(c.mode==='lead')dest=leadMail?`<b>${esc(leadMail)}</b> — the group lead`:'<span class="cwarn">add the group lead’s email below</span>';
+    else if(c.mode==='planner')dest=(c.plannerEmail||'').trim()?`<b>${esc(c.plannerEmail.trim())}</b>${c.plannerName?' · '+esc(c.plannerName):''} — event planner`:'<span class="cwarn">enter the planner’s email</span>';
+    else dest='each guest’s own email';
+    return `<div class="card"><style>
+        .cmo{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line-2,#d8d8d8);border-radius:10px;margin-bottom:8px;cursor:pointer;font:600 13px var(--sans)}
+        .cmo.on{border-color:var(--accent,#0e7c6f);background:var(--accent-soft,#e8f3f0)}
+        .cmo input{margin-top:3px;accent-color:var(--accent,#0e7c6f)}
+        .chint{font:500 11.5px var(--sans);color:var(--muted,#667)}
+        .cwarn{color:var(--salmon,#c25e39);font-weight:700}
+        .cdest{margin-top:6px;padding:9px 12px;border-radius:8px;background:var(--accent-soft,#e8f3f0);font:600 13px var(--sans);color:var(--ink,#1a2b28)}
+      </style>
+      <h2>📣 Group communications</h2>
+      <p class="fhint" style="margin:-4px 0 12px">Where should trip communications — itineraries, reminders, invoices — be sent? This sets the default for everyone; you can still override any single guest on their own profile.</p>
+      ${opt('each','Each guest’s own email','The standard — every guest hears from us directly.')}
+      ${opt('lead','Send everything to me (group lead)',leadMail?esc(leadMail):'Add your email on your profile below first.')}
+      ${opt('planner','Send everything to an event planner','A travel agent or assistant coordinating the group.')}
+      ${c.mode==='planner'?`<div class="frow2" style="margin:2px 0 4px"><div class="fg"><label>Planner name</label><input value="${esc(c.plannerName)}" placeholder="Full name" oninput="P.commsSet('plannerName',this.value)"></div><div class="fg"><label>Planner email</label><input type="email" value="${esc(c.plannerEmail)}" placeholder="planner@example.com" oninput="P.commsSet('plannerEmail',this.value)"></div></div>`:''}
+      <div class="cdest">All group communications will go to: ${dest}</div></div>`;
+  }
   function guestCard(g,i,lead,forceFull){
     const isLead=!!g.isLead;const access=isLead?'self':(g.access||'invite');const full=forceFull||isLead||access==='managed';
     const nm=isLead?(esc((g.first+' '+g.last).trim())||'Group lead'):guestLabel(g,i);
@@ -498,6 +525,10 @@
         <input type="email" value="${esc(g.email)}" placeholder="${isLead?'you@example.com':access==='invite'?'guest@example.com — needed to invite':'email (optional — you can use yours)'}" oninput="P.gset('${g.id}','email',this.value)">
         ${isLead?'':`<button type="button" class="leadmail" onclick="P.useLeadEmail('${g.id}')">↳ Use group lead email</button><span class="fhint">A child without their own email can share the group lead’s.</span>`}</div>`;
     if(full){
+      const cdef=commsDefault(g,curProfile());
+      f+=`<div class="fg"><label>Communications email</label>
+        <input type="email" value="${esc(g.commsEmail||'')}" placeholder="${esc(cdef||'their own email')}" oninput="P.gset('${g.id}','commsEmail',this.value)">
+        <span class="fhint">Where <b>this guest’s</b> trip communications are sent. Leave blank to use the group default${g.commsEmail?' — currently overridden just for this guest':''}.</span></div>`;
       f+=`<div class="fg"><label>Phone</label><input value="${esc(g.phone)}" placeholder="(555) 123-4567" oninput="P.gset('${g.id}','phone',this.value)"></div>
         <h4 class="subhd">Mailing address</h4>
         <div class="frow2">
@@ -561,6 +592,7 @@
     }
     el('view').innerHTML=DETAILS_CSS+backBar('Guest Details','Choose who gets their own portal and who you’ll manage — and track everyone’s progress.')
       +progressPanel(pr)
+      +commsCard(pr)
       +`<h3 class="sec">Your guest list</h3>`
       +`<div class="cards">${pr.guests.map((g,i)=>guestCard(g,i,lead)).join('')}</div>`
       +`<div class="card addrow"><div class="ghd"><span class="gn">Add a guest</span></div>
@@ -702,6 +734,8 @@
     markReg(id){const pr=curProfile(),g=pr.guests.find(x=>x.id===id);if(g){g.invite='registered';saveProf();renderView();toast((g.first||'Guest')+' registered (simulated)');}},
     removeGuest(id){const pr=curProfile(),g=pr.guests.find(x=>x.id===id);if(!g||g.isLead)return;pr.guests=pr.guests.filter(x=>x.id!==id);saveProf();renderView();toast('Guest removed');},
     useLeadEmail(id){const pr=curProfile(),lead=pr.guests.find(g=>g.isLead),g=pr.guests.find(x=>x.id===id);if(lead&&g){g.email=lead.email||'';saveProf();renderView();}},
+    commsMode(mode){const pr=curProfile();(pr.comms=pr.comms||{mode:'each',plannerName:'',plannerEmail:''}).mode=mode;saveProf();renderView();},
+    commsSet(field,val){const pr=curProfile();const c=pr.comms=pr.comms||{mode:'planner',plannerName:'',plannerEmail:''};c[field]=val;saveProf();const d=document.querySelector('.cdest');if(d){const em=(c.plannerEmail||'').trim();d.innerHTML='All group communications will go to: '+(em?'<b>'+esc(em)+'</b>'+(c.plannerName?' · '+esc(c.plannerName):'')+' — event planner':'<span class="cwarn">enter the planner’s email</span>');}},
     // flights
     fset(leg,field,val){const pr=curProfile();(pr.flights[leg]=pr.flights[leg]||{})[field]=val;saveProf();},
     // fishing license

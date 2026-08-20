@@ -122,13 +122,15 @@ of a type, with a JSON `properties` bag for type-specific detail. A new offering
 ---
 
 ## E. Groups · Trips · Profiles · Scheduling
-**groups** — the roster for **one** trip · `property_id`?→properties · `name`? · `lead_person_id`?→persons · `booking_agent_name/email/phone/agency`? *(agent, not a person)* · `copied_from_group_id`?→groups *(repeat visit = copy)*
+**groups** — the roster for **one** trip · `property_id`?→properties · `name`? · `lead_person_id`?→persons · `booking_agent_name/email/phone/agency`? *(agent, not a person)* · `communications_mode` (each|lead|agent) default `each` *(group-wide comms routing — see note)* · `copied_from_group_id`?→groups *(repeat visit = copy)*
 **group_persons** — membership · `group_id`→groups · `person_id`→persons · `role` (lead|member) · uq(group,person)
 **trips** — the dated booking (**1:1 with group**) · `group_id`→groups **uq** · `property_id`?→properties · `package_id`?→packages · `arrival_date`? · `departure_date`? · `nights`? · `status` (inquiry|booked|in_progress|completed|cancelled)
 **trip_profiles** — one per person per trip; **structured core + `details` JSON** (copied forward)
 `trip_id`→trips · `person_id`→persons · `copied_from_profile_id`?→trip_profiles · `version` int *(1,2,3… across copy-forwards)*
-core: `arrival_mode`? · `arrival_flight_no`? · `arrival_time`? · `depart_transfer_time`? · `depart_flight_no`? · `depart_flight_time`? · `emergency_contact_name/phone`?
+core: `arrival_mode`? · `arrival_flight_no`? · `arrival_time`? · `depart_transfer_time`? · `depart_flight_no`? · `depart_flight_time`? · `emergency_contact_name/phone`? · `communications_email`? *(per-guest override; null → group routing)*
 `details` **JSON** *(the variable tail — boot/jacket size, allergies-as-of-trip, medical, special-event, per-property custom fields)* · uq(trip_id,person_id)
+
+> **Communications routing.** Every guest has an effective comms address, resolved as: `trip_profiles.communications_email` if set → else by `groups.communications_mode` — `each` = the person's own email, `lead` = the lead person's email, `agent` = `groups.booking_agent_email` (the event planner / travel agent). Itineraries, reminders, and invoices all send to the resolved address; respect `persons.do_not_email`.
 **assignments** — the **one scheduler**: person + asset + date (replaces day-assignments, breakfast_orders, spa_appointments, activity scheduling)
 `trip_id`→trips · `person_id`→persons · `asset_id`→assets · `assignment_date` date · `status` (requested|confirmed) · `details` **JSON** *(type-specific — massage length, breakfast items, fish caught `{species,weight,count}`…)* · idx(asset_id,assignment_date)
 **stay_media** — guest uploads + stay photos/videos (object storage) · `trip_id`→trips · `person_id`?→persons · `kind` (fishing_license|photo|video|document) · `url` · `caption`? · `uploaded_by` (guest|staff) · `available_for_download` bool
