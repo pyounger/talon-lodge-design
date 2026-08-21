@@ -1,0 +1,201 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Package Guest List</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--gold:#b9892b;--gold-soft:#f6ecd6;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 22px rgba(18,42,43,.06)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--gold:#e0b45e;--gold-soft:#2c2413;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--gold:#e0b45e}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--gold:#b9892b}
+  *{box-sizing:border-box}
+  .rm{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(12px,3vw,26px);-webkit-font-smoothing:antialiased}
+  .rm .wrap{max-width:1180px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(20px,3vw,28px)/1.1 var(--sans);letter-spacing:-.02em;margin:0 0 4px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:13.5px;max-width:90ch}
+  .bar{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);padding:12px 14px;margin-bottom:14px}
+  .fld{display:flex;flex-direction:column;gap:5px}.fld label{font:700 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  select,input.search,input.tin,textarea.tin{font:600 13.5px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:8px 10px}
+  input.search{min-width:180px}
+  select:focus,input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+  .addbtn{margin-left:auto;font:700 13px var(--sans);color:#fff;background:var(--accent);border:0;border-radius:9px;padding:10px 15px;cursor:pointer;align-self:flex-end}
+  .addbtn:hover{filter:brightness(1.05)}
+  .stat{font:600 12.5px var(--sans);color:var(--muted);margin:0 0 10px}.stat b{color:var(--accent-deep)}
+  .tblwrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow)}
+  table.gl{width:100%;border-collapse:collapse;min-width:820px}
+  table.gl th{font:700 10.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);text-align:left;padding:11px 14px;border-bottom:1px solid var(--line)}
+  table.gl td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top;font-size:13.5px}
+  table.gl tr:last-child td{border-bottom:0}
+  table.gl tr:hover td{background:var(--surface-2)}
+  .gnm{font-weight:800}
+  .lead{font:800 9px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent-deep);background:var(--accent-soft);border-radius:20px;padding:2px 7px;margin-left:6px;vertical-align:middle}
+  .grpcell{font:700 12px var(--mono);color:var(--muted)}
+  .sub2{color:var(--muted);font-size:12px}
+  .editb{font:700 12px var(--sans);border:1px solid var(--line-2);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 12px;cursor:pointer}
+  .editb:hover{border-color:var(--accent);color:var(--accent-deep)}
+  .empty{padding:34px 16px;text-align:center;color:var(--muted);font-size:14px}
+  .schema{margin-top:16px;font-size:12px;color:var(--muted);background:var(--surface);border:1px dashed var(--line-2);border-radius:10px;padding:11px 14px;line-height:1.6}
+  .schema b{color:var(--accent-deep)} .schema code{font-family:var(--mono);font-size:.9em;color:var(--ink)}
+  /* repeat badge + years modal */
+  .rbadge{display:inline-block;font:800 10.5px var(--mono);letter-spacing:.02em;border:0;border-radius:20px;padding:3px 8px;cursor:pointer;background:var(--gold);color:#3a2a06;vertical-align:middle;margin-left:6px}
+  .rbadge:hover{filter:brightness(1.06)}
+  .rbadge.new{background:var(--surface-2);color:var(--muted);cursor:default;font-weight:700}
+  .modal{position:fixed;inset:0;background:rgba(10,20,19,.5);display:none;align-items:center;justify-content:center;z-index:20;padding:20px}
+  .modal.on{display:flex}
+  .rgbox{background:var(--surface);border:1px solid var(--line-2);border-radius:14px;box-shadow:var(--shadow);max-width:360px;width:100%;padding:18px 20px}
+  .rgbox h3{margin:0 0 2px;font:800 16px var(--sans)}.rgbox .sub{color:var(--muted);font-size:12.5px;margin:0 0 12px}
+  .rgyears{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .rgyear{font:700 13px var(--mono);background:var(--accent-soft);color:var(--accent-deep);border-radius:8px;padding:6px 11px}
+  .rgclose{font:700 13px var(--sans);border:1px solid var(--line-2);background:var(--surface);border-radius:9px;padding:8px 14px;cursor:pointer;color:var(--ink)}
+  .ebox{background:var(--surface);border:1px solid var(--line-2);border-radius:16px;box-shadow:var(--shadow);max-width:560px;width:100%;max-height:90vh;overflow:auto;padding:20px 22px}
+  .ebox h3{margin:0 0 14px;font:800 18px var(--sans)}
+  .erow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+  @media(max-width:520px){.erow{grid-template-columns:1fr}}
+  .ef{display:flex;flex-direction:column;gap:4px}
+  .ef label{font:700 10px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+  .ef input,.ef select,.ef textarea{font:600 13.5px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:8px 10px;width:100%}
+  .ef.full{grid-column:1/-1}
+  .echk{display:flex;align-items:center;gap:8px;font:600 13px var(--sans);cursor:pointer}
+  .echk input{width:16px;height:16px;accent-color:var(--accent)}
+  .efoot{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+  .btn{font:700 13px var(--sans);border-radius:9px;padding:9px 16px;cursor:pointer;border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--accent-deep);color:#fff;font:600 13px var(--sans);padding:9px 16px;border-radius:9px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s;z-index:30}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+<div class="rm"><div class="wrap">
+  <p class="eyebrow">Operate · Roster</p>
+  <h1>Package Guest List</h1>
+  <p class="lede">Every guest booked on a package, across all groups — with a repeat-guest badge (<b>R4</b> = four stays; click it for the years). View, edit, or add guest details in one place.</p>
+
+  <div class="bar">
+    <div class="fld"><label>Package</label><select id="pkg" onchange="GL.pick()"></select></div>
+    <div class="fld"><label>Group</label><select id="grp" onchange="GL.render()"><option value="">All groups</option></select></div>
+    <div class="fld"><label>Search</label><input class="search" id="search" placeholder="Name, email, city…" oninput="GL.render()"></div>
+    <button class="addbtn" onclick="GL.addNew()">＋ Add guest</button>
+  </div>
+  <div class="stat" id="stat"></div>
+  <div class="tblwrap" id="tblwrap"></div>
+  <div class="schema">Maps to Andy's schema → guests are <b>persons</b> linked to this trip via <b>group_persons</b> + <b>trip_profiles</b>. The repeat count &amp; years come from the <b>person's</b> stay history (all trips that resolved to the same person via matching) — <code>R&lt;n&gt;</code> = distinct stay years. Editing here writes the trip profile; identity stays on the person.</div>
+</div></div>
+<div class="toast" id="toast"></div>
+<div class="modal" id="rgmodal" onclick="if(event.target===this)GL.rgClose()"><div class="rgbox" id="rgbox"></div></div>
+<div class="modal" id="emodal" onclick="if(event.target===this)GL.eClose()"><div class="ebox" id="ebox"></div></div>
+<script>
+(function(){
+  const PKEY='talon_packages_v1', PROF='talon_portal_profile';
+  const PKG_SEED=[{id:'sp1',series:'Standard',category:'Sportfishing',status:'published',arrival_start_date:'2027-05-24',nights:4}];
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const jesc=s=>String(s==null?'':s).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),1500);}
+
+  function loadPkgs(){try{const p=JSON.parse(localStorage.getItem(PKEY));if(Array.isArray(p)&&p.length)return p;}catch(e){}return PKG_SEED;}
+  const PKGS=loadPkgs().filter(p=>(!p.status||p.status==='published')&&p.arrival_start_date).sort((a,b)=>a.arrival_start_date<b.arrival_start_date?-1:1);
+  const parseD=s=>{const[y,m,d]=(s||'').split('-').map(Number);return new Date(y,(m||1)-1,d||1);};
+  const MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const pkgLabel=p=>{const d=parseD(p.arrival_start_date);return MO[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear()+' · '+(p.series?p.series+' ':'')+(p.category||'Sportfishing');};
+  const loadProfiles=()=>{try{return JSON.parse(localStorage.getItem(PROF))||{};}catch(e){return {};}};
+  const saveProfiles=pr=>{try{localStorage.setItem(PROF,JSON.stringify(pr));return true;}catch(e){toast('Could not save');return false;}};
+  function groupsForPkg(pkgId){const pr=loadProfiles(),out=[];Object.keys(pr).forEach(k=>{const i=k.lastIndexOf('|');if(i>0&&k.slice(i+1)===pkgId)out.push(k.slice(0,i));});return out.sort();}
+  const shortGroup=g=>String(g||'').replace(/\s+Group$/,'');
+  function personKey(g){const e=(g.email||'').trim().toLowerCase();if(/.+@.+\..+/.test(e))return 'e:'+e;return 'n:'+((g.first||'')+' '+(g.last||'')).trim().toLowerCase().replace(/\s+/g,' ');}
+
+  // ---- Repeat-guest identifier (shared store talon_stay_history_v1) ----
+  const HIST_KEY='talon_stay_history_v1';
+  const HIST_SEED={'e:phil@talonlodge.com':[2018,2020,2022,2024],'e:crm.alaska@pm.me':[2021,2023,2025],'e:klm63.alaska@pm.me':[2022,2024],'e:bob@bobgomezgroup.com':[2019,2024],'e:teresagaines20@gmail.com':[2021,2022,2024,2025],'e:kkdvm77@gmail.com':[2020,2023],'e:tim@mcfarlandmachine.com':[2017,2019,2021,2023,2025],'e:dmr1914@gmail.com':[2023,2025]};
+  function loadHistory(){let h;try{h=JSON.parse(localStorage.getItem(HIST_KEY));}catch(e){}if(!h||typeof h!=='object'){h=JSON.parse(JSON.stringify(HIST_SEED));try{localStorage.setItem(HIST_KEY,JSON.stringify(h));}catch(e){}}return h;}
+  function repeatInfo(g){const years=[...new Set((loadHistory()[personKey(g)]||[]).map(Number))].sort((a,b)=>a-b);return {count:years.length,years};}
+  function repeatBadge(g){const r=repeatInfo(g);const nm=((g.first||'')+' '+(g.last||'')).trim();
+    if(r.count>=2)return `<button class="rbadge" title="Repeat guest — ${r.count} stays" onclick="GL.rgShow('${jesc(nm)}','${r.years.join(',')}')">R${r.count}</button>`;
+    return `<span class="rbadge new" title="First recorded stay">New</span>`;}
+
+  let S={pkgId:''};
+  const EDIT={mode:'',group:'',idx:-1};
+  function initPkg(){el('pkg').innerHTML='<option value="">Select a package…</option>'+PKGS.map(p=>`<option value="${p.id}">${esc(pkgLabel(p))}</option>`).join('');if(PKGS.length===1)el('pkg').value=PKGS[0].id;}
+  function refreshGroups(){const grps=S.pkgId?groupsForPkg(S.pkgId):[];const cur=el('grp').value;el('grp').innerHTML='<option value="">All groups</option>'+grps.map(g=>`<option ${g===cur?'selected':''}>${esc(g)}</option>`).join('');}
+  function rows(){const pr=loadProfiles();const only=el('grp').value;const grps=only?[only]:groupsForPkg(S.pkgId);const out=[];
+    grps.forEach(gr=>{const arr=(pr[gr+'|'+S.pkgId]&&pr[gr+'|'+S.pkgId].guests)||[];arr.forEach((g,idx)=>out.push({group:gr,idx,g}));});
+    return out;}
+
+  window.GL={
+    pick(){S.pkgId=el('pkg').value;refreshGroups();GL.render();},
+    render(){
+      const wrap=el('tblwrap');
+      if(!S.pkgId){wrap.innerHTML='<div class="empty">Pick a package to see its guest list.</div>';el('stat').textContent='';return;}
+      let list=rows();const grpCount=new Set(list.map(x=>x.group)).size;
+      const q=(el('search').value||'').trim().toLowerCase();
+      if(q)list=list.filter(x=>{const g=x.g;return((g.first||'')+' '+(g.last||'')+' '+(g.email||'')+' '+(g.city||'')+' '+(g.state||'')+' '+x.group).toLowerCase().includes(q);});
+      el('stat').innerHTML=`<b>${list.length}</b> guest${list.length===1?'':'s'} · <b>${grpCount}</b> group${grpCount===1?'':'s'} on this package`;
+      if(!list.length){wrap.innerHTML='<div class="empty">No guests match. Add one with ＋ Add guest, or load <b>Test data</b> for a roster.</div>';return;}
+      list.sort((a,b)=>a.group.localeCompare(b.group)||String(a.g.last||'').localeCompare(String(b.g.last||'')));
+      const body=list.map(x=>{const g=x.g;const nm=((g.first||'')+' '+(g.last||'')).trim();
+        return `<tr>
+          <td><span class="gnm">${esc(nm)||'—'}</span>${g.lead?'<span class="lead">Lead</span>':''}${repeatBadge(g)}</td>
+          <td class="grpcell">${esc(shortGroup(x.group))}</td>
+          <td>${g.email?esc(g.email):'<span class="sub2">—</span>'}<div class="sub2">${esc(g.phone||'')}</div></td>
+          <td>${esc([g.city,g.state].filter(Boolean).join(', ')||'—')}</td>
+          <td>${esc(g.room||'—')}</td>
+          <td><button class="editb" onclick="GL.edit('${jesc(x.group)}',${x.idx})">View / edit</button></td>
+        </tr>`;}).join('');
+      wrap.innerHTML=`<table class="gl"><thead><tr><th>Guest</th><th>Group</th><th>Contact</th><th>Location</th><th>Room</th><th></th></tr></thead><tbody>${body}</tbody></table>`;
+    },
+    rgShow(name,csv){const years=csv?csv.split(','):[];el('rgbox').innerHTML=`<h3>${esc(name)}</h3><p class="sub">Repeat guest · ${years.length} stay${years.length===1?'':'s'} at Talon Lodge</p><div class="rgyears">${years.map(y=>`<span class="rgyear">${esc(y)}</span>`).join('')}</div><button class="rgclose" onclick="GL.rgClose()">Close</button>`;el('rgmodal').classList.add('on');},
+    rgClose(){el('rgmodal').classList.remove('on');},
+    edit(group,idx){const pr=loadProfiles();const g=((pr[group+'|'+S.pkgId]||{}).guests||[])[idx]||{};EDIT.mode='edit';EDIT.group=group;EDIT.idx=idx;GL.openForm(g,group);},
+    addNew(){if(!S.pkgId){toast('Pick a package first');return;}EDIT.mode='new';EDIT.group='';EDIT.idx=-1;GL.openForm({},'');},
+    openForm(g,group){
+      const grps=groupsForPkg(S.pkgId);
+      const grpField=EDIT.mode==='new'
+        ? `<div class="ef full"><label>Group</label><select id="e_group">${grps.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}${grps.length?'':'<option value="">— none yet —</option>'}</select></div>`
+        : `<div class="ef full"><label>Group</label><input class="tin" value="${esc(group)}" disabled></div>`;
+      el('ebox').innerHTML=`<h3>${EDIT.mode==='new'?'Add guest':'Guest details'}</h3>
+        <div class="erow">
+          <div class="ef"><label>First name</label><input id="e_first" value="${esc(g.first||'')}"></div>
+          <div class="ef"><label>Last name</label><input id="e_last" value="${esc(g.last||'')}"></div>
+        </div>
+        <div class="erow">
+          <div class="ef"><label>Email</label><input id="e_email" type="email" value="${esc(g.email||'')}"></div>
+          <div class="ef"><label>Phone</label><input id="e_phone" value="${esc(g.phone||'')}"></div>
+        </div>
+        <div class="erow">
+          <div class="ef"><label>City</label><input id="e_city" value="${esc(g.city||'')}"></div>
+          <div class="ef"><label>State</label><input id="e_state" value="${esc(g.state||'')}"></div>
+        </div>
+        <div class="erow">
+          <div class="ef"><label>Age</label><input id="e_age" value="${esc(g.age||'')}"></div>
+          <div class="ef"><label>Room</label><input id="e_room" value="${esc(g.room||'')}"></div>
+        </div>
+        <div class="erow">
+          <div class="ef"><label>Boot size</label><input id="e_boot" value="${esc(g.boot||'')}"></div>
+          <div class="ef"><label>Jacket size</label><input id="e_jacket" value="${esc(g.jacket||'')}"></div>
+        </div>
+        <div class="erow">
+          <div class="ef full"><label>Dietary / notes</label><textarea id="e_diet" rows="2">${esc(g.diet||'')}</textarea></div>
+        </div>
+        <div class="erow">${grpField}
+          <div class="ef"><label>&nbsp;</label><label class="echk"><input type="checkbox" id="e_lead" ${g.lead?'checked':''}> Group lead</label></div>
+        </div>
+        <div class="efoot">
+          <button class="btn" onclick="GL.eClose()">Cancel</button>
+          <button class="btn primary" onclick="GL.save()">${EDIT.mode==='new'?'Add guest':'Save changes'}</button>
+        </div>`;
+      el('emodal').classList.add('on');
+    },
+    eClose(){el('emodal').classList.remove('on');},
+    save(){
+      const v=id=>((el('e_'+id)||{}).value||'').trim();
+      const rec={first:v('first'),last:v('last'),email:v('email'),phone:v('phone'),city:v('city'),state:v('state'),age:v('age'),room:v('room'),boot:v('boot'),jacket:v('jacket'),diet:v('diet'),lead:!!(el('e_lead')&&el('e_lead').checked)};
+      if(!rec.first&&!rec.last){toast('Enter a name');return;}
+      const pr=loadProfiles();
+      if(EDIT.mode==='new'){
+        const grp=(el('e_group')||{}).value||'';
+        if(!grp){toast('Choose a group');return;}
+        const k=grp+'|'+S.pkgId;pr[k]=pr[k]||{guests:[]};pr[k].guests=pr[k].guests||[];
+        rec.id='g'+Date.now().toString(36);pr[k].guests.push(rec);
+      }else{
+        const k=EDIT.group+'|'+S.pkgId;const g=((pr[k]||{}).guests||[])[EDIT.idx];if(!g){toast('Guest not found');return;}Object.assign(g,rec);
+      }
+      if(saveProfiles(pr)){GL.eClose();refreshGroups();GL.render();toast('Saved');}
+    }
+  };
+  initPkg();S.pkgId=el('pkg').value;refreshGroups();GL.render();
+})();
+</script>
+</body></html>
