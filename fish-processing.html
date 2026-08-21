@@ -129,7 +129,7 @@
 
   <div id="work"></div>
 
-  <div class="schema">Maps to Andy's schema → <b>fish_catch</b> (<code>trip_id, group, catch_date, species_id, count, avg_weight, recovery_pct</code>) + <b>fish_catch_split</b> (<code>catch_date, share_index, person_id, lbs</code>). Every share row references a <code>person</code> — the catch funnels to the individual.</div>
+  <div class="schema">Maps to Andy's schema → <b>fish_catch</b> (<code>trip_id, group, catch_date, species_id, count, avg_weight, recovery_pct</code>) + <b>fish_catch_split</b> (<code>catch_date, share_index, person_id, lbs</code>) + <b>fish_processing</b> (<code>trip_id, person_id, ship_method (carryon|fedex|none), fedex_date, smoke, note</code>) + <b>fish_payment</b> (<code>trip_id, payer_person_id, stripe_payment_method_id</code> — no PAN stored). Every share row references a <code>person</code> — the catch funnels to the individual.</div>
 </div></div>
 <div class="toast" id="toast"></div>
 <script>
@@ -172,6 +172,18 @@
   function guestObjs(){const pr=loadProfiles();const k=S.group+'|'+S.pkgId;return (pr[k]&&pr[k].guests)||[];}
   function depInfo(name){const g=guestObjs().find(x=>((x.first||'')+' '+(x.last||'')).trim()===name);if(!g||!g.dep)return null;const d=g.dep;return {mode:d.mode||'commercial',airline:d.airline,flightNo:d.flightNo,tail:d.tail,time:(d.mode==='jet'?(d.est||d.time):d.time),date:d.date};}
 
+  // ---- processing / shipping / payment preferences (group-trip level; lead OR admin edits) ----
+  const PREFS_KEY='talon_fish_prefs_v1';
+  function loadPrefs(){try{return JSON.parse(localStorage.getItem(PREFS_KEY))||{};}catch(e){return {};}}
+  function prefsKey(){return S.pkgId+'::'+S.group;}
+  function getPrefs(){const all=loadPrefs();const p=all[prefsKey()]||{byGuest:{},payer:'',cardId:''};p.byGuest=p.byGuest||{};return p;}
+  function setPrefs(p){const all=loadPrefs();all[prefsKey()]=p;try{localStorage.setItem(PREFS_KEY,JSON.stringify(all));}catch(e){}}
+  const gpref=name=>{const g=getPrefs().byGuest[name]||{};return {ship:g.ship||'carryon',fedexDate:g.fedexDate||'',smoke:g.smoke||'no',note:g.note||''};};
+  function putGuestPref(name,field,val){const p=getPrefs();const g=p.byGuest[name]=Object.assign({ship:'carryon',fedexDate:'',smoke:'no',note:''},p.byGuest[name]||{});g[field]=val;setPrefs(p);}
+  // Demo cards on file. Real capture is tokenized via Stripe — no card numbers are entered or stored here.
+  const cardsOnFile=holder=>[{id:'c1',label:'Visa ···· 4242',holder:holder||'Group lead'},{id:'c2',label:'Amex ···· 1005',holder:holder||'Group lead'}];
+  const shipLabel=s=>s==='fedex'?'FedEx to home':s==='none'?'Not taking fish':'Carry-on (airport)';
+
   function initPkg(){
     el('pkg').innerHTML='<option value="">Select a package…</option>'+PKGS.map(p=>`<option value="${p.id}">${esc(pkgLabel(p))}</option>`).join('');
     if(PKGS.length===1){el('pkg').value=PKGS[0].id;}
@@ -213,9 +225,9 @@
   function renderGuestReport(){
     const w=el('work');const guests=groupGuests(S.group,S.pkgId);const totals=perGuestTotals();const sp=speciesTotals();const p=pkgById(S.pkgId);
     const spList=Object.keys(sp).sort();
-    const cards=guests.map(nm=>{const t=totals[nm]||{lbs:0,days:0,byday:[]};const d=depInfo(nm);
+    const cards=guests.map(nm=>{const t=totals[nm]||{lbs:0,days:0,byday:[]};const d=depInfo(nm);const gp=gpref(nm);
       return `<div class="grpt"><div class="gtop"><span class="gn">${esc(nm)}</span><span class="gl">${money2(t.lbs)} lb</span></div>
-        <div class="gsub">Take‑home filet across ${t.days} day${t.days===1?'':'s'}${d&&d.time?` · departs ${d.mode==='jet'?'private jet '+esc((d.tail||'').trim()):esc(d.flightNo||'')} ${fmtT(d.time)}`:''}</div>
+        <div class="gsub">Take‑home filet across ${t.days} day${t.days===1?'':'s'} · ${shipLabel(gp.ship)}${gp.ship==='fedex'&&gp.fedexDate?' (by '+fmtD(gp.fedexDate)+')':''}${gp.smoke==='yes'?' · smoked':''}${d&&d.time?` · departs ${d.mode==='jet'?'private jet '+esc((d.tail||'').trim()):esc(d.flightNo||'')} ${fmtT(d.time)}`:''}</div>
         ${t.byday.length?`<div class="gdays">${t.byday.map(x=>`<span class="dchip">${fmtD(x.date)} · ${money2(x.lbs)} lb</span>`).join('')}</div>`:'<div class="gsub" style="color:var(--faint)">No fish assigned yet</div>'}</div>`;}).join('');
     w.innerHTML=`<div class="panel report"><div class="rhead"><div><div class="rtitle">🎣 Fish Take‑Home Summary</div><div class="rsub">${esc(S.group)} · ${esc(pkgLabel(p))}</div></div><button class="btn no-print" onclick="window.print()">🖨 Print</button></div>
       <div class="rbody"><div class="rnote">Each guest's share of the group's processed catch, funneled to them by name. Species landed this trip: ${spList.length?spList.map(esc).join(', '):'—'}.</div>${cards}</div></div>`;
@@ -225,8 +237,15 @@
     const boxes=Object.keys(totals).filter(nm=>totals[nm].lbs>0).sort((a,b)=>totals[b].lbs-totals[a].lbs);
     const specials=[...new Set(recs.map(r=>(r.special||'').trim()).filter(Boolean))];
     const grand=boxes.reduce((s,nm)=>s+totals[nm].lbs,0);
-    const boxRows=boxes.map((nm,idx)=>{const d=depInfo(nm);
-      return `<tr><td class="bx">${idx+1}</td><td>${esc(nm)}</td><td class="num lbs">${money2(totals[nm].lbs)} lb</td><td>${d?(d.mode==='jet'?('Jet '+(esc((d.tail||'').trim())||'—')):esc(d.flightNo||'—')):'—'}</td><td class="dl">${d&&d.time?fmtT(d.time):'—'}${d&&d.date?' · '+fmtD(d.date):''}</td></tr>`;}).join('');
+    const prefs=getPrefs();
+    const boxRows=boxes.map((nm,idx)=>{const d=depInfo(nm);const gp=gpref(nm);
+      const take=gp.ship==='fedex'?'FedEx home':gp.ship==='none'?'Not taking':'Carry-on';
+      const deadline=gp.ship==='fedex'
+        ? (gp.fedexDate?('FedEx by '+fmtD(gp.fedexDate)):'FedEx — date TBD')
+        : (d&&d.time?fmtT(d.time)+(d.date?' · '+fmtD(d.date):''):'—');
+      return `<tr><td class="bx">${idx+1}</td><td>${esc(nm)}</td><td class="num lbs">${money2(totals[nm].lbs)} lb</td><td>${take}</td><td>${gp.smoke==='yes'?'✓ Smoked':'—'}</td><td>${d?(d.mode==='jet'?('Jet '+(esc((d.tail||'').trim())||'—')):esc(d.flightNo||'—')):'—'}</td><td class="dl">${deadline}</td>${gp.note?`<td>${esc(gp.note)}</td>`:'<td>—</td>'}</tr>`;}).join('');
+    const payCard=cardsOnFile(prefs.payer).find(c=>c.id===prefs.cardId);
+    const payLine=(prefs.payer||prefs.cardId)?`<div class="instr"><div class="il">Billing</div><div class="itxt">Bill to <b>${esc(prefs.payer||'—')}</b>${payCard?' · '+esc(payCard.label):''} — via Stripe (card on file).</div></div>`:'';
     const dayRows=recs.map(r=>{const tot=(r.lines||[]).reduce((s,l)=>s+num(l.count)*num(l.w)*num(l.r)/100,0);const nn=Math.max(1,parseInt(r.splitBy)||1);
       const caught=(r.lines||[]).filter(l=>num(l.count)>0).map(l=>`${esc(l.name)} ×${num(l.count)}`).join(', ')||'—';
       return `<tr><td>${fmtDW(r.date)}</td><td>${caught}</td><td class="num">${money2(tot)} lb</td><td class="num">${nn}</td><td>${(r.recipients||[]).filter(Boolean).map(esc).join(', ')||'—'}</td></tr>`;}).join('');
@@ -234,14 +253,60 @@
     w.innerHTML=`<div class="panel report"><div class="rhead"><div><div class="rtitle">📦 Fish Processing &amp; Packing Instructions</div><div class="rsub">${esc(S.group)} · ${esc(pkgLabel(p))}</div></div><button class="btn no-print" onclick="window.print()">🖨 Print</button></div>
       <div class="rbody">
         ${specials.length?`<div class="instr"><div class="il">Initial instructions</div>${specials.map(s=>`<div class="itxt">“${esc(s)}”</div>`).join('')}</div>`:''}
+        ${payLine}
         <div class="bigrow"><div class="big"><div class="bl">Boxes to pack (shares)</div><div class="bv">${boxes.length}</div></div><div class="big"><div class="bl">Total filet</div><div class="bv">${money2(grand)} lb</div></div></div>
         <h3 class="rsec">Pack one box per named guest — ready before their departure</h3>
-        <table class="rt"><thead><tr><th>Box</th><th>Guest (recipient)</th><th class="num">Weight</th><th>Departure</th><th>Deadline (SIT)</th></tr></thead><tbody>${boxRows||'<tr><td colspan="5" class="mut">No shares assigned yet</td></tr>'}</tbody></table>
+        <table class="rt"><thead><tr><th>Box</th><th>Guest (recipient)</th><th class="num">Weight</th><th>Take home</th><th>Smoke</th><th>Departure</th><th>Deadline</th><th>Note</th></tr></thead><tbody>${boxRows||'<tr><td colspan="8" class="mut">No shares assigned yet</td></tr>'}</tbody></table>
         <h3 class="rsec">Per‑day catch &amp; split</h3>
         <table class="rt"><thead><tr><th>Day</th><th>Species caught</th><th class="num">Filet</th><th class="num">Split by</th><th>Recipients</th></tr></thead><tbody>${dayRows||'<tr><td colspan="5" class="mut">No catch logged</td></tr>'}</tbody></table>
         <h3 class="rsec">Total catch by species</h3>
         <table class="rt"><thead><tr><th>Species</th><th class="num">Count</th><th class="num">Filet weight</th></tr></thead><tbody>${spRows||'<tr><td colspan="3" class="mut">—</td></tr>'}</tbody></table>
       </div></div>`;
+  }
+
+  function shipPayPanel(guests){
+    const prefs=getPrefs();const cards=cardsOnFile(prefs.payer);
+    const rows=guests.map(nm=>{const gp=gpref(nm);const dq='data-g="'+esc(nm)+'"';
+      return `<tr>
+        <td class="who">${esc(nm)}</td>
+        <td>
+          <select ${dq} onchange="FP.setShip(this.dataset.g,this.value)">
+            <option value="carryon"${gp.ship==='carryon'?' selected':''}>Carry-on — airport on departure day</option>
+            <option value="fedex"${gp.ship==='fedex'?' selected':''}>FedEx to home</option>
+            <option value="none"${gp.ship==='none'?' selected':''}>Not taking fish</option>
+          </select>
+          ${gp.ship==='fedex'?`<input type="date" ${dq} value="${esc(gp.fedexDate)}" title="FedEx receive-by date" onchange="FP.setFedex(this.dataset.g,this.value)" style="margin-top:6px">`:''}
+        </td>
+        <td><select ${dq} onchange="FP.setSmoke(this.dataset.g,this.value)"><option value="no"${gp.smoke==='no'?' selected':''}>No</option><option value="yes"${gp.smoke==='yes'?' selected':''}>Yes</option></select></td>
+        <td><input ${dq} value="${esc(gp.note)}" placeholder="optional" oninput="FP.setGnote(this.dataset.g,this.value)"></td>
+      </tr>`;}).join('');
+    return `<div class="shippay">
+      <style>
+        .shippay{padding:14px 16px;border-bottom:1px solid var(--line)}
+        .shippay h3{font:700 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin:0 0 4px}
+        .shippay .sub{font-size:12px;color:var(--muted);margin:0 0 10px}
+        .shippay table{width:100%;border-collapse:collapse}
+        .shippay th{font:700 10.5px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--faint);text-align:left;padding:4px 8px 8px}
+        .shippay td{padding:5px 8px;border-top:1px solid var(--line);vertical-align:top}
+        .shippay td.who{font-weight:700;white-space:nowrap}
+        .shippay select,.shippay input{font:inherit;padding:6px 8px;border:1px solid var(--line-2);border-radius:8px;background:var(--surface,#fff);color:inherit;width:100%;max-width:280px}
+        .shippay .pay{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line-2)}
+        .shippay .payrow{display:flex;flex-wrap:wrap;gap:14px;align-items:end}
+        .shippay .fld{display:flex;flex-direction:column;gap:4px}
+        .shippay .fld label{font:700 10.5px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--faint)}
+        .shippay .lock{margin:10px 0 0;font-size:11.5px;color:var(--muted);background:var(--accent-soft,#eef5f2);border-radius:8px;padding:8px 10px}
+      </style>
+      <h3>Take-home, smoking &amp; payment <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">· whole trip</span></h3>
+      <p class="sub">How each guest gets their fish home, whether it's smoked, and who's paying. Set once for the trip — the group lead can also fill this in from their portal.</p>
+      <table><thead><tr><th>Guest</th><th>Take home as</th><th>Smoke?</th><th>Note</th></tr></thead><tbody>${rows||'<tr><td colspan="4" class="mut">No guests on this group</td></tr>'}</tbody></table>
+      <div class="pay">
+        <div class="payrow">
+          <div class="fld"><label>Who pays</label><select onchange="FP.setPayer(this.value)"><option value="">— choose payer —</option>${guests.map(g=>`<option value="${esc(g)}"${g===prefs.payer?' selected':''}>${esc(g)}</option>`).join('')}</select></div>
+          <div class="fld"><label>Card on file</label><select onchange="FP.setCard(this.value)"><option value="">— choose card —</option>${cards.map(c=>`<option value="${c.id}"${c.id===prefs.cardId?' selected':''}>${esc(c.label)}${c.holder?' · '+esc(c.holder):''}</option>`).join('')}</select></div>
+        </div>
+        <p class="lock">🔒 Cards are stored &amp; charged through <b>Stripe</b> (tokenized). This prototype only references a card on file — no card numbers are entered or kept here.</p>
+      </div>
+    </div>`;
   }
 
   function render(){
@@ -298,6 +363,7 @@
         <h3 style="font:700 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin:0 0 8px">Special instructions</h3>
         <textarea placeholder="e.g. vacuum-pack halibut separately; ship Barrett's share to hotel" oninput="FP.setSpecial(this.value)">${esc(rec.special)}</textarea>
       </div>
+      ${shipPayPanel(guests)}
       <div class="foot">
         <button class="btn primary" onclick="FP.save()">Save catch &amp; split</button>
         <button class="btn" onclick="FP.clear()">Clear this day</button>
@@ -343,6 +409,12 @@
       // live-refresh only the trip summary
       const old=document.querySelector('.tripsum');if(old){const tmp=document.createElement('div');tmp.innerHTML=tripSummary();if(tmp.firstElementChild)old.replaceWith(tmp.firstElementChild);}},
     setSpecial(v){rec.special=v;rec.saved=false;persist();},
+    setShip(name,v){putGuestPref(name,'ship',v);render();},
+    setFedex(name,v){putGuestPref(name,'fedexDate',v);},
+    setSmoke(name,v){putGuestPref(name,'smoke',v);},
+    setGnote(name,v){putGuestPref(name,'note',v);},
+    setPayer(v){const p=getPrefs();p.payer=v;setPrefs(p);render();},
+    setCard(v){const p=getPrefs();p.cardId=v;setPrefs(p);},
     save(){rec.saved=true;const ok=persist();render();toast(ok?('Saved — '+S.group+' · '+fmtD(S.date)):'Could not save (storage full)');},
     clear(){if(!confirm('Clear all catch for '+S.group+' on '+fmtD(S.date)+'? This removes the day\'s entry.'))return;const map=loadCatch();delete map[keyOf()];saveCatch(map);render();toast('Day cleared');}
   };
