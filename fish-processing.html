@@ -129,7 +129,7 @@
 
   <div id="work"></div>
 
-  <div class="schema">Maps to Andy's schema → <b>fish_catch</b> (<code>trip_id, group, catch_date, species_id, count, avg_weight, recovery_pct</code>) + <b>fish_catch_split</b> (<code>catch_date, share_index, person_id, lbs</code>) + <b>fish_processing</b> (<code>trip_id, person_id, ship_method (carryon|fedex|none), fedex_date, smoke, note</code>) + <b>fish_payment</b> (<code>trip_id, payer_person_id, stripe_payment_method_id</code> — no PAN stored). Every share row references a <code>person</code> — the catch funnels to the individual.</div>
+  <div class="schema">Maps to Andy's schema → <b>fish_catch</b> (<code>trip_id, group, catch_date, species_id, count, avg_weight, recovery_pct</code>) + <b>fish_catch_split</b> (<code>catch_date, share_index, person_id, lbs</code>) + <b>fish_processing</b> (<code>trip_id, person_id, ship_method (carryon|fedex|none), fedex_date, keep_collars_bellies, note</code>) + <b>fish_payment</b> (<code>trip_id, payer_person_id, stripe_payment_method_id</code> — no PAN stored). Every share row references a <code>person</code> — the catch funnels to the individual.</div>
 </div></div>
 <div class="toast" id="toast"></div>
 <script>
@@ -178,8 +178,8 @@
   function prefsKey(){return S.pkgId+'::'+S.group;}
   function getPrefs(){const all=loadPrefs();const p=all[prefsKey()]||{byGuest:{},payer:'',cardId:''};p.byGuest=p.byGuest||{};return p;}
   function setPrefs(p){const all=loadPrefs();all[prefsKey()]=p;try{localStorage.setItem(PREFS_KEY,JSON.stringify(all));}catch(e){}}
-  const gpref=name=>{const g=getPrefs().byGuest[name]||{};return {ship:g.ship||'carryon',fedexDate:g.fedexDate||'',smoke:g.smoke||'no',note:g.note||''};};
-  function putGuestPref(name,field,val){const p=getPrefs();const g=p.byGuest[name]=Object.assign({ship:'carryon',fedexDate:'',smoke:'no',note:''},p.byGuest[name]||{});g[field]=val;setPrefs(p);}
+  const gpref=name=>{const g=getPrefs().byGuest[name]||{};return {ship:g.ship||'carryon',fedexDate:g.fedexDate||'',collars:g.collars||'no',note:g.note||''};};
+  function putGuestPref(name,field,val){const p=getPrefs();const g=p.byGuest[name]=Object.assign({ship:'carryon',fedexDate:'',collars:'no',note:''},p.byGuest[name]||{});g[field]=val;setPrefs(p);}
   // Demo cards on file. Real capture is tokenized via Stripe — no card numbers are entered or stored here.
   const cardsOnFile=holder=>[{id:'c1',label:'Visa ···· 4242',holder:holder||'Group lead'},{id:'c2',label:'Amex ···· 1005',holder:holder||'Group lead'}];
   const shipLabel=s=>s==='fedex'?'FedEx to home':s==='none'?'Not taking fish':'Carry-on (airport)';
@@ -227,7 +227,7 @@
     const spList=Object.keys(sp).sort();
     const cards=guests.map(nm=>{const t=totals[nm]||{lbs:0,days:0,byday:[]};const d=depInfo(nm);const gp=gpref(nm);
       return `<div class="grpt"><div class="gtop"><span class="gn">${esc(nm)}</span><span class="gl">${money2(t.lbs)} lb</span></div>
-        <div class="gsub">Take‑home filet across ${t.days} day${t.days===1?'':'s'} · ${shipLabel(gp.ship)}${gp.ship==='fedex'&&gp.fedexDate?' (by '+fmtD(gp.fedexDate)+')':''}${gp.smoke==='yes'?' · smoked':''}${d&&d.time?` · departs ${d.mode==='jet'?'private jet '+esc((d.tail||'').trim()):esc(d.flightNo||'')} ${fmtT(d.time)}`:''}</div>
+        <div class="gsub">Take‑home filet across ${t.days} day${t.days===1?'':'s'} · ${shipLabel(gp.ship)}${gp.ship==='fedex'&&gp.fedexDate?' (by '+fmtD(gp.fedexDate)+')':''}${gp.collars==='yes'?' · collars & bellies':''}${d&&d.time?` · departs ${d.mode==='jet'?'private jet '+esc((d.tail||'').trim()):esc(d.flightNo||'')} ${fmtT(d.time)}`:''}</div>
         ${t.byday.length?`<div class="gdays">${t.byday.map(x=>`<span class="dchip">${fmtD(x.date)} · ${money2(x.lbs)} lb</span>`).join('')}</div>`:'<div class="gsub" style="color:var(--faint)">No fish assigned yet</div>'}</div>`;}).join('');
     w.innerHTML=`<div class="panel report"><div class="rhead"><div><div class="rtitle">🎣 Fish Take‑Home Summary</div><div class="rsub">${esc(S.group)} · ${esc(pkgLabel(p))}</div></div><button class="btn no-print" onclick="window.print()">🖨 Print</button></div>
       <div class="rbody"><div class="rnote">Each guest's share of the group's processed catch, funneled to them by name. Species landed this trip: ${spList.length?spList.map(esc).join(', '):'—'}.</div>${cards}</div></div>`;
@@ -245,7 +245,7 @@
       const deadline=gp.ship==='fedex'
         ? (gp.fedexDate?('FedEx by '+fmtD(gp.fedexDate)):'FedEx — date TBD')
         : (d&&d.time?fmtT(d.time)+(d.date?' · '+fmtD(d.date):''):'—');
-      return `<tr><td class="bx">${idx+1}</td><td>${esc(nm)}</td><td class="num lbs">${money2(totals[nm].lbs)} lb</td><td>${take}</td><td>${gp.smoke==='yes'?'✓ Smoked':'—'}</td><td>${d?(d.mode==='jet'?('Jet '+(esc((d.tail||'').trim())||'—')):esc(d.flightNo||'—')):'—'}</td><td class="dl">${deadline}</td>${gp.note?`<td>${esc(gp.note)}</td>`:'<td>—</td>'}</tr>`;}).join('');
+      return `<tr><td class="bx">${idx+1}</td><td>${esc(nm)}</td><td class="num lbs">${money2(totals[nm].lbs)} lb</td><td>${take}</td><td>${gp.collars==='yes'?'✓ Collars & bellies':'—'}</td><td>${d?(d.mode==='jet'?('Jet '+(esc((d.tail||'').trim())||'—')):esc(d.flightNo||'—')):'—'}</td><td class="dl">${deadline}</td>${gp.note?`<td>${esc(gp.note)}</td>`:'<td>—</td>'}</tr>`;}).join('');
     const payCard=cardsOnFile(prefs.payer).find(c=>c.id===prefs.cardId);
     const payLine=(prefs.payer||prefs.cardId)?`<div class="instr"><div class="il">Billing</div><div class="itxt">Bill to <b>${esc(prefs.payer||'—')}</b>${payCard?' · '+esc(payCard.label):''} — via Stripe (card on file).</div></div>`:'';
     const dayRows=recs.map(r=>{const tot=(r.lines||[]).reduce((s,l)=>s+num(l.count)*num(l.w)*num(l.r)/100,0);const nn=Math.max(1,parseInt(r.splitBy)||1);
@@ -259,7 +259,7 @@
         ${payLine}
         <div class="bigrow"><div class="big"><div class="bl">Boxes to pack (shares)</div><div class="bv">${boxes.length}</div></div><div class="big"><div class="bl">Total filet</div><div class="bv">${money2(grand)} lb</div></div></div>
         <h3 class="rsec">Pack one box per named guest — ready before their departure</h3>
-        <table class="rt"><thead><tr><th>Box</th><th>Guest (recipient)</th><th class="num">Weight</th><th>Take home</th><th>Smoke</th><th>Departure</th><th>Deadline</th><th>Note</th></tr></thead><tbody>${boxRows||'<tr><td colspan="8" class="mut">No shares assigned yet</td></tr>'}</tbody></table>
+        <table class="rt"><thead><tr><th>Box</th><th>Guest (recipient)</th><th class="num">Weight</th><th>Take home</th><th>Collars &amp; bellies</th><th>Departure</th><th>Deadline</th><th>Note</th></tr></thead><tbody>${boxRows||'<tr><td colspan="8" class="mut">No shares assigned yet</td></tr>'}</tbody></table>
         <h3 class="rsec">Per‑day catch &amp; split</h3>
         <table class="rt"><thead><tr><th>Day</th><th>Species caught</th><th class="num">Filet</th><th class="num">Split by</th><th>Recipients</th></tr></thead><tbody>${dayRows||'<tr><td colspan="5" class="mut">No catch logged</td></tr>'}</tbody></table>
         <h3 class="rsec">Total catch by species</h3>
@@ -280,7 +280,7 @@
           </select>
           ${gp.ship==='fedex'?`<input type="date" ${dq} value="${esc(gp.fedexDate)}" title="FedEx receive-by date" onchange="FP.setFedex(this.dataset.g,this.value)" style="margin-top:6px">`:''}
         </td>
-        <td><select ${dq} onchange="FP.setSmoke(this.dataset.g,this.value)"><option value="no"${gp.smoke==='no'?' selected':''}>No</option><option value="yes"${gp.smoke==='yes'?' selected':''}>Yes</option></select></td>
+        <td><select ${dq} onchange="FP.setCollars(this.dataset.g,this.value)"><option value="no"${gp.collars==='no'?' selected':''}>No</option><option value="yes"${gp.collars==='yes'?' selected':''}>Yes</option></select></td>
         <td><input ${dq} value="${esc(gp.note)}" placeholder="optional" oninput="FP.setGnote(this.dataset.g,this.value)"></td>
       </tr>`;}).join('');
     return `<div class="shippay">
@@ -300,8 +300,8 @@
         .shippay .lock{margin:10px 0 0;font-size:11.5px;color:var(--muted);background:var(--accent-soft,#eef5f2);border-radius:8px;padding:8px 10px}
       </style>
       <h3>Take-home, smoking &amp; payment <span style="color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0">· whole trip</span></h3>
-      <p class="sub">How each guest gets their fish home, whether it's smoked, and who's paying. Set once for the trip — the group lead can also fill this in from their portal.</p>
-      <table><thead><tr><th>Guest</th><th>Take home as</th><th>Smoke?</th><th>Note</th></tr></thead><tbody>${rows||'<tr><td colspan="4" class="mut">No guests on this group</td></tr>'}</tbody></table>
+      <p class="sub">How each guest gets their fish home, whether they keep the collars &amp; bellies, and who's paying. Set once for the trip — the group lead can also fill this in from their portal.</p>
+      <table><thead><tr><th>Guest</th><th>Take home as</th><th>Keep collars &amp; bellies?</th><th>Note</th></tr></thead><tbody>${rows||'<tr><td colspan="4" class="mut">No guests on this group</td></tr>'}</tbody></table>
       <div class="pay">
         <div class="payrow">
           <div class="fld"><label>Who pays</label><select onchange="FP.setPayer(this.value)"><option value="">— choose payer —</option>${guests.map(g=>`<option value="${esc(g)}"${g===prefs.payer?' selected':''}>${esc(g)}</option>`).join('')}</select></div>
@@ -414,7 +414,7 @@
     setSpecial(v){rec.special=v;rec.saved=false;persist();},
     setShip(name,v){putGuestPref(name,'ship',v);render();},
     setFedex(name,v){putGuestPref(name,'fedexDate',v);},
-    setSmoke(name,v){putGuestPref(name,'smoke',v);},
+    setCollars(name,v){putGuestPref(name,'collars',v);},
     setGnote(name,v){putGuestPref(name,'note',v);},
     setPayer(v){const p=getPrefs();p.payer=v;setPrefs(p);render();},
     setCard(v){const p=getPrefs();p.cardId=v;setPrefs(p);},
