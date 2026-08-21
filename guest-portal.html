@@ -327,6 +327,16 @@
   const guestLabel=(g,i)=>esc((g.first+' '+g.last).trim())||('Guest '+(i+1));
 
   // ---- tiles (the Viking-style image grid) ----
+  // ---- Fish processing prefs (shared store with the admin Fish Processing tool) ----
+  const FPREFS_KEY='talon_fish_prefs_v1';
+  const fpAll=()=>{try{return JSON.parse(localStorage.getItem(FPREFS_KEY))||{};}catch(e){return {};}};
+  const fpKey=()=>trip.pkgId+'::'+trip.group;
+  function fpGet(){const all=fpAll();const p=all[fpKey()]||{byGuest:{},payer:'',cardId:'',shares:'',special:'',deferred:false};p.byGuest=p.byGuest||{};return p;}
+  function fpSet(p){const all=fpAll();all[fpKey()]=p;try{localStorage.setItem(FPREFS_KEY,JSON.stringify(all));}catch(e){}}
+  const fpG=name=>{const g=fpGet().byGuest[name]||{};return {ship:g.ship||'carryon',fedexDate:g.fedexDate||'',smoke:g.smoke||'no',note:g.note||''};};
+  function fpPutGuest(name,field,val){const p=fpGet();const g=p.byGuest[name]=Object.assign({ship:'carryon',fedexDate:'',smoke:'no',note:''},p.byGuest[name]||{});g[field]=val;fpSet(p);}
+  const fpCards=()=>[{id:'c1',label:'Visa ···· 4242'},{id:'c2',label:'Amex ···· 1005'}];
+
   const TILES=[
     {id:'details',t:'Guest Details',s:'Profile & preferences',e:'📋',g:['#3f5f3a','#6f9a56']},
     {id:'flights',t:'Flights In & Out',s:'Manage your air',e:'✈️',g:['#2a6a8a','#58a6c4']},
@@ -334,6 +344,7 @@
     {id:'activities',t:'Adventures & Activities',s:'Request guided add-ons',e:'🎣',g:['#0d5b52','#2a9d8f']},
     {id:'spa',t:'Spa & Massage',s:'Reserve a session',e:'💆',g:['#6d4b6b','#a9738f']},
     {id:'license',t:'Fishing License',s:'Upload your license',e:'📄',g:['#7d5f2a','#c0972f']},
+    {id:'fish',t:'Fish Processing',s:'How to take your catch home',e:'🐟',g:['#215e6e','#3f9fb0']},
     {id:'agenda',t:'Daily Agenda',s:'Your day-by-day',e:'🗓️',g:['#4a4a7a','#7d7ab0']},
     {id:'bring',t:'Before You Go',s:'What to bring',e:'🎒',g:['#6a4a3a','#9c7350']},
     {id:'photos',t:'Photos & Memories',s:'From your trip',e:'📸',g:['#2f6a5a','#57a088']}
@@ -366,6 +377,7 @@
     if(PAGE==='details')return renderDetails();
     if(PAGE==='flights')return renderFlights();
     if(PAGE==='license')return renderLicense();
+    if(PAGE==='fish')return renderFishProcessing();
     if(PAGE==='agenda')return renderAgenda();
     if(PAGE==='bring')return renderSoon('🎒','Before you go','Packing guidance for Southeast Alaska, plus everything you need to know before your trip begins.',['Packing list','Weather','Know before you go']);
     if(PAGE==='photos')return renderSoon('📸','Photos & Memories','Your guides’ photos and videos from the water, plus your daily catch log with weights — collected here to take home.',['Photos & videos','Daily catch','Weights']);
@@ -383,6 +395,7 @@
       else if(x.id==='spa')n=pendCount('massage');
       else if(x.id==='details'){n=incompleteGuests();bl='to complete';}
       else if(x.id==='license'){n=missingLicenses();bl='to upload';}
+      else if(x.id==='fish'){const fp=fpGet();if(fp.deferred){n='✓';bl='at check-in';}else if(!fp.payer){n='●';bl='to complete';}}
       return `<button class="tile" style="--g1:${x.g[0]};--g2:${x.g[1]}" onclick="P.go('${x.id}')">
         <div class="photo"><span class="emoji">${x.e}</span>${n?`<span class="badge">${n} ${bl}</span>`:''}</div>
         <div class="bar"><span class="t">${esc(x.t)}</span><span class="s">${esc(x.s)}</span></div>
@@ -687,6 +700,50 @@
         </div></div>`;
   }
 
+  function renderFishProcessing(){
+    const pr=curProfile();const guests=pr.guests.map(g=>(g.first+' '+g.last).trim()).filter(Boolean);
+    const p=fpGet();const cards=fpCards();const deferred=!!p.deferred;
+    const shareN=Math.max(1,parseInt(p.shares)||guests.length||1);
+    const guestRows=guests.map(nm=>{const gp=fpG(nm);const dq='data-g="'+esc(nm)+'"';
+      return `<tr>
+        <td class="who">${esc(nm)}</td>
+        <td><select ${dq} onchange="P.fpShip(this.dataset.g,this.value)">
+          <option value="carryon"${gp.ship==='carryon'?' selected':''}>Carry-on — airport on departure day</option>
+          <option value="fedex"${gp.ship==='fedex'?' selected':''}>FedEx to my home</option>
+          <option value="none"${gp.ship==='none'?' selected':''}>Not taking fish</option></select>
+          ${gp.ship==='fedex'?`<input type="date" ${dq} value="${esc(gp.fedexDate)}" title="FedEx receive-by date" onchange="P.fpFedex(this.dataset.g,this.value)" style="margin-top:6px">`:''}</td>
+        <td><select ${dq} onchange="P.fpSmoke(this.dataset.g,this.value)"><option value="no"${gp.smoke==='no'?' selected':''}>No</option><option value="yes"${gp.smoke==='yes'?' selected':''}>Yes</option></select></td>
+        <td><input ${dq} value="${esc(gp.note)}" placeholder="optional" oninput="P.fpNote(this.dataset.g,this.value)"></td>
+      </tr>`;}).join('');
+    const body = deferred ? `<div class="fpdefer">You've chosen to <b>provide fish-processing details at check-in</b>. Our team will walk you through it when you arrive. You can switch back and fill it in here any time.</div>` : `
+      <div class="fg"><label>How many shares to split the catch into</label><input type="number" min="1" step="1" value="${shareN}" oninput="P.fpShares(this.value)" style="max-width:130px"><span class="fhint">e.g. 3 couples in a group of 6 → split 3 ways. One packed box per share.</span></div>
+      <h4 class="subhd">How each guest takes their fish home</h4>
+      <div class="fptbl"><table><thead><tr><th>Guest</th><th>Take home as</th><th>Smoke?</th><th>Note</th></tr></thead><tbody>${guestRows||'<tr><td colspan="4" style="color:var(--muted)">Add guests under Guest Details first.</td></tr>'}</tbody></table></div>
+      <h4 class="subhd">Who's paying</h4>
+      <div class="frow2">
+        <div class="fg"><label>Payer</label><select onchange="P.fpPayer(this.value)"><option value="">— choose —</option>${guests.map(g=>`<option value="${esc(g)}"${g===p.payer?' selected':''}>${esc(g)}</option>`).join('')}</select></div>
+        <div class="fg"><label>Card on file</label><select onchange="P.fpCard(this.value)"><option value="">— choose card —</option>${cards.map(c=>`<option value="${c.id}"${c.id===p.cardId?' selected':''}>${esc(c.label)}</option>`).join('')}</select></div>
+      </div>
+      <p class="fhint">🔒 Cards are charged securely through Stripe — this prototype only references a card on file; no card numbers are entered or stored.</p>
+      <div class="fg"><label>Anything else for the processing team?</label><textarea placeholder="e.g. mix of 8oz and 1lb filets; want bellies &amp; collars too" oninput="P.fpSpecial(this.value)">${esc(p.special||'')}</textarea></div>`;
+    el('view').innerHTML=DETAILS_CSS+backBar('Fish Processing',"Tell us how you'd like your catch processed, packed, and sent home — or provide it when you check in.")
+      +`<style>
+         .fptbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin:6px 0 4px}
+         .fptbl table{width:100%;border-collapse:collapse;min-width:540px}
+         .fptbl th{font:700 10.5px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--faint);text-align:left;padding:8px 10px}
+         .fptbl td{padding:6px 10px;border-top:1px solid var(--line);vertical-align:top}
+         .fptbl td.who{font-weight:700;white-space:nowrap}
+         .fptbl select,.fptbl input{width:100%;max-width:270px}
+         .fpdefer{background:var(--accent-soft,#e8f3f0);border:1px solid var(--line-2);border-radius:12px;padding:16px 18px;font-size:14px;color:var(--ink)}
+         .fpdeferbar{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:16px}
+         .fpdeferbar label{display:flex;align-items:center;gap:9px;font:600 13.5px var(--sans);cursor:pointer;margin:0}
+         .fpdeferbar input{width:17px;height:17px;accent-color:var(--accent,#0e7c6f)}
+       </style>
+       <div class="fpdeferbar"><label><input type="checkbox" ${deferred?'checked':''} onchange="P.fpDefer(this.checked)"> Provide this information at check-in instead</label></div>
+       <div class="card"><div class="frm">${body}</div></div>
+       <p class="savenote">Saves automatically. This is the same information our lodge team sees — set it here now, or finish it when you arrive.</p>`;
+  }
+
   function renderAgenda(){
     const cols=columns();const sched=schedForGroup().concat(homeBoatItems()).concat(islandItems());const mine=myFullName();
     const T=load('talon_team_v1',null);
@@ -746,7 +803,17 @@
     fleg(gid,leg,field,val){const pr=curProfile(),g=pr.guests.find(x=>x.id===gid);if(!g)return;(g[leg]=g[leg]||{})[field]=val;saveProf();},
     flegMode(gid,leg,mode){const pr=curProfile(),g=pr.guests.find(x=>x.id===gid);if(!g)return;(g[leg]=g[leg]||{}).mode=mode;saveProf();renderView();},
     flegPick(gid,leg,val){const pr=curProfile(),g=pr.guests.find(x=>x.id===gid);if(!g)return;const L=g[leg]=g[leg]||{};L.mode='commercial';if(val==='__other'){L.manual=true;L.flightNo='';L.time='';L.airline=L.airline||'Alaska Airlines';}else if(val===''){L.manual=false;L.flightNo='';L.time='';}else{const[no,time]=val.split('|');L.manual=false;L.airline='Alaska Airlines';L.flightNo=no;L.time=time;}saveProf();renderView();},
-    fstay(gid,which,field,val){const pr=curProfile(),g=pr.guests.find(x=>x.id===gid);if(!g)return;const k=which==='early'?'sitkaEarly':'sitkaLate';const st=g[k]=g[k]||{};st[field]=(field==='nights'?(+val||1):(field==='on'?!!val:val));saveProf();if(field==='on'||field==='hotel')renderView();}
+    fstay(gid,which,field,val){const pr=curProfile(),g=pr.guests.find(x=>x.id===gid);if(!g)return;const k=which==='early'?'sitkaEarly':'sitkaLate';const st=g[k]=g[k]||{};st[field]=(field==='nights'?(+val||1):(field==='on'?!!val:val));saveProf();if(field==='on'||field==='hotel')renderView();},
+    // fish processing (shared store with admin tool)
+    fpShip(name,v){fpPutGuest(name,'ship',v);renderView();},
+    fpFedex(name,v){fpPutGuest(name,'fedexDate',v);},
+    fpSmoke(name,v){fpPutGuest(name,'smoke',v);},
+    fpNote(name,v){fpPutGuest(name,'note',v);},
+    fpShares(v){const p=fpGet();p.shares=Math.max(1,parseInt(v)||1);fpSet(p);},
+    fpPayer(v){const p=fpGet();p.payer=v;fpSet(p);},
+    fpCard(v){const p=fpGet();p.cardId=v;fpSet(p);},
+    fpSpecial(v){const p=fpGet();p.special=v;fpSet(p);},
+    fpDefer(on){const p=fpGet();p.deferred=!!on;fpSet(p);renderView();}
   };
   renderShell();
 })();

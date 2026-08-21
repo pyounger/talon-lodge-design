@@ -204,7 +204,7 @@
     const guests=groupGuests(S.group,S.pkgId);
     if(!r){
       r={pkgId:S.pkgId,group:S.group,date:S.date,lines:types.map(t=>({name:t.name,count:0,w:t.w,r:t.r})),
-         splitBy:guests.length||1,recipients:guests.slice(),special:'',saved:false};
+         splitBy:Math.max(1,parseInt(getPrefs().shares)||guests.length||1),recipients:guests.slice(),special:'',saved:false};
     }else{
       // reconcile with current species list: keep saved lines, append any new species
       const have=new Set(r.lines.map(l=>l.name.toLowerCase()));
@@ -235,7 +235,9 @@
   function renderProcReport(){
     const w=el('work');const totals=perGuestTotals();const recs=catchForGroup();const sp=speciesTotals();const p=pkgById(S.pkgId);
     const boxes=Object.keys(totals).filter(nm=>totals[nm].lbs>0).sort((a,b)=>totals[b].lbs-totals[a].lbs);
-    const specials=[...new Set(recs.map(r=>(r.special||'').trim()).filter(Boolean))];
+    const _pf=getPrefs();
+    const specials=[...new Set(recs.map(r=>(r.special||'').trim()).concat([(_pf.special||'').trim()]).filter(Boolean))];
+    const deferBanner=_pf.deferred?`<div class="instr" style="border-color:var(--gold,#c0972f)"><div class="il">Heads up</div><div class="itxt">The group chose to <b>provide processing details at check-in</b> — confirm their take-home &amp; payment choices on arrival.</div></div>`:'';
     const grand=boxes.reduce((s,nm)=>s+totals[nm].lbs,0);
     const prefs=getPrefs();
     const boxRows=boxes.map((nm,idx)=>{const d=depInfo(nm);const gp=gpref(nm);
@@ -252,6 +254,7 @@
     const spRows=Object.keys(sp).sort().map(n=>`<tr><td>${esc(n)}</td><td class="num">${sp[n].count}</td><td class="num">${money2(sp[n].filet)} lb</td></tr>`).join('');
     w.innerHTML=`<div class="panel report"><div class="rhead"><div><div class="rtitle">📦 Fish Processing &amp; Packing Instructions</div><div class="rsub">${esc(S.group)} · ${esc(pkgLabel(p))}</div></div><button class="btn no-print" onclick="window.print()">🖨 Print</button></div>
       <div class="rbody">
+        ${deferBanner}
         ${specials.length?`<div class="instr"><div class="il">Initial instructions</div>${specials.map(s=>`<div class="itxt">“${esc(s)}”</div>`).join('')}</div>`:''}
         ${payLine}
         <div class="bigrow"><div class="big"><div class="bl">Boxes to pack (shares)</div><div class="bv">${boxes.length}</div></div><div class="big"><div class="bl">Total filet</div><div class="bv">${money2(grand)} lb</div></div></div>
