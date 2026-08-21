@@ -154,6 +154,42 @@
     ]}
   ];
 
+  // ---- pre-trip completion spread -------------------------------------------
+  // The roster lands mid-cycle: contact + sizing come off the booking, then
+  // address / emergency contact / health answers / airfare / licence trickle in
+  // as guests work through the portal. Deterministic by guest index, so the
+  // readiness bars on Package Guest List show a real spread, not 24 identical rows.
+  const STREETS=['Cedar','Spruce','Harbor','Lakeview','Summit','Alder','Kingfisher','Baranof'];
+  const SUFFIX=['St','Ave','Dr','Ln'];
+  const EMER=[['Sam Rogers','248-894-5531','spouse'],['Dana Whitfield','702-882-4599','daughter'],
+    ['Mark Ellsworth','201-390-7899','brother'],['Karen Vaughn','202-438-5299','spouse'],
+    ['Paul Hendricks','480-695-3299','son'],['Nicole Barrett','602-616-2499','spouse'],
+    ['Greg Sandoval','480-612-7499','brother'],['Amy Lindquist','602-885-2899','sister']];
+  const ARR_F=[['AS 65','12:35'],['AS 61','14:15'],['AS 67','16:05'],['AS 63','09:40']];
+  const DEP_F=[['AS 66','13:10'],['AS 62','15:25'],['AS 68','11:50'],['AS 64','17:20']];
+  const OCCASIONS=['40th anniversary','Retirement trip','60th birthday','First trip with my son'];
+  function preTrip(rec,n,arrDate,depDate){
+    if(n%3!==2){                                   // ~2/3 have posted a mailing address
+      rec.country='United States';
+      rec.addr1=(104+n*13)+' '+STREETS[n%STREETS.length]+' '+SUFFIX[n%4];
+      rec.zip=String(10000+(n*4637)%89000);
+    }
+    if(n%2===0){const e=EMER[Math.floor(n/2)%EMER.length];rec.emerName=e[0];rec.emerPhone=e[1];rec.emerRel=e[2];}
+    if(n%5!==3){                                   // most have answered the three questions
+      rec.allergyHas=rec.allergies?'yes':'no';
+      rec.medicalHas=rec.medical?'yes':'no';
+      rec.eventHas=n%7===0?'yes':'no';
+      if(rec.eventHas==='yes')rec.eventDesc=OCCASIONS[n%OCCASIONS.length];
+    }
+    if(n%3===0){                                   // airfare booked, both legs
+      const a=ARR_F[n%4],d=DEP_F[(n+1)%4];
+      rec.arr={mode:'commercial',airline:'Alaska Airlines',flightNo:a[0],time:a[1],date:arrDate};
+      rec.dep={mode:'commercial',airline:'Alaska Airlines',flightNo:d[0],time:d[1],date:depDate};
+    }
+    if(n%4===0)rec.license={name:'AK-sportfish-'+slug(rec.last||'guest')+'.pdf',type:'application/pdf',uploadedAt:'2027-05-0'+(1+n%9)};
+    return rec;
+  }
+
   // ---- sample pending requests layered on top (roster has none) ----
   // [group, activityName, dayOffset(1-3), kind, [guest full names]]
   const REQS=[
@@ -199,13 +235,14 @@
     load(){
       const {pkg,existed}=pickPkg();const ARRIVAL=pkg.arrival_start_date;
       const reqs=[],profs={},now=new Date().toISOString();let rid=1;
+      const DEPART=addDays(ARRIVAL,pkg.nights||4);let gn=0;
       GROUPS.forEach(gp=>{
-        profs[gp.group+'|'+pkg.id]={mode:'invite',guests:gp.guests.map((x,i)=>({
+        profs[gp.group+'|'+pkg.id]={mode:'invite',guests:gp.guests.map((x,i)=>preTrip({
           id:'gp'+slug(gp.group)+i,first:x.first,last:x.last,email:x.email,phone:x.phone,
           city:x.city,state:x.state,gender:x.gender,age:x.age,boot:x.boot,jacket:x.jacket,
           room:x.room,boatPref:x.boat,captain:x.captain,mate:x.mate,
           allergies:x.diet,medical:x.diet,emerName:'',emerPhone:'',emerRel:'',license:null,
-          access:'managed',invite:'none',isLead:x.lead}))};
+          access:'managed',invite:'none',isLead:x.lead},gn++,ARRIVAL,DEPART))};
       });
       REQS.forEach(([group,name,day,kind,who])=>{
         reqs.push({id:rid++,group,actId:slug(name),name,date:addDays(ARRIVAL,day),guests:who.length,guestNames:who,kind,status:'requested',source:'reservation',created:now});

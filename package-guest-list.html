@@ -19,7 +19,7 @@
   .addbtn:hover{filter:brightness(1.05)}
   .stat{font:600 12.5px var(--sans);color:var(--muted);margin:0 0 10px}.stat b{color:var(--accent-deep)}
   .tblwrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow)}
-  table.gl{width:100%;border-collapse:collapse;min-width:820px}
+  table.gl{width:100%;border-collapse:collapse;min-width:960px}
   table.gl th{font:700 10.5px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);text-align:left;padding:11px 14px;border-bottom:1px solid var(--line)}
   table.gl td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top;font-size:13.5px}
   table.gl tr:last-child td{border-bottom:0}
@@ -28,7 +28,7 @@
   .lead{font:800 9px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent-deep);background:var(--accent-soft);border-radius:20px;padding:2px 7px;margin-left:6px;vertical-align:middle}
   .grpcell{font:700 12px var(--mono);color:var(--muted)}
   .sub2{color:var(--muted);font-size:12px}
-  .editb{font:700 12px var(--sans);border:1px solid var(--line-2);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 12px;cursor:pointer}
+  .editb{font:700 12px var(--sans);border:1px solid var(--line-2);background:var(--surface);color:var(--ink);border-radius:8px;padding:6px 12px;cursor:pointer;white-space:nowrap}
   .editb:hover{border-color:var(--accent);color:var(--accent-deep)}
   .empty{padding:34px 16px;text-align:center;color:var(--muted);font-size:14px}
   .schema{margin-top:16px;font-size:12px;color:var(--muted);background:var(--surface);border:1px dashed var(--line-2);border-radius:10px;padding:11px 14px;line-height:1.6}
@@ -58,11 +58,54 @@
   .btn{font:700 13px var(--sans);border-radius:9px;padding:9px 16px;cursor:pointer;border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
   .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
   .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--accent-deep);color:#fff;font:600 13px var(--sans);padding:9px 16px;border-radius:9px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s;z-index:30}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  /* ---- pre-trip readiness: roster summary ---- */
+  .rsum{background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);padding:13px 16px;margin-bottom:14px}
+  .rsum .hd{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:11px}
+  .rsum .ttl{font:700 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .rsum .pct{font:800 21px/1 var(--sans);color:var(--accent-deep)}
+  .obar{display:block;flex:1;min-width:130px;height:8px;border-radius:20px;background:var(--surface-2);overflow:hidden}
+  .obar>span{display:block;height:100%;border-radius:20px;background:linear-gradient(90deg,var(--accent),var(--accent-deep));transition:width .3s}
+  .rchips{display:flex;gap:7px;flex-wrap:wrap}
+  .rchip{font:600 11.5px var(--sans);color:var(--muted);background:var(--surface);border:1px solid var(--line-2);border-radius:20px;padding:5px 11px;cursor:pointer}
+  .rchip:hover{border-color:var(--accent);color:var(--accent-deep)}
+  .rchip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep)}
+  .rchip b{font-weight:800}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(124px,1fr));gap:10px;border-top:1px solid var(--line);padding-top:11px}
+  .step .sl{display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin-bottom:4px}
+  .step .sl span{font:600 11.5px var(--sans);color:var(--muted)}
+  .step .sl b{font:700 11px var(--mono);color:var(--ink)}
+  .step .sb{height:5px;border-radius:20px;background:var(--surface-2);overflow:hidden}
+  .step .sb>span{display:block;height:100%;border-radius:20px;background:var(--accent)}
+  .step.done .sl b{color:var(--accent-deep)} .step.zero .sl b{color:var(--salmon)}
+  /* ---- pre-trip readiness: per-guest cell ---- */
+  .rdy{white-space:nowrap}
+  .rdybtn{display:flex;flex-direction:column;align-items:flex-start;gap:5px;border:0;background:none;padding:0;font:inherit;text-align:left;cursor:pointer}
+  .pips{display:flex;gap:3px}
+  .pip{display:block;width:15px;height:7px;border-radius:3px;background:var(--line-2)}
+  .pip.on{background:var(--accent)} .pip.warn{background:var(--salmon)}
+  .rdyline{display:flex;align-items:center;gap:7px}
+  .rdyn{font:800 11px var(--mono);color:var(--gold)}
+  .rdybtn.full .rdyn{color:var(--accent-deep)} .rdybtn.none .rdyn{color:var(--salmon)}
+  .rdymiss{font:600 11.5px var(--sans);color:var(--faint);max-width:158px;overflow:hidden;text-overflow:ellipsis}
+  .rdybtn:hover .rdymiss{color:var(--accent-deep)}
+  .rpill{font:800 9px var(--mono);letter-spacing:.05em;text-transform:uppercase;background:var(--accent-soft);color:var(--accent-deep);border-radius:20px;padding:2px 7px}
+  /* ---- readiness detail modal ---- */
+  .rdbox{background:var(--surface);border:1px solid var(--line-2);border-radius:14px;box-shadow:var(--shadow);max-width:420px;width:100%;max-height:90vh;overflow:auto;padding:18px 20px}
+  .rdbox h3{margin:0 0 2px;font:800 17px var(--sans)}
+  .rdbox .sub{color:var(--muted);font-size:12.5px;margin:0 0 10px}
+  .rlist{margin:12px 0 4px}
+  .ritem{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line)}
+  .ritem:last-child{border-bottom:0}
+  .ritem .ic{width:20px;height:20px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font:800 11px var(--sans);background:var(--surface-2);color:var(--faint)}
+  .ritem.ok .ic{background:var(--accent);color:#fff} .ritem.bad .ic{background:var(--salmon);color:#fff}
+  .ritem .t{font:700 13px var(--sans)} .ritem .h{font-size:11.5px;color:var(--muted);line-height:1.45}
+  .rdnote{font-size:11.5px;color:var(--faint);line-height:1.5;margin:12px 0 0}
+  .estrip{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface-2);border-radius:10px;padding:9px 12px;margin:-4px 0 14px}
 </style>
 <div class="rm"><div class="wrap">
   <p class="eyebrow">Operate · Roster</p>
   <h1>Package Guest List</h1>
-  <p class="lede">Every guest booked on a package, across all groups — with a repeat-guest badge (<b>R4</b> = four stays; click it for the years). View, edit, or add guest details in one place.</p>
+  <p class="lede">Every guest booked on a package, across all groups — with a repeat-guest badge (<b>R4</b> = four stays; click it for the years) and a <b>pre-trip readiness</b> bar showing how far each guest has got with their profile, airfare, fishing licence and the rest. Click any bar for the breakdown; click a chip to chase just that group.</p>
 
   <div class="bar">
     <div class="fld"><label>Package</label><select id="pkg" onchange="GL.pick()"></select></div>
@@ -71,11 +114,14 @@
     <button class="addbtn" onclick="GL.addNew()">＋ Add guest</button>
   </div>
   <div class="stat" id="stat"></div>
+  <div id="rsum"></div>
   <div class="tblwrap" id="tblwrap"></div>
-  <div class="schema">Maps to Andy's schema → guests are <b>persons</b> linked to this trip via <b>group_persons</b> + <b>trip_profiles</b>. The repeat count &amp; years come from the <b>person's</b> stay history (all trips that resolved to the same person via matching) — <code>R&lt;n&gt;</code> = distinct stay years. Editing here writes the trip profile; identity stays on the person.</div>
+  <div class="schema">Maps to Andy's schema → guests are <b>persons</b> linked to this trip via <b>group_persons</b> + <b>trip_profiles</b>. The repeat count &amp; years come from the <b>person's</b> stay history (all trips that resolved to the same person via matching) — <code>R&lt;n&gt;</code> = distinct stay years. Editing here writes the trip profile; identity stays on the person.<br>
+  <b>Trip readiness</b> is derived, never stored — each step reads the guest's own <b>trip_profile</b> fields (contact, address, sizing, emergency contact, health answers), their <b>flight legs</b>, and whether a fishing-license <b>asset</b> exists. Same record the Guest Portal writes, so the bar moves the moment a guest saves.</div>
 </div></div>
 <div class="toast" id="toast"></div>
 <div class="modal" id="rgmodal" onclick="if(event.target===this)GL.rgClose()"><div class="rgbox" id="rgbox"></div></div>
+<div class="modal" id="rdmodal" onclick="if(event.target===this)GL.rdClose()"><div class="rdbox" id="rdbox"></div></div>
 <div class="modal" id="emodal" onclick="if(event.target===this)GL.eClose()"><div class="ebox" id="ebox"></div></div>
 <script>
 (function(){
@@ -106,7 +152,50 @@
     if(r.count>=2)return `<button class="rbadge" title="Repeat guest — ${r.count} stays" onclick="GL.rgShow('${jesc(nm)}','${r.years.join(',')}')">R${r.count}</button>`;
     return `<span class="rbadge new" title="First recorded stay">New</span>`;}
 
-  let S={pkgId:''};
+  // ---- Pre-trip readiness ----------------------------------------------------
+  // Derived, never stored. Each step reads the same guest record the Guest Portal
+  // writes (talon_portal_profile), so this bar tracks what the guest has actually
+  // filled in — profile, address, sizing, emergency contact, health answers,
+  // airfare and fishing license.
+  const s=v=>String(v==null?'':v).trim();
+  const QUESTIONS=[['allergyHas','allergies'],['medicalHas','medical'],['eventHas','eventDesc']];
+  // portal derives "yes" from a filled description even when the radio was never touched
+  const qHas=(g,h,d)=>g[h]||(s(g[d])?'yes':'');
+  const qAnswered=g=>QUESTIONS.every(([h,d])=>{const v=qHas(g,h,d);return v==='no'||(v==='yes'&&!!s(g[d]));});
+  const qNeedsDetail=g=>QUESTIONS.some(([h,d])=>qHas(g,h,d)==='yes'&&!s(g[d]));
+  const legOK=l=>!!(l&&typeof l==='object'&&s(l.date)&&(l.mode==='jet'?s(l.tail):s(l.flightNo)));
+  const STEPS=[
+    {key:'profile',short:'Profile',label:'Profile & contact',hint:'Full name, a valid email, and a phone number.',
+     test:g=>!!(s(g.first)&&s(g.last)&&/.+@.+\..+/.test(s(g.email))&&s(g.phone))},
+    {key:'address',short:'Address',label:'Mailing address',hint:'Street, city, state and zip — where fish ships home.',
+     test:g=>!!(s(g.addr1)&&s(g.city)&&s(g.state)&&s(g.zip))},
+    {key:'sizing',short:'Sizing',label:'Gear sizing',hint:'Boot and jacket size, so rain gear is ready on arrival.',
+     test:g=>!!(s(g.boot)&&s(g.jacket))},
+    {key:'emergency',short:'Emergency',label:'Emergency contact',hint:'A name and phone we can reach off-grid.',
+     test:g=>!!(s(g.emerName)&&s(g.emerPhone))},
+    {key:'health',short:'Health',label:'Allergies, medical & occasions',hint:'All three questions answered — any “Yes” described.',
+     test:qAnswered,warn:qNeedsDetail,warnText:'A “Yes” answer is missing its description — the kitchen and guides need it.'},
+    {key:'flights',short:'Airfare',label:'Airfare in & out',hint:'Both legs into and out of Sitka — we time the floatplane from these.',
+     test:g=>legOK(g.arr)&&legOK(g.dep)},
+    {key:'license',short:'License',label:'Fishing license',hint:'A photo or PDF of the Alaska sportfishing licence.',
+     test:g=>!!g.license}
+  ];
+  function readiness(g){
+    const items=STEPS.map(st=>({short:st.short,label:st.label,hint:st.hint,
+      ok:!!st.test(g),warn:!!(st.warn&&st.warn(g)),warnText:st.warnText||''}));
+    const done=items.filter(i=>i.ok).length;
+    return {items,done,total:items.length,pct:Math.round(done/items.length*100),
+            miss:items.filter(i=>!i.ok),warn:items.some(i=>i.warn)};
+  }
+  const pipHtml=r=>r.items.map(i=>`<span class="pip ${i.warn?'warn':i.ok?'on':''}" title="${esc(i.label)} — ${i.warn?'needs detail':i.ok?'complete':'not yet'}"></span>`).join('');
+  function missText(r){
+    if(!r.done)return 'Nothing started yet';
+    if(r.done===r.total)return '';
+    const n=r.miss.map(m=>m.short.toLowerCase());
+    return 'Needs '+n.slice(0,2).join(', ')+(n.length>2?' +'+(n.length-2):'');
+  }
+
+  let S={pkgId:'',filter:''};
   const EDIT={mode:'',group:'',idx:-1};
   function initPkg(){el('pkg').innerHTML='<option value="">Select a package…</option>'+PKGS.map(p=>`<option value="${p.id}">${esc(pkgLabel(p))}</option>`).join('');if(PKGS.length===1)el('pkg').value=PKGS[0].id;}
   function refreshGroups(){const grps=S.pkgId?groupsForPkg(S.pkgId):[];const cur=el('grp').value;el('grp').innerHTML='<option value="">All groups</option>'+grps.map(g=>`<option ${g===cur?'selected':''}>${esc(g)}</option>`).join('');}
@@ -114,74 +203,170 @@
     grps.forEach(gr=>{const arr=(pr[gr+'|'+S.pkgId]&&pr[gr+'|'+S.pkgId].guests)||[];arr.forEach((g,idx)=>out.push({group:gr,idx,g}));});
     return out;}
 
+  // roster roll-up: overall %, the three states (clickable filters), and a
+  // per-step column so staff can see at a glance which chase to run.
+  function summaryHtml(list){
+    if(!list.length)return '';
+    const n=list.length,slots=n*STEPS.length;
+    const done=list.reduce((t,x)=>t+x.r.done,0),pct=Math.round(done/slots*100);
+    const nReady=list.filter(x=>x.r.done===x.r.total).length;
+    const nNone=list.filter(x=>!x.r.done).length;
+    const chip=(k,lbl,c)=>`<button class="rchip ${S.filter===k?'on':''}" onclick="GL.filter('${k}')"><b>${c}</b> ${lbl}</button>`;
+    const steps=STEPS.map((st,i)=>{const c=list.filter(x=>x.r.items[i].ok).length,p=Math.round(c/n*100);
+      return `<div class="step ${c===n?'done':''}${c?'':' zero'}"><div class="sl"><span>${esc(st.short)}</span><b>${c}/${n}</b></div>
+        <div class="sb"><span style="width:${p}%"></span></div></div>`;}).join('');
+    return `<div class="rsum">
+      <div class="hd"><span class="ttl">Pre-trip readiness</span><span class="pct">${pct}%</span>
+        <span class="obar"><span style="width:${pct}%"></span></span>
+        <span class="rchips">${chip('','All',n)}${chip('ready','trip-ready',nReady)}${chip('progress','in progress',n-nReady-nNone)}${chip('none','not started',nNone)}</span></div>
+      <div class="steps">${steps}</div></div>`;
+  }
+
+  // ---- editor sub-widgets: flight legs, fishing license, health Q&A ----
+  function legFields(pfx,leg,which){
+    leg=leg||{};const mode=leg.mode||'commercial';
+    return `<div class="erow"><div class="ef"><label>Mode</label><select id="${pfx}_mode" onchange="GL.legToggle('${pfx}')"><option value="commercial"${mode==='commercial'?' selected':''}>Commercial</option><option value="jet"${mode==='jet'?' selected':''}>Private jet</option></select></div>
+        <div class="ef"><label>${which} date</label><input id="${pfx}_date" type="date" value="${esc(leg.date||'')}"></div></div>
+      <div id="${pfx}_comm" style="display:${mode==='jet'?'none':'block'}">
+        <div class="erow"><div class="ef"><label>Airline</label><input id="${pfx}_airline" value="${esc(leg.airline||'Alaska Airlines')}"></div>
+          <div class="ef"><label>Flight #</label><input id="${pfx}_flightNo" value="${esc(leg.flightNo||'')}" placeholder="AS 65"></div></div>
+        <div class="erow"><div class="ef"><label>Time at SIT</label><input id="${pfx}_time" type="time" value="${esc(leg.time||'')}"></div><div class="ef"></div></div></div>
+      <div id="${pfx}_jet" style="display:${mode==='jet'?'block':'none'}">
+        <div class="erow"><div class="ef"><label>Tail #</label><input id="${pfx}_tail" value="${esc(leg.tail||'')}" placeholder="N123AB"></div>
+          <div class="ef"><label>Est. time</label><input id="${pfx}_est" type="time" value="${esc(leg.est||leg.time||'')}"></div></div></div>`;
+  }
+  function readLeg(pfx){const v=id=>((el(id)||{}).value||'').trim();const mode=v(pfx+'_mode')||'commercial';const leg={mode,date:v(pfx+'_date')};
+    if(mode==='jet'){leg.tail=v(pfx+'_tail');leg.est=v(pfx+'_est');leg.time=leg.est;}else{leg.airline=v(pfx+'_airline');leg.flightNo=v(pfx+'_flightNo');leg.time=v(pfx+'_time');}return leg;}
+  function licPreviewHtml(l){
+    const isImg=l&&l.type&&/^image\//.test(l.type);
+    if(!l)return '<div class="sub2">No license on file.</div>';
+    return `<div style="display:flex;align-items:center;gap:10px">${isImg?`<img src="${esc(l.dataUrl)}" alt="license" style="width:54px;height:54px;object-fit:cover;border-radius:8px;border:1px solid var(--line-2)">`:'<div style="width:54px;height:54px;border-radius:8px;border:1px solid var(--line-2);display:grid;place-items:center;font-size:22px">📄</div>'}<div><div style="font-weight:700;font-size:13px">${esc(l.name||'License on file')}</div><div class="sub2">Uploaded ${esc(l.uploadedAt||'')}</div></div><button class="btn" style="margin-left:auto;border-color:var(--salmon);color:var(--salmon)" onclick="GL.licRemove()">Remove</button></div>`;
+  }
+  function qBlock(pfx,label,hasVal,descVal,ph){
+    const yes=hasVal==='yes'||(!hasVal&&!!String(descVal||'').trim());
+    return `<div class="ef full"><label>${label}</label>
+      <select id="${pfx}_has" onchange="GL.qtoggle('${pfx}')"><option value=""${!hasVal&&!yes?' selected':''}>— select —</option><option value="no"${hasVal==='no'?' selected':''}>No</option><option value="yes"${yes?' selected':''}>Yes</option></select>
+      <div id="${pfx}_row" style="display:${yes?'block':'none'};margin-top:6px"><textarea id="${pfx}_desc" rows="2" placeholder="${esc(ph)}">${esc(descVal||'')}</textarea></div></div>`;
+  }
+  function readQ(pfx){const has=((el(pfx+'_has')||{}).value)||'';const desc=((el(pfx+'_desc')||{}).value||'').trim();return {has,desc:has==='no'?'':desc};}
+
   window.GL={
     pick(){S.pkgId=el('pkg').value;refreshGroups();GL.render();},
     render(){
       const wrap=el('tblwrap');
-      if(!S.pkgId){wrap.innerHTML='<div class="empty">Pick a package to see its guest list.</div>';el('stat').textContent='';return;}
+      if(!S.pkgId){wrap.innerHTML='<div class="empty">Pick a package to see its guest list.</div>';el('stat').textContent='';el('rsum').innerHTML='';return;}
       let list=rows();const grpCount=new Set(list.map(x=>x.group)).size;
       const q=(el('search').value||'').trim().toLowerCase();
       if(q)list=list.filter(x=>{const g=x.g;return((g.first||'')+' '+(g.last||'')+' '+(g.email||'')+' '+(g.city||'')+' '+(g.state||'')+' '+x.group).toLowerCase().includes(q);});
-      el('stat').innerHTML=`<b>${list.length}</b> guest${list.length===1?'':'s'} · <b>${grpCount}</b> group${grpCount===1?'':'s'} on this package`;
+      list.forEach(x=>{x.r=readiness(x.g);});
+      el('rsum').innerHTML=summaryHtml(list);
+      // the readiness chips filter the table; the summary above always covers the whole scope
+      let show=list;
+      if(S.filter==='ready')show=list.filter(x=>x.r.done===x.r.total);
+      else if(S.filter==='progress')show=list.filter(x=>x.r.done>0&&x.r.done<x.r.total);
+      else if(S.filter==='none')show=list.filter(x=>x.r.done===0);
+      el('stat').innerHTML=`<b>${list.length}</b> guest${list.length===1?'':'s'} · <b>${grpCount}</b> group${grpCount===1?'':'s'} on this package`
+        +(S.filter?` · showing <b>${show.length}</b> ${S.filter==='ready'?'trip-ready':S.filter==='progress'?'in progress':'not started'}`:'');
       if(!list.length){wrap.innerHTML='<div class="empty">No guests match. Add one with ＋ Add guest, or load <b>Test data</b> for a roster.</div>';return;}
-      list.sort((a,b)=>a.group.localeCompare(b.group)||String(a.g.last||'').localeCompare(String(b.g.last||'')));
-      const body=list.map(x=>{const g=x.g;const nm=((g.first||'')+' '+(g.last||'')).trim();
+      if(!show.length){wrap.innerHTML='<div class="empty">No guest is in that state right now.</div>';return;}
+      // chasing a gap? least-ready first. otherwise the familiar group / surname order
+      if(S.filter)show.sort((a,b)=>a.r.done-b.r.done||a.group.localeCompare(b.group)||String(a.g.last||'').localeCompare(String(b.g.last||'')));
+      else show.sort((a,b)=>a.group.localeCompare(b.group)||String(a.g.last||'').localeCompare(String(b.g.last||'')));
+      const body=show.map(x=>{const g=x.g,r=x.r;const nm=((g.first||'')+' '+(g.last||'')).trim();
+        const cls=r.done===r.total?'full':r.done?'':'none';
+        const tail=r.done===r.total?'<span class="rpill">✓ Ready</span>':`<span class="rdymiss">${esc(missText(r))}</span>`;
         return `<tr>
           <td><span class="gnm">${esc(nm)||'—'}</span>${g.lead?'<span class="lead">Lead</span>':''}${repeatBadge(g)}</td>
           <td class="grpcell">${esc(shortGroup(x.group))}</td>
           <td>${g.email?esc(g.email):'<span class="sub2">—</span>'}<div class="sub2">${esc(g.phone||'')}</div></td>
           <td>${esc([g.city,g.state].filter(Boolean).join(', ')||'—')}</td>
           <td>${esc(g.room||'—')}</td>
+          <td class="rdy"><button class="rdybtn ${cls}" onclick="GL.ready('${jesc(x.group)}',${x.idx})" title="What's still outstanding">
+            <span class="pips">${pipHtml(r)}</span>
+            <span class="rdyline"><span class="rdyn">${r.done}/${r.total}</span>${tail}</span></button></td>
           <td><button class="editb" onclick="GL.edit('${jesc(x.group)}',${x.idx})">View / edit</button></td>
         </tr>`;}).join('');
-      wrap.innerHTML=`<table class="gl"><thead><tr><th>Guest</th><th>Group</th><th>Contact</th><th>Location</th><th>Room</th><th></th></tr></thead><tbody>${body}</tbody></table>`;
+      wrap.innerHTML=`<table class="gl"><thead><tr><th>Guest</th><th>Group</th><th>Contact</th><th>Location</th><th>Room</th><th>Pre-trip readiness</th><th></th></tr></thead><tbody>${body}</tbody></table>`;
     },
+    filter(k){S.filter=S.filter===k?'':k;GL.render();},
+    ready(group,idx){
+      const pr=loadProfiles();const g=((pr[group+'|'+S.pkgId]||{}).guests||[])[idx];
+      if(!g){toast('Guest not found');return;}
+      const r=readiness(g);const nm=((g.first||'')+' '+(g.last||'')).trim()||'Guest';
+      el('rdbox').innerHTML=`<h3>${esc(nm)}</h3>
+        <p class="sub">${esc(shortGroup(group))} · ${r.done} of ${r.total} pre-trip steps complete</p>
+        <span class="obar"><span style="width:${r.pct}%"></span></span>
+        <div class="rlist">${r.items.map(i=>`<div class="ritem ${i.warn?'bad':i.ok?'ok':''}">
+          <span class="ic">${i.warn?'!':i.ok?'✓':'○'}</span>
+          <div><div class="t">${esc(i.label)}</div><div class="h">${esc(i.warn?i.warnText:i.hint)}</div></div></div>`).join('')}</div>
+        <p class="rdnote">Airfare and the fishing licence are filled in by the guest in the <b>Guest Portal</b> — everything else can be completed here on their behalf.</p>
+        <div class="efoot"><button class="btn" onclick="GL.rdClose()">Close</button>
+          <button class="btn primary" onclick="GL.rdClose();GL.edit('${jesc(group)}',${idx})">Open guest</button></div>`;
+      el('rdmodal').classList.add('on');
+    },
+    rdClose(){el('rdmodal').classList.remove('on');},
     rgShow(name,csv){const years=csv?csv.split(','):[];el('rgbox').innerHTML=`<h3>${esc(name)}</h3><p class="sub">Repeat guest · ${years.length} stay${years.length===1?'':'s'} at Talon Lodge</p><div class="rgyears">${years.map(y=>`<span class="rgyear">${esc(y)}</span>`).join('')}</div><button class="rgclose" onclick="GL.rgClose()">Close</button>`;el('rgmodal').classList.add('on');},
     rgClose(){el('rgmodal').classList.remove('on');},
     edit(group,idx){const pr=loadProfiles();const g=((pr[group+'|'+S.pkgId]||{}).guests||[])[idx]||{};EDIT.mode='edit';EDIT.group=group;EDIT.idx=idx;GL.openForm(g,group);},
     addNew(){if(!S.pkgId){toast('Pick a package first');return;}EDIT.mode='new';EDIT.group='';EDIT.idx=-1;GL.openForm({},'');},
     openForm(g,group){
-      const grps=groupsForPkg(S.pkgId);
-      const grpField=EDIT.mode==='new'
-        ? `<div class="ef full"><label>Group</label><select id="e_group">${grps.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}${grps.length?'':'<option value="">— none yet —</option>'}</select></div>`
-        : `<div class="ef full"><label>Group</label><input class="tin" value="${esc(group)}" disabled></div>`;
-      el('ebox').innerHTML=`<h3>${EDIT.mode==='new'?'Add guest':'Guest details'}</h3>
-        <div class="erow">
-          <div class="ef"><label>First name</label><input id="e_first" value="${esc(g.first||'')}"></div>
-          <div class="ef"><label>Last name</label><input id="e_last" value="${esc(g.last||'')}"></div>
-        </div>
-        <div class="erow">
-          <div class="ef"><label>Email</label><input id="e_email" type="email" value="${esc(g.email||'')}"></div>
-          <div class="ef"><label>Phone</label><input id="e_phone" value="${esc(g.phone||'')}"></div>
-        </div>
-        <div class="erow">
-          <div class="ef"><label>City</label><input id="e_city" value="${esc(g.city||'')}"></div>
-          <div class="ef"><label>State</label><input id="e_state" value="${esc(g.state||'')}"></div>
-        </div>
-        <div class="erow">
-          <div class="ef"><label>Age</label><input id="e_age" value="${esc(g.age||'')}"></div>
-          <div class="ef"><label>Room</label><input id="e_room" value="${esc(g.room||'')}"></div>
-        </div>
-        <div class="erow">
-          <div class="ef"><label>Boot size</label><input id="e_boot" value="${esc(g.boot||'')}"></div>
-          <div class="ef"><label>Jacket size</label><input id="e_jacket" value="${esc(g.jacket||'')}"></div>
-        </div>
-        <div class="erow">
-          <div class="ef full"><label>Dietary / notes</label><textarea id="e_diet" rows="2">${esc(g.diet||'')}</textarea></div>
-        </div>
-        <div class="erow">${grpField}
-          <div class="ef"><label>&nbsp;</label><label class="echk"><input type="checkbox" id="e_lead" ${g.lead?'checked':''}> Group lead</label></div>
-        </div>
-        <div class="efoot">
+      const grps=groupsForPkg(S.pkgId);const isEdit=EDIT.mode==='edit';
+      const grpField=isEdit
+        ? `<div class="ef full"><label>Group</label><input class="tin" value="${esc(group)}" disabled></div>`
+        : `<div class="ef full"><label>Group</label><select id="e_group">${grps.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('')}${grps.length?'':'<option value="">— none yet —</option>'}</select></div>`;
+      const r=isEdit?readiness(g):null;
+      const strip=r?`<div class="estrip"><span class="pips">${pipHtml(r)}</span>
+        <span class="rdyn" style="color:${r.done===r.total?'var(--accent-deep)':r.done?'var(--gold)':'var(--salmon)'}">${r.done}/${r.total}</span>
+        <span class="rdymiss" style="max-width:none">${r.done===r.total?'All pre-trip steps complete':esc('Outstanding: '+r.miss.map(m=>m.short.toLowerCase()).join(', '))}</span></div>`:'';
+      const flights=isEdit?`<div class="esub">Flights in &amp; out</div>
+        <div class="esubh">🛬 Arrival into Sitka</div>${legFields('e_arr',g.arr,'Arrival')}
+        <div class="esubh">🛫 Departure from Sitka</div>${legFields('e_dep',g.dep,'Departure')}`:'';
+      const license=isEdit?`<div class="esub">Fishing license</div><div id="e_lic_preview">${licPreviewHtml(g.license)}</div>
+        <label class="btn" style="display:inline-block;margin-top:8px;position:relative;overflow:hidden">${g.license?'Replace license':'Upload license'}<input type="file" accept="image/*,application/pdf" onchange="GL.licUpload(this)" style="position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0"></label>`:'';
+      el('ebox').innerHTML=`<style>.esub{font:800 12px var(--sans);color:var(--ink);margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--line)}.esubh{font:700 10px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin:8px 0 4px}</style>
+        <h3>${isEdit?'Guest details':'Add guest'}</h3>${strip}
+        <div class="esub" style="border-top:0;padding-top:0;margin-top:0">Profile</div>
+        <div class="erow"><div class="ef"><label>First name</label><input id="e_first" value="${esc(g.first||'')}"></div><div class="ef"><label>Last name</label><input id="e_last" value="${esc(g.last||'')}"></div></div>
+        <div class="erow"><div class="ef"><label>Email</label><input id="e_email" type="email" value="${esc(g.email||'')}"></div><div class="ef"><label>Phone</label><input id="e_phone" value="${esc(g.phone||'')}"></div></div>
+        <div class="esub">Mailing address</div>
+        <div class="erow"><div class="ef"><label>Country</label><input id="e_country" value="${esc(g.country||'United States')}"></div><div class="ef"><label>Zip / Postal</label><input id="e_zip" value="${esc(g.zip||'')}"></div></div>
+        <div class="erow"><div class="ef"><label>Address 1</label><input id="e_addr1" value="${esc(g.addr1||'')}"></div><div class="ef"><label>Address 2</label><input id="e_addr2" value="${esc(g.addr2||'')}"></div></div>
+        <div class="erow"><div class="ef"><label>City</label><input id="e_city" value="${esc(g.city||'')}"></div><div class="ef"><label>State</label><input id="e_state" value="${esc(g.state||'')}"></div></div>
+        <div class="esub">Sizing &amp; room</div>
+        <div class="erow"><div class="ef"><label>Age</label><input id="e_age" value="${esc(g.age||'')}"></div><div class="ef"><label>Room</label><input id="e_room" value="${esc(g.room||'')}"></div></div>
+        <div class="erow"><div class="ef"><label>Boot size</label><input id="e_boot" value="${esc(g.boot||'')}"></div><div class="ef"><label>Jacket size</label><input id="e_jacket" value="${esc(g.jacket||'')}"></div></div>
+        <div class="esub">Emergency contact</div>
+        <div class="erow"><div class="ef"><label>Contact name</label><input id="e_emerName" value="${esc(g.emerName||'')}" placeholder="Full name"></div><div class="ef"><label>Contact phone</label><input id="e_emerPhone" value="${esc(g.emerPhone||'')}" placeholder="Phone"></div></div>
+        <div class="erow"><div class="ef full"><label>Relationship to guest</label><input id="e_emerRel" value="${esc(g.emerRel||'')}" placeholder="e.g. spouse, parent"></div></div>
+        <div class="esub">Allergies, medical &amp; occasions</div>
+        <div class="erow">${qBlock('e_allergy','Do you have any food allergies?',g.allergyHas,g.allergies,'e.g. shellfish, tree nuts')}</div>
+        <div class="erow">${qBlock('e_medical','Any medical condition we should know?',g.medicalHas,g.medical,'anything guides &amp; kitchen should know')}</div>
+        <div class="erow">${qBlock('e_event','Celebrating a special event?',g.eventHas,g.eventDesc,'e.g. anniversary, birthday')}</div>
+        <div class="erow"><div class="ef full"><label>Dietary preferences / other notes</label><textarea id="e_diet" rows="2">${esc(g.diet||'')}</textarea></div></div>
+        ${flights}
+        ${license}
+        <div class="esub">Group &amp; role</div>
+        <div class="erow">${grpField}<div class="ef"><label>&nbsp;</label><label class="echk"><input type="checkbox" id="e_lead" ${g.lead?'checked':''}> Group lead</label></div></div>
+        <div class="efoot">${isEdit?'<button class="btn" style="margin-right:auto;border-color:var(--salmon);color:var(--salmon)" onclick="GL.remove()">🗑 Delete guest</button>':''}
           <button class="btn" onclick="GL.eClose()">Cancel</button>
-          <button class="btn primary" onclick="GL.save()">${EDIT.mode==='new'?'Add guest':'Save changes'}</button>
-        </div>`;
+          <button class="btn primary" onclick="GL.save()">${isEdit?'Save changes':'Add guest'}</button></div>`;
       el('emodal').classList.add('on');
     },
+    legToggle(pfx){const m=((el(pfx+'_mode')||{}).value)||'commercial';const c=el(pfx+'_comm'),j=el(pfx+'_jet');if(c)c.style.display=m==='jet'?'none':'block';if(j)j.style.display=m==='jet'?'block':'none';},
+    qtoggle(pfx){const y=((el(pfx+'_has')||{}).value)==='yes';const row=el(pfx+'_row');if(row)row.style.display=y?'block':'none';},
+    licUpload(input){const f=input.files&&input.files[0];input.value='';if(!f)return;if(f.size>4*1024*1024){toast('File too large — 4 MB max');return;}
+      const r=new FileReader();r.onload=()=>{const pr=loadProfiles();const g=((pr[EDIT.group+'|'+S.pkgId]||{}).guests||[])[EDIT.idx];if(!g){toast('Save the guest first');return;}
+        g.license={name:f.name,type:f.type||'',dataUrl:r.result,uploadedAt:new Date().toISOString().slice(0,10)};
+        if(saveProfiles(pr)){const pv=el('e_lic_preview');if(pv)pv.innerHTML=licPreviewHtml(g.license);toast('License uploaded');GL.render();}else{delete g.license;toast('Too large to store');}};r.readAsDataURL(f);},
+    licRemove(){const pr=loadProfiles();const g=((pr[EDIT.group+'|'+S.pkgId]||{}).guests||[])[EDIT.idx];if(!g||!g.license)return;delete g.license;if(saveProfiles(pr)){const pv=el('e_lic_preview');if(pv)pv.innerHTML=licPreviewHtml(null);toast('License removed');GL.render();}},
+    remove(){const pr=loadProfiles();const k=EDIT.group+'|'+S.pkgId;const arr=(pr[k]||{}).guests||[];const g=arr[EDIT.idx];if(!g)return;const nm=((g.first||'')+' '+(g.last||'')).trim()||'this guest';if(!confirm('Remove '+nm+' from '+shortGroup(EDIT.group)+'? This deletes their trip profile for this package.'))return;arr.splice(EDIT.idx,1);if(saveProfiles(pr)){GL.eClose();refreshGroups();GL.render();toast(nm+' removed');}},
     eClose(){el('emodal').classList.remove('on');},
     save(){
       const v=id=>((el('e_'+id)||{}).value||'').trim();
-      const rec={first:v('first'),last:v('last'),email:v('email'),phone:v('phone'),city:v('city'),state:v('state'),age:v('age'),room:v('room'),boot:v('boot'),jacket:v('jacket'),diet:v('diet'),lead:!!(el('e_lead')&&el('e_lead').checked)};
+      const rec={first:v('first'),last:v('last'),email:v('email'),phone:v('phone'),country:v('country'),zip:v('zip'),addr1:v('addr1'),addr2:v('addr2'),city:v('city'),state:v('state'),age:v('age'),room:v('room'),boot:v('boot'),jacket:v('jacket'),emerName:v('emerName'),emerPhone:v('emerPhone'),emerRel:v('emerRel'),diet:v('diet'),lead:!!(el('e_lead')&&el('e_lead').checked)};
+      const qa=readQ('e_allergy'),qm=readQ('e_medical'),qe=readQ('e_event');
+      rec.allergyHas=qa.has;rec.allergies=qa.desc;rec.medicalHas=qm.has;rec.medical=qm.desc;rec.eventHas=qe.has;rec.eventDesc=qe.desc;
+      if(el('e_arr_mode')){rec.arr=readLeg('e_arr');rec.dep=readLeg('e_dep');}
       if(!rec.first&&!rec.last){toast('Enter a name');return;}
       const pr=loadProfiles();
       if(EDIT.mode==='new'){
