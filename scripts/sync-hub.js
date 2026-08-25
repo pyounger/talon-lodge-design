@@ -18,7 +18,15 @@ const MAP = {
   fishproc:'fish-processing.html', photos:'guest-photos.html', guestlist:'package-guest-list.html',
   daily:'daily-report.html', display:'daily-display.html', sigdisp:'signature-display.html',
   booking:'booking-engine.html', portal:'guest-portal.html', testdata:'test-data.html',
-  guide:'test-guide.html'
+  guide:'test-guide.html', islandops:'island-ops.html'
+};
+
+// Tools that may not be in the hub yet. Each says which existing tool to slot in after,
+// plus its catalog entry. Once the hub has the tool these are no-ops, so entries can stay
+// here permanently — add a line here whenever you add a prototype to MAP above.
+const NEW = {
+  guestlist: {after: 'photos',    label: 'Package Guest List', desc: 'View/edit/add guests per package · repeat-guest badge', group: 'Operate'},
+  islandops: {after: 'guestlist', label: 'Island Ops',         desc: 'Inventory, set-up & shutdown lists, project notes',     group: 'Operate'}
 };
 
 const enc = f => Buffer.from(fs.readFileSync(path.join(DIR, f), 'utf8'), 'utf8').toString('base64');
@@ -28,12 +36,15 @@ if (missing.length) { console.error('MISSING FILES:', missing); process.exit(1);
 
 let hub = fs.readFileSync(HUB, 'utf8');
 
-// 1. register the new tool in the inline TOOLS catalog (after "photos")
-const photosTool = '{"id":"photos","label":"Guest photos","desc":"Photo per guest for recognition (phone/iPad)","group":"Operate"}';
-if (hub.indexOf('"id":"guestlist"') < 0) {
-  if (hub.indexOf(photosTool) < 0) { console.error('Could not find the photos TOOLS entry to anchor to.'); process.exit(1); }
-  hub = hub.replace(photosTool, photosTool + ',{"id":"guestlist","label":"Package Guest List","desc":"View/edit/add guests per package · repeat-guest badge","group":"Operate"}');
-}
+// 1. register any not-yet-known tool in the inline TOOLS catalog, after its anchor tool
+Object.keys(NEW).forEach(id => {
+  if (hub.indexOf('"id":"' + id + '"') >= 0) return;              // already in the catalog
+  const m = NEW[id];
+  const anchor = hub.match(new RegExp('\\{"id":"' + m.after + '"[^}]*\\}'));
+  if (!anchor) { console.error('Could not find the "' + m.after + '" TOOLS entry to anchor "' + id + '" to.'); process.exit(1); }
+  hub = hub.replace(anchor[0], anchor[0] + ',' + JSON.stringify({id, label: m.label, desc: m.desc, group: m.group}));
+  console.log('  + catalog entry for', id);
+});
 
 // 2. grant it to the Front desk role by default (admin/manager already get '*')
 hub = hub.replace(
@@ -47,9 +58,11 @@ Object.keys(MAP).forEach(id => {
   const tag = '<script type="text/plain" id="src-' + id + '">' + enc(MAP[id]) + '</' + 'script>';
   const re = new RegExp('<script[^>]*id="src-' + id + '"[^>]*>[\\s\\S]*?<\\/script>');
   if (re.test(hub)) { hub = hub.replace(re, tag); refreshed++; }
-  else if (id === 'guestlist') {
-    const reP = /<script[^>]*id="src-photos"[^>]*>[\s\S]*?<\/script>/;
+  else if (NEW[id]) {
+    const reP = new RegExp('<script[^>]*id="src-' + NEW[id].after + '"[^>]*>[\\s\\S]*?<\\/script>');
+    if (!reP.test(hub)) { console.error('No "' + NEW[id].after + '" src blob to anchor "' + id + '" to.'); process.exit(1); }
     hub = hub.replace(reP, m => m + '\n' + tag); inserted++;
+    console.log('  + embedded', id);
   } else { console.warn('  no src blob for', id, '(skipped)'); }
 });
 

@@ -1,0 +1,2269 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Talon Lodge — Island Ops</title><style>html,body{margin:0;background:#f3f6f5}@media(prefers-color-scheme:dark){html,body{background:#0a1413}}</style></head><body>
+<style>
+  :root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--amber:#a5762a;--amber-soft:#f6ecd9;--violet:#6b5ca5;--violet-soft:#eae7f5;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 22px rgba(18,42,43,.06)}
+  @media (prefers-color-scheme:dark){:root{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--amber:#d9ab5e;--amber-soft:#2e2617;--violet:#a99ade;--violet-soft:#23203a;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35)}}
+  :root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--amber:#d9ab5e;--amber-soft:#2e2617;--violet:#a99ade;--violet-soft:#23203a}
+  :root[data-theme="light"]{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--amber:#a5762a;--amber-soft:#f6ecd9;--violet:#6b5ca5;--violet-soft:#eae7f5}
+  *{box-sizing:border-box}
+  .io{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;padding:clamp(14px,3vw,30px);-webkit-font-smoothing:antialiased;min-height:100vh}
+  .io .wrap{max-width:1240px;margin:0 auto}
+  .eyebrow{font:600 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 8px}
+  h1{font:800 clamp(20px,3vw,30px)/1.1 var(--sans);letter-spacing:-.02em;margin:0 0 4px}
+  .lede{color:var(--muted);margin:0 0 16px;font-size:13.5px;max-width:78ch}
+  .topbar{display:flex;gap:12px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px}
+  .topright{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+  .topright label{display:block;margin-bottom:5px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow)}
+  .hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .hd h2{font:700 12px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin:0}
+  label{font:600 10.5px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+  input,select,textarea{font:500 14px var(--sans);padding:9px 11px;border:1px solid var(--line-2);border-radius:7px;background:var(--surface);color:var(--ink);width:100%}
+  textarea{resize:vertical;min-height:60px}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);border-color:var(--accent)}
+  button{font:700 13px var(--sans);padding:9px 15px;border-radius:7px;border:1px solid transparent;cursor:pointer}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-ghost{background:var(--surface);border-color:var(--line-2);color:var(--ink)}
+  .btn-danger{background:var(--surface);border-color:var(--salmon);color:var(--salmon)}
+  .btn-sm{padding:6px 11px;font-size:12px}
+  .btn-xs{padding:3px 8px;font-size:11.5px;font-weight:700}
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px;flex-wrap:wrap}
+  .tab{background:none;border:none;border-bottom:2px solid transparent;border-radius:0;padding:10px 14px;color:var(--muted);font:700 13.5px var(--sans)}
+  .tab:hover{color:var(--ink)}
+  .tab.on{color:var(--accent-deep);border-bottom-color:var(--accent)}
+  .tab .pill{display:inline-block;margin-left:7px;font:700 10.5px/1 var(--mono);padding:3px 6px;border-radius:20px;background:var(--surface-2);color:var(--faint)}
+  .tab.on .pill{background:var(--accent-soft);color:var(--accent-deep)}
+  .pane{display:none}.pane.on{display:block}
+  .subtabs{display:flex;gap:6px;flex-wrap:wrap}
+  .subtab{background:var(--surface);border:1px solid var(--line-2);color:var(--muted);padding:5px 11px;font-size:12.5px;border-radius:20px}
+  .subtab.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep)}
+  .grid{display:grid;grid-template-columns:250px 1fr;gap:16px;align-items:start}
+  .grid>*{min-width:0}   /* grid items default to min-width:auto, which lets a wide table blow out the page */
+  @media(max-width:860px){.grid{grid-template-columns:1fr}}
+  .side{max-height:76vh;overflow:auto}
+  .grp{font:700 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);padding:12px 12px 6px}
+  .crow{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--line);cursor:pointer}
+  .crow:hover{background:var(--surface-2)}.crow.sel{background:var(--accent-soft)}
+  .crow .n{font-weight:700;font-size:13.5px}
+  .crow .c{font:600 11px var(--mono);color:var(--faint);white-space:nowrap}
+  table{width:100%;border-collapse:collapse}
+  th{font:700 10.5px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:9px 12px;border-bottom:1px solid var(--line);font-size:13.5px;vertical-align:middle}
+  tr.item:hover{background:var(--surface-2)}
+  td.num{text-align:right;font:600 13.5px var(--mono);white-space:nowrap}
+  td.iname{min-width:168px}
+  .tw{overflow-x:auto}
+  .qty{display:inline-flex;align-items:center;gap:4px}
+  .qty input{width:62px;text-align:right;padding:5px 7px;font:600 13.5px var(--mono)}
+  .step{width:26px;height:26px;padding:0;font-size:15px;line-height:1;background:var(--surface);border:1px solid var(--line-2);color:var(--muted);border-radius:6px}
+  .step:hover{border-color:var(--accent);color:var(--accent)}
+  .tag{display:inline-block;font:700 10.5px/1 var(--mono);padding:4px 7px;border-radius:5px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+  .t-ok{background:var(--accent-soft);color:var(--accent-deep)}
+  .t-low{background:var(--amber-soft);color:var(--amber)}
+  .t-out{background:var(--salmon-soft);color:var(--salmon)}
+  .t-photo{background:var(--violet-soft);color:var(--violet)}
+  .t-rep{background:var(--amber-soft);color:var(--amber);border:1px solid var(--amber)}
+  .t-ord{background:var(--accent-soft);color:var(--accent-deep);border:1px solid var(--accent)}
+  .sub{font-size:11.5px;color:var(--faint)}
+  /* count grid — one box per size or per location */
+  .cells{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:6px;padding:4px 0 2px;min-width:300px}
+  .cell{border:1px solid var(--line);border-radius:7px;padding:5px 4px;background:var(--surface);text-align:center;min-width:0}
+  .cell.low{border-color:var(--amber)}.cell.out{border-color:var(--salmon)}
+  .cell .lbl{font:700 9.5px/1.15 var(--mono);color:var(--faint);letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cell input{width:100%;min-width:0;text-align:center;padding:3px 0;font:700 13px var(--mono);border:none;background:none}
+  .cell input:focus{outline:1px solid var(--accent);border-radius:4px}
+  .cell .par{font:600 9.5px/1 var(--mono);color:var(--faint);margin-top:2px}
+  /* photos */
+  .thumb{width:46px;height:46px;border-radius:7px;object-fit:cover;background:var(--surface-2);display:block;border:1px solid var(--line)}
+  .thumbbtn{padding:0;border:none;background:none;cursor:pointer;position:relative;line-height:0}
+  .thumbadd{width:46px;height:46px;border:1px dashed var(--line-2);border-radius:7px;background:var(--surface);color:var(--faint);font-size:17px;display:grid;place-items:center}
+  .thumbadd.req{border-color:var(--violet);color:var(--violet)}
+  .thumbbtn .n{position:absolute;right:-4px;bottom:-4px;background:var(--accent);color:#fff;font:700 9.5px/1 var(--mono);border-radius:9px;padding:3px 5px}
+  .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+  .pcard{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface-2)}
+  .pcard img{width:100%;height:110px;object-fit:cover;display:block}
+  .pcard .bar{display:flex;justify-content:flex-end;padding:5px}
+  .empty{padding:34px 16px;text-align:center;color:var(--faint);font-size:13px}
+  .toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .toolbar input[type=search]{width:180px}
+  .toolbar select{width:auto}
+  .chk{display:flex;gap:6px;align-items:center;font-size:12.5px;color:var(--muted);white-space:nowrap;cursor:pointer}
+  .chk input{width:auto}
+  .area{border-bottom:1px solid var(--line)}
+  .area:last-child{border-bottom:none}
+  .ahd{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--surface-2)}
+  .ahd h3{margin:0;font:700 12px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--ink)}
+  .bar{height:5px;border-radius:4px;background:var(--line);overflow:hidden;width:110px;flex:none}
+  .bar i{display:block;height:100%;background:var(--accent);border-radius:4px}
+  .trow{display:flex;gap:10px;align-items:flex-start;padding:9px 14px;border-top:1px solid var(--line)}
+  .trow:hover{background:var(--surface-2)}
+  .trow input[type=checkbox]{width:17px;height:17px;margin-top:2px;flex:none;accent-color:var(--accent)}
+  .trow .body{flex:1;min-width:0}
+  .trow .txt{font-size:13.5px}
+  .trow.done .txt{text-decoration:line-through;color:var(--faint)}
+  .trow .meta{font:600 11px var(--mono);color:var(--faint);margin-top:2px}
+  .trow .note{font-size:12px;color:var(--muted);margin-top:3px;white-space:pre-wrap}
+  .rowbtns{display:flex;gap:5px;flex:none;opacity:.35}
+  .trow:hover .rowbtns,.prow:hover .rowbtns,tr.item:hover .rowbtns{opacity:1}
+  .addrow{display:flex;gap:8px;padding:10px 14px;border-top:1px dashed var(--line-2);flex-wrap:wrap}
+  .addrow input{flex:1;min-width:180px}
+  .progwrap{display:flex;gap:10px;align-items:center;font:600 12px var(--mono);color:var(--muted)}
+  .progwrap .bar{width:180px;height:7px}
+  .plist{max-height:74vh;overflow:auto}
+  .prow{display:flex;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer}
+  .prow:hover{background:var(--surface-2)}.prow.sel{background:var(--accent-soft)}
+  .prow .t{font-weight:700;font-size:13.5px;line-height:1.3}
+  .dot{width:9px;height:9px;border-radius:50%;flex:none}
+  .form{padding:16px;display:flex;flex-direction:column;gap:14px}
+  .frow{display:flex;gap:12px;flex-wrap:wrap}
+  .fld{display:flex;flex-direction:column;gap:5px;flex:1;min-width:140px}
+  .actions{display:flex;gap:8px;border-top:1px solid var(--line);padding-top:14px;flex-wrap:wrap}
+  .notes{display:flex;flex-direction:column;gap:8px}
+  .nitem{border-left:2px solid var(--accent);padding:2px 0 2px 10px}
+  .nitem .when{font:600 10.5px var(--mono);color:var(--faint)}
+  .nitem .body{font-size:13px;white-space:pre-wrap}
+  .sample{background:var(--amber-soft);color:var(--amber);border:1px solid var(--amber);border-radius:8px;padding:9px 12px;font-size:12.5px;margin-bottom:14px}
+  .rt{width:100%;font:500 12.5px/1.5 var(--mono);min-height:240px}
+  .foot{margin-top:18px;font-size:11.5px;color:var(--faint);text-align:center}
+  .hide{display:none!important}
+  dialog{border:none;padding:0;border-radius:10px;width:min(600px,94vw);background:var(--surface);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.28)}
+  dialog::backdrop{background:rgba(10,20,19,.45)}
+  dialog .form{max-height:64vh;overflow:auto}
+  dialog .actions{padding:14px 16px;margin:0}
+  dialog .hint{font-size:11.5px;color:var(--faint)}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(14px);background:var(--ink);color:var(--paper);font:600 13px var(--sans);padding:10px 16px;border-radius:8px;box-shadow:0 8px 26px rgba(0,0,0,.28);opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;z-index:99;max-width:min(520px,92vw)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.bad{background:var(--salmon);color:#fff}
+  .warnrow{grid-column:1/-1;background:var(--amber-soft);color:var(--amber);border:1px solid var(--amber);border-radius:8px;padding:10px 12px;font-size:12.5px}
+  .checks{display:flex;gap:14px;flex-wrap:wrap}
+  .checks label{display:flex;gap:6px;align-items:center;text-transform:none;font:500 13px var(--sans);color:var(--ink)}
+  .checks input{width:auto}
+</style>
+
+<div class="io"><div class="wrap">
+  <div class="topbar">
+    <div>
+      <p class="eyebrow">Talon Lodge &amp; Spa</p>
+      <h1>Island Ops</h1>
+      <p class="lede">Inventory, seasonal set-up &amp; shutdown checklists, and the island project list. Each inventory <strong>section</strong> sets its own shape — a plain count, a count per size, or a count per location — plus whether items carry a photo and whether make/model/condition are tracked.</p>
+    </div>
+    <div class="topright">
+      <div><label for="who">Who's on</label><input id="who" placeholder="Name / initials" style="width:150px"></div>
+      <div><label for="season">Season</label><select id="season" style="min-width:110px"></select></div>
+      <button class="btn-ghost btn-sm" id="btn-export">Export</button>
+      <button class="btn-ghost btn-sm" id="btn-import">Import</button>
+      <input type="file" id="file-import" accept="application/json" class="hide">
+      <input type="file" id="photo-input" accept="image/*" capture="environment" class="hide">
+    </div>
+  </div>
+
+  <div class="sample" id="sample-note">
+    <strong>Loaded from the 2026 Talon inventory sheets.</strong> Rain gear, boots, bar and massage carry the counts from those sheets. Glassware, linen and cleaning are the real item lists with counts still blank — those sheets haven't been counted for 2026 yet, so use <em>Season counts → Take START-of-season count</em> once they have been.
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" data-tab="inv">Inventory<span class="pill" id="p-inv">0</span></button>
+    <button class="tab" data-tab="setup">Set-up list<span class="pill" id="p-setup">0</span></button>
+    <button class="tab" data-tab="shutdown">Shutdown list<span class="pill" id="p-shutdown">0</span></button>
+    <button class="tab" data-tab="proj">Projects<span class="pill" id="p-proj">0</span></button>
+  </div>
+
+  <section class="pane on" id="pane-inv">
+    <div class="hd card" style="margin-bottom:14px">
+      <div class="subtabs">
+        <button class="subtab on" data-sub="items">Items</button>
+        <button class="subtab" data-sub="reorder">Reorder report</button>
+        <button class="subtab" data-sub="counts">Season counts</button>
+        <button class="subtab" data-sub="orders">On order<span class="pill" id="p-orders"></span></button>
+        <button class="subtab" data-sub="repairs">Repairs<span class="pill" id="p-repairs"></span></button>
+        <button class="subtab" data-sub="sections">Sections</button>
+      </div>
+      <div class="toolbar" id="inv-tools">
+        <input type="search" id="q" placeholder="Search items…">
+        <label class="chk"><input type="checkbox" id="only-low"> Below par</label>
+        <label class="chk"><input type="checkbox" id="only-nophoto"> Missing photo</label>
+        <button class="btn-ghost btn-sm" id="btn-locations">Locations</button>
+        <button class="btn-primary btn-sm" id="btn-add-item">+ Item</button>
+      </div>
+    </div>
+
+    <div id="sub-items">
+      <div class="grid">
+        <div class="card side" id="cats"></div>
+        <div class="card"><div id="items"></div></div>
+      </div>
+    </div>
+
+    <div id="sub-reorder" class="hide">
+      <div class="card">
+        <div class="hd"><h2>To order</h2><button class="btn-ghost btn-sm" id="btn-copy-order">Copy as list</button></div>
+        <div id="reorder"></div>
+      </div>
+    </div>
+
+    <div id="sub-counts" class="hide">
+      <div class="card" style="margin-bottom:14px">
+        <div class="hd"><h2>Season counts</h2>
+          <div class="toolbar">
+            <button class="btn-ghost btn-sm" data-snap="start">Take START-of-season count</button>
+            <button class="btn-ghost btn-sm" data-snap="end">Take END-of-season count</button>
+          </div>
+        </div>
+        <div id="snaps"></div>
+      </div>
+      <div class="card">
+        <div class="hd"><h2>Start · current · end</h2><span class="sub" id="cmp-note"></span></div>
+        <div id="compare"></div>
+      </div>
+    </div>
+
+    <div id="sub-orders" class="hide">
+      <div class="card">
+        <div class="hd">
+          <h2>On order</h2>
+          <div class="toolbar">
+            <select id="ofilter" style="width:auto">
+              <option value="ordered">Still coming</option>
+              <option value="all">All orders</option>
+              <option value="received">Received</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <button class="btn-primary btn-sm" id="btn-add-order">+ Record an order</button>
+          </div>
+        </div>
+        <div id="orders"></div>
+      </div>
+    </div>
+
+    <div id="sub-repairs" class="hide">
+      <div class="card">
+        <div class="hd">
+          <h2>Out for repair</h2>
+          <div class="toolbar">
+            <select id="rfilter" style="width:auto">
+              <option value="out">Currently out</option>
+              <option value="all">All records</option>
+              <option value="returned">Returned</option>
+              <option value="lost">Written off</option>
+            </select>
+            <button class="btn-primary btn-sm" id="btn-add-repair">+ Send for repair</button>
+          </div>
+        </div>
+        <div id="repairs"></div>
+      </div>
+    </div>
+
+    <div id="sub-sections" class="hide">
+      <div class="card">
+        <div class="hd"><h2>Inventory sections</h2>
+          <div class="toolbar">
+            <button class="btn-ghost btn-sm" id="btn-groups">Groups</button>
+            <button class="btn-primary btn-sm" id="btn-add-cat">+ Section</button>
+          </div></div>
+        <div id="sections"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pane" id="pane-setup"></section>
+  <section class="pane" id="pane-shutdown"></section>
+
+  <section class="pane" id="pane-proj">
+    <div class="hd card" style="margin-bottom:14px">
+      <div class="toolbar">
+        <select id="pfilter" style="width:auto">
+          <option value="open">Open (not done)</option>
+          <option value="all">All projects</option>
+          <option value="someday">Someday</option>
+          <option value="planned">Planned</option>
+          <option value="active">In progress</option>
+          <option value="done">Done</option>
+        </select>
+        <input type="search" id="pq" placeholder="Search projects…">
+      </div>
+      <div class="toolbar">
+        <button class="btn-ghost btn-sm" data-areas="1">Edit areas</button>
+        <button class="btn-primary btn-sm" id="btn-add-proj">+ Project</button>
+      </div>
+    </div>
+    <div class="grid" style="grid-template-columns:330px 1fr">
+      <div class="card plist" id="plist"></div>
+      <div class="card" id="pdetail"></div>
+    </div>
+  </section>
+
+  <dialog id="dlg">
+    <form id="dlgform" method="dialog">
+      <div class="hd"><h2 id="dlg-title"></h2></div>
+      <div class="form" id="dlg-fields"></div>
+      <div class="actions">
+        <button class="btn-primary" value="ok" id="dlg-ok">Save</button>
+        <button class="btn-ghost" value="cancel" formnovalidate>Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="pdlg">
+    <div class="hd"><h2 id="pdlg-title">Photos</h2><button class="btn-ghost btn-sm" id="pdlg-close">Close</button></div>
+    <div class="form"><div class="pgrid" id="pdlg-grid"></div></div>
+    <div class="actions"><button class="btn-primary" id="pdlg-add">Add photo</button><span class="sub" id="pdlg-note"></span></div>
+  </dialog>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="foot">
+    Prototype · records in <code>talon_island_ops_v1</code> · photos in the shared <code>talon-images</code> store ·
+    <button class="btn-ghost btn-xs" id="btn-reset">Reset to sample</button>
+    <button class="btn-danger btn-xs" id="btn-wipe">Erase all data</button>
+  </div>
+</div></div>
+
+<script>
+(() => {
+'use strict';
+const KEY = 'talon_island_ops_v1';
+const WHO = 'talon_island_who';
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const uid = () => Math.random().toString(36).slice(2, 9);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* Dates are handled in LOCAL time throughout. toISOString() is UTC, which in Alaska
+   rolls over mid-afternoon and would stamp/display the wrong day. */
+const pad = n => String(n).padStart(2, '0');
+const today = () => { const d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
+const thisYear = () => new Date().getFullYear();
+const fmtDate = s => {
+  if (!s) return '';
+  const p = String(s).split('-').map(Number);
+  if (p.length < 3 || !p[0]) return '';
+  return new Date(p[0], p[1] - 1, p[2]).toLocaleDateString(undefined, {month: 'short', day: 'numeric', year: 'numeric'});
+};
+
+/* ---------------- storage ---------------- */
+const ls = {
+  get(k)    { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { warnOnce(e.message); return false; } },
+  del(k)    { try { localStorage.removeItem(k); } catch (e) {} }
+};
+let warned = false;
+function warnOnce(msg) {
+  if (warned) return; warned = true;
+  const n = $('#sample-note');
+  if (n) { n.className = 'sample'; n.innerHTML = '<strong>Not saving.</strong> This browser is blocking local storage (' + esc(msg) + '), so changes will be lost on reload. Open the file directly from disk, or use Export to keep your data.'; n.classList.remove('hide'); }
+}
+
+/* Non-blocking status line. alert() is a silent no-op in some embedded contexts,
+   so errors the user needs to see never go through it. */
+let toastT = null;
+function toast(msg, bad) {
+  const e = $('#toast'); if (!e) return;
+  e.textContent = msg;
+  e.classList.toggle('bad', !!bad);
+  e.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => e.classList.remove('show'), bad ? 4200 : 1800);
+}
+
+/* Photo bytes live in the shared IndexedDB store the other prototypes use, so an
+   item record only ever holds a tiny "idb:<key>" reference. */
+const IMGDB = (() => {
+  let dbp = null;
+  function open() {
+    if (dbp) return dbp;
+    dbp = new Promise((res, rej) => {
+      let r; try { r = indexedDB.open('talon-images', 1); } catch (e) { return rej(e); }
+      r.onupgradeneeded = e => { try { e.target.result.createObjectStore('photos'); } catch (_) {} };
+      r.onsuccess = e => res(e.target.result);
+      r.onerror = () => rej(r.error);
+    });
+    return dbp;
+  }
+  return {
+    /* resolves to null when the store is usable, or a reason string when it isn't,
+       so the photo UI can explain itself instead of offering a dead button */
+    why: () => open().then(() => null, e => (e && e.name === 'SecurityError')
+      ? 'This browser blocks local photo storage here (opening the file straight from disk fixes it).'
+      : 'Photo storage is unavailable: ' + ((e && e.message) || 'unknown error')),
+    put: (k, v) => open().then(db => new Promise((res, rej) => { const tx = db.transaction('photos', 'readwrite'); tx.objectStore('photos').put(v, k); tx.oncomplete = () => res(true); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); })),
+    get: k => open().then(db => new Promise(res => { const rq = db.transaction('photos', 'readonly').objectStore('photos').get(k); rq.onsuccess = () => res(rq.result || null); rq.onerror = () => res(null); })).catch(() => null),
+    del: k => open().then(db => new Promise(res => { const tx = db.transaction('photos', 'readwrite'); tx.objectStore('photos').delete(k); tx.oncomplete = () => res(true); tx.onerror = () => res(false); })).catch(() => false)
+  };
+})();
+function resizeImg(file, cb) {
+  const r = new FileReader();
+  r.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const max = 900; let w = img.width, h = img.height;
+      if (Math.max(w, h) > max) { if (w >= h) { h = Math.round(h * max / w); w = max; } else { w = Math.round(w * max / h); h = max; } }
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      cb(c.toDataURL('image/jpeg', .82));
+    };
+    img.onerror = () => cb(null);
+    img.src = r.result;
+  };
+  r.onerror = () => cb(null);
+  r.readAsDataURL(file);
+}
+function resolveIdb() {
+  $$('img[data-idb]').forEach(img => {
+    const k = img.getAttribute('data-idb'); img.removeAttribute('data-idb');
+    IMGDB.get(k).then(v => { if (v) img.src = v; else img.style.visibility = 'hidden'; });
+  });
+}
+
+/* ---------------- dialog (replaces prompt(): works on tablets, no browser modals) ---------------- */
+function renderField(f) {
+  const id = 'f-' + f.k;
+  const hint = f.hint ? `<div class="hint">${esc(f.hint)}</div>` : '';
+  if (f.type === 'cells') {
+    return `<div class="fld"><label>${esc(f.label)}</label><div class="cells">`
+      + f.keys.map(s => `<div class="cell"><div class="lbl" title="${esc(s)}">${esc(s)}</div>
+          <input type="number" min="0" name="${esc(f.k)}__${esc(s)}" value="${+(f.value || {})[s] || 0}" aria-label="${esc(f.label)} ${esc(s)}"></div>`).join('')
+      + `</div>${hint}</div>`;
+  }
+  if (f.type === 'list') {
+    /* one input per existing value (so a rename can be tracked by position) plus
+       spare blanks for new ones. Clearing an input means "remove this". */
+    const spare = f.spare == null ? 3 : f.spare;
+    const rows = f.values.map((val, i) =>
+      `<input name="${esc(f.k)}__${i}" value="${esc(val)}" aria-label="${esc(f.label)} ${i + 1}" style="margin-bottom:6px">`).join('')
+      + Array.from({length: spare}, (_, j) =>
+      `<input name="${esc(f.k)}__${f.values.length + j}" value="" placeholder="Add another…" aria-label="New ${esc(f.label)}" style="margin-bottom:6px">`).join('');
+    return `<div class="fld"><label>${esc(f.label)}</label>${rows}${hint}</div>`;
+  }
+  if (f.type === 'checks') {
+    return `<div class="fld"><label>${esc(f.label)}</label><div class="checks">`
+      + f.options.map(o => `<label><input type="checkbox" name="${esc(f.k)}__${esc(o.v)}"${(f.value || {})[o.v] ? ' checked' : ''}> ${esc(o.label)}</label>`).join('')
+      + `</div>${hint}</div>`;
+  }
+  if (f.type === 'select') {
+    return `<div class="fld"><label for="${id}">${esc(f.label)}</label>
+      <select id="${id}" name="${esc(f.k)}">${f.options.map(o => `<option value="${esc(o.v)}"${String(o.v) === String(f.value) ? ' selected' : ''}>${esc(o.label)}</option>`).join('')}</select>${hint}</div>`;
+  }
+  if (f.type === 'textarea') {
+    return `<div class="fld"><label for="${id}">${esc(f.label)}</label>
+      <textarea id="${id}" name="${esc(f.k)}"${f.big ? ' class="rt"' : ''} placeholder="${esc(f.ph || '')}">${esc(f.value || '')}</textarea>${hint}</div>`;
+  }
+  /* a plain text field can offer previous entries without forcing a fixed list */
+  const dl = (f.options && f.options.length) ? 'dl-' + f.k : '';
+  return `<div class="fld"><label for="${id}">${esc(f.label)}</label>
+    <input id="${id}" name="${esc(f.k)}" type="${f.type || 'text'}"${f.min != null ? ` min="${f.min}"` : ''}
+      value="${esc(f.value == null ? '' : f.value)}" placeholder="${esc(f.ph || '')}"${f.required ? ' required' : ''}${dl ? ` list="${dl}"` : ''}>
+    ${dl ? `<datalist id="${dl}">${f.options.map(o => `<option value="${esc(o)}"></option>`).join('')}</datalist>` : ''}${hint}</div>`;
+}
+function ask(title, fields, okLabel) {
+  return new Promise(resolve => {
+    const dlg = $('#dlg'), form = $('#dlgform');
+    $('#dlg-title').textContent = title;
+    $('#dlg-ok').textContent = okLabel || 'Save';
+    $('#dlg-fields').innerHTML = fields.map(renderField).join('');
+    /* Resolution is deferred by a turn so the dialog is fully closed before the
+       caller runs — a chained ask() would otherwise call showModal() on a still-open
+       dialog, which throws and silently does nothing. Either submit or close can get
+       here first (close doesn't always fire on a method="dialog" submit), so `settle`
+       guards against resolving twice. */
+    let captured = null, settled = false, cleanup = () => {};
+    const settle = v => {
+      if (settled) return;
+      settled = true; cleanup();
+      setTimeout(() => resolve(v), 0);
+    };
+    /* Look controls up by attribute, NOT via form.elements[name]: that is a named
+       property on an HTMLFormControlsCollection, so a field called "item", "length"
+       or "namedItem" silently returns the built-in instead of the input. */
+    const el = name => form.querySelector('[name="' + name + '"]');
+    const onSubmit = e => {
+      if (e.submitter && e.submitter.value === 'cancel') return;
+      const v = {};
+      fields.forEach(f => {
+        if (f.type === 'list') {
+          const spare = f.spare == null ? 3 : f.spare;
+          v[f.k] = Array.from({length: f.values.length + spare}, (_, i) => (el(f.k + '__' + i).value || '').trim());
+        }
+        else if (f.type === 'cells') { v[f.k] = {}; f.keys.forEach(s => { v[f.k][s] = Math.max(0, +el(f.k + '__' + s).value || 0); }); }
+        else if (f.type === 'checks') { v[f.k] = {}; f.options.forEach(o => { v[f.k][o.v] = el(f.k + '__' + o.v).checked; }); }
+        else v[f.k] = el(f.k).value;
+      });
+      captured = v;
+      settle(v);
+    };
+    const onClose = () => settle(captured);
+    cleanup = () => {
+      form.removeEventListener('submit', onSubmit);
+      dlg.removeEventListener('close', onClose);
+    };
+    form.addEventListener('submit', onSubmit);
+    dlg.addEventListener('close', onClose);
+    dlg.showModal();
+    const first = form.querySelector('input,select,textarea');
+    if (first) { first.focus(); if (first.select) first.select(); }
+  });
+}
+
+/* ---------------- seed ----------------
+   Sections mirror the real Talon inventory sheets. A section declares:
+     dim   — null (one plain count) | {type:'sizes'|'locations', values:[…]}
+     track — which extra fields the items carry
+     photo — 'none' | 'optional' | 'required'                                   */
+/* Starting areas. Editable at runtime — the live list is S.areas, shared by both
+   checklists and the project list. AREAS0 is only the seed default. */
+const AREAS0 = ['Lodge', 'Kitchen', 'Boats & Docks', 'Water & Septic', 'Power & Fuel', 'Spa', 'Shop & Grounds', 'Office'];
+const areas = () => S.areas || AREAS0;
+
+/* Where stock is kept. A controlled list so "Shop" doesn't also get typed as
+   "shop" or "the shop" — editable at runtime, same as areas. */
+const LOCATIONS0 = ['Dining Room Bar', 'Liquor Closet', 'Wine Vault', 'Annex',
+                    'Merchandise Room', 'Main Spruce', 'Shop'];
+const locations = () => S.locations || LOCATIONS0;
+
+/* The department a section belongs to. Controlled list, and the sidebar shows
+   groups in this order rather than whatever order sections happen to be in. */
+const GROUPS0 = ['Front of House', 'Food & Beverage', 'Fishing & Guides',
+                 'Lodge Maintenance', 'Housekeeping'];
+const groups = () => S.groups || GROUPS0;
+const ADULT = ['XS','S','M','L','XL','XXL','XXXL','XXXXL','XXXXXL'];
+/* Granyte youth runs S–XL, Grundens runs by age — one section carries both */
+const YOUTH = ['S','M','L','XL','6YR','8YR','10YR','12YR','14YR'];
+const BOOTS = ['5','6','7','8','9','10','11','12','13','14','15','16','17','18'];
+
+function seed() {
+  const yr = String(thisYear());
+  const T = o => Object.assign({productNo: false, makeModel: false, condition: false, power: false, defective: false, repairs: false}, o || {});
+  const cat = (id, group, name, unit, dim, track, photo) => ({id, group, name, unit, dim: dim || null, track: T(track), photo: photo || 'none'});
+  const cats = [
+    cat('bar',     'Food & Beverage', 'Bar & Liquor', 'bottle', null, {}, 'none'),
+    cat('glass',   'Front of House',  'Glassware',  'ea',   {type: 'locations', values: ['Dry Storage', 'Bar', 'Upper', 'Bluff']}, {productNo: true}, 'optional'),
+    cat('linen',   'Front of House',  'Linen',      'ea',   {type: 'locations', values: ['Breez', 'Bluff', 'Main Cedar', 'Common Room', 'Lodge', 'Dry Storage']}, {}, 'none'),
+    cat('massage', 'Front of House',  'Massage Supplies', 'ea', null, {}, 'none'),
+    cat('clean',   'Housekeeping',    'Cleaning & Dry Goods', 'ea', {type: 'locations', values: ['Dry Storage', 'Breezeway', 'Landing', 'Annex', 'Bluff House']}, {productNo: true}, 'none'),
+    cat('shop',    'Lodge Maintenance', 'Shop Hardware', 'ea', null, {productNo: true}, 'none'),
+    cat('power',   'Lodge Maintenance', 'Power Equipment', 'ea', null, {makeModel: true, condition: true, power: true}, 'optional'),
+    cat('rods',    'Fishing & Guides', 'Rods',       'ea', null, {productNo: true, repairs: true}, 'optional'),
+    cat('reels',   'Fishing & Guides', 'Reels',      'ea', null, {productNo: true, repairs: true}, 'optional'),
+    cat('boatpart','Fishing & Guides', 'Boat Parts', 'ea', null, {productNo: true}, 'none'),
+    cat('jackets', 'Fishing & Guides', 'Jackets',  'ea',   {type: 'sizes', values: ADULT}, {defective: true, repairs: true}, 'none'),
+    cat('bibs',    'Fishing & Guides', 'Bibs',     'ea',   {type: 'sizes', values: ADULT}, {defective: true, repairs: true}, 'none'),
+    cat('pants',   'Fishing & Guides', 'Pants',    'ea',   {type: 'sizes', values: ADULT}, {defective: true, repairs: true}, 'none'),
+    cat('rainsets','Fishing & Guides', 'Rain Sets', 'set', {type: 'sizes', values: ADULT}, {repairs: true}, 'none'),
+    cat('youth',   'Fishing & Guides', 'Youth Rain Gear', 'ea', {type: 'sizes', values: YOUTH}, {defective: true, repairs: true}, 'none'),
+    cat('boots',   'Fishing & Guides', 'Boots',    'pair', {type: 'sizes', values: BOOTS}, {defective: true, repairs: true}, 'none'),
+    cat('waders',  'Fishing & Guides', 'Waders',   'pair', {type: 'sizes', values: ADULT}, {defective: true, repairs: true}, 'none'),
+    cat('waderboots', 'Fishing & Guides', 'Wader Boots', 'pair', {type: 'sizes', values: BOOTS}, {repairs: true}, 'none'),
+    cat('merch',   'Front of House',  'Sales Merchandise', 'ea', {type: 'sizes', values: ['XS','S','M','L','XL','XXL']}, {productNo: true}, 'required')
+  ];
+
+  /* ---- REAL-DATA-START — generated from the 2026 Talon inventory sheets ---- */
+  const R = o => Object.assign({id: uid(), productNo: '', make: '', model: '', condition: '', power: '',
+    loc: '', notes: '', qty: 0, par: 0, counts: {}, pars: {}, defective: {},
+    orderFlag: false, orderQty: 0, photos: [], updated: today()}, o);
+  const realItems = [
+    R({"id":"r1","cat":"jackets","name":"Drift Creek Black jacket","unit":"ea","loc":"Annex","notes":"Sheet cells: S: \"3 NEW\"; M: \"8, 10 NEW\"; L: \"3, 7 NEW\"; XL: \"3, 10 NEW\"; XXL: \"9 NEW\"","counts":{"S":3,"M":18,"L":10,"XL":13,"XXL":9}}),
+    R({"id":"r2","cat":"bibs","name":"Drift Creek Black bib","unit":"ea","loc":"Annex","counts":{"XS":2}}),
+    R({"id":"r3","cat":"pants","name":"Drift Creek Black pant","unit":"ea","loc":"Annex","notes":"Sheet cells: XS: \"1, 1 NEW\"; S: \"6 NEW\"","counts":{"XS":2,"S":6,"XXXL":2,"XXXXL":1}}),
+    R({"id":"r4","cat":"rainsets","name":"Drift Creek Black set","unit":"set","loc":"Annex","counts":{"XS":12,"S":18,"M":6,"L":21,"XL":13,"XXL":9,"XXXL":7,"XXXXL":3}}),
+    R({"id":"r5","cat":"youth","name":"Youth Granyte jacket","unit":"ea","loc":"Annex","counts":{"S":1,"M":1,"L":2,"XL":1}}),
+    R({"id":"r6","cat":"youth","name":"Youth Grundens jacket","unit":"ea","loc":"Annex","counts":{"8YR":2,"10YR":2,"12YR":1,"14YR":2}}),
+    R({"id":"r7","cat":"boots","name":"Helly Hansen boots (new)","unit":"pair","loc":"Annex","counts":{"7":5,"8":3,"10":10,"11":5,"12":5,"13":2}}),
+    R({"id":"r8","cat":"boots","name":"Helly Hansen boots (old)","unit":"pair","loc":"Annex","counts":{"8":4,"9":18,"10":10},"defective":{"11":3,"12":3,"13":3}}),
+    R({"id":"r9","cat":"boots","name":"Thick Black boots","unit":"pair","loc":"Annex","counts":{"11":1,"12":1,"13":2,"14":1}}),
+    R({"id":"ra","cat":"boots","name":"Blue boots","unit":"pair","loc":"Annex","counts":{"6":2,"7":3,"8":2}}),
+    R({"id":"rb","cat":"boots","name":"BOG boots","unit":"pair","loc":"Annex","counts":{"16":2,"17":2,"18":2}}),
+    R({"id":"rc","cat":"boots","name":"Helly Hansen women's (white bottom)","unit":"pair","loc":"Annex","counts":{"6":2,"8":3,"10":4}}),
+    R({"id":"rd","cat":"glass","name":"Water Glass","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"re","cat":"glass","name":"Happy Hour Beer Glass 11oz","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rf","cat":"glass","name":"Alaskan Amber Glass 16oz","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rg","cat":"glass","name":"Pinot Noir (Dinner Wine)","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rh","cat":"glass","name":"White wine (Happy Hour)","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"ri","cat":"glass","name":"Red Wine Glass (Bowl)","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rj","cat":"glass","name":"Rocks Glass","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rk","cat":"glass","name":"Large Rocks","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rl","cat":"glass","name":"Snifter","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rm","cat":"glass","name":"Juice Glass","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rn","cat":"glass","name":"Parfait Mug","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"ro","cat":"glass","name":"Champagne Flute","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rp","cat":"glass","name":"Tall Soda glass","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rq","cat":"glass","name":"Highball","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rr","cat":"glass","name":"Martini Glass","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rs","cat":"glass","name":"Cosmopolitan (short Martini)","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rt","cat":"glass","name":"Coupe","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"ru","cat":"glass","name":"Shot Glass","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rv","cat":"glass","name":"Bluff House Wine Glass","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rw","cat":"glass","name":"Small Wine Carafes","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rx","cat":"glass","name":"Decanters","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"ry","cat":"glass","name":"Copper Mugs","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"rz","cat":"glass","name":"Heavy Shams","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"r10","cat":"glass","name":"Black Spruce/Bluff Coffee Mugs","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"r11","cat":"glass","name":"Black short Coffee Cups","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"r12","cat":"glass","name":"Black Saucers (Tea)","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"r13","cat":"glass","name":"Black Sauces (Coffee)","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"r14","cat":"glass","name":"Black Breakfast Coffe Mugs (new)","unit":"ea","loc":"Dining Room Bar"}),
+    R({"id":"r15","cat":"linen","name":"Bath Towels","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r16","cat":"linen","name":"Unopened Bath Towels","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r17","cat":"linen","name":"Hand Towels","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r18","cat":"linen","name":"Unopened Hand Towels","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r19","cat":"linen","name":"Face Towels","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1a","cat":"linen","name":"Bath Mats","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1b","cat":"linen","name":"Hot Tub towels","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1c","cat":"linen","name":"Fish Towels","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1d","cat":"linen","name":"Chef Towels","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1e","cat":"linen","name":"FOH Towels (Green Stripe)","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1f","cat":"linen","name":"Micro Fiber Towels","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1g","cat":"linen","name":"Polishing Cloths","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1h","cat":"linen","name":"Dinner Napkins","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1i","cat":"linen","name":"Mop Heads for Bona Mops","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1j","cat":"linen","name":"King Fitted Sheets","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1k","cat":"linen","name":"King Top Sheet","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1l","cat":"linen","name":"King Duvet insert","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1m","cat":"linen","name":"King Duvet Cover","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1n","cat":"linen","name":"King Pillowcase","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1o","cat":"linen","name":"King Pillow","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1p","cat":"linen","name":"King Blanket","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1q","cat":"linen","name":"King Quilt","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1r","cat":"linen","name":"King Pillow Sham","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1s","cat":"linen","name":"Full Fitted Sheet","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1t","cat":"linen","name":"Full Top Sheet","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1u","cat":"linen","name":"Full Duvet Insert","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1v","cat":"linen","name":"Full Duvet Cover","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1w","cat":"linen","name":"Standard Pillow case","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1x","cat":"linen","name":"Standard Pillow","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1y","cat":"linen","name":"Full Blanket","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r1z","cat":"linen","name":"Full Quilt","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r20","cat":"linen","name":"Full Bed Skirt","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r21","cat":"linen","name":"Standard Pillow Sham","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r22","cat":"linen","name":"Twin Fitted Sheet","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r23","cat":"linen","name":"Twin Top Sheet","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r24","cat":"linen","name":"Twin Duvet Insert","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r25","cat":"linen","name":"Twin Duvet Cover","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r26","cat":"linen","name":"Twin Blanket","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r27","cat":"linen","name":"Twin Quilt","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r28","cat":"linen","name":"Twin Bed Skirt (PB)","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r29","cat":"linen","name":"Accent Pillow Covers","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r2a","cat":"linen","name":"Accent Pillow Inserts","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r2b","cat":"linen","name":"Surgery Kit","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r2c","cat":"linen","name":"New Standard Pillows","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r2d","cat":"linen","name":"New King Pillows","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r2e","cat":"linen","name":"Standard Pillow Protectors","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r2f","cat":"linen","name":"King Pillow Protectors","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r2g","cat":"linen","name":"Hangers","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r2h","cat":"linen","name":"Rubber Bands","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r2i","cat":"linen","name":"80x30 Curtains","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r2j","cat":"linen","name":"160x84 Curtains","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r2k","cat":"linen","name":"New Twin Mattress Pad","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r2l","cat":"linen","name":"New King Mattress Pad","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r2m","cat":"linen","name":"New Full Mattress Pad","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r2n","cat":"linen","name":"Shower curtains","unit":"ea","loc":"Main Spruce","orderFlag":true,"orderQty":3}),
+    R({"id":"r2o","cat":"linen","name":"Liners","unit":"ea","loc":"Main Spruce","orderFlag":true,"orderQty":3}),
+    R({"id":"r2p","cat":"clean","name":"Pledge","unit":"ea","loc":"Annex"}),
+    R({"id":"r2q","cat":"clean","name":"Shout","unit":"ea","loc":"Annex"}),
+    R({"id":"r2r","cat":"clean","name":"Windex Refill Bottles","unit":"ea","loc":"Annex"}),
+    R({"id":"r2s","cat":"clean","name":"Clear Cups (50pk)","unit":"ea","loc":"Annex"}),
+    R({"id":"r2t","cat":"clean","name":"Travel size toothpaste (boxes)","unit":"ea","loc":"Annex"}),
+    R({"id":"r2u","cat":"clean","name":"Murphys Oil","unit":"ea","loc":"Annex"}),
+    R({"id":"r2v","cat":"clean","name":"Cascade (bluff house dishwasher)","unit":"ea","loc":"Annex"}),
+    R({"id":"r2w","cat":"clean","name":"Laundry Detergent","unit":"ea","loc":"Annex"}),
+    R({"id":"r2x","cat":"clean","name":"Kleenex (case of 12)","unit":"ea","loc":"Annex"}),
+    R({"id":"r2y","cat":"clean","name":"Vanity Kits (boxes)","unit":"ea","loc":"Annex"}),
+    R({"id":"r2z","cat":"clean","name":"Paya Shampoo (Boxes)","unit":"ea","loc":"Annex"}),
+    R({"id":"r30","cat":"clean","name":"Paya Conditioner (boxes)","unit":"ea","loc":"Annex"}),
+    R({"id":"r31","cat":"clean","name":"Paya Soap Bars (boxes)","unit":"ea","loc":"Annex"}),
+    R({"id":"r32","cat":"clean","name":"Paya Soap (Orange Bar)","unit":"ea","loc":"Annex"}),
+    R({"id":"r33","cat":"clean","name":"Bona","unit":"ea","loc":"Annex"}),
+    R({"id":"r34","cat":"clean","name":"Windex Spray Bottles","unit":"ea","loc":"Annex"}),
+    R({"id":"r35","cat":"clean","name":"Soft Scrub","unit":"ea","loc":"Annex"}),
+    R({"id":"r36","cat":"clean","name":"Bar Jumbo Straws (boxes) BLACK","unit":"ea","loc":"Annex"}),
+    R({"id":"r37","cat":"clean","name":"Bar Black Napkins","unit":"ea","loc":"Annex"}),
+    R({"id":"r38","cat":"clean","name":"Bar Coasters","unit":"ea","loc":"Annex"}),
+    R({"id":"r39","cat":"clean","name":"Coffee Stir Straws (boxes) SMALL","unit":"ea","loc":"Annex"}),
+    R({"id":"r3a","cat":"clean","name":"Scrubbing Sponges (20pk)","unit":"ea","loc":"Annex"}),
+    R({"id":"r3b","cat":"clean","name":"Green Green Scourring Pad (boxes)","unit":"ea","loc":"Annex"}),
+    R({"id":"r3c","cat":"clean","name":"Stainless Steel Scrubber (Boxes)","unit":"ea","loc":"Annex"}),
+    R({"id":"r3d","cat":"clean","name":"Blue Sponges","unit":"ea","loc":"Annex"}),
+    R({"id":"r3e","cat":"clean","name":"Wool Soap Pads","unit":"ea","loc":"Annex"}),
+    R({"id":"r3f","cat":"clean","name":"White Kitchen Trash Bags (2)","unit":"ea","loc":"Annex"}),
+    R({"id":"r3g","cat":"clean","name":"C Folds - packs","unit":"ea","loc":"Annex"}),
+    R({"id":"r3h","cat":"clean","name":"Coffee Solo Lids (sleeve)","unit":"ea","loc":"Annex"}),
+    R({"id":"r3i","cat":"clean","name":"Coffee to go cups (sleeve)","unit":"ea","loc":"Annex"}),
+    R({"id":"r3j","cat":"clean","name":"Gallon Ziplock","unit":"ea","loc":"Annex"}),
+    R({"id":"r3k","cat":"clean","name":"Sandwich Ziplock","unit":"ea","loc":"Annex"}),
+    R({"id":"r3l","cat":"clean","name":"Paper Plates 6\"","unit":"ea","loc":"Annex"}),
+    R({"id":"r3m","cat":"clean","name":"Paper Bowls","unit":"ea","loc":"Annex"}),
+    R({"id":"r3n","cat":"clean","name":"Simple Green","unit":"ea","loc":"Annex"}),
+    R({"id":"r3o","cat":"clean","name":"Paper Towels (12roll pack)","unit":"ea","loc":"Annex"}),
+    R({"id":"r3p","cat":"clean","name":"2 Gallon Trash Bag (boxes)","unit":"ea","loc":"Annex"}),
+    R({"id":"r3q","cat":"clean","name":"Drawstring White (boxes)","unit":"ea","loc":"Annex"}),
+    R({"id":"r3r","cat":"clean","name":"Drawstring Black (box)","unit":"ea","loc":"Annex"}),
+    R({"id":"r3s","cat":"clean","name":"Contractor Bags (box)","unit":"ea","loc":"Annex"}),
+    R({"id":"r3t","cat":"clean","name":"Toilet Paper (30 rol)","unit":"ea","loc":"Annex"}),
+    R({"id":"r3u","cat":"clean","name":"Breakfast Napkins","unit":"ea","loc":"Annex"}),
+    R({"id":"r3v","cat":"clean","name":"Brown To-go Boxes (Small)","unit":"ea","loc":"Annex"}),
+    R({"id":"r3w","cat":"clean","name":"Brown To-go Boxes (Big)","unit":"ea","loc":"Annex"}),
+    R({"id":"r3x","cat":"clean","name":"Paper Plates 9\"","unit":"ea","loc":"Annex"}),
+    R({"id":"r3y","cat":"clean","name":"Deli Containers (small)","unit":"ea","loc":"Annex"}),
+    R({"id":"r3z","cat":"clean","name":"Mob Head Boxes","unit":"ea","loc":"Annex"}),
+    R({"id":"r40","cat":"clean","name":"Dawn","unit":"ea","loc":"Annex"}),
+    R({"id":"r41","cat":"clean","name":"Plastic Spoons","unit":"ea","loc":"Annex"}),
+    R({"id":"r42","cat":"clean","name":"Plastic Knives","unit":"ea","loc":"Annex"}),
+    R({"id":"r43","cat":"clean","name":"Plastic Forks","unit":"ea","loc":"Annex"}),
+    R({"id":"r44","cat":"clean","name":"Pre-rolled Silverware","unit":"ea","loc":"Annex"}),
+    R({"id":"r45","cat":"clean","name":"Coffee Filters","unit":"ea","loc":"Annex"}),
+    R({"id":"r46","cat":"clean","name":"Portion Cups","unit":"ea","loc":"Annex"}),
+    R({"id":"r47","cat":"clean","name":"Portion Cup Lids","unit":"ea","loc":"Annex"}),
+    R({"id":"r48","cat":"clean","name":"Bleach","unit":"ea","loc":"Annex"}),
+    R({"id":"r49","cat":"clean","name":"Small Portion Cups","unit":"ea","loc":"Annex"}),
+    R({"id":"r4a","cat":"clean","name":"Small Portion Cups Lids","unit":"ea","loc":"Annex"}),
+    R({"id":"r4b","cat":"clean","name":"Super Trump","unit":"ea","loc":"Annex"}),
+    R({"id":"r4c","cat":"clean","name":"Floor Cleaner","unit":"ea","loc":"Annex"}),
+    R({"id":"r4d","cat":"clean","name":"Eco San","unit":"ea","loc":"Annex"}),
+    R({"id":"r4e","cat":"clean","name":"Silverware Polish","unit":"ea","loc":"Annex"}),
+    R({"id":"r4f","cat":"bar","name":"Beefeater","unit":"bottle","loc":"Liquor Closet","notes":"Gin","qty":2,"par":1}),
+    R({"id":"r4g","cat":"bar","name":"Tanqueray","unit":"bottle","loc":"Liquor Closet","notes":"Gin","qty":1,"par":1}),
+    R({"id":"r4h","cat":"bar","name":"Monkey 47","unit":"bottle","loc":"Liquor Closet","notes":"Gin","qty":1,"par":1}),
+    R({"id":"r4i","cat":"bar","name":"Hendrick's","unit":"bottle","loc":"Liquor Closet","notes":"Gin","qty":2,"par":1}),
+    R({"id":"r4j","cat":"bar","name":"Empress 1908","unit":"bottle","loc":"Liquor Closet","notes":"Gin","qty":2,"par":1}),
+    R({"id":"r4k","cat":"bar","name":"Bombay Sapphire","unit":"bottle","loc":"Liquor Closet","notes":"Gin","qty":2,"par":1}),
+    R({"id":"r4l","cat":"bar","name":"Absolut","unit":"bottle","loc":"Liquor Closet","notes":"Vodka","qty":4,"par":1}),
+    R({"id":"r4m","cat":"bar","name":"Tito's","unit":"bottle","loc":"Liquor Closet","notes":"Vodka","qty":1,"par":1}),
+    R({"id":"r4n","cat":"bar","name":"Chopin","unit":"bottle","loc":"Liquor Closet","notes":"Vodka","qty":2,"par":1}),
+    R({"id":"r4o","cat":"bar","name":"Skyy","unit":"bottle","loc":"Liquor Closet","notes":"Vodka","qty":1,"par":1}),
+    R({"id":"r4p","cat":"bar","name":"Grey Goose","unit":"bottle","loc":"Liquor Closet","notes":"Vodka","qty":2,"par":1}),
+    R({"id":"r4q","cat":"bar","name":"Ketel One","unit":"bottle","loc":"Liquor Closet","notes":"Vodka"}),
+    R({"id":"r4r","cat":"bar","name":"Ketel One Citron","unit":"bottle","loc":"Liquor Closet","notes":"Vodka"}),
+    R({"id":"r4s","cat":"bar","name":"Smirnoff","unit":"bottle","loc":"Liquor Closet","notes":"Vodka","qty":1}),
+    R({"id":"r4t","cat":"bar","name":"Smirnoff Whipped Cream","unit":"bottle","loc":"Liquor Closet","notes":"Vodka","par":1}),
+    R({"id":"r4u","cat":"bar","name":"Smirnoff Strawberry","unit":"bottle","loc":"Liquor Closet","notes":"Vodka","qty":1}),
+    R({"id":"r4v","cat":"bar","name":"Smirnoff Blueberry","unit":"bottle","loc":"Liquor Closet","notes":"Vodka","par":1}),
+    R({"id":"r4w","cat":"bar","name":"Smirnoff Raspberry","unit":"bottle","loc":"Liquor Closet","notes":"Vodka","par":1}),
+    R({"id":"r4x","cat":"bar","name":"Smirnoff Lemon","unit":"bottle","loc":"Liquor Closet","notes":"Vodka","qty":1}),
+    R({"id":"r4y","cat":"bar","name":"Smirnoff Kissed Caramel","unit":"bottle","loc":"Liquor Closet","notes":"Vodka","par":1}),
+    R({"id":"r4z","cat":"bar","name":"Pinnacle Whipped","unit":"bottle","loc":"Liquor Closet","notes":"Vodka","par":1}),
+    R({"id":"r50","cat":"bar","name":"Myers's Original Dark","unit":"bottle","loc":"Liquor Closet","notes":"Rum","qty":1,"par":1}),
+    R({"id":"r51","cat":"bar","name":"Bacardi Gold","unit":"bottle","loc":"Liquor Closet","notes":"Rum","qty":2,"par":1}),
+    R({"id":"r52","cat":"bar","name":"Bacardi White","unit":"bottle","loc":"Liquor Closet","notes":"Rum","qty":1,"par":1}),
+    R({"id":"r53","cat":"bar","name":"Bacardi Limon","unit":"bottle","loc":"Liquor Closet","notes":"Rum","par":1}),
+    R({"id":"r54","cat":"bar","name":"Don Q","unit":"bottle","loc":"Liquor Closet","notes":"Rum","qty":1,"par":1}),
+    R({"id":"r55","cat":"bar","name":"The Kraken","unit":"bottle","loc":"Liquor Closet","notes":"Rum","par":1}),
+    R({"id":"r56","cat":"bar","name":"Captain Morgan","unit":"bottle","loc":"Liquor Closet","notes":"Rum","par":1}),
+    R({"id":"r57","cat":"bar","name":"Casamigos Blanco","unit":"bottle","loc":"Liquor Closet","notes":"Tequila","qty":1,"par":1}),
+    R({"id":"r58","cat":"bar","name":"Casamigos Reposado","unit":"bottle","loc":"Liquor Closet","notes":"Tequila","qty":1,"par":1}),
+    R({"id":"r59","cat":"bar","name":"Espolon","unit":"bottle","loc":"Liquor Closet","notes":"Tequila","qty":1,"par":1}),
+    R({"id":"r5a","cat":"bar","name":"Don Julio Blanco","unit":"bottle","loc":"Liquor Closet","notes":"Tequila","qty":2,"par":1}),
+    R({"id":"r5b","cat":"bar","name":"Don Julio 1942","unit":"bottle","loc":"Liquor Closet","notes":"Tequila","qty":2,"par":1}),
+    R({"id":"r5c","cat":"bar","name":"Patron Silver","unit":"bottle","loc":"Liquor Closet","notes":"Tequila","qty":3,"par":1}),
+    R({"id":"r5d","cat":"bar","name":"Patron Anejo","unit":"bottle","loc":"Liquor Closet","notes":"Tequila","qty":2,"par":1}),
+    R({"id":"r5e","cat":"bar","name":"Patron XO Cafe","unit":"bottle","loc":"Liquor Closet","notes":"Tequila","par":1}),
+    R({"id":"r5f","cat":"bar","name":"Koch Mezcal","unit":"bottle","loc":"Liquor Closet","notes":"Tequila","qty":3,"par":1}),
+    R({"id":"r5g","cat":"bar","name":"Herradura Ultra","unit":"bottle","loc":"Liquor Closet","notes":"Tequila","qty":1}),
+    R({"id":"r5h","cat":"bar","name":"Clase Azul Reposado","unit":"bottle","loc":"Liquor Closet","notes":"Tequila","par":1}),
+    R({"id":"r5i","cat":"bar","name":"Clase Azul Blanco","unit":"bottle","loc":"Liquor Closet","notes":"Tequila","qty":2,"par":1}),
+    R({"id":"r5j","cat":"bar","name":"Casa Sauza Extra Anejo","unit":"bottle","loc":"Liquor Closet","notes":"Tequila","par":1}),
+    R({"id":"r5k","cat":"bar","name":"Woodford Reserve","unit":"bottle","loc":"Liquor Closet","notes":"Bourbon Whiskey","qty":1}),
+    R({"id":"r5l","cat":"bar","name":"Basil Hayden","unit":"bottle","loc":"Liquor Closet","notes":"Bourbon Whiskey","qty":1}),
+    R({"id":"r5m","cat":"bar","name":"Dewar's","unit":"bottle","loc":"Liquor Closet","notes":"Bourbon Whiskey","qty":1}),
+    R({"id":"r5n","cat":"bar","name":"Segram's 7","unit":"bottle","loc":"Liquor Closet","notes":"Bourbon Whiskey","qty":1,"par":1}),
+    R({"id":"r5o","cat":"bar","name":"Serpent's Bite","unit":"bottle","loc":"Liquor Closet","notes":"Bourbon Whiskey","qty":1,"par":1}),
+    R({"id":"r5p","cat":"bar","name":"Knob Creek","unit":"bottle","loc":"Liquor Closet","notes":"Bourbon Whiskey","qty":2,"par":1}),
+    R({"id":"r5q","cat":"bar","name":"Bulleit Bourbon","unit":"bottle","loc":"Liquor Closet","notes":"Bourbon Whiskey","qty":1,"par":1}),
+    R({"id":"r5r","cat":"bar","name":"Jack Daniel's","unit":"bottle","loc":"Liquor Closet","notes":"Bourbon Whiskey","qty":4,"par":1}),
+    R({"id":"r5s","cat":"bar","name":"Skrewball","unit":"bottle","loc":"Liquor Closet","notes":"Bourbon Whiskey","qty":4,"par":1}),
+    R({"id":"r5t","cat":"bar","name":"Maker's Mark","unit":"bottle","loc":"Liquor Closet","notes":"Bourbon Whiskey","par":1}),
+    R({"id":"r5u","cat":"bar","name":"Maker's Mark 46","unit":"bottle","loc":"Liquor Closet","notes":"Bourbon Whiskey","par":1}),
+    R({"id":"r5v","cat":"bar","name":"Southern Comfort","unit":"bottle","loc":"Liquor Closet","notes":"Bourbon Whiskey","qty":1}),
+    R({"id":"r5w","cat":"bar","name":"Four Roses","unit":"bottle","loc":"Liquor Closet","notes":"Bourbon Whiskey","par":1}),
+    R({"id":"r5x","cat":"bar","name":"Jefferson's Reserve","unit":"bottle","loc":"Liquor Closet","notes":"Bourbon Whiskey","par":1}),
+    R({"id":"r5y","cat":"bar","name":"Whistle Pig","unit":"bottle","loc":"Liquor Closet","notes":"Bourbon Whiskey","qty":1,"par":1}),
+    R({"id":"r5z","cat":"bar","name":"Talisker","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","qty":1,"par":1}),
+    R({"id":"r60","cat":"bar","name":"Talisker Storm","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","qty":1}),
+    R({"id":"r61","cat":"bar","name":"Dalwhinnie","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","qty":1,"par":1}),
+    R({"id":"r62","cat":"bar","name":"The Balvenie","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","par":1}),
+    R({"id":"r63","cat":"bar","name":"Lagavulin","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","qty":3,"par":1}),
+    R({"id":"r64","cat":"bar","name":"Glen Livet","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","qty":1,"par":1}),
+    R({"id":"r65","cat":"bar","name":"Glenfiddich","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","qty":2,"par":1}),
+    R({"id":"r66","cat":"bar","name":"Jim Beam Original","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","qty":1,"par":1}),
+    R({"id":"r67","cat":"bar","name":"Jim Beam Honey","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","qty":2,"par":1}),
+    R({"id":"r68","cat":"bar","name":"Highland Park 18","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","qty":1,"par":1}),
+    R({"id":"r69","cat":"bar","name":"Highland Park 12","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","par":1}),
+    R({"id":"r6a","cat":"bar","name":"The Macallan 12","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","qty":1,"par":1}),
+    R({"id":"r6b","cat":"bar","name":"The Macallan 18","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","par":1}),
+    R({"id":"r6c","cat":"bar","name":"The Macallan Gold","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","par":1}),
+    R({"id":"r6d","cat":"bar","name":"Jameson","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","qty":2,"par":1}),
+    R({"id":"r6e","cat":"bar","name":"Connemara","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","qty":1}),
+    R({"id":"r6f","cat":"bar","name":"Hennessy","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","par":1}),
+    R({"id":"r6g","cat":"bar","name":"Gentleman Jack","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","qty":1,"par":1}),
+    R({"id":"r6h","cat":"bar","name":"Johnnie Walker Red Label","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","par":1}),
+    R({"id":"r6i","cat":"bar","name":"Johnnie Walker Black Label","unit":"bottle","loc":"Liquor Closet","notes":"Scotch Whisky","par":1}),
+    R({"id":"r6j","cat":"bar","name":"Bulleit 95 Rye","unit":"bottle","loc":"Liquor Closet","notes":"Rye Whisky","qty":1,"par":1}),
+    R({"id":"r6k","cat":"bar","name":"Pendleton Rye","unit":"bottle","loc":"Liquor Closet","notes":"Rye Whisky","par":1}),
+    R({"id":"r6l","cat":"bar","name":"Pendleton","unit":"bottle","loc":"Liquor Closet","notes":"Canadian Whisky","qty":2,"par":1}),
+    R({"id":"r6m","cat":"bar","name":"Canadian Club","unit":"bottle","loc":"Liquor Closet","notes":"Canadian Whisky","qty":2,"par":1}),
+    R({"id":"r6n","cat":"bar","name":"Windsor","unit":"bottle","loc":"Liquor Closet","notes":"Canadian Whisky","qty":2}),
+    R({"id":"r6o","cat":"bar","name":"Crown Royal Apple","unit":"bottle","loc":"Liquor Closet","notes":"Canadian Whisky","qty":2}),
+    R({"id":"r6p","cat":"bar","name":"Crown Royal Fine de Luxe","unit":"bottle","loc":"Liquor Closet","notes":"Canadian Whisky","par":1}),
+    R({"id":"r6q","cat":"bar","name":"Disaronno","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":1,"par":1}),
+    R({"id":"r6r","cat":"bar","name":"Rum Chata","unit":"bottle","loc":"Liquor Closet","notes":"Etc","par":1}),
+    R({"id":"r6s","cat":"bar","name":"Romana Sambvca","unit":"bottle","loc":"Liquor Closet","notes":"Etc","par":2}),
+    R({"id":"r6t","cat":"bar","name":"di Amore Amaretto","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":2}),
+    R({"id":"r6u","cat":"bar","name":"Ryan's","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":1}),
+    R({"id":"r6v","cat":"bar","name":"Carolans","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":1}),
+    R({"id":"r6w","cat":"bar","name":"Fireball","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":1,"par":1}),
+    R({"id":"r6x","cat":"bar","name":"Frangelico","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":1,"par":1}),
+    R({"id":"r6y","cat":"bar","name":"Baileys","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":2,"par":1}),
+    R({"id":"r6z","cat":"bar","name":"Grand Marnier","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":1,"par":1}),
+    R({"id":"r70","cat":"bar","name":"Pimm's","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":1,"par":1}),
+    R({"id":"r71","cat":"bar","name":"Drambuie","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":1}),
+    R({"id":"r72","cat":"bar","name":"Courvoisier","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":1,"par":2}),
+    R({"id":"r73","cat":"bar","name":"Martini Rosso vermouth","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":1}),
+    R({"id":"r74","cat":"bar","name":"Cointreau","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":1,"par":1}),
+    R({"id":"r75","cat":"bar","name":"Aperol","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":2,"par":1}),
+    R({"id":"r76","cat":"bar","name":"Cook's","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":2}),
+    R({"id":"r77","cat":"bar","name":"Veuve Cliquot","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":5}),
+    R({"id":"r78","cat":"bar","name":"Moet","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":1}),
+    R({"id":"r79","cat":"bar","name":"Luxardo","unit":"bottle","loc":"Liquor Closet","notes":"Etc","par":1}),
+    R({"id":"r7a","cat":"bar","name":"Gallo Sweet Vermouth","unit":"bottle","loc":"Liquor Closet","notes":"Etc","par":1}),
+    R({"id":"r7b","cat":"bar","name":"Gallo Extra Dry Vermouth","unit":"bottle","loc":"Liquor Closet","notes":"Etc","par":1}),
+    R({"id":"r7c","cat":"bar","name":"Jagermeister","unit":"bottle","loc":"Liquor Closet","notes":"Etc","par":1}),
+    R({"id":"r7d","cat":"bar","name":"Kahlua","unit":"bottle","loc":"Liquor Closet","notes":"Etc","par":1}),
+    R({"id":"r7e","cat":"bar","name":"St. Germain","unit":"bottle","loc":"Liquor Closet","notes":"Etc","par":1}),
+    R({"id":"r7f","cat":"bar","name":"Angrosota Bitters","unit":"bottle","loc":"Liquor Closet","notes":"Etc","par":1}),
+    R({"id":"r7g","cat":"bar","name":"Goldschmidt","unit":"bottle","loc":"Liquor Closet","notes":"Etc","par":1}),
+    R({"id":"r7h","cat":"bar","name":"Lillet","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":1}),
+    R({"id":"r7i","cat":"bar","name":"Campari","unit":"bottle","loc":"Liquor Closet","notes":"Etc","par":1}),
+    R({"id":"r7j","cat":"bar","name":"Remy Martin","unit":"bottle","loc":"Liquor Closet","notes":"Etc","qty":1}),
+    R({"id":"r7k","cat":"massage","name":"Green Sheet","unit":"ea","loc":"Main Spruce","qty":33}),
+    R({"id":"r7l","cat":"massage","name":"Bleached or Damaged Green Sheet","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r7m","cat":"massage","name":"Bean Bag Face Rests","unit":"ea","loc":"Main Spruce","qty":2}),
+    R({"id":"r7n","cat":"massage","name":"Thai Bolsters","unit":"ea","loc":"Main Spruce"}),
+    R({"id":"r7o","cat":"massage","name":"Fitted Disposable Head Cover (50pk)","unit":"ea","loc":"Annex","qty":11}),
+    R({"id":"r7p","cat":"massage","name":"Massage Chair","unit":"ea","loc":"Main Spruce","qty":1}),
+    R({"id":"r7q","cat":"massage","name":"White Facerest Covers","unit":"ea","loc":"Main Spruce","qty":16}),
+    R({"id":"r7r","cat":"massage","name":"Green Facerest Cover","unit":"ea","loc":"Main Spruce","qty":7}),
+    R({"id":"r7s","cat":"massage","name":"Electric Table Warmers","unit":"ea","loc":"Main Spruce","qty":2}),
+    R({"id":"r7t","cat":"massage","name":"Sets of hotstones","unit":"ea","loc":"Main Spruce","qty":2}),
+    R({"id":"r7u","cat":"massage","name":"Hotstone Ovens","unit":"ea","loc":"Main Spruce","qty":2}),
+    R({"id":"r7v","cat":"massage","name":"Massage Tables","unit":"ea","loc":"Main Spruce","qty":2}),
+    R({"id":"r7w","cat":"massage","name":"Massage Tables Covers","unit":"ea","loc":"Main Spruce","qty":2}),
+    R({"id":"r7x","cat":"massage","name":"Large Hot Packstory Covers","unit":"ea","loc":"Main Spruce","qty":2}),
+    R({"id":"r7y","cat":"massage","name":"White Pillow Cases","unit":"ea","loc":"Main Spruce","qty":5}),
+    R({"id":"r7z","cat":"massage","name":"Bolsters","unit":"ea","loc":"Main Spruce","qty":2}),
+    R({"id":"r80","cat":"massage","name":"Hydroculator","unit":"ea","loc":"Main Spruce","qty":1}),
+    R({"id":"r81","cat":"massage","name":"Herbal Salt Scrub","unit":"ea","loc":"Main Spruce","qty":1}),
+    R({"id":"r82","cat":"massage","name":"Extension Cord","unit":"ea","loc":"Main Spruce","qty":1}),
+    R({"id":"r83","cat":"massage","name":"Body Scrub Gloves (pairs)","unit":"ea","loc":"Main Spruce","qty":8}),
+    R({"id":"r84","cat":"massage","name":"Large Wooden Spoon","unit":"ea","loc":"Main Spruce","qty":2}),
+    R({"id":"r85","cat":"massage","name":"Small Cream Containers (no tops)","unit":"ea","loc":"Main Spruce","qty":4}),
+    R({"id":"r86","cat":"massage","name":"Lotion Bottles/pump","unit":"ea","loc":"Main Spruce","qty":2}),
+    R({"id":"r87","cat":"massage","name":"Lotion Bottles/pump (Small)","unit":"ea","loc":"Main Spruce","qty":2}),
+    R({"id":"r88","cat":"massage","name":"Pumps (Large)","unit":"ea","loc":"Main Spruce","qty":2}),
+    R({"id":"r89","cat":"massage","name":"Massage Creme Biotone","unit":"ea","loc":"Main Spruce","qty":2}),
+    R({"id":"r8a","cat":"massage","name":"Massage Stool","unit":"ea","loc":"Main Spruce","qty":1}),
+    R({"id":"r8b","cat":"massage","name":"Eye Pillow Cases","unit":"ea","loc":"Main Spruce","qty":6}),
+    R({"id":"r8c","cat":"massage","name":"Sitting Chairs (for guests)","unit":"ea","loc":"Main Spruce","qty":2}),
+    R({"id":"r8d","cat":"massage","name":"Phone Off Signs (hanging)","unit":"ea","loc":"Main Spruce","qty":2}),
+    R({"id":"r8e","cat":"massage","name":"Towel Warmers","unit":"ea","loc":"Main Spruce"})
+  ];
+  /* ---- REAL-DATA-END ---- */
+
+  const items = realItems;
+
+  const t = (list, area, text) => ({id: uid(), list, season: yr, area, text, done: false, by: '', at: '', note: ''});
+  const tasks = [
+    t('setup','Power & Fuel','Start and load-test the main generator'),
+    t('setup','Power & Fuel','Top off fuel tanks and log starting levels'),
+    t('setup','Water & Septic','Open water system, flush lines, shock chlorinate'),
+    t('setup','Water & Septic','Bring septic/lift station back online'),
+    t('setup','Lodge','Turn on heat, air out all guest rooms'),
+    t('setup','Lodge','Make up all beds, hang fresh linens'),
+    t('setup','Kitchen','Start walk-in cooler & freezer, verify temps for 24 hrs'),
+    t('setup','Kitchen','First provisioning barge — receive and put away'),
+    t('setup','Boats & Docks','Launch boats, run each engine, check safety gear'),
+    t('setup','Boats & Docks','Inspect docks, cleats and lines after winter'),
+    t('setup','Shop & Grounds','Take opening counts on every inventory section'),
+    t('setup','Spa','Open treatment room, restock oils and linens'),
+    t('setup','Office','Test internet, phones and card reader'),
+    t('shutdown','Kitchen','Deep clean and defrost walk-in, prop doors open'),
+    t('shutdown','Kitchen','Inventory and remove all perishables'),
+    t('shutdown','Water & Septic','Drain and blow out all water lines, add antifreeze'),
+    t('shutdown','Power & Fuel','Winterize generator, stabilize remaining fuel'),
+    t('shutdown','Lodge','Strip beds, bag linens, set heat to winter minimum'),
+    t('shutdown','Lodge','Shutter windows, secure exterior doors'),
+    t('shutdown','Boats & Docks','Haul boats, winterize engines, shrink wrap'),
+    t('shutdown','Boats & Docks','Pull dock sections / remove floats'),
+    t('shutdown','Spa','Drain hot tub, clean and cover'),
+    t('shutdown','Office','Take closing counts on every inventory section')
+  ];
+  const projects = [
+    {id: uid(), title: 'Rebuild the lower dock ramp', area: 'Boats & Docks', status: 'planned', priority: 'high', owner: 'Andy', due: yr + '-05-15', cost: 8500,
+     notes: [{at: today(), by: 'Phil', text: 'Ramp decking is soft at the hinge end. Get lumber on the spring barge.'}]},
+    {id: uid(), title: 'Replace guest room 3 window', area: 'Lodge', status: 'active', priority: 'normal', owner: '', due: '', cost: 1200,
+     notes: [{at: today(), by: 'Phil', text: 'Seal failed, fogging between panes. Measured 34 x 52.'}]},
+    {id: uid(), title: 'Add shelving to the gear room', area: 'Shop & Grounds', status: 'someday', priority: 'low', owner: '', due: '', cost: 400, notes: []}
+  ];
+  /* Repairs and orders are illustrative, not from the sheets — they attach to
+     whatever real item matches, and simply don't appear if it isn't there. */
+  const repairs = [], orders = [];
+  const jacket = items.find(i => i.cat === 'jackets' && (i.counts || {}).XL);
+  if (jacket) {
+    repairs.push({id: uid(), itemId: jacket.id, key: 'XL', qty: 2, vendor: 'Drift Creek Outdoor Gear',
+      sentAt: yr + '-04-02', dueAt: yr + '-05-10', returnedAt: '', status: 'out',
+      ref: 'RMA-4417', cost: 0, by: 'Andy', notes: 'Zip sliders failed on both.', deducted: true});
+    jacket.counts.XL = Math.max(0, jacket.counts.XL - 2);   // away, so off the shelf
+  }
+  const amber = items.find(i => i.name.indexOf('Alaskan Amber') === 0);
+  if (amber) {
+    orders.push({id: uid(), itemId: amber.id, key: 'Bar', qty: 24, vendor: 'Alaska Restaurant Supply',
+      orderedAt: yr + '-08-04', etaAt: yr + '-08-20', carrier: 'AML', tracking: 'AML-882314',
+      status: 'ordered', receivedAt: '', cost: 312, by: 'Phil', notes: 'Barge to Sitka, then float out.'});
+  }
+
+  return {v: 3, season: yr, sample: false, areas: AREAS0.slice(), groups: GROUPS0.slice(),
+          locations: LOCATIONS0.slice(), cats, items, tasks, projects,
+          repairs, orders, snapshots: [], archives: []};
+}
+
+/* ---------------- state ---------------- */
+let S;
+try { S = JSON.parse(ls.get(KEY)) || seed(); } catch (e) { S = seed(); }
+let ui = {tab: 'inv', sub: 'items', cat: 'all', q: '', onlyLow: false, onlyNoPhoto: false,
+          pfilter: 'open', pq: '', proj: null, rfilter: 'out', ofilter: 'ordered', who: ls.get(WHO) || ''};
+const save = () => ls.set(KEY, JSON.stringify(S));
+
+/* ---------------- derived ---------------- */
+const catOf   = it => S.cats.find(c => c.id === it.cat) || {name: '—', unit: 'ea', dim: null, track: {}, photo: 'none'};
+const keysOf  = c  => (c && c.dim) ? c.dim.values : null;
+const isDim   = it => !!keysOf(catOf(it));
+const onHand  = it => isDim(it) ? Object.values(it.counts || {}).reduce((a, b) => a + (+b || 0), 0) : (+it.qty || 0);
+const parOf   = it => isDim(it) ? Object.values(it.pars   || {}).reduce((a, b) => a + (+b || 0), 0) : (+it.par || 0);
+const defOf   = it => Object.values(it.defective || {}).reduce((a, b) => a + (+b || 0), 0);
+function status(it) {
+  const h = onHand(it), p = parOf(it);
+  if (h <= 0 && p > 0) return 'out';
+  if (p > 0 && h < p) return 'low';
+  return 'ok';
+}
+const photoPolicy = it => catOf(it).photo || 'none';
+const needsPhoto  = it => photoPolicy(it) === 'required' && !(it.photos || []).length;
+
+/* ---- repairs ----
+   Gear sent away is off the shelf, so it is NOT part of the counted stock. The
+   counts stay "what you'd find if you counted right now"; outstanding repairs are
+   tracked alongside, and `owned` is the two added together. */
+const tracksRepairs = it => !!(catOf(it).track || {}).repairs;
+const repairsFor    = id => (S.repairs || []).filter(r => r.itemId === id);
+const openRepairs   = id => repairsFor(id).filter(r => r.status === 'out');
+const outCount      = (id, key) => openRepairs(id)
+  .filter(r => key == null || r.key === key)
+  .reduce((a, r) => a + (+r.qty || 0), 0);
+const ownedCount    = it => onHand(it) + outCount(it.id, null);
+const isOverdue     = r => r.status === 'out' && r.dueAt && r.dueAt < today();
+const openRepairCount = () => (S.repairs || []).filter(r => r.status === 'out').length;
+
+/* ---- purchase orders ----
+   Stock already ordered but not yet landed. Like repairs it is NOT counted stock,
+   but it is on its way, so it shows against the item to stop double-ordering. */
+const CARRIERS = ['AML', 'FedEx', 'USPS', 'Other'];
+const ordersFor   = id => (S.orders || []).filter(o => o.itemId === id);
+const openOrders  = id => ordersFor(id).filter(o => o.status === 'ordered');
+const onOrder     = (id, key) => openOrders(id)
+  .filter(o => key == null || o.key === key)
+  .reduce((a, o) => a + (+o.qty || 0), 0);
+const isLate      = o => o.status === 'ordered' && o.etaAt && o.etaAt < today();
+const openOrderCount = () => (S.orders || []).filter(o => o.status === 'ordered').length;
+
+/* What to order. A manual flag with a quantity is authoritative and replaces the
+   par maths for that item — that's the "Need to order (y/n) / Count to Order"
+   pair off the real sheets, and a hand-entered number should win. Flagged with no
+   quantity just means "surface it", so the computed shortfalls still stand. */
+function shortfalls(it) {
+  const manualQty = +it.orderQty || 0;
+  if (it.orderFlag && manualQty > 0) {
+    return [{key: null, have: onHand(it), want: parOf(it), need: manualQty, manual: true}];
+  }
+  const out = [], keys = keysOf(catOf(it));
+  if (keys) {
+    keys.forEach(k => {
+      const have = +(it.counts || {})[k] || 0, want = +(it.pars || {})[k] || 0;
+      if (want > have) out.push({key: k, have, want, need: want - have});
+    });
+  } else {
+    const have = +it.qty || 0, want = +it.par || 0;
+    if (want > have) out.push({key: null, have, want, need: want - have});
+  }
+  if (it.orderFlag && !out.length) out.push({key: null, have: onHand(it), want: parOf(it), need: 0, manual: true});
+  return out;
+}
+const seasons = () => {
+  const set = new Set([S.season, String(thisYear())]);
+  S.tasks.forEach(t => set.add(t.season));
+  S.snapshots.forEach(s => set.add(s.season));
+  S.archives.forEach(a => set.add(a.season));
+  return Array.from(set).sort().reverse();
+};
+
+/* ---------------- chrome ---------------- */
+function renderChrome() {
+  const who = $('#who');
+  if (document.activeElement !== who) who.value = ui.who;
+  $('#season').innerHTML = seasons().map(y => `<option value="${esc(y)}"${y === S.season ? ' selected' : ''}>${esc(y)}</option>`).join('')
+                         + `<option value="__new">+ New season…</option>`;
+  const st = S.tasks.filter(t => t.season === S.season && t.list === 'setup');
+  const sd = S.tasks.filter(t => t.season === S.season && t.list === 'shutdown');
+  /* repairs badge lives on a sub-tab that may be hidden, so refresh it here */
+  const openR = openRepairCount();
+  const rp = $('#p-repairs');
+  if (rp) { rp.textContent = openR ? String(openR) : ''; rp.classList.toggle('hide', !openR); }
+  const openO = openOrderCount();
+  const op = $('#p-orders');
+  if (op) { op.textContent = openO ? String(openO) : ''; op.classList.toggle('hide', !openO); }
+  const flagged = S.items.filter(i => status(i) !== 'ok' || i.orderFlag).length;
+  $('#p-inv').textContent      = flagged ? flagged + ' low' : S.items.length;
+  $('#p-setup').textContent    = st.filter(t => t.done).length + '/' + st.length;
+  $('#p-shutdown').textContent = sd.filter(t => t.done).length + '/' + sd.length;
+  $('#p-proj').textContent     = S.projects.filter(p => p.status !== 'done').length;
+  if (!warned) $('#sample-note').classList.remove('hide');
+  $$('.tab').forEach(b => b.classList.toggle('on', b.dataset.tab === ui.tab));
+  $$('.pane').forEach(p => p.classList.toggle('on', p.id === 'pane-' + ui.tab));
+}
+
+/* ---------------- inventory ---------------- */
+function renderCats() {
+  /* standard order first, then anything a custom section still uses */
+  const used = [];
+  S.cats.forEach(c => { if (!used.includes(c.group)) used.push(c.group); });
+  const shown = groups().filter(g => used.includes(g)).concat(used.filter(g => !groups().includes(g)));
+  const count = id => S.items.filter(i => i.cat === id).length;
+  const lowIn = id => S.items.filter(i => i.cat === id && (status(i) !== 'ok' || i.orderFlag)).length;
+  const noPic = id => S.items.filter(i => i.cat === id && needsPhoto(i)).length;
+  let h = `<div class="crow${ui.cat === 'all' ? ' sel' : ''}" data-cat="all"><span class="n">All items</span><span class="c">${S.items.length}</span></div>`;
+  shown.forEach(g => {
+    h += `<div class="grp">${esc(g)}</div>`;
+    S.cats.filter(c => c.group === g).forEach(c => {
+      const l = lowIn(c.id), np = noPic(c.id);
+      const shape = c.dim ? (c.dim.type === 'sizes' ? 'by size' : 'by location') : '';
+      h += `<div class="crow${ui.cat === c.id ? ' sel' : ''}" data-cat="${c.id}">
+              <span class="n">${esc(c.name)}${shape ? ` <span class="sub">· ${shape}</span>` : ''}${c.photo === 'required' ? ' <span class="sub">· 📷</span>' : ''}</span>
+              <span class="c">${np ? `<span class="tag t-photo">${np}</span> ` : ''}${l ? `<span class="tag t-low">${l}</span> ` : ''}${count(c.id)}</span></div>`;
+    });
+  });
+  $('#cats').innerHTML = h;
+}
+
+function visibleItems() {
+  const q = ui.q.trim().toLowerCase();
+  return S.items.filter(i =>
+    (ui.cat === 'all' || i.cat === ui.cat) &&
+    (!q || i.name.toLowerCase().includes(q) || (i.loc || '').toLowerCase().includes(q)
+        || (i.productNo || '').toLowerCase().includes(q) || (i.make || '').toLowerCase().includes(q)
+        || (i.model || '').toLowerCase().includes(q)) &&
+    (!ui.onlyLow || status(i) !== 'ok' || i.orderFlag) &&
+    (!ui.onlyNoPhoto || needsPhoto(i))
+  );
+}
+
+function photoCell(it) {
+  const pol = photoPolicy(it);
+  if (pol === 'none') return '';
+  const ph = it.photos || [];
+  if (!ph.length) {
+    return `<td><button class="thumbbtn" data-photo="${it.id}" title="${pol === 'required' ? 'Photo required' : 'Add a photo'}">
+      <span class="thumbadd${pol === 'required' ? ' req' : ''}">+</span></button></td>`;
+  }
+  return `<td><button class="thumbbtn" data-photo="${it.id}" title="${ph.length} photo${ph.length > 1 ? 's' : ''}">
+    <img class="thumb" data-idb="${esc(ph[0].slice(4))}" alt="">${ph.length > 1 ? `<span class="n">${ph.length}</span>` : ''}</button></td>`;
+}
+
+function renderItems() {
+  const list = visibleItems();
+  const single = ui.cat !== 'all' ? S.cats.find(c => c.id === ui.cat) : null;
+  const showPhoto = single ? single.photo !== 'none' : S.cats.some(c => c.photo !== 'none');
+  const showCond  = single ? !!single.track.condition : false;
+
+  if (!list.length) { $('#items').innerHTML = `<div class="empty">No items match.</div>`; return; }
+
+  const rows = list.map(it => {
+    const c = catOf(it), keys = keysOf(c), st = status(it), h = onHand(it), p = parOf(it);
+    const tag = {ok: '<span class="tag t-ok">OK</span>', low: '<span class="tag t-low">Low</span>', out: '<span class="tag t-out">Out</span>'}[st];
+    let countCell;
+    if (keys) {
+      countCell = `<div class="cells">` + keys.map(k => {
+        const have = +(it.counts || {})[k] || 0, want = +(it.pars || {})[k] || 0;
+        const cls = have <= 0 && want > 0 ? ' out' : (want > have ? ' low' : '');
+        return `<div class="cell${cls}"><div class="lbl" title="${esc(k)}">${esc(k)}</div>
+                <input type="number" min="0" value="${have}" data-cellqty="${it.id}" data-key="${esc(k)}" aria-label="${esc(it.name)} ${esc(k)}">
+                <div class="par">par ${want}</div></div>`;
+      }).join('') + `</div>`;
+    } else {
+      countCell = `<span class="qty">
+          <button class="step" data-step="-1" data-id="${it.id}" aria-label="minus one">−</button>
+          <input type="number" min="0" value="${+it.qty || 0}" data-qty="${it.id}" aria-label="${esc(it.name)} quantity">
+          <button class="step" data-step="1" data-id="${it.id}" aria-label="plus one">+</button>
+        </span>`;
+    }
+    const bits = [];
+    if (ui.cat === 'all') bits.push(esc(c.name));
+    if (it.productNo) bits.push(esc(it.productNo));
+    if (it.make || it.model) bits.push(esc([it.make, it.model].filter(Boolean).join(' ')));
+    if (it.power) bits.push(esc(it.power));
+    if (it.loc) bits.push(esc(it.loc));
+    if (it.notes) bits.push(esc(it.notes));
+    const dfc = c.track.defective && defOf(it) ? ` <span class="tag t-out">${defOf(it)} defective</span>` : '';
+    const out = outCount(it.id, null);
+    const rep = out ? ` <span class="tag t-rep">${out} at repair</span>` : '';
+    if (out) bits.push('owns ' + ownedCount(it) + ' incl. repairs');
+    const coming = onOrder(it.id, null);
+    const ord = coming ? ` <span class="tag t-ord">${coming} on order</span>` : '';
+
+    return `<tr class="item">
+      ${showPhoto ? photoCell(it) : ''}
+      <td class="iname"><div style="font-weight:700">${esc(it.name)}${needsPhoto(it) ? ' <span class="tag t-photo">Photo needed</span>' : ''}${dfc}${rep}${ord}</div>
+          ${bits.length ? `<div class="sub">${bits.join(' · ')}</div>` : ''}</td>
+      <td>${countCell}</td>
+      <td class="num">${keys ? h + ' / ' + p : `<input type="number" min="0" value="${+it.par || 0}" data-par="${it.id}" style="width:62px;text-align:right;padding:5px 7px;font:600 13.5px var(--mono)">`}</td>
+      ${showCond ? `<td><select data-cond="${it.id}" style="width:auto;padding:5px 8px">${['','G','F','B'].map(v => `<option value="${v}"${it.condition === v ? ' selected' : ''}>${v || '—'}</option>`).join('')}</select></td>` : ''}
+      <td class="num">${esc(it.unit || c.unit)}</td>
+      <td>${tag}${it.orderFlag ? ' <span class="tag t-low">Order</span>' : ''}</td>
+      <td><div class="rowbtns"><button class="btn-ghost btn-xs" data-order="${it.id}" title="Record an order for this item">Order</button>${tracksRepairs(it) ? `<button class="btn-ghost btn-xs" data-send="${it.id}" title="Send this item out for repair">Repair</button>` : ''}<button class="btn-ghost btn-xs" data-edit="${it.id}">Edit</button><button class="btn-danger btn-xs" data-del="${it.id}">✕</button></div></td>
+    </tr>`;
+  }).join('');
+
+  $('#items').innerHTML = `<div class="tw"><table><thead><tr>
+      ${showPhoto ? '<th>Photo</th>' : ''}<th>Item</th><th>On hand</th><th>Par</th>${showCond ? '<th>Cond</th>' : ''}<th>Unit</th><th>Status</th><th></th>
+    </tr></thead><tbody>${rows}</tbody></table></div>`;
+  resolveIdb();
+}
+
+function orderLines() {
+  const out = [];
+  S.items.forEach(it => shortfalls(it).forEach(s => out.push(Object.assign({it}, s))));
+  return out.sort((a, b) => catOf(a.it).name.localeCompare(catOf(b.it).name) || a.it.name.localeCompare(b.it.name));
+}
+function renderReorder() {
+  const lines = orderLines();
+  if (!lines.length) { $('#reorder').innerHTML = `<div class="empty">Everything is at or above par and nothing is flagged. Nothing to order.</div>`; return; }
+  $('#reorder').innerHTML = `<div class="tw"><table><thead><tr><th>Section</th><th>Item</th><th>Size / location</th><th class="num">On hand</th><th class="num">Par</th><th class="num">Order</th><th>Unit</th><th></th></tr></thead><tbody>`
+    + lines.map(l => {
+        const coming = onOrder(l.it.id, l.key);
+        return `<tr class="item"><td class="sub">${esc(catOf(l.it).name)}</td>
+        <td style="font-weight:700">${esc(l.it.name)}${l.it.productNo ? `<div class="sub">${esc(l.it.productNo)}</div>` : ''}</td>
+        <td>${l.key ? `<span class="tag t-low">${esc(l.key)}</span>` : (l.manual ? '<span class="sub">flagged</span>' : '<span class="sub">—</span>')}</td>
+        <td class="num">${l.have}</td><td class="num">${l.want}</td>
+        <td class="num" style="color:var(--salmon);font-weight:700">${l.need}</td>
+        <td class="sub">${esc(l.it.unit || catOf(l.it).unit)}</td>
+        <td>${coming
+          ? `<span class="tag t-ord">${coming} on order</span>`
+          : `<button class="btn-ghost btn-xs" data-order="${l.it.id}" data-oqty="${l.need}"${l.key ? ` data-okey="${esc(l.key)}"` : ''}>Order</button>`}</td></tr>`;
+      }).join('')
+    + `</tbody></table></div>`;
+}
+function orderText() {
+  const lines = orderLines();
+  if (!lines.length) return 'Nothing to order.';
+  let out = `Talon Lodge — order list (${today()})\n`, cur = '';
+  lines.forEach(l => {
+    const c = catOf(l.it).name;
+    if (c !== cur) { out += `\n${c.toUpperCase()}\n`; cur = c; }
+    out += `  ${l.need} ${l.it.unit || catOf(l.it).unit} — ${l.it.name}`
+        + (l.key ? ` (${l.key})` : '') + (l.it.productNo ? ` [${l.it.productNo}]` : '')
+        + `   have ${l.have}, par ${l.want}\n`;
+  });
+  return out;
+}
+
+function renderSnaps() {
+  const list = S.snapshots.filter(s => s.season === S.season).sort((a, b) => a.at.localeCompare(b.at));
+  $('#snaps').innerHTML = list.length
+    ? `<div class="tw"><table><thead><tr><th>Count</th><th>Taken</th><th>By</th><th class="num">Lines</th><th class="num">Total units</th><th></th></tr></thead><tbody>`
+      + list.map(s => `<tr class="item"><td><span class="tag ${s.kind === 'start' ? 't-ok' : 't-low'}">${s.kind === 'start' ? 'Start' : 'End'}</span> <strong>${esc(s.season)}</strong></td>
+          <td>${fmtDate(s.at)}</td><td>${esc(s.by || '—')}</td><td class="num">${Object.keys(s.lines).length}</td>
+          <td class="num">${Object.values(s.lines).reduce((a, b) => a + b, 0)}</td>
+          <td><button class="btn-danger btn-xs" data-delsnap="${s.id}">✕</button></td></tr>`).join('')
+      + `</tbody></table></div>`
+    : `<div class="empty">No counts taken for ${esc(S.season)} yet. Take a start-of-season count when the shelves are stocked, and an end-of-season count at shutdown.</div>`;
+}
+function renderCompare() {
+  const start = S.snapshots.find(s => s.season === S.season && s.kind === 'start');
+  const end   = S.snapshots.find(s => s.season === S.season && s.kind === 'end');
+  $('#cmp-note').textContent = start ? `Start ${fmtDate(start.at)}${end ? ' · End ' + fmtDate(end.at) : ' · no end count yet'}` : '';
+  if (!start) { $('#compare').innerHTML = `<div class="empty">Take a start-of-season count to see usage across the season.</div>`; return; }
+  $('#compare').innerHTML = `<div class="tw"><table><thead><tr><th>Item</th><th class="num">Start</th><th class="num">Current</th>${end ? '<th class="num">End</th>' : ''}<th class="num">Used</th></tr></thead><tbody>`
+    + S.items.map(it => {
+        const s0 = start.lines[it.id], now = onHand(it), s1 = end ? end.lines[it.id] : undefined;
+        if (s0 == null) return '';
+        const final = s1 == null ? now : s1, used = s0 - final;
+        return `<tr class="item"><td><strong>${esc(it.name)}</strong> <span class="sub">${esc(catOf(it).name)}</span></td>
+          <td class="num">${s0}</td><td class="num">${now}</td>${end ? `<td class="num">${s1 == null ? '—' : s1}</td>` : ''}
+          <td class="num" style="color:${used > 0 ? 'var(--salmon)' : 'var(--faint)'}">${used > 0 ? used : (used < 0 ? '+' + (-used) : '0')}</td></tr>`;
+      }).join('')
+    + `</tbody></table></div>`;
+}
+
+function trackingLink(o) {
+  const t = (o.tracking || '').trim();
+  if (!t) return '';
+  const u = {FedEx: 'https://www.fedex.com/fedextrack/?trknbr=', USPS: 'https://tools.usps.com/go/TrackConfirmAction?tLabels='}[o.carrier];
+  return u ? `<a href="${u}${encodeURIComponent(t)}" target="_blank" rel="noopener">${esc(t)}</a>` : esc(t);
+}
+
+function renderOrders() {
+  const f = ui.ofilter;
+  const sel = $('#ofilter'); if (sel && sel.value !== f) sel.value = f;
+  const list = (S.orders || [])
+    .filter(o => f === 'all' || o.status === f)
+    .slice()
+    .sort((a, b) => (b.orderedAt || '').localeCompare(a.orderedAt || ''));
+
+  if (!list.length) {
+    $('#orders').innerHTML = `<div class="empty">${f === 'ordered'
+      ? 'Nothing on order. Use <strong>+ Record an order</strong>, or the <strong>Order</strong> button beside any line on the reorder report.'
+      : 'No orders match.'}</div>`;
+    return;
+  }
+  $('#orders').innerHTML = `<div class="tw"><table><thead><tr>
+      <th>Item</th><th>Size / location</th><th class="num">Qty</th><th>Vendor</th><th>Ordered</th><th>Expected</th><th>Shipping</th><th>Status</th><th></th>
+    </tr></thead><tbody>`
+    + list.map(o => {
+        const it = S.items.find(i => i.id === o.itemId);
+        const late = isLate(o);
+        const badge = o.status === 'ordered'
+          ? (late ? `<span class="tag t-out">Late</span>` : `<span class="tag t-low">On order</span>`)
+          : o.status === 'received' ? `<span class="tag t-ok">Received ${fmtDate(o.receivedAt)}</span>`
+          : `<span class="tag t-out">Cancelled</span>`;
+        return `<tr class="item">
+          <td class="iname"><strong>${esc(it ? it.name : '(deleted item)')}</strong>
+            <div class="sub">${esc(it ? catOf(it).name : '')}${o.by ? ' · ordered by ' + esc(o.by) : ''}${+o.cost ? ' · $' + (+o.cost).toFixed(2) : ''}</div></td>
+          <td>${o.key ? `<span class="tag t-low">${esc(o.key)}</span>` : '<span class="sub">—</span>'}</td>
+          <td class="num">${+o.qty || 0}</td>
+          <td><strong>${esc(o.vendor || '—')}</strong></td>
+          <td class="num">${fmtDate(o.orderedAt)}</td>
+          <td class="num"${late ? ' style="color:var(--salmon);font-weight:700"' : ''}>${o.etaAt ? fmtDate(o.etaAt) : '<span class="sub">—</span>'}</td>
+          <td class="sub">${o.carrier ? `<strong>${esc(o.carrier)}</strong>` : ''}${o.tracking ? `<div>${trackingLink(o)}</div>` : ''}${!o.carrier && !o.tracking ? '—' : ''}</td>
+          <td>${badge}</td>
+          <td><div class="rowbtns">
+            ${o.status === 'ordered' ? `<button class="btn-ghost btn-xs" data-oarrive="${o.id}">Received</button>` : ''}
+            <button class="btn-ghost btn-xs" data-oedit="${o.id}">Edit</button>
+            <button class="btn-danger btn-xs" data-odel="${o.id}">✕</button></div></td>
+        </tr>`;
+      }).join('')
+    + `</tbody></table></div>`;
+}
+
+function orderFields(rec, it, suggestQty, suggestKey) {
+  const keys = keysOf(catOf(it));
+  const vendors = Array.from(new Set((S.orders || []).map(o => o.vendor).filter(Boolean)));
+  const f = [];
+  if (keys) f.push({k: 'okey', label: 'Which size / location', type: 'select',
+    value: rec.key != null ? rec.key : (suggestKey || keys[0]),
+    options: keys.map(k => ({v: k, label: k + '  (' + (+(it.counts || {})[k] || 0) + ' on hand)'}))});
+  f.push({k: 'qty', label: 'Quantity ordered', type: 'number', min: 1,
+    value: +rec.qty || suggestQty || 1, required: true});
+  f.push({k: 'vendor', label: 'Vendor name', value: rec.vendor || '', required: true,
+    ph: 'Alaska Restaurant Supply', options: vendors,
+    hint: vendors.length ? 'Previously used: ' + vendors.join(' · ') : ''});
+  f.push({k: 'orderedAt', label: 'Date ordered', type: 'date', value: rec.orderedAt || today(), required: true});
+  f.push({k: 'etaAt', label: 'Expected delivery', type: 'date', value: rec.etaAt || '',
+    hint: 'Anything past this date still showing as on order is flagged Late.'});
+  f.push({k: 'carrier', label: 'Shipping', type: 'select', value: rec.carrier || '',
+    options: [{v: '', label: '—'}].concat(CARRIERS.map(c => ({v: c, label: c})))});
+  f.push({k: 'tracking', label: 'Tracking number', value: rec.tracking || '',
+    ph: 'If available', hint: 'FedEx and USPS numbers become a clickable tracking link.'});
+  f.push({k: 'cost', label: 'Cost ($)', type: 'number', min: 0, value: rec.cost || ''});
+  f.push({k: 'notes', label: 'Notes', type: 'textarea', value: rec.notes || ''});
+  return f;
+}
+
+async function placeOrder(itemId, suggestQty, suggestKey) {
+  const it = S.items.find(i => i.id === itemId);
+  if (!it) { toast('Could not find that item.', true); return; }
+  const keys = keysOf(catOf(it));
+  const v = await ask('Record an order — ' + it.name, orderFields({}, it, suggestQty, suggestKey), 'Save order');
+  if (!v) return;
+
+  const qty = Math.max(1, +v.qty || 1);
+  (S.orders = S.orders || []).push({
+    id: uid(), itemId, key: keys ? v.okey : null, qty, vendor: v.vendor.trim(),
+    orderedAt: v.orderedAt, etaAt: v.etaAt, carrier: v.carrier, tracking: v.tracking.trim(),
+    status: 'ordered', receivedAt: '', cost: +v.cost || 0, by: ui.who, notes: v.notes.trim()
+  });
+  /* the manual "needs ordering" flag has served its purpose once an order exists */
+  const cleared = it.orderFlag;
+  if (cleared) { it.orderFlag = false; it.orderQty = 0; }
+  save(); render();
+  toast(`${qty} × ${it.name} ordered from ${v.vendor.trim()}` + (cleared ? ' · order flag cleared' : ''));
+}
+
+async function receiveOrder(id) {
+  const o = (S.orders || []).find(x => x.id === id); if (!o) return;
+  const it = S.items.find(i => i.id === o.itemId);
+  const v = await ask('Order arrived — ' + (it ? it.name : ''), [
+    {k: 'outcome', label: 'What happened', type: 'select', value: 'received',
+     options: [{v: 'received', label: 'Delivered — add to stock'},
+               {v: 'cancelled', label: 'Cancelled / never arriving'}]},
+    {k: 'receivedAt', label: 'Date received', type: 'date', value: today(), required: true},
+    {k: 'qty', label: 'How many arrived', type: 'number', min: 0, value: +o.qty || 1,
+     hint: 'Short delivery? Enter what actually turned up — the rest stays on order.'},
+    {k: 'cost', label: 'Final cost ($)', type: 'number', min: 0, value: o.cost || ''},
+    {k: 'notes', label: 'Notes', type: 'textarea', value: o.notes || ''}
+  ], 'Save');
+  if (!v) return;
+
+  const ordered = +o.qty || 0;
+  const got = v.outcome === 'received' ? Math.min(ordered, Math.max(0, +v.qty || 0)) : 0;
+  const short = v.outcome === 'received' ? ordered - got : 0;
+
+  o.status = v.outcome;
+  o.receivedAt = v.receivedAt;
+  o.cost = +v.cost || 0;
+  o.notes = v.notes.trim();
+  o.qty = v.outcome === 'received' ? got : ordered;
+
+  /* a short delivery splits, same as a partial repair return */
+  if (short > 0) {
+    S.orders.push(Object.assign({}, o, {
+      id: uid(), qty: short, status: 'ordered', receivedAt: '', cost: 0,
+      notes: (o.notes ? o.notes + ' · ' : '') + `${short} of ${ordered} still outstanding`
+    }));
+  }
+  if (got && it) {
+    if (o.key != null) it.counts[o.key] = (+(it.counts || {})[o.key] || 0) + got;
+    else it.qty = (+it.qty || 0) + got;
+    it.updated = today();
+  }
+  save(); render();
+  toast(v.outcome === 'received'
+    ? `${got} added to stock` + (short ? ` · ${short} still outstanding` : '')
+    : 'Order cancelled');
+}
+
+function renderRepairs() {
+  const f = ui.rfilter;
+  const sel = $('#rfilter'); if (sel && sel.value !== f) sel.value = f;
+  const list = (S.repairs || [])
+    .filter(r => f === 'all' || r.status === f)
+    .slice()
+    .sort((a, b) => (b.sentAt || '').localeCompare(a.sentAt || ''));
+  const open = openRepairCount();
+  $('#p-repairs').textContent = open ? String(open) : '';
+  $('#p-repairs').classList.toggle('hide', !open);
+
+  if (!list.length) {
+    $('#repairs').innerHTML = `<div class="empty">${f === 'out'
+      ? 'Nothing is out for repair. Use <strong>+ Send for repair</strong> when gear goes off the island.'
+      : 'No repair records match.'}</div>`;
+    return;
+  }
+  $('#repairs').innerHTML = `<div class="tw"><table><thead><tr>
+      <th>Item</th><th>Size</th><th class="num">Qty</th><th>Sent to</th><th>Sent</th><th>Due back</th><th>Status</th><th>Ref / notes</th><th></th>
+    </tr></thead><tbody>`
+    + list.map(r => {
+        const it = S.items.find(i => i.id === r.itemId);
+        const overdue = isOverdue(r);
+        const badge = r.status === 'out'
+          ? (overdue ? `<span class="tag t-out">Overdue</span>` : `<span class="tag t-low">Out</span>`)
+          : r.status === 'returned' ? `<span class="tag t-ok">Returned ${fmtDate(r.returnedAt)}</span>`
+          : `<span class="tag t-out">Written off</span>`;
+        return `<tr class="item">
+          <td class="iname"><strong>${esc(it ? it.name : '(deleted item)')}</strong>
+            <div class="sub">${esc(it ? catOf(it).name : '')}${r.by ? ' · sent by ' + esc(r.by) : ''}</div></td>
+          <td>${r.key ? `<span class="tag t-low">${esc(r.key)}</span>` : '<span class="sub">—</span>'}</td>
+          <td class="num">${+r.qty || 0}</td>
+          <td><strong>${esc(r.vendor || '—')}</strong></td>
+          <td class="num">${fmtDate(r.sentAt)}</td>
+          <td class="num"${overdue ? ' style="color:var(--salmon);font-weight:700"' : ''}>${r.dueAt ? fmtDate(r.dueAt) : '<span class="sub">—</span>'}</td>
+          <td>${badge}</td>
+          <td class="sub">${esc([r.ref, r.notes].filter(Boolean).join(' · ')) || '—'}${+r.cost ? ` · $${(+r.cost).toFixed(2)}` : ''}</td>
+          <td><div class="rowbtns">
+            ${r.status === 'out' ? `<button class="btn-ghost btn-xs" data-rback="${r.id}">Returned</button>` : ''}
+            <button class="btn-ghost btn-xs" data-redit="${r.id}">Edit</button>
+            <button class="btn-danger btn-xs" data-rdel="${r.id}">✕</button></div></td>
+        </tr>`;
+      }).join('')
+    + `</tbody></table></div>`;
+}
+
+/* fields shared by the send + edit dialogs */
+function repairFields(rec, it) {
+  const keys = keysOf(catOf(it));
+  const vendors = Array.from(new Set((S.repairs || []).map(r => r.vendor).filter(Boolean)));
+  const f = [];
+  if (keys) f.push({k: 'key', label: 'Which size', type: 'select', value: rec.key || keys[0],
+    options: keys.map(k => ({v: k, label: k + '  (' + (+(it.counts || {})[k] || 0) + ' on hand)'}))});
+  f.push({k: 'qty', label: 'How many', type: 'number', min: 1, value: +rec.qty || 1, required: true});
+  f.push({k: 'vendor', label: 'Sent to', value: rec.vendor || '', required: true,
+    ph: 'Drift Creek Outdoor Gear', options: vendors,
+    hint: vendors.length ? 'Previously used: ' + vendors.join(' · ') : ''});
+  f.push({k: 'sentAt', label: 'Date sent', type: 'date', value: rec.sentAt || today(), required: true});
+  f.push({k: 'dueAt',  label: 'Expected back', type: 'date', value: rec.dueAt || '',
+    hint: 'Optional. Anything past this date is flagged Overdue.'});
+  f.push({k: 'ref',    label: 'Reference / RMA', value: rec.ref || '', ph: 'RMA-4417, tracking no.'});
+  f.push({k: 'cost',   label: 'Cost ($)', type: 'number', min: 0, value: rec.cost || ''});
+  f.push({k: 'notes',  label: 'What is wrong with it', type: 'textarea', value: rec.notes || '',
+    ph: 'Zip sliders failed, cracked tip section…'});
+  return f;
+}
+
+async function sendForRepair(itemId) {
+  const it = S.items.find(i => i.id === itemId);
+  if (!it) { toast('Could not find that item.', true); return; }
+  const keys = keysOf(catOf(it));
+  const fields = repairFields({}, it).concat([
+    {k: 'deduct', label: 'Stock', type: 'checks', value: {yes: true},
+     options: [{v: 'yes', label: 'Take these off the on-hand count'}],
+     hint: 'Leave ticked — gear at the repair shop is not on the shelf. Untick only if you are recording a repair after already adjusting the count.'}
+  ]);
+  const v = await ask('Send for repair — ' + it.name, fields, 'Send');
+  if (!v) return;
+
+  const qty = Math.max(1, +v.qty || 1);
+  const key = keys ? v.key : null;
+  const have = keys ? (+(it.counts || {})[key] || 0) : (+it.qty || 0);
+  if (v.deduct.yes && qty > have) {
+    toast(`Only ${have} ${key ? key + ' ' : ''}on hand — can't send ${qty}.`, true);
+    return;
+  }
+  if (v.deduct.yes) {
+    if (keys) it.counts[key] = have - qty; else it.qty = have - qty;
+    it.updated = today();
+  }
+  (S.repairs = S.repairs || []).push({
+    id: uid(), itemId, key, qty, vendor: v.vendor.trim(), sentAt: v.sentAt,
+    dueAt: v.dueAt, returnedAt: '', status: 'out', ref: v.ref.trim(),
+    cost: +v.cost || 0, by: ui.who, notes: v.notes.trim(), deducted: !!v.deduct.yes
+  });
+  save(); render();
+  toast(`${qty} × ${it.name} sent to ${v.vendor.trim()}`);
+}
+
+async function markReturned(id) {
+  const r = (S.repairs || []).find(x => x.id === id); if (!r) return;
+  const it = S.items.find(i => i.id === r.itemId);
+  const v = await ask('Back from repair — ' + (it ? it.name : ''), [
+    {k: 'outcome', label: 'What happened', type: 'select', value: 'returned',
+     options: [{v: 'returned', label: 'Repaired and back on the shelf'},
+               {v: 'lost', label: 'Written off — not coming back'}]},
+    {k: 'returnedAt', label: 'Date back', type: 'date', value: today(), required: true},
+    {k: 'qty', label: 'How many came back', type: 'number', min: 0, value: +r.qty || 1,
+     hint: 'Only counts for a repair; a write-off returns nothing to stock.'},
+    {k: 'cost', label: 'Final cost ($)', type: 'number', min: 0, value: r.cost || ''},
+    {k: 'notes', label: 'Notes', type: 'textarea', value: r.notes || ''}
+  ], 'Save');
+  if (!v) return;
+
+  const sent = +r.qty || 0;
+  const back = v.outcome === 'returned' ? Math.min(sent, Math.max(0, +v.qty || 0)) : 0;
+  const remainder = v.outcome === 'returned' ? sent - back : 0;
+
+  r.status = v.outcome;
+  r.returnedAt = v.returnedAt;
+  r.cost = +v.cost || 0;
+  r.notes = v.notes.trim();
+  r.qty = v.outcome === 'returned' ? back : sent;
+
+  /* A partial return splits the record: the part that came back closes, and the
+     rest stays open — otherwise the ledger would claim gear is home when it isn't. */
+  if (remainder > 0) {
+    S.repairs.push(Object.assign({}, r, {
+      id: uid(), qty: remainder, status: 'out', returnedAt: '', cost: 0,
+      notes: (r.notes ? r.notes + ' · ' : '') + `${remainder} of ${sent} still out`
+    }));
+  }
+  /* only put stock back if it was taken out in the first place */
+  if (back && r.deducted !== false && it) {
+    if (r.key != null) it.counts[r.key] = (+(it.counts || {})[r.key] || 0) + back;
+    else it.qty = (+it.qty || 0) + back;
+    it.updated = today();
+  }
+  save(); render();
+  toast(v.outcome === 'returned'
+    ? `${back} back on the shelf` + (remainder ? ` · ${remainder} still out` : '')
+    : 'Written off');
+}
+
+function renderSections() {
+  $('#sections').innerHTML = `<div class="tw"><table><thead><tr>
+      <th>Section</th><th>Group</th><th>Shape</th><th>Photo</th><th>Also tracks</th><th class="num">Items</th><th></th></tr></thead><tbody>`
+    + S.cats.map(c => {
+        const tr = Object.keys(c.track || {}).filter(k => c.track[k]);
+        const names = {productNo: 'product #', makeModel: 'make/model', condition: 'condition', power: 'corded/cordless', defective: 'defective', repairs: 'repairs'};
+        return `<tr class="item">
+          <td><strong>${esc(c.name)}</strong><div class="sub">unit: ${esc(c.unit)}</div></td>
+          <td class="sub">${esc(c.group)}</td>
+          <td>${c.dim ? `<span class="tag t-ok">${c.dim.type === 'sizes' ? 'By size' : 'By location'}</span><div class="sub">${c.dim.values.map(esc).join(' · ')}</div>` : '<span class="sub">single count</span>'}</td>
+          <td>${c.photo === 'required' ? '<span class="tag t-photo">Required</span>' : c.photo === 'optional' ? '<span class="sub">optional</span>' : '<span class="sub">—</span>'}</td>
+          <td class="sub">${tr.length ? tr.map(k => names[k]).join(', ') : '—'}</td>
+          <td class="num">${S.items.filter(i => i.cat === c.id).length}</td>
+          <td><div class="rowbtns"><button class="btn-ghost btn-xs" data-editcat="${c.id}">Edit</button><button class="btn-danger btn-xs" data-delcat="${c.id}">✕</button></div></td>
+        </tr>`;
+      }).join('')
+    + `</tbody></table></div>`;
+}
+
+function renderInv() {
+  ['items', 'reorder', 'counts', 'orders', 'repairs', 'sections'].forEach(k => $('#sub-' + k).classList.toggle('hide', ui.sub !== k));
+  $('#inv-tools').classList.toggle('hide', ui.sub !== 'items');
+  $$('.subtab').forEach(b => b.classList.toggle('on', b.dataset.sub === ui.sub));
+  if (ui.sub === 'items')    { renderCats(); renderItems(); }
+  if (ui.sub === 'reorder')    renderReorder();
+  if (ui.sub === 'counts')   { renderSnaps(); renderCompare(); }
+  if (ui.sub === 'orders')     renderOrders();
+  if (ui.sub === 'repairs')    renderRepairs();
+  if (ui.sub === 'sections')   renderSections();
+}
+
+/* ---------------- checklists ---------------- */
+function renderList(list) {
+  const tasks = S.tasks.filter(t => t.season === S.season && t.list === list);
+  const done = tasks.filter(t => t.done).length;
+  const pct = tasks.length ? Math.round(done / tasks.length * 100) : 0;
+  const shown = areas().filter(a => tasks.some(t => t.area === a))
+    .concat(Array.from(new Set(tasks.map(t => t.area))).filter(a => !areas().includes(a)));
+  const title = list === 'setup' ? 'Set-up list' : 'Shutdown list';
+  const blurb = list === 'setup'
+    ? 'Everything that has to happen to open the island for the season.'
+    : 'Everything that has to happen to close the island down for winter.';
+
+  let h = `<div class="card" style="margin-bottom:14px"><div class="hd">
+      <div><h2>${title} · ${esc(S.season)}</h2><div class="sub" style="margin-top:4px">${blurb}</div></div>
+      <div class="toolbar">
+        <div class="progwrap"><div class="bar"><i style="width:${pct}%"></i></div>${done}/${tasks.length} · ${pct}%</div>
+        <button class="btn-ghost btn-sm" data-areas="1">Edit areas</button>
+        <button class="btn-ghost btn-sm" data-archive="${list}">Archive &amp; reset for next season</button>
+      </div></div></div>
+    <div class="card">`;
+
+  if (!tasks.length) h += `<div class="empty">No tasks for ${esc(S.season)} yet.</div>`;
+  else shown.forEach(a => {
+    const ts = tasks.filter(t => t.area === a);
+    const d = ts.filter(t => t.done).length, p = Math.round(d / ts.length * 100);
+    h += `<div class="area"><div class="ahd"><h3>${esc(a)}</h3>
+            <div class="progwrap"><div class="bar"><i style="width:${p}%"></i></div>${d}/${ts.length}</div></div>`;
+    ts.forEach(t => {
+      h += `<div class="trow${t.done ? ' done' : ''}">
+          <input type="checkbox" data-task="${t.id}"${t.done ? ' checked' : ''} aria-label="${esc(t.text)}">
+          <div class="body"><div class="txt">${esc(t.text)}</div>
+            ${t.done && (t.by || t.at) ? `<div class="meta">${esc(t.by || '—')} · ${fmtDate(t.at)}</div>` : ''}
+            ${t.note ? `<div class="note">${esc(t.note)}</div>` : ''}</div>
+          <div class="rowbtns">
+            <button class="btn-ghost btn-xs" data-tedit="${t.id}">Edit</button>
+            <button class="btn-ghost btn-xs" data-tnote="${t.id}">Note</button>
+            <button class="btn-danger btn-xs" data-tdel="${t.id}">✕</button></div></div>`;
+    });
+    h += `</div>`;
+  });
+  h += `<div class="addrow">
+      <input type="text" placeholder="Add a task…" data-newtask="${list}">
+      <select data-newarea="${list}" style="width:auto">${areas().map(a => `<option>${esc(a)}</option>`).join('')}</select>
+      <button class="btn-primary btn-sm" data-addtask="${list}">Add</button>
+    </div></div>`;
+
+  const arch = S.archives.filter(x => x.list === list);
+  if (arch.length) {
+    h += `<div class="card" style="margin-top:14px"><div class="hd"><h2>Past seasons</h2></div>
+      <table><thead><tr><th>Season</th><th>Archived</th><th class="num">Completed</th></tr></thead><tbody>`
+      + arch.slice().sort((a, b) => b.season.localeCompare(a.season)).map(x =>
+        `<tr class="item"><td><strong>${esc(x.season)}</strong></td><td>${fmtDate(x.at)}</td><td class="num">${x.done}/${x.total}</td></tr>`).join('')
+      + `</tbody></table></div>`;
+  }
+  $('#pane-' + list).innerHTML = h;
+}
+
+/* ---------------- projects ---------------- */
+const P_STATUS = [
+  {v: 'someday', label: 'Someday',     color: '#7f918d'},
+  {v: 'planned', label: 'Planned',     color: '#a5762a'},
+  {v: 'active',  label: 'In progress', color: '#0e7c6f'},
+  {v: 'done',    label: 'Done',        color: '#c2cfcb'}
+];
+const stMeta = v => P_STATUS.find(s => s.v === v) || P_STATUS[0];
+
+function renderProjects() {
+  const q = ui.pq.trim().toLowerCase();
+  const list = S.projects.filter(p =>
+    (ui.pfilter === 'all' || (ui.pfilter === 'open' ? p.status !== 'done' : p.status === ui.pfilter)) &&
+    (!q || p.title.toLowerCase().includes(q) || (p.area || '').toLowerCase().includes(q) ||
+      (p.notes || []).some(n => n.text.toLowerCase().includes(q)))
+  );
+  $('#plist').innerHTML = list.length ? list.map(p => {
+    const m = stMeta(p.status);
+    return `<div class="prow${ui.proj === p.id ? ' sel' : ''}" data-proj="${p.id}">
+      <span class="dot" style="background:${m.color}"></span>
+      <div style="flex:1;min-width:0"><div class="t">${esc(p.title)}</div>
+        <div class="sub">${esc(m.label)}${p.area ? ' · ' + esc(p.area) : ''}${p.owner ? ' · ' + esc(p.owner) : ''}${p.due ? ' · due ' + fmtDate(p.due) : ''}</div></div>
+      ${p.priority === 'high' ? '<span class="tag t-out">High</span>' : ''}
+      ${(p.notes || []).length ? `<span class="sub">${p.notes.length}📝</span>` : ''}
+    </div>`;
+  }).join('') : `<div class="empty">No projects match.</div>`;
+
+  const p = S.projects.find(x => x.id === ui.proj);
+  if (!p) { $('#pdetail').innerHTML = `<div class="empty">Pick a project on the left, or add a new one.</div>`; return; }
+  $('#pdetail').innerHTML = `
+    <div class="hd"><h2>Project</h2><button class="btn-danger btn-sm" data-pdel="${p.id}">Delete</button></div>
+    <div class="form">
+      <div class="fld"><label for="p-title">Title</label><input id="p-title" value="${esc(p.title)}" data-pf="title"></div>
+      <div class="frow">
+        <div class="fld"><label for="p-status">Status</label><select id="p-status" data-pf="status">${P_STATUS.map(s => `<option value="${s.v}"${p.status === s.v ? ' selected' : ''}>${s.label}</option>`).join('')}</select></div>
+        <div class="fld"><label for="p-pri">Priority</label><select id="p-pri" data-pf="priority">${['low','normal','high'].map(v => `<option value="${v}"${p.priority === v ? ' selected' : ''}>${v[0].toUpperCase() + v.slice(1)}</option>`).join('')}</select></div>
+        <div class="fld"><label for="p-area">Area</label><select id="p-area" data-pf="area"><option value=""></option>${areas().map(a => `<option${p.area === a ? " selected" : ""}>${esc(a)}</option>`).join("")}</select></div>
+      </div>
+      <div class="frow">
+        <div class="fld"><label for="p-owner">Owner</label><input id="p-owner" value="${esc(p.owner || '')}" data-pf="owner" placeholder="Who's on it"></div>
+        <div class="fld"><label for="p-due">Target date</label><input id="p-due" type="date" value="${esc(p.due || '')}" data-pf="due"></div>
+        <div class="fld"><label for="p-cost">Est. cost ($)</label><input id="p-cost" type="number" min="0" value="${p.cost || ''}" data-pf="cost"></div>
+      </div>
+      <div class="fld"><label>Notes</label>
+        <div class="notes">${(p.notes || []).slice().reverse().map((n, i) => `
+          <div class="nitem"><div class="when">${fmtDate(n.at)}${n.by ? ' · ' + esc(n.by) : ''}
+            <button class="btn-danger btn-xs" data-ndel="${(p.notes.length - 1 - i)}" style="margin-left:6px">✕</button></div>
+            <div class="body">${esc(n.text)}</div></div>`).join('') || '<div class="sub">No notes yet.</div>'}</div>
+      </div>
+      <div class="fld"><label for="p-newnote">Add a note</label>
+        <textarea id="p-newnote" placeholder="What happened, what's needed, what it cost…"></textarea>
+        <div class="frow" style="margin-top:6px;align-items:center">
+          <button class="btn-primary btn-sm" id="btn-addnote">Add note</button>
+          <span class="sub">Signed as <strong id="sig">${esc(ui.who || 'nobody — set "Who\'s on" up top')}</strong></span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function render() {
+  renderChrome();
+  if (ui.tab === 'inv') renderInv();
+  if (ui.tab === 'setup') renderList('setup');
+  if (ui.tab === 'shutdown') renderList('shutdown');
+  if (ui.tab === 'proj') renderProjects();
+}
+
+/* ---------------- photos ---------------- */
+let photoTarget = null;
+function openPhotos(id) {
+  const it = S.items.find(i => i.id === id); if (!it) return;
+  photoTarget = id;
+  const pol = photoPolicy(it), ph = it.photos || [];
+  $('#pdlg-title').textContent = it.name;
+  $('#pdlg-note').textContent = pol === 'required'
+    ? 'This section requires a photo of each item.'
+    : 'Photos are optional in this section.';
+  $('#pdlg-grid').innerHTML = ph.length
+    ? ph.map((p, i) => `<div class="pcard"><img data-idb="${esc(p.slice(4))}" alt="">
+        <div class="bar"><button class="btn-danger btn-xs" data-pdel-photo="${i}">Remove</button></div></div>`).join('')
+    : `<div class="empty" style="grid-column:1/-1">No photos yet. On a phone or tablet, “Add photo” opens the camera.</div>`;
+  const dlg = $('#pdlg');
+  if (!dlg.open) dlg.showModal();
+  resolveIdb();
+  /* say so up front rather than letting Add photo fail silently */
+  IMGDB.why().then(reason => {
+    if (!reason || photoTarget !== id) return;
+    $('#pdlg-add').disabled = true;
+    $('#pdlg-add').style.opacity = .5;
+    $('#pdlg-grid').insertAdjacentHTML('afterbegin', `<div class="warnrow">${esc(reason)}</div>`);
+  });
+}
+function addPhotoTo(id, file) {
+  const it = S.items.find(i => i.id === id); if (!it || !file) return;
+  resizeImg(file, url => {
+    if (!url) { toast('That file could not be read as an image.', true); return; }
+    const key = 'item:' + id + ':' + uid();
+    IMGDB.put(key, url).then(() => {
+      (it.photos = it.photos || []).push('idb:' + key);
+      it.updated = today(); save();
+      openPhotos(id); renderCats(); renderItems(); renderChrome();
+      toast('Photo saved for ' + it.name);
+    }).catch(e => toast('Could not save the photo: ' + ((e && e.message) || 'storage unavailable'), true));
+  });
+}
+
+/* ---------------- item add / edit ---------------- */
+async function itemDialog(it, isNew) {
+  const cat = catOf(it), keys = keysOf(cat);
+  const fields = [
+    {k: 'name', label: 'Item name', value: it.name, required: true},
+    {k: 'cat',  label: 'Section', type: 'select', value: it.cat,
+     options: S.cats.map(c => ({v: c.id, label: c.group + ' · ' + c.name}))},
+    {k: 'unit', label: 'Unit', value: it.unit || cat.unit, ph: 'jar, case, lb, ea, pair…'}
+  ];
+  if (cat.track.productNo) fields.push({k: 'productNo', label: 'Product / model #', value: it.productNo, ph: '3752'});
+  if (cat.track.makeModel) {
+    fields.push({k: 'make',  label: 'Make',  value: it.make,  ph: 'DeWalt'});
+    fields.push({k: 'model', label: 'Model', value: it.model, ph: 'DWS780'});
+  }
+  if (cat.track.condition) fields.push({k: 'condition', label: 'Condition', type: 'select', value: it.condition,
+    options: [{v: '', label: '—'}, {v: 'G', label: 'G — good'}, {v: 'F', label: 'F — fair'}, {v: 'B', label: 'B — bad'}]});
+  if (cat.track.power) fields.push({k: 'power', label: 'Power', type: 'select', value: it.power,
+    options: [{v: '', label: '—'}, {v: 'Corded', label: 'Corded'}, {v: 'Cordless', label: 'Cordless'}, {v: 'Cord/Cordless', label: 'Cord/Cordless'}]});
+  fields.push({k: 'loc', label: 'Stored where', type: 'select', value: it.loc || '',
+    options: [{v: '', label: '—'}].concat(locations().map(l => ({v: l, label: l}))),
+    hint: 'Manage this list with “Locations” above the item table.'});
+  fields.push({k: 'notes', label: 'Notes', type: 'textarea', value: it.notes, ph: 'Brand, vendor, anything worth remembering'});
+
+  if (keys) fields.push({k: 'pars', label: cat.dim.type === 'sizes' ? 'Par level per size' : 'Par level per location',
+    type: 'cells', keys, value: it.pars, hint: 'The order report flags any ' + (cat.dim.type === 'sizes' ? 'size' : 'location') + ' below its par.'});
+  else fields.push({k: 'par', label: 'Par level', type: 'number', min: 0, value: +it.par || 0,
+    hint: 'Reorder when what\'s on hand drops below this. Leave 0 to never flag it.'});
+  if (cat.track.defective && keys) fields.push({k: 'defective', label: 'Defective / out of service', type: 'cells', keys, value: it.defective});
+  fields.push({k: 'order', label: 'Order override', type: 'checks', value: {flag: !!it.orderFlag},
+    options: [{v: 'flag', label: 'Flag this to order regardless of par'}]});
+  fields.push({k: 'orderQty', label: 'Quantity to order (if flagged)', type: 'number', min: 0, value: +it.orderQty || 0});
+
+  const v = await ask(isNew ? 'New item' : 'Edit item', fields, isNew ? 'Add item' : 'Save');
+  if (!v) return false;
+
+  const oldCat = it.cat;
+  it.name = v.name.trim() || it.name;
+  it.cat = v.cat;
+  it.unit = v.unit.trim();
+  if ('productNo' in v) it.productNo = v.productNo.trim();
+  if ('make' in v)  it.make = v.make.trim();
+  if ('model' in v) it.model = v.model.trim();
+  if ('condition' in v) it.condition = v.condition;
+  if ('power' in v) it.power = v.power;
+  it.loc = v.loc.trim();
+  it.notes = v.notes.trim();
+  it.orderFlag = !!v.order.flag;
+  it.orderQty = Math.max(0, +v.orderQty || 0);
+
+  const newCat = catOf(it), newKeys = keysOf(newCat);
+  if (newKeys) {
+    it.pars = v.pars || it.pars || {};
+    it.counts = it.counts || {};
+    if (oldCat !== it.cat) newKeys.forEach(k => { if (it.counts[k] == null) it.counts[k] = 0; });
+    if (newCat.track.defective) it.defective = v.defective || it.defective || {};
+  } else if ('par' in v) {
+    it.par = Math.max(0, +v.par || 0);
+  }
+  it.updated = today();
+  save(); renderCats(); renderItems(); renderChrome();
+  return true;
+}
+async function addItem() {
+  const c = ui.cat !== 'all' ? ui.cat : (S.cats[0] || {}).id;
+  const cat = S.cats.find(x => x.id === c) || S.cats[0];
+  const it = {id: uid(), cat: cat.id, name: '', productNo: '', make: '', model: '', condition: '', power: '',
+    unit: cat.unit, loc: '', notes: '', qty: 0, par: 0, counts: {}, pars: {}, defective: {},
+    orderFlag: false, orderQty: 0, photos: [], updated: today()};
+  const keys = keysOf(cat);
+  if (keys) keys.forEach(k => { it.counts[k] = 0; it.pars[k] = 0; });
+  if (await itemDialog(it, true)) {
+    S.items.unshift(it); ui.cat = it.cat;
+    save(); renderCats(); renderItems(); renderChrome();
+    if (photoPolicy(it) === 'required') openPhotos(it.id);
+  }
+}
+function editItem(id) { const it = S.items.find(i => i.id === id); if (it) itemDialog(it, false); }
+
+/* ---------------- areas ----------------
+   Shared by both checklists and the project list. Inputs are positional, so a
+   changed box is a rename (and every task/project using it follows), a cleared
+   box is a delete, and the spare boxes at the end are additions. */
+/* Shared editor for a controlled vocabulary (areas, storage locations).
+   Inputs are positional: a changed box renames, a cleared box removes, the spare
+   boxes add. Removing something still in use is refused rather than stranding
+   the records that point at it.
+     cfg = {title, label, hint, noun, list, usedBy(name)->count, rename(old,new), save(list)} */
+async function editVocabulary(cfg) {
+  const before = cfg.list.slice();
+  const v = await ask(cfg.title, [{k: 'vals', label: cfg.label, type: 'list', values: before, hint: cfg.hint}], 'Save');
+  if (!v) return;
+
+  const next = v.vals;
+  const renames = [], removals = [];
+  before.forEach((old, i) => {
+    const now = next[i];
+    if (!now) removals.push(old);
+    else if (now !== old) renames.push([old, now]);
+  });
+  const additions = next.slice(before.length).filter(Boolean);
+
+  const blocked = removals.filter(a => cfg.usedBy(a) > 0);
+  if (blocked.length) {
+    toast(`"${blocked[0]}" is still used by ${cfg.usedBy(blocked[0])} record${cfg.usedBy(blocked[0]) > 1 ? 's' : ''} — reassign those first.`, true);
+    return;
+  }
+
+  let list = before.map((old, i) => next[i]).filter(Boolean).concat(additions);
+  list = list.filter((a, i) => list.indexOf(a) === i);      // drop duplicates
+  if (!list.length) { toast(`Keep at least one ${cfg.noun}.`, true); return; }
+
+  renames.forEach(([old, now]) => cfg.rename(old, now));
+  cfg.save(list);
+  save(); render();
+  const bits = [];
+  if (renames.length)   bits.push(renames.length + ' renamed');
+  if (additions.length) bits.push(additions.length + ' added');
+  if (removals.length)  bits.push(removals.length + ' removed');
+  toast(cfg.title + ' saved' + (bits.length ? ' — ' + bits.join(', ') : ''));
+}
+
+const areasDialog = () => editVocabulary({
+  title: 'Areas', label: 'Areas', noun: 'area', list: areas(),
+  hint: 'Change a name to rename it everywhere · clear a box to remove that area · use the blanks to add. Shared by the set-up list, the shutdown list and Projects.',
+  usedBy: a => S.tasks.filter(t => t.area === a).length + S.projects.filter(p => p.area === a).length,
+  rename: (old, now) => {
+    S.tasks.forEach(t => { if (t.area === old) t.area = now; });
+    S.projects.forEach(p => { if (p.area === old) p.area = now; });
+  },
+  save: list => { S.areas = list; }
+});
+
+const groupsDialog = () => editVocabulary({
+  title: 'Groups', label: 'Groups', noun: 'group', list: groups(),
+  hint: 'The departments sections are filed under, in sidebar order. Change a name to rename it on every section · clear a box to remove it · use the blanks to add.',
+  usedBy: g => S.cats.filter(c => c.group === g).length,
+  rename: (old, now) => { S.cats.forEach(c => { if (c.group === old) c.group = now; }); },
+  save: list => { S.groups = list; }
+});
+
+const locationsDialog = () => editVocabulary({
+  title: 'Storage locations', label: 'Locations', noun: 'location', list: locations(),
+  hint: 'Where things are kept on the island. Change a name to rename it on every item · clear a box to remove it · use the blanks to add.',
+  usedBy: l => S.items.filter(i => i.loc === l).length,
+  rename: (old, now) => { S.items.forEach(i => { if (i.loc === old) i.loc = now; }); },
+  save: list => { S.locations = list; }
+});
+
+/* ---------------- section add / edit ---------------- */
+async function catDialog(c, isNew) {
+  const TRACKS = [
+    {v: 'productNo', label: 'Product / model #'}, {v: 'makeModel', label: 'Make & model'},
+    {v: 'condition', label: 'Condition (G/F/B)'}, {v: 'power', label: 'Corded / cordless'},
+    {v: 'defective', label: 'Defective count'}, {v: 'repairs', label: 'Send-out repairs'}
+  ];
+  const v = await ask(isNew ? 'New section' : 'Edit section', [
+    {k: 'name',  label: 'Section name', value: c.name, required: true, ph: 'Glassware'},
+    {k: 'group', label: 'Group', type: 'select', value: c.group || groups()[0],
+     options: groups().map(g => ({v: g, label: g})),
+     hint: 'Manage this list with the “Groups” button above.'},
+    {k: 'unit',  label: 'Default unit', value: c.unit, ph: 'ea'},
+    {k: 'dim',   label: 'How are these counted?', type: 'select', value: c.dim ? c.dim.type : 'none',
+     options: [{v: 'none', label: 'One count per item'}, {v: 'sizes', label: 'A count per size'}, {v: 'locations', label: 'A count per location'}]},
+    {k: 'vals',  label: 'Sizes / locations', value: c.dim ? c.dim.values.join(', ') : '',
+     ph: 'S, M, L, XL   —or—   Bar, Upper, Bluff', hint: 'Comma separated. Ignored for a single count.'},
+    {k: 'photo', label: 'Item photos', type: 'select', value: c.photo || 'none',
+     options: [{v: 'none', label: 'Not used'}, {v: 'optional', label: 'Optional'}, {v: 'required', label: 'Required — flag items without one'}],
+     hint: 'Sales merchandise usually wants a photo of every item; spices do not.'},
+    {k: 'track', label: 'Also track', type: 'checks', value: c.track || {}, options: TRACKS}
+  ], isNew ? 'Add section' : 'Save');
+  if (!v) return false;
+
+  c.name = v.name.trim(); c.group = v.group; c.unit = v.unit.trim() || 'ea';
+  c.photo = v.photo; c.track = v.track;
+  if (v.dim === 'none') c.dim = null;
+  else {
+    const vals = v.vals.split(',').map(s => s.trim()).filter(Boolean);
+    if (!vals.length) { toast('Give at least one ' + (v.dim === 'sizes' ? 'size' : 'location') + ', comma separated.', true); return false; }
+    c.dim = {type: v.dim, values: vals};
+    /* keep existing items coherent with the new key set */
+    S.items.filter(i => i.cat === c.id).forEach(i => {
+      i.counts = i.counts || {}; i.pars = i.pars || {};
+      vals.forEach(k => { if (i.counts[k] == null) i.counts[k] = 0; if (i.pars[k] == null) i.pars[k] = 0; });
+    });
+  }
+  save(); renderCats(); renderItems(); renderSections(); renderChrome();
+  return true;
+}
+
+/* ---------------- events ---------------- */
+document.addEventListener('click', e => {
+  const t = e.target.closest('button, .crow, .prow');
+  if (!t) return;
+  const d = t.dataset;
+
+  if (d.tab)  { ui.tab = d.tab; render(); return; }
+  if (d.sub)  { ui.sub = d.sub; renderInv(); return; }
+  if (d.cat)  { ui.cat = d.cat; renderCats(); renderItems(); return; }
+
+  if (d.step) {
+    const it = S.items.find(i => i.id === d.id);
+    it.qty = Math.max(0, (+it.qty || 0) + (+d.step)); it.updated = today();
+    save(); renderCats(); renderItems(); renderChrome(); return;
+  }
+  if (t.id === 'btn-add-item') { addItem(); return; }
+  if (d.edit) { editItem(d.edit); return; }
+  if (d.del)  {
+    const it = S.items.find(i => i.id === d.del);
+    const rc = repairsFor(it.id).length;
+    if (confirm(`Delete "${it.name}"?` + (rc ? `\n\n${rc} repair record${rc > 1 ? 's' : ''} will be deleted with it.` : ''))) {
+      (it.photos || []).forEach(p => IMGDB.del(p.slice(4)));
+      S.items = S.items.filter(i => i.id !== d.del);
+      S.repairs = (S.repairs || []).filter(r => r.itemId !== d.del);
+      S.orders  = (S.orders  || []).filter(o => o.itemId !== d.del);
+      save(); render();
+    }
+    return;
+  }
+  if (d.photo) { openPhotos(d.photo); return; }
+
+  /* orders */
+  if (d.order)   { placeOrder(d.order, +d.oqty || 0, d.okey); return; }
+  if (d.oarrive) { receiveOrder(d.oarrive); return; }
+  if (d.oedit) {
+    const o = (S.orders || []).find(x => x.id === d.oedit);
+    const it = S.items.find(i => i.id === o.itemId);
+    if (!it) { toast('That item no longer exists.', true); return; }
+    ask('Edit order — ' + it.name, orderFields(o, it), 'Save').then(v => {
+      if (!v) return;
+      /* quantity changes here do NOT move stock — use Received for that */
+      if ('okey' in v) o.key = v.okey;
+      o.qty = Math.max(1, +v.qty || 1); o.vendor = v.vendor.trim();
+      o.orderedAt = v.orderedAt; o.etaAt = v.etaAt; o.carrier = v.carrier;
+      o.tracking = v.tracking.trim(); o.cost = +v.cost || 0; o.notes = v.notes.trim();
+      save(); render(); toast('Order updated');
+    });
+    return;
+  }
+  if (d.odel) {
+    if (!confirm('Delete this order record? Stock is not changed.')) return;
+    S.orders = S.orders.filter(x => x.id !== d.odel);
+    save(); render(); toast('Order record deleted');
+    return;
+  }
+  if (t.id === 'btn-add-order') {
+    if (!S.items.length) { toast('No items to order yet.', true); return; }
+    ask('Record an order', [{k: 'oitem', label: 'Which item?', type: 'select', value: S.items[0].id,
+      options: S.items.map(i => ({v: i.id, label: catOf(i).name + ' · ' + i.name}))}], 'Next')
+      .then(v => { if (v) placeOrder(v.oitem); });
+    return;
+  }
+
+  /* repairs */
+  if (d.send)  { sendForRepair(d.send); return; }
+  if (d.rback) { markReturned(d.rback); return; }
+  if (d.redit) {
+    const r = (S.repairs || []).find(x => x.id === d.redit);
+    const it = S.items.find(i => i.id === r.itemId);
+    if (!it) { toast('That item no longer exists.', true); return; }
+    ask('Edit repair — ' + it.name, repairFields(r, it), 'Save').then(v => {
+      if (!v) return;
+      /* quantity/size changes here do NOT move stock — use Returned for that */
+      if ('key' in v) r.key = v.key;
+      r.qty = Math.max(1, +v.qty || 1); r.vendor = v.vendor.trim();
+      r.sentAt = v.sentAt; r.dueAt = v.dueAt; r.ref = v.ref.trim();
+      r.cost = +v.cost || 0; r.notes = v.notes.trim();
+      save(); render(); toast('Repair updated');
+    });
+    return;
+  }
+  if (d.rdel) {
+    const r = (S.repairs || []).find(x => x.id === d.rdel);
+    const it = S.items.find(i => i.id === r.itemId);
+    const willRestore = r.status === 'out' && r.deducted !== false && it;
+    if (!confirm(willRestore
+      ? `Delete this repair record?\n\n${r.qty} × ${it.name} will go back onto the on-hand count.`
+      : 'Delete this repair record?')) return;
+    if (willRestore) {
+      if (r.key != null) it.counts[r.key] = (+(it.counts || {})[r.key] || 0) + (+r.qty || 0);
+      else it.qty = (+it.qty || 0) + (+r.qty || 0);
+    }
+    S.repairs = S.repairs.filter(x => x.id !== d.rdel);
+    save(); render(); toast('Repair record deleted');
+    return;
+  }
+  if (t.id === 'btn-add-repair') {
+    const eligible = S.items.filter(tracksRepairs);
+    if (!eligible.length) { toast('No section tracks repairs yet — turn it on in Sections.', true); return; }
+    ask('Send for repair', [{k: 'item', label: 'Which item?', type: 'select', value: eligible[0].id,
+      options: eligible.map(i => ({v: i.id, label: catOf(i).name + ' · ' + i.name}))}], 'Next')
+      .then(v => { if (v) sendForRepair(v.item); });
+    return;
+  }
+  if (t.id === 'pdlg-add') { $('#photo-input').click(); return; }
+  if (t.id === 'pdlg-close') { $('#pdlg').close(); return; }
+  if (d.pdelPhoto != null) {
+    const it = S.items.find(i => i.id === photoTarget);
+    const ref = it.photos[+d.pdelPhoto];
+    if (confirm('Remove this photo?')) {
+      it.photos.splice(+d.pdelPhoto, 1); save();
+      if (ref) IMGDB.del(ref.slice(4));
+      openPhotos(photoTarget); renderCats(); renderItems(); renderChrome();
+    }
+    return;
+  }
+  if (t.id === 'btn-add-cat') {
+    const c = {id: uid(), group: groups()[0], name: '', unit: 'ea', dim: null, track: {}, photo: 'none'};
+    catDialog(c, true).then(ok => { if (ok) { S.cats.push(c); save(); renderSections(); renderCats(); } });
+    return;
+  }
+  if (d.editcat) { catDialog(S.cats.find(c => c.id === d.editcat), false); return; }
+  if (d.delcat) {
+    const c = S.cats.find(x => x.id === d.delcat);
+    const n = S.items.filter(i => i.cat === c.id).length;
+    if (n) { toast(`"${c.name}" still has ${n} item${n > 1 ? "s" : ""} — move or delete them first.`, true); return; }
+    if (confirm(`Delete the "${c.name}" section?`)) { S.cats = S.cats.filter(x => x.id !== c.id); save(); renderSections(); renderCats(); }
+    return;
+  }
+  if (t.id === 'btn-copy-order') {
+    const txt = orderText();
+    const fallback = () => ask('Order list', [{k: 't', label: 'Select all and copy', type: 'textarea', value: txt, big: true,
+      hint: 'Clipboard access is blocked here — copy it by hand.'}], 'Done');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt)
+        .then(() => { t.textContent = 'Copied ✓'; setTimeout(() => { t.textContent = 'Copy as list'; }, 1400); })
+        .catch(fallback);
+    } else fallback();
+    return;
+  }
+  if (d.snap) {
+    const kind = d.snap;
+    const existing = S.snapshots.find(s => s.season === S.season && s.kind === kind);
+    if (existing && !confirm(`A ${kind}-of-season count already exists for ${S.season}. Replace it?`)) return;
+    if (existing) S.snapshots = S.snapshots.filter(s => s !== existing);
+    const lines = {};
+    S.items.forEach(i => { lines[i.id] = onHand(i); });
+    S.snapshots.push({id: uid(), kind, season: S.season, at: today(), by: ui.who, lines});
+    save(); renderSnaps(); renderCompare(); return;
+  }
+  if (d.delsnap) {
+    if (confirm('Delete this count?')) { S.snapshots = S.snapshots.filter(s => s.id !== d.delsnap); save(); renderSnaps(); renderCompare(); }
+    return;
+  }
+
+  if (d.areas) { areasDialog(); return; }
+  if (t.id === 'btn-locations') { locationsDialog(); return; }
+  if (t.id === 'btn-groups')    { groupsDialog(); return; }
+  if (d.tedit) {
+    const task = S.tasks.find(x => x.id === d.tedit);
+    ask('Edit task', [
+      {k: 'text', label: 'Task', value: task.text, required: true},
+      {k: 'area', label: 'Area', type: 'select', value: task.area,
+       options: areas().concat(areas().includes(task.area) ? [] : [task.area]).map(a => ({v: a, label: a}))},
+      {k: 'note', label: 'Note', type: 'textarea', value: task.note, ph: 'Optional'}
+    ]).then(v => {
+      if (!v || !v.text.trim()) return;
+      task.text = v.text.trim(); task.area = v.area; task.note = v.note.trim();
+      save(); renderList(task.list); renderChrome();
+    });
+    return;
+  }
+  if (d.tnote) {
+    const task = S.tasks.find(x => x.id === d.tnote);
+    ask('Note — ' + task.text, [{k: 'note', label: 'Note', type: 'textarea', value: task.note,
+      ph: 'What was found, what still needs doing, parts ordered…'}])
+      .then(v => { if (v) { task.note = v.note.trim(); save(); renderList(task.list); } });
+    return;
+  }
+  if (d.tdel) {
+    const task = S.tasks.find(x => x.id === d.tdel);
+    if (confirm('Delete this task?')) { S.tasks = S.tasks.filter(x => x.id !== d.tdel); save(); renderList(task.list); renderChrome(); }
+    return;
+  }
+  if (d.addtask) {
+    const list = d.addtask;
+    const inp = document.querySelector(`[data-newtask="${list}"]`), area = document.querySelector(`[data-newarea="${list}"]`).value;
+    const text = inp.value.trim();
+    if (!text) { inp.focus(); return; }
+    S.tasks.push({id: uid(), list, season: S.season, area, text, done: false, by: '', at: '', note: ''});
+    save(); renderList(list); renderChrome();
+    document.querySelector(`[data-newtask="${list}"]`).focus();
+    return;
+  }
+  if (d.archive) {
+    const list = d.archive;
+    const ts = S.tasks.filter(x => x.season === S.season && x.list === list);
+    if (!ts.length) return;
+    ask('Archive ' + S.season + ' & start the next season',
+      [{k: 'next', label: 'Copy this list to which season?', value: String(+S.season + 1), required: true,
+        hint: 'The ' + S.season + ' list is kept as history; the tasks are copied over unchecked.'}], 'Archive & copy')
+      .then(v => {
+        if (!v || !v.next.trim()) return;
+        const next = v.next.trim();
+        S.archives.push({id: uid(), list, season: S.season, at: today(), done: ts.filter(x => x.done).length, total: ts.length});
+        ts.forEach(x => { if (!S.tasks.some(y => y.season === next && y.list === list && y.text === x.text))
+          S.tasks.push({id: uid(), list, season: next, area: x.area, text: x.text, done: false, by: '', at: '', note: ''}); });
+        S.season = next; save(); render();
+      });
+    return;
+  }
+
+  if (d.proj) { ui.proj = d.proj; renderProjects(); return; }
+  if (t.id === 'btn-add-proj') {
+    ask('New project', [
+      {k: 'title', label: 'What is it?', required: true, ph: 'Rebuild the lower dock ramp'},
+      {k: 'area', label: 'Area', type: 'select', value: '', options: [{v: '', label: '—'}].concat(areas().map(a => ({v: a, label: a})))},
+      {k: 'status', label: 'Status', type: 'select', value: 'someday', options: P_STATUS.map(s => ({v: s.v, label: s.label}))},
+      {k: 'priority', label: 'Priority', type: 'select', value: 'normal', options: ['low','normal','high'].map(v => ({v, label: v[0].toUpperCase() + v.slice(1)}))}
+    ], 'Add project').then(v => {
+      if (!v || !v.title.trim()) return;
+      const p = {id: uid(), title: v.title.trim(), area: v.area, status: v.status, priority: v.priority, owner: '', due: '', cost: '', notes: []};
+      S.projects.unshift(p); ui.proj = p.id; ui.pfilter = 'all'; $('#pfilter').value = 'all';
+      save(); renderProjects(); renderChrome();
+    });
+    return;
+  }
+  if (d.pdel) {
+    const p = S.projects.find(x => x.id === d.pdel);
+    if (confirm(`Delete "${p.title}"?`)) { S.projects = S.projects.filter(x => x.id !== d.pdel); ui.proj = null; save(); renderProjects(); renderChrome(); }
+    return;
+  }
+  if (t.id === 'btn-addnote') {
+    const p = S.projects.find(x => x.id === ui.proj);
+    const txt = $('#p-newnote').value.trim();
+    if (!txt) { $('#p-newnote').focus(); return; }
+    (p.notes = p.notes || []).push({at: today(), by: ui.who, text: txt});
+    save(); renderProjects(); return;
+  }
+  if (d.ndel) {
+    const p = S.projects.find(x => x.id === ui.proj);
+    p.notes.splice(+d.ndel, 1); save(); renderProjects(); return;
+  }
+
+  /* Export inlines the photo bytes so the file is self-contained — the refs alone
+     would point at an IndexedDB store the recipient doesn't have. */
+  if (t.id === 'btn-export') {
+    const label = t.textContent; t.textContent = 'Packing…';
+    const refs = [];
+    S.items.forEach(i => (i.photos || []).forEach(p => refs.push(p.slice(4))));
+    Promise.all(refs.map(k => IMGDB.get(k).then(v => [k, v]))).then(pairs => {
+      const images = {};
+      pairs.forEach(([k, v]) => { if (v) images[k] = v; });
+      const blob = new Blob([JSON.stringify(Object.assign({}, S, {images}), null, 2)], {type: 'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = `talon-island-ops-${today()}.json`; a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+      t.textContent = label;
+    }).catch(() => { t.textContent = label; toast('Could not package the photos.', true); });
+    return;
+  }
+  if (t.id === 'btn-import') { $('#file-import').click(); return; }
+  if (t.id === 'btn-reset')  { if (confirm('Replace everything with the sample data?')) { S = seed(); ui.proj = null; ui.cat = 'all'; save(); render(); } return; }
+  if (t.id === 'btn-wipe')   {
+    if (confirm('Erase all Island Ops data in this browser?')) {
+      S.items.forEach(i => (i.photos || []).forEach(p => IMGDB.del(p.slice(4))));
+      ls.del(KEY);
+      S = {v: 3, season: String(thisYear()), sample: false, areas: AREAS0.slice(), cats: seed().cats,
+           items: [], tasks: [], projects: [], repairs: [], orders: [], snapshots: [], archives: []};
+      ui.proj = null; ui.cat = 'all'; save(); render();
+    }
+    return;
+  }
+});
+
+document.addEventListener('change', e => {
+  const d = e.target.dataset;
+  if (e.target.id === 'season') {
+    if (e.target.value === '__new') {
+      ask('New season', [{k: 'y', label: 'Season (year)', value: String(+S.season + 1), required: true}], 'Create')
+        .then(v => { if (v && v.y.trim()) S.season = v.y.trim(); save(); render(); });
+    } else { S.season = e.target.value; save(); render(); }
+    return;
+  }
+  if (e.target.id === 'only-low')     { ui.onlyLow = e.target.checked; renderItems(); return; }
+  if (e.target.id === 'only-nophoto') { ui.onlyNoPhoto = e.target.checked; renderItems(); return; }
+  if (e.target.id === 'pfilter')      { ui.pfilter = e.target.value; renderProjects(); return; }
+  if (e.target.id === 'rfilter')      { ui.rfilter = e.target.value; renderRepairs(); return; }
+  if (e.target.id === 'ofilter')      { ui.ofilter = e.target.value; renderOrders(); return; }
+  if (e.target.id === 'photo-input')  { const f = e.target.files[0]; e.target.value = ''; if (f && photoTarget) addPhotoTo(photoTarget, f); return; }
+  if (d.qty) {
+    const it = S.items.find(i => i.id === d.qty);
+    it.qty = Math.max(0, +e.target.value || 0); it.updated = today();
+    save(); renderCats(); renderItems(); renderChrome(); return;
+  }
+  if (d.par) {
+    const it = S.items.find(i => i.id === d.par);
+    it.par = Math.max(0, +e.target.value || 0);
+    save(); renderCats(); renderItems(); renderChrome(); return;
+  }
+  if (d.cellqty) {
+    const it = S.items.find(i => i.id === d.cellqty);
+    (it.counts = it.counts || {})[d.key] = Math.max(0, +e.target.value || 0); it.updated = today();
+    save(); renderCats(); renderItems(); renderChrome(); return;
+  }
+  if (d.cond) {
+    const it = S.items.find(i => i.id === d.cond);
+    it.condition = e.target.value; save(); return;
+  }
+  if (d.task) {
+    const task = S.tasks.find(x => x.id === d.task);
+    task.done = e.target.checked;
+    if (task.done) { task.at = today(); task.by = ui.who; } else { task.at = ''; task.by = ''; }
+    save(); renderList(task.list); renderChrome(); return;
+  }
+  if (d.pf) {
+    const p = S.projects.find(x => x.id === ui.proj);
+    p[d.pf] = e.target.value; save(); renderProjects(); renderChrome(); return;
+  }
+  if (e.target.id === 'file-import') {
+    const f = e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const data = JSON.parse(r.result);
+        if (!data.items || !data.tasks || !data.cats) throw new Error('Not an Island Ops export.');
+        if (!confirm('Replace all current data with this file?')) return;
+        const images = data.images || {}; delete data.images;
+        S = data; ui.proj = null; ui.cat = 'all'; save(); render();
+        const keys = Object.keys(images);
+        if (keys.length) Promise.all(keys.map(k => IMGDB.put(k, images[k]))).then(() => renderItems());
+      } catch (err) { toast('Could not import: ' + err.message, true); }
+    };
+    r.readAsText(f); e.target.value = ''; return;
+  }
+});
+
+document.addEventListener('input', e => {
+  if (e.target.id === 'q')   { ui.q = e.target.value; renderItems(); }
+  if (e.target.id === 'pq')  { ui.pq = e.target.value; renderProjects(); }
+  if (e.target.id === 'who') {
+    ui.who = e.target.value.trim(); ls.set(WHO, ui.who);
+    const sig = $('#sig');                       // update in place — a re-render would wipe a half-typed note
+    if (sig) sig.textContent = ui.who || 'nobody — set "Who\'s on" up top';
+  }
+});
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const d = e.target.dataset;
+  if (d.newtask) document.querySelector(`[data-addtask="${d.newtask}"]`).click();
+});
+
+/* migrate saves written before a field existed */
+if (!Array.isArray(S.areas) || !S.areas.length) {
+  /* adopt the defaults, then keep any area an existing task or project already uses */
+  const used = new Set();
+  (S.tasks || []).forEach(t => t.area && used.add(t.area));
+  (S.projects || []).forEach(p => p.area && used.add(p.area));
+  S.areas = AREAS0.concat(Array.from(used).filter(a => !AREAS0.includes(a)));
+}
+/* "Stored where" used to be free text. Adopt the standard list, then fold in any
+   value already on an item so nothing is lost — prune the strays via Locations. */
+if (!Array.isArray(S.locations) || !S.locations.length) {
+  const used = new Set();
+  (S.items || []).forEach(i => { if (i.loc) used.add(i.loc); });
+  S.locations = LOCATIONS0.concat(Array.from(used).filter(l => !LOCATIONS0.includes(l)));
+}
+/* Groups used to be free text per section. Fold the old ad-hoc names into the
+   standard departments, then keep anything custom so no section loses its home. */
+if (!Array.isArray(S.groups) || !S.groups.length) {
+  const GROUP_MAP = {
+    'Shop & Maintenance': 'Lodge Maintenance',
+    'Fish Room': 'Fishing & Guides',
+    'Rain Gear & Boots': 'Fishing & Guides',
+    'Retail': 'Front of House'
+  };
+  (S.cats || []).forEach(c => { if (GROUP_MAP[c.group]) c.group = GROUP_MAP[c.group]; });
+  const used = new Set();
+  (S.cats || []).forEach(c => { if (c.group) used.add(c.group); });
+  S.groups = GROUPS0.concat(Array.from(used).filter(g => !GROUPS0.includes(g)));
+}
+S.cats = S.cats || seed().cats;
+S.cats.forEach(c => { c.track = c.track || {}; c.photo = c.photo || 'none'; if (c.sizes && !c.dim) c.dim = {type: 'sizes', values: c.sizes}; });
+/* Repairs arrived in v3. A save made before that keeps its old sections, so the
+   gear ones would never show the Repair button — switch it on for them once. */
+if (!(S.v >= 3)) {
+  const GEAR = ['jackets', 'bibs', 'pants', 'youth', 'boots', 'rods', 'reels', 'waders', 'waderboots'];
+  const looksLikeGear = c => /jacket|bib|pant|boot|rod|reel|wader/i.test(c.name || '');
+  S.cats.forEach(c => { if (GEAR.includes(c.id) || looksLikeGear(c)) c.track.repairs = true; });
+  S.v = 3;
+}
+S.snapshots = S.snapshots || []; S.archives = S.archives || []; S.repairs = S.repairs || []; S.orders = S.orders || [];
+/* drop repair records whose item is gone, so the table can't show orphans */
+S.repairs = S.repairs.filter(r => S.items.some(i => i.id === r.itemId));
+S.orders  = S.orders.filter(o => S.items.some(i => i.id === o.itemId));
+S.items.forEach(i => {
+  i.counts = i.counts || i.sizes || {}; i.pars = i.pars || {}; i.defective = i.defective || {};
+  i.photos = i.photos || []; i.productNo = i.productNo || ''; i.make = i.make || ''; i.model = i.model || '';
+  i.condition = i.condition || ''; i.power = i.power || '';
+});
+/* write the upgraded shape back once, so the migration doesn't re-run every load */
+save();
+render();
+})();
+</script>
+</body></html>
