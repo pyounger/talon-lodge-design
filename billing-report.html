@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Billing Report — Winemaker Series</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,900&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#eef3f1; --surface:#ffffff; --surface-2:#e6efeb; --raise:#f5f9f7;
+  --ink:#12292a; --muted:#4f645f; --faint:#7a8b86;
+  --line:#d6e2dd; --line-2:#c1d1cb;
+  --accent:#0e7c6f; --accent-deep:#0a544c; --accent-soft:#dcece6;
+  --salmon:#bd5836; --salmon-deep:#9a4529; --salmon-soft:#f2e2db;
+  --gold:#a9791f; --gold-soft:#f3e8d0;
+  --plum:#8a5b7a;
+  --shadow:0 1px 2px rgba(18,42,43,.05),0 10px 26px rgba(18,42,43,.07);
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Cascadia Code",Consolas,monospace;
+}
+:root:not([data-theme="light"]){ @media (prefers-color-scheme:dark){
+  --paper:#081210; --surface:#0e1c1a; --surface-2:#152522; --raise:#122320;
+  --ink:#e9f1ed; --muted:#9bada9; --faint:#6f817c;
+  --line:#20332d; --line-2:#2e453e;
+  --accent:#38b8a6; --accent-deep:#5fd0bf; --accent-soft:#0f2a26;
+  --salmon:#e18a62; --salmon-deep:#eda588; --salmon-soft:#31231b;
+  --gold:#d9ad55; --gold-soft:#2a2413; --plum:#c79ab6;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.45);
+}}
+:root[data-theme="dark"]{
+  --paper:#081210; --surface:#0e1c1a; --surface-2:#152522; --raise:#122320;
+  --ink:#e9f1ed; --muted:#9bada9; --faint:#6f817c;
+  --line:#20332d; --line-2:#2e453e;
+  --accent:#38b8a6; --accent-deep:#5fd0bf; --accent-soft:#0f2a26;
+  --salmon:#e18a62; --salmon-deep:#eda588; --salmon-soft:#31231b;
+  --gold:#d9ad55; --gold-soft:#2a2413; --plum:#c79ab6;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:clamp(14px,3vw,26px) clamp(12px,3vw,22px) 60px}
+h1,h2,h3{margin:0;text-wrap:balance}
+button{font-family:inherit}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+.masthead{border:1px solid var(--line-2);border-top:4px solid var(--gold);border-radius:14px;background:var(--surface);box-shadow:var(--shadow);padding:18px clamp(15px,3vw,24px);margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold)}
+.titlerow{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-top:9px}
+.masthead h1{font-family:var(--serif);font-weight:900;font-size:clamp(24px,4.2vw,36px);line-height:1.03;letter-spacing:-.015em}
+.masthead .pkg{font-size:15px;color:var(--muted);margin-top:7px}
+.masthead .pkg b{color:var(--ink);font-weight:600}
+.tools{margin-left:auto;display:flex;gap:8px}
+.btn{font-weight:700;font-size:12.5px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);border-radius:9px;padding:9px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.btn:hover{background:var(--surface-2)} .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:16px}
+.stat{background:var(--raise);border:1px solid var(--line);border-radius:11px;padding:11px 15px;min-width:0}
+.stat .v{font-family:var(--serif);font-weight:600;font-size:24px;line-height:1;font-variant-numeric:tabular-nums}
+.stat .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:5px}
+.stat.total{border-left:3px solid var(--gold);background:var(--gold-soft)} .stat.total .v{color:var(--gold)}
+
+.draft{display:flex;gap:10px;align-items:flex-start;background:var(--gold-soft);border:1px solid color-mix(in srgb,var(--gold) 34%,transparent);border-radius:11px;padding:11px 15px;margin-bottom:16px;font-size:12.5px;color:var(--ink)}
+.draft b{color:var(--gold)}
+
+.grp{margin-bottom:16px;border:1px solid var(--line-2);border-radius:14px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow);break-inside:avoid}
+.grp-hd{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding:13px 16px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.grp-hd .gn{font-family:var(--serif);font-weight:600;font-size:19px;letter-spacing:-.01em}
+.grp-hd .gm{font-family:var(--mono);font-size:11px;color:var(--faint)}
+.grp-hd .gt{margin-left:auto;font-family:var(--mono);font-weight:600;font-size:15px;color:var(--gold)}
+.grp-hd .gt small{display:block;font-size:8.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);text-align:right;font-weight:400}
+
+.guest{padding:14px 16px;border-top:1px solid var(--line)}
+.guest:first-of-type{border-top:0}
+.guest-hd{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:8px}
+.guest-hd .name{font-weight:700;font-size:15.5px;letter-spacing:-.01em}
+.guest-hd .num{font-family:var(--mono);font-size:10px;color:var(--faint)}
+.linehd{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);display:flex;align-items:center;gap:7px;margin:10px 0 4px}
+.linehd .ic{font-size:12px}
+.line{display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:8px 12px;align-items:baseline;padding:6px 0;border-bottom:1px dashed var(--line)}
+.line:last-child{border-bottom:0}
+.line .d{font-family:var(--mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
+.line .desc{min-width:0}
+.line .desc .t{font-weight:600;font-size:13.5px}
+.line .desc .m{font-size:11.5px;color:var(--faint)}
+.line .p{font-family:var(--mono);font-weight:600;font-size:13.5px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tag{font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;background:var(--salmon-soft);color:var(--salmon-deep);border-radius:20px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+.none{font-size:12px;color:var(--faint);padding:4px 0 2px}
+.guest-total{display:flex;align-items:baseline;justify-content:flex-end;gap:12px;margin-top:10px;padding-top:9px;border-top:1px solid var(--line-2)}
+.guest-total .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.guest-total .amt{font-family:var(--serif);font-weight:600;font-size:19px;color:var(--ink);font-variant-numeric:tabular-nums}
+
+.grand{display:flex;align-items:center;gap:14px;flex-wrap:wrap;border:1px solid var(--gold);background:var(--gold-soft);border-radius:14px;padding:16px 20px;margin-top:4px}
+.grand .gl{font-family:var(--serif);font-weight:600;font-size:20px}
+.grand .gsub{font-size:12.5px;color:var(--muted)}
+.grand .gv{margin-left:auto;font-family:var(--serif);font-weight:900;font-size:clamp(26px,5vw,38px);color:var(--gold);line-height:1;font-variant-numeric:tabular-nums}
+
+.foot{margin-top:22px;padding-top:14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--faint);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media(max-width:540px){
+  .titlerow{flex-direction:column;align-items:stretch}.tools{margin-left:0}.tools .btn{flex:1;justify-content:center}
+  .line{grid-template-columns:64px minmax(0,1fr) auto}
+}
+@media print{
+  @page{size:letter;margin:12mm}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  html,body{background:#fff}
+  .no-print{display:none !important}
+  .wrap{max-width:none;padding:0}
+  .grp,.guest,.grand{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="brand"><span>🎣</span><span>Talon Lodge · Checkout Billing</span></div>
+    <div class="titlerow">
+      <h1>Billing Report</h1>
+      <div class="tools no-print">
+        <button class="btn" onclick="B.theme()">◐ Theme</button>
+        <button class="btn" onclick="window.print()">⎙ Print / Save PDF</button>
+      </div>
+    </div>
+    <div class="pkg" id="pkg"></div>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="draft">⚠ <span><b>Draft folio.</b> Massage sessions are from the spa schedule. Activity add-ons marked <span class="tag">sample</span> and all rates shown are <b>indicative</b> — confirm against the catalog before billing. Amounts are add-on charges due at checkout; state &amp; city taxes and fees apply per lodge policy.</span></div>
+
+  <div id="groups"></div>
+
+  <div class="grand"><div><div class="gl">Total to bill — all guests</div><div class="gsub" id="grandsub"></div></div><div class="gv" id="grand"></div></div>
+
+  <div class="foot"><span>Talon Lodge &amp; Spa · Sitka, Alaska</span><span id="footpkg"></span></div>
+</div>
+
+<script>
+(function(){
+  var PKG={name:'Winemaker Series',sub:'4-Night / 3-Day',dates:'May 29 – June 2, 2026'};
+  // t: 'activity' | 'massage'.  Massage sessions are real (from the spa schedule).
+  // Prices are INDICATIVE placeholders; activity rows tagged sample are format demos.
+  var GROUPS=[
+    {name:'Butler',guests:[
+      {n:'Jeannette Axner',items:[
+        {t:'activity',date:'2026-05-29',desc:'Additional Saltwater Day',meta:'Guided charter · arrival day',price:1600,sample:true},
+        {t:'massage',date:'2026-06-01',desc:'Denali Deep',meta:'Mikalia Lockhart · 50 min · 5:30 PM',price:175}
+      ]},
+      {n:'Patrisha Toney',items:[
+        {t:'massage',date:'2026-05-30',desc:'50-Minute Massage',meta:'Mikalia Lockhart · 50 min · 4:30 PM · treatment TBD',price:160}
+      ]},
+      {n:'Raymond (Eddie) Axner',items:[
+        {t:'massage',date:'2026-06-01',desc:'Denali Deep',meta:'Lori Strachan · 50 min · 5:30 PM',price:175}
+      ]}
+    ]},
+    {name:'Galante',guests:[
+      {n:'Dawn Galante',items:[
+        {t:'activity',date:'2026-05-30',desc:'Whale & Wildlife Viewing',meta:'Per person',price:425,sample:true},
+        {t:'massage',date:'2026-06-01',desc:'Aurora Refresher',meta:'Mikalia Lockhart · 50 min · 4:30 PM',price:160}
+      ]},
+      {n:'Jack Galante',items:[
+        {t:'massage',date:'2026-06-01',desc:'50-Minute Massage',meta:'Lori Strachan · 50 min · 4:30 PM · treatment TBD',price:160}
+      ]}
+    ]},
+    {name:'Keller',guests:[
+      {n:'Chic Young',items:[
+        {t:'massage',date:'2026-05-31',desc:'Denali Deep',meta:'Lori Strachan · 50 min · 4:30 PM',price:175}
+      ]},
+      {n:'Steve Keller',items:[
+        {t:'activity',date:'2026-05-31',desc:'Freshwater Fishing by Float Plane',meta:'Per person',price:1650,sample:true},
+        {t:'massage',date:'2026-05-31',desc:'Denali Deep',meta:'Mikalia Lockhart · 50 min · 4:30 PM',price:175}
+      ]}
+    ]},
+    {name:'Kenny',guests:[
+      {n:'Jeannie Kenny',items:[
+        {t:'massage',date:'2026-05-31',desc:'Sitka Swedish',meta:'Lori Strachan · 50 min · 5:30 PM',price:165}
+      ]},
+      {n:'Michael Kenny',items:[
+        {t:'massage',date:'2026-05-31',desc:'Sitka Swedish',meta:'Mikalia Lockhart · 50 min · 5:30 PM',price:165}
+      ]}
+    ]},
+    {name:'Merenda',guests:[
+      {n:'Amy Merenda',items:[
+        {t:'massage',date:'2026-05-30',desc:'Denali Deep',meta:'Lori Strachan · 50 min · 4:30 PM',price:175}
+      ]}
+    ]}
+  ];
+  var esc=function(x){return (x==null?'':String(x)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');};
+  var usd=function(n){return '$'+(n||0).toLocaleString('en-US');};
+  var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var fmtD=function(s){var p=s.split('-');return MO[+p[1]-1]+' '+(+p[2]);};
+
+  var grand=0,nGuests=0,nMass=0,nAct=0;
+  var groupsHtml=GROUPS.map(function(g){
+    var gtot=0;
+    var guestsHtml=g.guests.map(function(gu){
+      nGuests++;
+      var acts=gu.items.filter(function(i){return i.t==='activity';});
+      var mass=gu.items.filter(function(i){return i.t==='massage';});
+      nAct+=acts.length;nMass+=mass.length;
+      var gtotal=gu.items.reduce(function(s,i){return s+(i.price||0);},0);
+      gtot+=gtotal;
+      function lines(arr){return arr.map(function(i){
+        return '<div class="line"><span class="d">'+fmtD(i.date)+'</span>'+
+          '<div class="desc"><div class="t">'+esc(i.desc)+(i.sample?'<span class="tag">sample</span>':'')+'</div>'+
+          (i.meta?'<div class="m">'+esc(i.meta)+'</div>':'')+'</div>'+
+          '<div class="p">'+usd(i.price)+'</div></div>';
+      }).join('');}
+      return '<div class="guest"><div class="guest-hd"><span class="name">'+esc(gu.n)+'</span><span class="num">'+g.name+' Group</span></div>'+
+        '<div class="linehd"><span class="ic">🎣</span>Activities</div>'+
+        (acts.length?lines(acts):'<div class="none">No add-on activities billed.</div>')+
+        '<div class="linehd"><span class="ic">💆</span>Spa &amp; Massage</div>'+
+        (mass.length?lines(mass):'<div class="none">No spa sessions billed.</div>')+
+        '<div class="guest-total"><span class="lbl">Guest total to bill</span><span class="amt">'+usd(gtotal)+'</span></div></div>';
+    }).join('');
+    grand+=gtot;
+    return '<section class="grp"><div class="grp-hd"><span class="gn">'+esc(g.name)+' Group</span><span class="gm">'+g.guests.length+' guest'+(g.guests.length===1?'':'s')+'</span>'+
+      '<span class="gt">'+usd(gtot)+'<small>group total</small></span></div>'+guestsHtml+'</section>';
+  }).join('');
+
+  document.getElementById('groups').innerHTML=groupsHtml;
+  document.getElementById('pkg').innerHTML='<b>'+esc(PKG.name)+'</b> · '+esc(PKG.sub)+' · '+esc(PKG.dates);
+  document.getElementById('footpkg').textContent=PKG.name+' · '+PKG.dates;
+  document.getElementById('grand').textContent=usd(grand);
+  document.getElementById('grandsub').textContent=nGuests+' guests · '+GROUPS.length+' groups · add-on charges at checkout';
+  document.getElementById('stats').innerHTML=
+    '<div class="stat"><div class="v">'+nGuests+'</div><div class="k">Guests billed</div></div>'+
+    '<div class="stat"><div class="v">'+nMass+'</div><div class="k">Massage sessions</div></div>'+
+    '<div class="stat"><div class="v">'+nAct+'</div><div class="k">Activity add-ons</div></div>'+
+    '<div class="stat total"><div class="v">'+usd(grand)+'</div><div class="k">Total to bill</div></div>';
+
+  window.B={theme:function(){var c=document.documentElement.getAttribute('data-theme');var n=c==='dark'?'light':(c==='light'?'':'dark');if(n)document.documentElement.setAttribute('data-theme',n);else document.documentElement.removeAttribute('data-theme');}};
+})();
+</script>
+</body>
+</html>
