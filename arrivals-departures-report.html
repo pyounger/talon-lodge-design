@@ -232,10 +232,11 @@ table.grp tfoot td{font-weight:700;border-top:2px solid var(--line-2);background
   var fmtPh=function(d){return d&&d.length===10?'('+d.slice(0,3)+') '+d.slice(3,6)+'-'+d.slice(6):(d||'');};
 
   function renderDir(dir){
+    var showRep=(dir==='arr');
     var out=SCHED[dir].map(function(sec){
-      var reps=sec.pax.filter(function(p){return p.rep;}).length;
+      var reps=showRep?sec.pax.filter(function(p){return p.rep;}).length:0;
       var rows=sec.pax.map(function(p){
-        var rep=p.rep?' <span class="rep" title="Returning guest · '+p.rep+' prior stays">🔁 '+p.rep+'</span>':'';
+        var rep=(showRep&&p.rep)?' <span class="rep" title="Returning guest · '+p.rep+' prior stays">🔁 '+p.rep+'</span>':'';
         var note=p.note?'<div class="g-note">'+esc(p.note)+'</div>':'';
         var tel=p.ph?'<a class="g-tel" href="tel:+1'+esc(p.ph)+'">'+esc(fmtPh(p.ph))+'</a>':'';
         return '<div class="g"><div class="g-main"><div class="g-top"><span class="g-name">'+esc(p.n)+'</span>'+rep+'<span class="g-grp">'+esc(p.grp)+' Group</span></div>'+note+'</div>'+tel+'</div>';
@@ -253,7 +254,7 @@ table.grp tfoot td{font-weight:700;border-top:2px solid var(--line-2);background
 
   var nArr=SCHED.arr.reduce(function(s,x){return s+x.pax.length;},0);
   var nDep=SCHED.dep.reduce(function(s,x){return s+x.pax.length;},0);
-  var repCount=0;['arr','dep'].forEach(function(d){SCHED[d].forEach(function(s){s.pax.forEach(function(p){if(p.rep)repCount++;});});});
+  var repCount=0;SCHED.arr.forEach(function(s){s.pax.forEach(function(p){if(p.rep)repCount++;});});
   // movement by group
   var G={};function tallyGrp(d){SCHED[d].forEach(function(s){s.pax.forEach(function(p){G[p.grp]=G[p.grp]||{a:0,d:0};G[p.grp][d==='arr'?'a':'d']++;});});}
   tallyGrp('arr');tallyGrp('dep');

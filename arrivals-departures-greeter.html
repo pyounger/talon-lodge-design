@@ -107,10 +107,14 @@ button{font-family:inherit}
 
 /* guest rows */
 .people{display:flex;flex-direction:column}
-.g{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;
+.g{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;gap:12px;align-items:center;
   padding:11px 15px;border-top:1px solid var(--line)}
 .g:first-child{border-top:0}
 .g.done{background:var(--raise)}
+.ava{width:44px;height:44px;border-radius:50%;overflow:hidden;flex:0 0 auto;display:grid;place-items:center;
+  font-weight:700;font-size:14.5px;color:#fff;background:var(--surface-2);border:1px solid var(--line-2);letter-spacing:.02em}
+.ava img{width:100%;height:100%;object-fit:cover;display:block}
+.g.done .ava{opacity:.65}
 .chk{width:30px;height:30px;flex:0 0 auto;border-radius:50%;border:2px solid var(--line-2);background:var(--surface);
   cursor:pointer;display:grid;place-items:center;color:transparent;font-size:15px;line-height:1;transition:.12s;padding:0}
 .chk:hover{border-color:var(--accent)}
@@ -145,8 +149,8 @@ button{font-family:inherit}
 .panel.hidedone .g.done{display:none}
 
 @media(max-width:560px){
-  .g{grid-template-columns:auto minmax(0,1fr);gap:10px 12px}
-  .g-bags{grid-column:2;justify-content:flex-start;margin-top:2px}
+  .g{grid-template-columns:auto auto minmax(0,1fr);gap:10px 12px}
+  .g-bags{grid-column:1/-1;justify-content:flex-start;margin-top:2px}
   .titlerow{flex-direction:column;align-items:stretch}
   .tools{margin-left:0}.tools .btn{flex:1;justify-content:center}
   .sec-meta{margin-left:0;width:100%}
@@ -289,6 +293,16 @@ h2.ptitle{display:none;font-family:var(--serif);font-weight:600;font-size:22px;m
     ]
   };
 
+  // ---- guest photo (recognition headshot) — shown when on file, else initials ----
+  function initials(n){var p=String(n).trim().split(/\s+/);return ((p[0]?p[0][0]:'')+(p.length>1?p[p.length-1][0]:'')).toUpperCase();}
+  function hueFor(n){var h=0;for(var i=0;i<n.length;i++)h=(h*31+n.charCodeAt(i))>>>0;return h%360;}
+  function demoPhoto(hue){var svg='<svg xmlns="http://www.w3.org/2000/svg" width="88" height="88"><defs><linearGradient id="a" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="hsl('+hue+',46%,60%)"/><stop offset="1" stop-color="hsl('+hue+',50%,38%)"/></linearGradient></defs><rect width="88" height="88" fill="url(#a)"/><circle cx="44" cy="34" r="15" fill="rgba(255,255,255,.9)"/><path d="M16 80c0-16 13-24 28-24s28 8 28 24z" fill="rgba(255,255,255,.9)"/></svg>';return 'data:image/svg+xml,'+encodeURIComponent(svg);}
+  // demo: a few guests have a recognition photo on file (placeholder art stands in for the real headshot)
+  if(SCHED.arr[0]&&SCHED.arr[0].pax[0])SCHED.arr[0].pax[0].photo=demoPhoto(174);
+  if(SCHED.arr[1]&&SCHED.arr[1].pax[0])SCHED.arr[1].pax[0].photo=demoPhoto(24);
+  if(SCHED.arr[2]&&SCHED.arr[2].pax[3])SCHED.arr[2].pax[3].photo=demoPhoto(302);
+  if(SCHED.dep[3]&&SCHED.dep[3].pax[0])SCHED.dep[3].pax[0].photo=demoPhoto(208);
+
   var KEY='talon_greeter_'+DATE;
   var state={bags:{},met:{}};
   try{var s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object'){state.bags=s.bags||{};state.met=s.met||{};}}catch(e){}
@@ -310,9 +324,10 @@ h2.ptitle{display:none;font-family:var(--serif);font-weight:600;font-size:22px;m
         var bagctl=dir==='arr'?'<div class="g-bags"><button class="stp" aria-label="one fewer bag" onclick="G.bag(\''+id+'\',-1)">−</button>'+
           '<div class="bagn"><span id="bn_'+id+'">'+bags+'</span><small>bags</small></div>'+
           '<button class="stp" aria-label="one more bag" onclick="G.bag(\''+id+'\',1)">+</button></div>':'';
-        var rep=p.rep?'<span class="rep" title="Returning guest · '+p.rep+' prior stays">🔁 '+p.rep+'</span>':'';
+        var rep=(dir==='arr'&&p.rep)?'<span class="rep" title="Returning guest · '+p.rep+' prior stays">🔁 '+p.rep+'</span>':'';
+        var av=p.photo?'<div class="ava"><img src="'+p.photo+'" alt="'+esc(p.n)+'"></div>':'<div class="ava" style="background:hsl('+hueFor(p.n)+' 38% 42%)" title="No photo on file">'+esc(initials(p.n))+'</div>';
         return '<div class="g'+(done?' done':'')+'" id="g_'+id+'">'+
-          '<button class="chk" aria-pressed="'+(done?'true':'false')+'" aria-label="mark handled" onclick="G.met(\''+id+'\',this)">✓</button>'+
+          '<button class="chk" aria-pressed="'+(done?'true':'false')+'" aria-label="mark handled" onclick="G.met(\''+id+'\',this)">✓</button>'+av+
           '<div class="g-main"><div class="g-top"><span class="g-name">'+esc(p.n)+'</span>'+rep+'<span class="g-grp">'+esc(p.grp)+' Group</span></div>'+
           note+call+'</div>'+bagctl+'</div>';
       }).join('');
