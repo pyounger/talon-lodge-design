@@ -91,6 +91,23 @@ button{font-family:inherit}
 .guest-total{display:flex;align-items:baseline;justify-content:flex-end;gap:12px;margin-top:10px;padding-top:9px;border-top:1px solid var(--line-2)}
 .guest-total .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
 .guest-total .amt{font-family:var(--serif);font-weight:600;font-size:19px;color:var(--ink);font-variant-numeric:tabular-nums}
+.billto{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--accent-deep);margin-top:3px}
+
+.sectitle{display:flex;align-items:center;gap:10px;margin:26px 2px 6px}
+.sectitle::before{content:"";width:22px;height:2px;background:var(--gold);border-radius:2px}
+.sectitle h2{font-family:var(--serif);font-weight:600;font-size:clamp(19px,3.2vw,25px);letter-spacing:-.01em}
+.folionote{font-size:13px;color:var(--muted);margin:0 2px 14px;max-width:74ch}
+.folio{border:1px solid var(--line-2);border-radius:12px;background:var(--surface);box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden;break-inside:avoid}
+.folio-hd{display:flex;align-items:center;gap:12px;padding:11px 15px;background:var(--accent-soft);border-bottom:1px solid var(--line)}
+.folio-hd .pn{font-family:var(--serif);font-weight:600;font-size:16.5px}
+.folio-hd .pt{margin-left:auto;font-family:var(--mono);font-weight:600;font-size:16px;color:var(--accent-deep);text-align:right}
+.folio-hd .pt small{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:400}
+.fline{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:10px;padding:7px 15px;border-bottom:1px dashed var(--line);font-size:13px;align-items:baseline}
+.fline:last-child{border-bottom:0}
+.fline .d{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
+.fline .fdesc{min-width:0;font-weight:600}
+.fline .for{color:var(--faint);font-weight:400}
+.fline .p{font-family:var(--mono);font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
 
 .grand{display:flex;align-items:center;gap:14px;flex-wrap:wrap;border:1px solid var(--gold);background:var(--gold-soft);border-radius:14px;padding:16px 20px;margin-top:4px}
 .grand .gl{font-family:var(--serif);font-weight:600;font-size:20px}
@@ -132,7 +149,11 @@ button{font-family:inherit}
 
   <div id="groups"></div>
 
-  <div class="grand"><div><div class="gl">Total to bill — all guests</div><div class="gsub" id="grandsub"></div></div><div class="gv" id="grand"></div></div>
+  <div class="sectitle"><h2>Checkout folios — who pays what</h2></div>
+  <p class="folionote">Charges route to the payer the group lead set at check-in (Payment Responsibility). Each folio below is what that person settles at checkout.</p>
+  <div id="folios"></div>
+
+  <div class="grand"><div><div class="gl">Total to bill — all folios</div><div class="gsub" id="grandsub"></div></div><div class="gv" id="grand"></div></div>
 
   <div class="foot"><span>Talon Lodge &amp; Spa · Sitka, Alaska</span><span id="footpkg"></span></div>
 </div>
@@ -148,10 +169,10 @@ button{font-family:inherit}
         {t:'activity',date:'2026-05-29',desc:'Additional Saltwater Day',meta:'Guided charter · arrival day',price:1600,sample:true},
         {t:'massage',date:'2026-06-01',desc:'Denali Deep',meta:'Mikalia Lockhart · 50 min · 5:30 PM',price:175}
       ]},
-      {n:'Patrisha Toney',items:[
+      {n:'Patrisha Toney',route:{spa:'Jeannette Axner'},items:[
         {t:'massage',date:'2026-05-30',desc:'50-Minute Massage',meta:'Mikalia Lockhart · 50 min · 4:30 PM · treatment TBD',price:160}
       ]},
-      {n:'Raymond (Eddie) Axner',items:[
+      {n:'Raymond (Eddie) Axner',route:{spa:'Jeannette Axner'},items:[
         {t:'massage',date:'2026-06-01',desc:'Denali Deep',meta:'Lori Strachan · 50 min · 5:30 PM',price:175}
       ]}
     ]},
@@ -165,7 +186,7 @@ button{font-family:inherit}
       ]}
     ]},
     {name:'Keller',guests:[
-      {n:'Chic Young',items:[
+      {n:'Chic Young',route:{spa:'Steve Keller'},items:[
         {t:'massage',date:'2026-05-31',desc:'Denali Deep',meta:'Lori Strachan · 50 min · 4:30 PM',price:175}
       ]},
       {n:'Steve Keller',items:[
@@ -193,19 +214,25 @@ button{font-family:inherit}
   var fmtD=function(s){var p=s.split('-');return MO[+p[1]-1]+' '+(+p[2]);};
 
   var grand=0,nGuests=0,nMass=0,nAct=0;
+  var folios={}; // payerName -> {total, lines:[]}
+  function addFolio(payer,guestName,i){var f=folios[payer]||(folios[payer]={total:0,lines:[]});f.total+=(i.price||0);f.lines.push({guest:guestName,desc:i.desc,date:i.date,price:i.price,sample:i.sample});}
   var groupsHtml=GROUPS.map(function(g){
     var gtot=0;
     var guestsHtml=g.guests.map(function(gu){
       nGuests++;
+      var route=gu.route||{};
+      function payerOf(i){var cat=i.t==='activity'?'activities':(i.t==='massage'?'spa':'alcohol');var r=route[cat]||'self';return r==='self'?gu.n:r;}
       var acts=gu.items.filter(function(i){return i.t==='activity';});
       var mass=gu.items.filter(function(i){return i.t==='massage';});
       nAct+=acts.length;nMass+=mass.length;
-      var gtotal=gu.items.reduce(function(s,i){return s+(i.price||0);},0);
-      gtot+=gtotal;
+      var incurred=gu.items.reduce(function(s,i){return s+(i.price||0);},0);
+      gu.items.forEach(function(i){addFolio(payerOf(i),gu.n,i);});
+      gtot+=incurred;
       function lines(arr){return arr.map(function(i){
+        var payer=payerOf(i);var bt=payer!==gu.n?'<div class="billto">→ billed to '+esc(payer)+'</div>':'';
         return '<div class="line"><span class="d">'+fmtD(i.date)+'</span>'+
           '<div class="desc"><div class="t">'+esc(i.desc)+(i.sample?'<span class="tag">sample</span>':'')+'</div>'+
-          (i.meta?'<div class="m">'+esc(i.meta)+'</div>':'')+'</div>'+
+          (i.meta?'<div class="m">'+esc(i.meta)+'</div>':'')+bt+'</div>'+
           '<div class="p">'+usd(i.price)+'</div></div>';
       }).join('');}
       return '<div class="guest"><div class="guest-hd"><span class="name">'+esc(gu.n)+'</span><span class="num">'+g.name+' Group</span></div>'+
@@ -213,14 +240,24 @@ button{font-family:inherit}
         (acts.length?lines(acts):'<div class="none">No add-on activities billed.</div>')+
         '<div class="linehd"><span class="ic">💆</span>Spa &amp; Massage</div>'+
         (mass.length?lines(mass):'<div class="none">No spa sessions billed.</div>')+
-        '<div class="guest-total"><span class="lbl">Guest total to bill</span><span class="amt">'+usd(gtotal)+'</span></div></div>';
+        '<div class="guest-total"><span class="lbl">Charges incurred</span><span class="amt">'+usd(incurred)+'</span></div></div>';
     }).join('');
     grand+=gtot;
     return '<section class="grp"><div class="grp-hd"><span class="gn">'+esc(g.name)+' Group</span><span class="gm">'+g.guests.length+' guest'+(g.guests.length===1?'':'s')+'</span>'+
-      '<span class="gt">'+usd(gtot)+'<small>group total</small></span></div>'+guestsHtml+'</section>';
+      '<span class="gt">'+usd(gtot)+'<small>charges incurred</small></span></div>'+guestsHtml+'</section>';
   }).join('');
 
   document.getElementById('groups').innerHTML=groupsHtml;
+
+  // ---- checkout folios: who actually pays, after payment-responsibility routing ----
+  var payers=Object.keys(folios).sort(function(a,b){return folios[b].total-folios[a].total||a.localeCompare(b);});
+  document.getElementById('folios').innerHTML=payers.map(function(pn){
+    var f=folios[pn];
+    var rows=f.lines.slice().sort(function(a,b){return a.date<b.date?-1:1;}).map(function(l){
+      return '<div class="fline"><span class="d">'+fmtD(l.date)+'</span><span class="fdesc">'+esc(l.desc)+(l.guest!==pn?' <span class="for">· for '+esc(l.guest)+'</span>':'')+(l.sample?'<span class="tag">sample</span>':'')+'</span><span class="p">'+usd(l.price)+'</span></div>';
+    }).join('');
+    return '<div class="folio"><div class="folio-hd"><span class="pn">'+esc(pn)+'</span><span class="pt">'+usd(f.total)+'<small>folio total</small></span></div>'+rows+'</div>';
+  }).join('');
   document.getElementById('pkg').innerHTML='<b>'+esc(PKG.name)+'</b> · '+esc(PKG.sub)+' · '+esc(PKG.dates);
   document.getElementById('footpkg').textContent=PKG.name+' · '+PKG.dates;
   document.getElementById('grand').textContent=usd(grand);
