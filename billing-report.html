@@ -167,7 +167,8 @@ button{font-family:inherit}
     {name:'Butler',guests:[
       {n:'Jeannette Axner',items:[
         {t:'activity',date:'2026-05-29',desc:'Additional Saltwater Day',meta:'Guided charter · arrival day',price:1600,sample:true},
-        {t:'massage',date:'2026-06-01',desc:'Denali Deep',meta:'Mikalia Lockhart · 50 min · 5:30 PM',price:175}
+        {t:'massage',date:'2026-06-01',desc:'Denali Deep',meta:'Mikalia Lockhart · 50 min · 5:30 PM',price:175},
+        {t:'alcohol',date:'2026-05-31',desc:'Bar tab',meta:'Wine & cocktails',price:85,sample:true}
       ]},
       {n:'Patrisha Toney',route:{spa:'Jeannette Axner'},items:[
         {t:'massage',date:'2026-05-30',desc:'50-Minute Massage',meta:'Mikalia Lockhart · 50 min · 4:30 PM · treatment TBD',price:160}
@@ -191,7 +192,8 @@ button{font-family:inherit}
       ]},
       {n:'Steve Keller',items:[
         {t:'activity',date:'2026-05-31',desc:'Freshwater Fishing by Float Plane',meta:'Per person',price:1650,sample:true},
-        {t:'massage',date:'2026-05-31',desc:'Denali Deep',meta:'Mikalia Lockhart · 50 min · 4:30 PM',price:175}
+        {t:'massage',date:'2026-05-31',desc:'Denali Deep',meta:'Mikalia Lockhart · 50 min · 4:30 PM',price:175},
+        {t:'alcohol',date:'2026-05-31',desc:'Winemaker dinner — wine pairing',meta:'Per person',price:120,sample:true}
       ]}
     ]},
     {name:'Kenny',guests:[
@@ -213,60 +215,72 @@ button{font-family:inherit}
   var MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   var fmtD=function(s){var p=s.split('-');return MO[+p[1]-1]+' '+(+p[2]);};
 
-  var grand=0,nGuests=0,nMass=0,nAct=0;
-  var folios={}; // payerName -> {total, lines:[]}
-  function addFolio(payer,guestName,i){var f=folios[payer]||(folios[payer]={total:0,lines:[]});f.total+=(i.price||0);f.lines.push({guest:guestName,desc:i.desc,date:i.date,price:i.price,sample:i.sample});}
-  var groupsHtml=GROUPS.map(function(g){
-    var gtot=0;
-    var guestsHtml=g.guests.map(function(gu){
-      nGuests++;
-      var route=gu.route||{};
-      function payerOf(i){var cat=i.t==='activity'?'activities':(i.t==='massage'?'spa':'alcohol');var r=route[cat]||'self';return r==='self'?gu.n:r;}
-      var acts=gu.items.filter(function(i){return i.t==='activity';});
-      var mass=gu.items.filter(function(i){return i.t==='massage';});
-      nAct+=acts.length;nMass+=mass.length;
-      var incurred=gu.items.reduce(function(s,i){return s+(i.price||0);},0);
-      gu.items.forEach(function(i){addFolio(payerOf(i),gu.n,i);});
-      gtot+=incurred;
-      function lines(arr){return arr.map(function(i){
-        var payer=payerOf(i);var bt=payer!==gu.n?'<div class="billto">→ billed to '+esc(payer)+'</div>':'';
-        return '<div class="line"><span class="d">'+fmtD(i.date)+'</span>'+
-          '<div class="desc"><div class="t">'+esc(i.desc)+(i.sample?'<span class="tag">sample</span>':'')+'</div>'+
-          (i.meta?'<div class="m">'+esc(i.meta)+'</div>':'')+bt+'</div>'+
-          '<div class="p">'+usd(i.price)+'</div></div>';
-      }).join('');}
-      return '<div class="guest"><div class="guest-hd"><span class="name">'+esc(gu.n)+'</span><span class="num">'+g.name+' Group</span></div>'+
-        '<div class="linehd"><span class="ic">🎣</span>Activities</div>'+
-        (acts.length?lines(acts):'<div class="none">No add-on activities billed.</div>')+
-        '<div class="linehd"><span class="ic">💆</span>Spa &amp; Massage</div>'+
-        (mass.length?lines(mass):'<div class="none">No spa sessions billed.</div>')+
-        '<div class="guest-total"><span class="lbl">Charges incurred</span><span class="amt">'+usd(incurred)+'</span></div></div>';
-    }).join('');
-    grand+=gtot;
-    return '<section class="grp"><div class="grp-hd"><span class="gn">'+esc(g.name)+' Group</span><span class="gm">'+g.guests.length+' guest'+(g.guests.length===1?'':'s')+'</span>'+
-      '<span class="gt">'+usd(gtot)+'<small>charges incurred</small></span></div>'+guestsHtml+'</section>';
-  }).join('');
+  var load=function(k,f){try{var v=JSON.parse(localStorage.getItem(k));return v==null?f:v;}catch(e){return f;}};
+  var slug=function(x){return String(x).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');};
+  var idToName={};GROUPS.forEach(function(g){g.guests.forEach(function(gu){idToName[slug(gu.n)]=gu.n;});});
+  var catOf=function(t){return t==='activity'?'activities':(t==='massage'?'spa':(t==='alcohol'?'alcohol':'fish'));};
 
-  document.getElementById('groups').innerHTML=groupsHtml;
-
-  // ---- checkout folios: who actually pays, after payment-responsibility routing ----
-  var payers=Object.keys(folios).sort(function(a,b){return folios[b].total-folios[a].total||a.localeCompare(b);});
-  document.getElementById('folios').innerHTML=payers.map(function(pn){
-    var f=folios[pn];
-    var rows=f.lines.slice().sort(function(a,b){return a.date<b.date?-1:1;}).map(function(l){
-      return '<div class="fline"><span class="d">'+fmtD(l.date)+'</span><span class="fdesc">'+esc(l.desc)+(l.guest!==pn?' <span class="for">· for '+esc(l.guest)+'</span>':'')+(l.sample?'<span class="tag">sample</span>':'')+'</span><span class="p">'+usd(l.price)+'</span></div>';
+  function renderAll(){
+    var RT=load('talon_billing_responsibility_v1',{}),routing=RT.routing||{},leads=RT.leads||{};
+    var hasShared=routing&&Object.keys(routing).length>0;
+    var grand=0,nGuests=0,nMass=0,nAct=0,folios={};
+    function addFolio(payer,guestName,i){var f=folios[payer]||(folios[payer]={total:0,lines:[]});f.total+=(i.price||0);f.lines.push({guest:guestName,desc:i.desc,date:i.date,price:i.price,sample:i.sample});}
+    var groupsHtml=GROUPS.map(function(g){
+      var gtot=0;
+      var guestsHtml=g.guests.map(function(gu){
+        nGuests++;var gid=slug(gu.n);
+        function payerOf(i){var cat=catOf(i.t),token;
+          if(hasShared){token=(routing[gid]&&routing[gid][cat])||'self';}else{token=(gu.route&&gu.route[cat])||'self';}
+          if(!hasShared)return token==='self'?gu.n:token;
+          if(token==='self')return gu.n;
+          if(token==='lead')return idToName[leads[g.name]]||gu.n;
+          return idToName[token]||gu.n;}
+        var acts=gu.items.filter(function(i){return i.t==='activity';});
+        var mass=gu.items.filter(function(i){return i.t==='massage';});
+        var alc=gu.items.filter(function(i){return i.t==='alcohol';});
+        nAct+=acts.length;nMass+=mass.length;
+        var incurred=gu.items.reduce(function(s,i){return s+(i.price||0);},0);
+        gu.items.forEach(function(i){addFolio(payerOf(i),gu.n,i);});
+        gtot+=incurred;
+        function lines(arr){return arr.map(function(i){
+          var payer=payerOf(i);var bt=payer!==gu.n?'<div class="billto">→ billed to '+esc(payer)+'</div>':'';
+          return '<div class="line"><span class="d">'+fmtD(i.date)+'</span>'+
+            '<div class="desc"><div class="t">'+esc(i.desc)+(i.sample?'<span class="tag">sample</span>':'')+'</div>'+
+            (i.meta?'<div class="m">'+esc(i.meta)+'</div>':'')+bt+'</div>'+
+            '<div class="p">'+usd(i.price)+'</div></div>';
+        }).join('');}
+        return '<div class="guest"><div class="guest-hd"><span class="name">'+esc(gu.n)+'</span><span class="num">'+g.name+' Group</span></div>'+
+          '<div class="linehd"><span class="ic">🎣</span>Activities</div>'+(acts.length?lines(acts):'<div class="none">No add-on activities billed.</div>')+
+          '<div class="linehd"><span class="ic">💆</span>Spa &amp; Massage</div>'+(mass.length?lines(mass):'<div class="none">No spa sessions billed.</div>')+
+          (alc.length?('<div class="linehd"><span class="ic">🍷</span>Alcohol</div>'+lines(alc)):'')+
+          '<div class="guest-total"><span class="lbl">Charges incurred</span><span class="amt">'+usd(incurred)+'</span></div></div>';
+      }).join('');
+      grand+=gtot;
+      return '<section class="grp"><div class="grp-hd"><span class="gn">'+esc(g.name)+' Group</span><span class="gm">'+g.guests.length+' guest'+(g.guests.length===1?'':'s')+'</span>'+
+        '<span class="gt">'+usd(gtot)+'<small>charges incurred</small></span></div>'+guestsHtml+'</section>';
     }).join('');
-    return '<div class="folio"><div class="folio-hd"><span class="pn">'+esc(pn)+'</span><span class="pt">'+usd(f.total)+'<small>folio total</small></span></div>'+rows+'</div>';
-  }).join('');
-  document.getElementById('pkg').innerHTML='<b>'+esc(PKG.name)+'</b> · '+esc(PKG.sub)+' · '+esc(PKG.dates);
-  document.getElementById('footpkg').textContent=PKG.name+' · '+PKG.dates;
-  document.getElementById('grand').textContent=usd(grand);
-  document.getElementById('grandsub').textContent=nGuests+' guests · '+GROUPS.length+' groups · add-on charges at checkout';
-  document.getElementById('stats').innerHTML=
-    '<div class="stat"><div class="v">'+nGuests+'</div><div class="k">Guests billed</div></div>'+
-    '<div class="stat"><div class="v">'+nMass+'</div><div class="k">Massage sessions</div></div>'+
-    '<div class="stat"><div class="v">'+nAct+'</div><div class="k">Activity add-ons</div></div>'+
-    '<div class="stat total"><div class="v">'+usd(grand)+'</div><div class="k">Total to bill</div></div>';
+    document.getElementById('groups').innerHTML=groupsHtml;
+
+    var payers=Object.keys(folios).sort(function(a,b){return folios[b].total-folios[a].total||a.localeCompare(b);});
+    document.getElementById('folios').innerHTML=payers.map(function(pn){
+      var f=folios[pn];
+      var rows=f.lines.slice().sort(function(a,b){return a.date<b.date?-1:1;}).map(function(l){
+        return '<div class="fline"><span class="d">'+fmtD(l.date)+'</span><span class="fdesc">'+esc(l.desc)+(l.guest!==pn?' <span class="for">· for '+esc(l.guest)+'</span>':'')+(l.sample?'<span class="tag">sample</span>':'')+'</span><span class="p">'+usd(l.price)+'</span></div>';
+      }).join('');
+      return '<div class="folio"><div class="folio-hd"><span class="pn">'+esc(pn)+'</span><span class="pt">'+usd(f.total)+'<small>folio total</small></span></div>'+rows+'</div>';
+    }).join('');
+    document.getElementById('pkg').innerHTML='<b>'+esc(PKG.name)+'</b> · '+esc(PKG.sub)+' · '+esc(PKG.dates);
+    document.getElementById('footpkg').textContent=PKG.name+' · '+PKG.dates;
+    document.getElementById('grand').textContent=usd(grand);
+    document.getElementById('grandsub').textContent=nGuests+' guests · '+GROUPS.length+' groups · '+(hasShared?'routing live from check-in':'add-on charges at checkout');
+    document.getElementById('stats').innerHTML=
+      '<div class="stat"><div class="v">'+nGuests+'</div><div class="k">Guests billed</div></div>'+
+      '<div class="stat"><div class="v">'+nMass+'</div><div class="k">Massage sessions</div></div>'+
+      '<div class="stat"><div class="v">'+nAct+'</div><div class="k">Activity add-ons</div></div>'+
+      '<div class="stat total"><div class="v">'+usd(grand)+'</div><div class="k">Total to bill</div></div>';
+  }
+  renderAll();
+  window.addEventListener('storage',function(e){if(!e.key||e.key==='talon_billing_responsibility_v1'||e.key==='talon_guest_confirmations_v1')renderAll();});
 
   window.B={theme:function(){var c=document.documentElement.getAttribute('data-theme');var n=c==='dark'?'light':(c==='light'?'':'dark');if(n)document.documentElement.setAttribute('data-theme',n);else document.documentElement.removeAttribute('data-theme');}};
 })();

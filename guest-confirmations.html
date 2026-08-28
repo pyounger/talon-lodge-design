@@ -140,12 +140,44 @@ button{font-family:inherit}
   // In production this guest, their assigned charges, and fish share are read from the
   // guest record (payment-responsibility routing + fish processing split). Demo data:
   var GUEST={name:'Steve Keller',group:'Keller',trip:'Winemaker Series · May 29 – June 2, 2026',id:'steve-keller'};
-  var CHARGES=[
+  var FISH={species:'Coho Salmon',lbs:42,boxes:2,note:'Your take-home share of the Keller group catch'};
+  var load=function(k,f){try{var v=JSON.parse(localStorage.getItem(k));return v==null?f:v;}catch(e){return f;}};
+  var catClass={activities:'act',spa:'spa',alcohol:'alc'},catLabelM={activities:'Activity',spa:'Spa',alcohol:'Alcohol'};
+  var catOf=function(t){return t==='activity'?'activities':(t==='massage'?'spa':(t==='alcohol'?'alcohol':'fish'));};
+  // full group add-on set (mirrors billing) — used to find what the lead routed to this guest
+  var ALL=[
+    {owner:'Jeannette Axner',ownerId:'jeannette-axner',group:'Butler',t:'activity',date:'May 29',title:'Additional Saltwater Day',mine:'Your booking',price:1600},
+    {owner:'Jeannette Axner',ownerId:'jeannette-axner',group:'Butler',t:'massage',date:'Jun 1',title:'Denali Deep massage',mine:'Your session · 50 min',price:175},
+    {owner:'Jeannette Axner',ownerId:'jeannette-axner',group:'Butler',t:'alcohol',date:'May 31',title:'Bar tab',mine:'Wine & cocktails',price:85},
+    {owner:'Patrisha Toney',ownerId:'patrisha-toney',group:'Butler',t:'massage',date:'May 30',title:'50-Minute Massage',mine:'Your session · 50 min',price:160},
+    {owner:'Raymond (Eddie) Axner',ownerId:'raymond-eddie-axner',group:'Butler',t:'massage',date:'Jun 1',title:'Denali Deep massage',mine:'Your session · 50 min',price:175},
+    {owner:'Dawn Galante',ownerId:'dawn-galante',group:'Galante',t:'activity',date:'May 30',title:'Whale & Wildlife Viewing',mine:'Per person',price:425},
+    {owner:'Dawn Galante',ownerId:'dawn-galante',group:'Galante',t:'massage',date:'Jun 1',title:'Aurora Refresher',mine:'Your session · 50 min',price:160},
+    {owner:'Jack Galante',ownerId:'jack-galante',group:'Galante',t:'massage',date:'Jun 1',title:'50-Minute Massage',mine:'Your session · 50 min',price:160},
+    {owner:'Chic Young',ownerId:'chic-young',group:'Keller',t:'massage',date:'May 31',title:'Denali Deep massage',mine:'Your session · 50 min',price:175},
+    {owner:'Steve Keller',ownerId:'steve-keller',group:'Keller',t:'activity',date:'May 31',title:'Freshwater Fishing by Float Plane',mine:'Your booking',price:1650},
+    {owner:'Steve Keller',ownerId:'steve-keller',group:'Keller',t:'massage',date:'May 31',title:'Denali Deep massage',mine:'Your session · 50 min',price:175},
+    {owner:'Steve Keller',ownerId:'steve-keller',group:'Keller',t:'alcohol',date:'May 31',title:'Winemaker dinner — wine pairing',mine:'Per person',price:120},
+    {owner:'Jeannie Kenny',ownerId:'jeannie-kenny',group:'Kenny',t:'massage',date:'May 31',title:'Sitka Swedish',mine:'Your session · 50 min',price:165},
+    {owner:'Michael Kenny',ownerId:'michael-kenny',group:'Kenny',t:'massage',date:'May 31',title:'Sitka Swedish',mine:'Your session · 50 min',price:165},
+    {owner:'Amy Merenda',ownerId:'amy-merenda',group:'Merenda',t:'massage',date:'May 30',title:'Denali Deep massage',mine:'Your session · 50 min',price:175}
+  ];
+  var BAKED=[
     {cat:'act',label:'Activity',date:'May 31',t:'Freshwater Fishing by Float Plane',m:'Your booking',price:1650},
     {cat:'spa',label:'Spa',date:'May 31',t:'Denali Deep massage',m:'Your session · 50 min',price:175},
+    {cat:'alc',label:'Alcohol',date:'May 31',t:'Winemaker dinner — wine pairing',m:'Per person',price:120},
     {cat:'spa',label:'Spa',date:'May 31',t:'Denali Deep massage',m:'For Chic Young — lead assigned to you',price:175}
   ];
-  var FISH={species:'Coho Salmon',lbs:42,boxes:2,note:'Your take-home share of the Keller group catch'};
+  function chargesForGuest(){
+    var RT=load('talon_billing_responsibility_v1',{}),routing=RT.routing||{},leads=RT.leads||{};
+    if(!routing||!Object.keys(routing).length)return BAKED.slice();
+    return ALL.filter(function(c){
+      var cat=catOf(c.t),tok=(routing[c.ownerId]&&routing[c.ownerId][cat])||'self';
+      var pid=tok==='self'?c.ownerId:(tok==='lead'?(leads[c.group]||c.ownerId):tok);
+      return pid===GUEST.id;
+    }).map(function(c){var ck=catOf(c.t);return {cat:catClass[ck],label:catLabelM[ck],date:c.date,t:c.title,m:(c.ownerId===GUEST.id?c.mine:('For '+c.owner+' — lead assigned to you')),price:c.price};});
+  }
+  var CHARGES=[],total=0;
 
   var esc=function(x){return (x==null?'':String(x)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');};
   var usd=function(n){return '$'+(n||0).toLocaleString('en-US');};
@@ -154,8 +186,6 @@ button{font-family:inherit}
   var st=all[GUEST.id]||(all[GUEST.id]={payment:{confirmed:false,at:null},fish:{method:null,fedexAck:false,confirmed:false,at:null}});
   var save=function(){try{all[GUEST.id]=st;localStorage.setItem(KEY,JSON.stringify(all));}catch(e){}};
   function stamp(){try{var d=new Date();var mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];var h=d.getHours(),ap=h>=12?'PM':'AM';h=h%12||12;return mo[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear()+' · '+h+':'+String(d.getMinutes()).padStart(2,'0')+' '+ap;}catch(e){return 'confirmed';}}
-
-  var total=CHARGES.reduce(function(s,c){return s+c.price;},0);
 
   function paymentCard(){
     var done=st.payment.confirmed;
@@ -206,6 +236,7 @@ button{font-family:inherit}
   }
 
   function render(){
+    CHARGES=chargesForGuest();total=CHARGES.reduce(function(s,c){return s+c.price;},0);
     document.getElementById('who').innerHTML='<b>'+esc(GUEST.name)+'</b> · '+esc(GUEST.group)+' Group · '+esc(GUEST.trip);
     document.getElementById('tasks').innerHTML=paymentCard()+fishCard();
     var done=(st.payment.confirmed?1:0)+(st.fish.confirmed?1:0);
@@ -223,6 +254,7 @@ button{font-family:inherit}
     reopenFish:function(){st.fish.confirmed=false;st.fish.at=null;save();render();},
     theme:function(){var c=document.documentElement.getAttribute('data-theme');var n=c==='dark'?'light':(c==='light'?'':'dark');if(n)document.documentElement.setAttribute('data-theme',n);else document.documentElement.removeAttribute('data-theme');}
   };
+  window.addEventListener('storage',function(e){if(!e.key||e.key==='talon_billing_responsibility_v1'||e.key==='talon_guest_confirmations_v1')render();});
   render();
 })();
 </script>

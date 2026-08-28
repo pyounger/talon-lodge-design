@@ -67,10 +67,10 @@ button{font-family:inherit}
 .qbtn{font:600 11px var(--sans);border:1px solid var(--line-2);background:var(--surface);color:var(--accent-deep);border-radius:8px;padding:6px 10px;cursor:pointer}
 .qbtn:hover{background:var(--accent-soft);border-color:var(--accent)}
 
-.thead{display:grid;grid-template-columns:minmax(120px,1.3fr) 1fr 1fr 1fr;gap:10px;padding:9px 16px;border-bottom:1px solid var(--line);
+.thead{display:grid;grid-template-columns:minmax(110px,1.2fr) repeat(4,minmax(0,1fr));gap:10px;padding:9px 16px;border-bottom:1px solid var(--line);
   font-family:var(--mono);font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
 .thead .cat{display:flex;align-items:center;gap:6px}
-.prow{display:grid;grid-template-columns:minmax(120px,1.3fr) 1fr 1fr 1fr;gap:10px;padding:11px 16px;border-bottom:1px solid var(--line);align-items:center}
+.prow{display:grid;grid-template-columns:minmax(110px,1.2fr) repeat(4,minmax(0,1fr));gap:10px;padding:11px 16px;border-bottom:1px solid var(--line);align-items:center}
 .prow:last-child{border-bottom:0}
 .gname{font-weight:700;font-size:14.5px;min-width:0}
 .gname .lead{font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-deep);background:var(--accent-soft);border-radius:20px;padding:2px 7px;margin-left:6px}
@@ -130,7 +130,7 @@ button{font-family:inherit}
     {name:'Kenny',guests:['Jeannie Kenny','Michael Kenny']},
     {name:'Merenda',guests:['Amy Merenda']}
   ];
-  var CATS=[{k:'activities',ic:'🎣',label:'Activities'},{k:'spa',ic:'💆',label:'Spa & Massage'},{k:'alcohol',ic:'🍷',label:'Alcohol'}];
+  var CATS=[{k:'activities',ic:'🎣',label:'Activities'},{k:'spa',ic:'💆',label:'Spa & Massage'},{k:'alcohol',ic:'🍷',label:'Alcohol'},{k:'fish',ic:'🐟',label:'Fish processing'}];
   var esc=function(x){return (x==null?'':String(x)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');};
   var slug=function(x){return x.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');};
 
@@ -201,6 +201,14 @@ button{font-family:inherit}
 
   document.getElementById('pkg').innerHTML='<b>'+esc(PKG.name)+'</b> · '+esc(PKG.sub)+' · '+esc(PKG.dates);
   document.getElementById('footpkg').textContent=PKG.name+' · '+PKG.dates;
+
+  // live sync: reload + re-render when the routing key changes in another view (shared demo)
+  window.addEventListener('storage',function(e){
+    if(e.key&&e.key!==KEY)return;
+    try{var s=JSON.parse(localStorage.getItem(KEY));state.routing=(s&&s.routing)||{};state.leads=(s&&s.leads)||{};}catch(err){state.routing={};state.leads={};}
+    GROUPS.forEach(function(g){if(!state.leads[g.name])state.leads[g.name]=slug(g.guests[0]);g.guests.forEach(function(n){var id=slug(n);state.routing[id]=state.routing[id]||{};CATS.forEach(function(c){if(!state.routing[id][c.k])state.routing[id][c.k]='self';});});});
+    render();
+  });
   render();
 })();
 </script>
