@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your Check-in Confirmations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,900&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#eef3f1; --surface:#ffffff; --surface-2:#e6efeb; --raise:#f5f9f7;
+  --ink:#12292a; --muted:#4f645f; --faint:#7a8b86;
+  --line:#d6e2dd; --line-2:#c1d1cb;
+  --accent:#0e7c6f; --accent-deep:#0a544c; --accent-soft:#dcece6;
+  --salmon:#bd5836; --salmon-deep:#9a4529; --salmon-soft:#f2e2db;
+  --gold:#a9791f; --gold-soft:#f3e8d0;
+  --good:#2f8256; --good-soft:#dcefe3;
+  --warn:#b6442c; --warn-soft:#f6e0d9;
+  --shadow:0 1px 2px rgba(18,42,43,.05),0 10px 26px rgba(18,42,43,.07);
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Cascadia Code",Consolas,monospace;
+}
+:root:not([data-theme="light"]){ @media (prefers-color-scheme:dark){
+  --paper:#081210; --surface:#0e1c1a; --surface-2:#152522; --raise:#122320;
+  --ink:#e9f1ed; --muted:#9bada9; --faint:#6f817c;
+  --line:#20332d; --line-2:#2e453e;
+  --accent:#38b8a6; --accent-deep:#5fd0bf; --accent-soft:#0f2a26;
+  --salmon:#e18a62; --salmon-deep:#eda588; --salmon-soft:#31231b;
+  --gold:#d9ad55; --gold-soft:#2a2413;
+  --good:#57c48a; --good-soft:#10281d; --warn:#e5865f; --warn-soft:#2f1c14;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.45);
+}}
+:root[data-theme="dark"]{
+  --paper:#081210; --surface:#0e1c1a; --surface-2:#152522; --raise:#122320;
+  --ink:#e9f1ed; --muted:#9bada9; --faint:#6f817c;
+  --line:#20332d; --line-2:#2e453e;
+  --accent:#38b8a6; --accent-deep:#5fd0bf; --accent-soft:#0f2a26;
+  --salmon:#e18a62; --salmon-deep:#eda588; --salmon-soft:#31231b;
+  --gold:#d9ad55; --gold-soft:#2a2413;
+  --good:#57c48a; --good-soft:#10281d; --warn:#e5865f; --warn-soft:#2f1c14;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:clamp(14px,3vw,26px) clamp(12px,3vw,20px) 60px}
+h1,h2,h3{margin:0;text-wrap:balance}
+button{font-family:inherit}
+
+.masthead{border:1px solid var(--line-2);border-top:4px solid var(--accent);border-radius:14px;background:var(--surface);box-shadow:var(--shadow);padding:18px clamp(15px,3vw,22px);margin-bottom:16px}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent-deep)}
+.titlerow{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-top:9px}
+.masthead h1{font-family:var(--serif);font-weight:900;font-size:clamp(24px,4.4vw,34px);line-height:1.03;letter-spacing:-.015em}
+.masthead .who{font-size:14.5px;color:var(--muted);margin-top:7px}
+.masthead .who b{color:var(--ink);font-weight:600}
+.tools{margin-left:auto;display:flex;gap:8px}
+.btn{font-weight:700;font-size:12.5px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);border-radius:9px;padding:9px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.btn:hover{background:var(--surface-2)} .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.progress{display:flex;align-items:center;gap:10px;margin-top:15px;font-size:13px;color:var(--muted)}
+.pbar{flex:1;height:8px;border-radius:20px;background:var(--surface-2);overflow:hidden;min-width:80px}
+.pbar i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.pcount{font-family:var(--mono);font-size:11px;color:var(--faint)}
+
+.card{border:1px solid var(--line-2);border-radius:14px;background:var(--surface);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
+.card-hd{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.card-hd .ic{width:38px;height:38px;border-radius:10px;background:var(--accent-soft);display:grid;place-items:center;font-size:19px;flex:0 0 auto}
+.card-hd .ct{font-family:var(--serif);font-weight:600;font-size:18px;letter-spacing:-.01em}
+.card-hd .cs{font-size:12.5px;color:var(--muted)}
+.status{margin-left:auto;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;border-radius:20px;padding:4px 11px;white-space:nowrap}
+.status.todo{background:var(--gold-soft);color:var(--gold)}
+.status.done{background:var(--good-soft);color:var(--good)}
+.card-bd{padding:15px 16px}
+
+.chg{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 12px;align-items:baseline;padding:8px 0;border-bottom:1px dashed var(--line)}
+.chg:last-of-type{border-bottom:0}
+.chg .cat{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;border-radius:20px;padding:2px 7px;background:var(--surface-2);color:var(--muted);align-self:center}
+.chg .cat.act{background:var(--accent-soft);color:var(--accent-deep)} .chg .cat.spa{background:var(--gold-soft);color:var(--gold)} .chg .cat.alc{background:var(--salmon-soft);color:var(--salmon-deep)}
+.chg .d{min-width:0}.chg .d .t{font-weight:600;font-size:14px}.chg .d .m{font-size:11.5px;color:var(--faint)}
+.chg .p{font-family:var(--mono);font-weight:600;font-size:14px;text-align:right;font-variant-numeric:tabular-nums}
+.subtotal{display:flex;justify-content:flex-end;gap:12px;align-items:baseline;margin-top:10px;padding-top:9px;border-top:1px solid var(--line-2)}
+.subtotal .l{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.subtotal .v{font-family:var(--serif);font-weight:600;font-size:20px;font-variant-numeric:tabular-nums}
+.mini{font-size:11.5px;color:var(--faint);margin-top:8px}
+
+.opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line-2);border-radius:12px;padding:13px 14px;cursor:pointer;margin-bottom:10px;transition:.12s}
+.opt:hover{border-color:var(--accent)}
+.opt.on{border-color:var(--accent);background:var(--accent-soft)}
+.opt .rd{width:22px;height:22px;border-radius:50%;border:2px solid var(--line-2);flex:0 0 auto;margin-top:1px;display:grid;place-items:center}
+.opt.on .rd{border-color:var(--accent)} .opt.on .rd::after{content:"";width:11px;height:11px;border-radius:50%;background:var(--accent)}
+.opt .ot{font-weight:700;font-size:14.5px}
+.opt .od{font-size:12.5px;color:var(--muted);margin-top:2px}
+.opt .oi{font-size:20px;margin-left:auto;flex:0 0 auto}
+
+.disc{border:1px solid var(--warn);background:var(--warn-soft);border-radius:12px;padding:14px 15px;margin:4px 0 12px}
+.disc h4{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--warn);margin:0 0 8px;display:flex;align-items:center;gap:7px}
+.disc p{font-size:13px;color:var(--ink);margin:0 0 9px;line-height:1.6}
+.disc p:last-of-type{margin-bottom:0}
+.ackrow{display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding-top:12px;border-top:1px solid color-mix(in srgb,var(--warn) 30%,transparent);cursor:pointer}
+.ackrow .ck{width:24px;height:24px;border-radius:6px;border:2px solid var(--warn);flex:0 0 auto;display:grid;place-items:center;color:transparent;font-size:14px;font-weight:800;margin-top:1px}
+.ackrow.on .ck{background:var(--warn);color:#fff}
+.ackrow .at{font-size:13px;font-weight:600;color:var(--ink)}
+
+.cta{width:100%;font-weight:700;font-size:14.5px;border:0;border-radius:11px;padding:13px;cursor:pointer;background:var(--accent);color:#fff;margin-top:6px}
+.cta:hover{background:var(--accent-deep)}
+.cta:disabled{background:var(--surface-2);color:var(--faint);cursor:not-allowed}
+.confirmed{display:flex;align-items:center;gap:10px;background:var(--good-soft);border:1px solid color-mix(in srgb,var(--good) 34%,transparent);border-radius:11px;padding:12px 14px;font-size:13.5px;color:var(--ink)}
+.confirmed .ci{color:var(--good);font-size:18px}
+.confirmed b{font-weight:600}
+.confirmed .at{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--faint);white-space:nowrap}
+.change{background:none;border:0;color:var(--accent-deep);font:600 12px var(--sans);cursor:pointer;text-decoration:underline;text-underline-offset:2px;margin-top:8px;padding:0}
+
+.foot{margin-top:20px;padding-top:14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--faint);text-align:center}
+@media(max-width:520px){.titlerow{flex-direction:column;align-items:stretch}.tools{margin-left:0}.tools .btn{flex:1;justify-content:center}.chg{grid-template-columns:auto minmax(0,1fr)}.chg .p{grid-column:2;text-align:left;color:var(--muted)}}
+@media print{@page{margin:12mm}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.no-print{display:none!important}html,body{background:#fff}.wrap{max-width:none;padding:0}.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="brand"><span>🎣</span><span>Talon Lodge · Guest Portal</span></div>
+    <div class="titlerow">
+      <h1>Your check-in confirmations</h1>
+      <div class="tools no-print"><button class="btn" onclick="C.theme()">◐ Theme</button></div>
+    </div>
+    <div class="who" id="who"></div>
+    <div class="progress"><div class="pbar"><i id="pbar"></i></div><span class="pcount" id="pcount"></span></div>
+  </header>
+
+  <p style="font-size:14px;color:var(--muted);margin:0 0 16px;max-width:60ch">Your group lead set you as responsible for the items below. Please review and confirm each — you can do this now in the portal, or we'll finish it with you at check-in.</p>
+
+  <div id="tasks"></div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+(function(){
+  // In production this guest, their assigned charges, and fish share are read from the
+  // guest record (payment-responsibility routing + fish processing split). Demo data:
+  var GUEST={name:'Steve Keller',group:'Keller',trip:'Winemaker Series · May 29 – June 2, 2026',id:'steve-keller'};
+  var CHARGES=[
+    {cat:'act',label:'Activity',date:'May 31',t:'Freshwater Fishing by Float Plane',m:'Your booking',price:1650},
+    {cat:'spa',label:'Spa',date:'May 31',t:'Denali Deep massage',m:'Your session · 50 min',price:175},
+    {cat:'spa',label:'Spa',date:'May 31',t:'Denali Deep massage',m:'For Chic Young — lead assigned to you',price:175}
+  ];
+  var FISH={species:'Coho Salmon',lbs:42,boxes:2,note:'Your take-home share of the Keller group catch'};
+
+  var esc=function(x){return (x==null?'':String(x)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');};
+  var usd=function(n){return '$'+(n||0).toLocaleString('en-US');};
+  var KEY='talon_guest_confirmations_v1';
+  var all={};try{all=JSON.parse(localStorage.getItem(KEY))||{};}catch(e){}
+  var st=all[GUEST.id]||(all[GUEST.id]={payment:{confirmed:false,at:null},fish:{method:null,fedexAck:false,confirmed:false,at:null}});
+  var save=function(){try{all[GUEST.id]=st;localStorage.setItem(KEY,JSON.stringify(all));}catch(e){}};
+  function stamp(){try{var d=new Date();var mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];var h=d.getHours(),ap=h>=12?'PM':'AM';h=h%12||12;return mo[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear()+' · '+h+':'+String(d.getMinutes()).padStart(2,'0')+' '+ap;}catch(e){return 'confirmed';}}
+
+  var total=CHARGES.reduce(function(s,c){return s+c.price;},0);
+
+  function paymentCard(){
+    var done=st.payment.confirmed;
+    var rows=CHARGES.map(function(c){
+      return '<div class="chg"><span class="cat '+c.cat+'">'+esc(c.label)+'</span>'+
+        '<div class="d"><div class="t">'+esc(c.t)+'</div><div class="m">'+esc(c.date)+' · '+esc(c.m)+'</div></div>'+
+        '<div class="p">'+usd(c.price)+'</div></div>';
+    }).join('');
+    var body=rows+'<div class="subtotal"><span class="l">Your folio at checkout</span><span class="v">'+usd(total)+'</span></div>'+
+      '<div class="mini">Rates are indicative and confirmed against the lodge catalog before billing. Taxes &amp; fees apply per policy.</div>';
+    if(done){
+      body+='<div class="confirmed" style="margin-top:12px"><span class="ci">✓</span><span><b>You confirmed responsibility for these charges.</b></span><span class="at">'+esc(st.payment.at||'')+'</span></div>'+
+        '<button class="change no-print" onclick="C.unconfirmPay()">Change</button>';
+    }else{
+      body+='<button class="cta" style="margin-top:14px" onclick="C.confirmPay()">I confirm I’m responsible for these charges</button>';
+    }
+    return card('💳','Payment responsibility','Activities, spa &amp; massage, and alcohol assigned to you',done,body);
+  }
+
+  function fishCard(){
+    var f=st.fish, done=f.confirmed;
+    var head='<div class="chg" style="border-bottom:0;padding-bottom:2px"><span class="cat" style="background:var(--accent-soft);color:var(--accent-deep)">Catch</span><div class="d"><div class="t">'+FISH.lbs+' lb '+esc(FISH.species)+' · '+FISH.boxes+' box'+(FISH.boxes===1?'':'es')+'</div><div class="m">'+esc(FISH.note)+'</div></div></div>';
+    var body;
+    if(done){
+      var label=f.method==='fedex'?'Ship via FedEx':'Take with me on the plane';
+      body=head+'<div class="confirmed" style="margin-top:12px"><span class="ci">✓</span><span><b>'+esc(label)+'</b>'+(f.method==='fedex'?' — risk disclaimer accepted.':'.')+'</span><span class="at">'+esc(f.at||'')+'</span></div>'+
+        '<button class="change no-print" onclick="C.reopenFish()">Change</button>';
+    }else{
+      var takeOn=f.method==='take', fedexOn=f.method==='fedex';
+      var disc=fedexOn?('<div class="disc"><h4>⚠ FedEx shipping — please read &amp; accept</h4>'+
+        '<p>Shipping fish by FedEx carries real risk. Cold-chain shipments can be <b>delayed</b>, and fish can partially <b>thaw, spoil, or be lost or damaged</b> in transit.</p>'+
+        '<p>By choosing FedEx you accept this risk. <b>Talon Lodge &amp; Spa will not absorb or be liable for this risk, and neither will the fish processing company.</b> We recommend traveling with your catch when you can.</p>'+
+        '<div class="ackrow'+(f.fedexAck?' on':'')+'" onclick="C.toggleAck()"><span class="ck">✓</span><span class="at">I have read and accept this risk, and release Talon Lodge and the processing company from liability for FedEx shipment.</span></div></div>'):'';
+      var canConfirm=f.method==='take'||(f.method==='fedex'&&f.fedexAck);
+      body=head+
+        '<div style="margin-top:12px">'+
+        opt('take','✈️','Take with me on the plane','Frozen &amp; boxed for your flight home.',takeOn)+
+        opt('fedex','📦','Ship via FedEx','We hand off to the processor for FedEx shipment.',fedexOn)+
+        '</div>'+disc+
+        '<button class="cta" onclick="C.confirmFish()"'+(canConfirm?'':' disabled')+'>Confirm fish handling</button>';
+    }
+    return card('🐟','Fish handling','How you want your catch to get home',done,body);
+  }
+  function opt(v,icon,t,d,on){return '<div class="opt'+(on?' on':'')+'" onclick="C.setFish(\''+v+'\')"><span class="rd"></span><div><div class="ot">'+t+'</div><div class="od">'+d+'</div></div><span class="oi">'+icon+'</span></div>';}
+  function card(ic,t,s,done,body){
+    return '<div class="card"><div class="card-hd"><span class="ic">'+ic+'</span><div><div class="ct">'+t+'</div><div class="cs">'+s+'</div></div>'+
+      '<span class="status '+(done?'done':'todo')+'">'+(done?'✓ Confirmed':'To do')+'</span></div><div class="card-bd">'+body+'</div></div>';
+  }
+
+  function render(){
+    document.getElementById('who').innerHTML='<b>'+esc(GUEST.name)+'</b> · '+esc(GUEST.group)+' Group · '+esc(GUEST.trip);
+    document.getElementById('tasks').innerHTML=paymentCard()+fishCard();
+    var done=(st.payment.confirmed?1:0)+(st.fish.confirmed?1:0);
+    document.getElementById('pbar').style.width=(done/2*100)+'%';
+    document.getElementById('pcount').textContent=done+' of 2 confirmed';
+    document.getElementById('foot').textContent=done===2?'All set — thank you. See you at Talon Lodge.':'Talon Lodge & Spa · Sitka, Alaska';
+  }
+
+  window.C={
+    confirmPay:function(){st.payment.confirmed=true;st.payment.at=stamp();save();render();},
+    unconfirmPay:function(){st.payment.confirmed=false;st.payment.at=null;save();render();},
+    setFish:function(v){st.fish.method=v;if(v!=='fedex')st.fish.fedexAck=false;save();render();},
+    toggleAck:function(){st.fish.fedexAck=!st.fish.fedexAck;save();render();},
+    confirmFish:function(){if(st.fish.method==='take'||(st.fish.method==='fedex'&&st.fish.fedexAck)){st.fish.confirmed=true;st.fish.at=stamp();save();render();}},
+    reopenFish:function(){st.fish.confirmed=false;st.fish.at=null;save();render();},
+    theme:function(){var c=document.documentElement.getAttribute('data-theme');var n=c==='dark'?'light':(c==='light'?'':'dark');if(n)document.documentElement.setAttribute('data-theme',n);else document.documentElement.removeAttribute('data-theme');}
+  };
+  render();
+})();
+</script>
+</body>
+</html>
