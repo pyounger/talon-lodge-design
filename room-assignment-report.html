@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Room Assignment Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,900&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#eef3f1; --surface:#ffffff; --surface-2:#e6efeb; --raise:#f5f9f7;
+  --ink:#12292a; --muted:#4f645f; --faint:#7a8b86;
+  --line:#d6e2dd; --line-2:#c1d1cb;
+  --accent:#0e7c6f; --accent-deep:#0a544c; --accent-soft:#dcece6;
+  --salmon:#bd5836; --salmon-soft:#f2e2db;
+  --gold:#a9791f; --gold-soft:#f3e8d0;
+  --shadow:0 1px 2px rgba(18,42,43,.05),0 10px 26px rgba(18,42,43,.07);
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Cascadia Code",Consolas,monospace;
+}
+:root:not([data-theme="light"]){ @media (prefers-color-scheme:dark){
+  --paper:#081210; --surface:#0e1c1a; --surface-2:#152522; --raise:#122320;
+  --ink:#e9f1ed; --muted:#9bada9; --faint:#6f817c;
+  --line:#20332d; --line-2:#2e453e;
+  --accent:#38b8a6; --accent-deep:#5fd0bf; --accent-soft:#0f2a26;
+  --salmon:#e18a62; --salmon-soft:#31231b;
+  --gold:#d9ad55; --gold-soft:#2a2413;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.45);
+}}
+:root[data-theme="dark"]{
+  --paper:#081210; --surface:#0e1c1a; --surface-2:#152522; --raise:#122320;
+  --ink:#e9f1ed; --muted:#9bada9; --faint:#6f817c;
+  --line:#20332d; --line-2:#2e453e;
+  --accent:#38b8a6; --accent-deep:#5fd0bf; --accent-soft:#0f2a26;
+  --salmon:#e18a62; --salmon-soft:#31231b;
+  --gold:#d9ad55; --gold-soft:#2a2413;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.report{max-width:940px;margin:0 auto;padding:clamp(16px,3.5vw,34px) clamp(14px,3.5vw,30px) 60px}
+h1,h2,h3{margin:0;text-wrap:balance}
+
+/* ---- masthead (restrained, print-friendly) ---- */
+.masthead{border:1px solid var(--line-2);border-top:4px solid var(--accent);border-radius:14px;
+  background:var(--surface);box-shadow:var(--shadow);padding:20px clamp(16px,3vw,26px);margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:11px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--accent-deep)}
+.brand .mk{font-size:14px}
+.titlerow{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-top:10px}
+.masthead h1{font-family:var(--serif);font-weight:900;font-size:clamp(26px,4.6vw,40px);line-height:1.02;letter-spacing:-.015em}
+.masthead .trip{font-size:15px;color:var(--muted);margin-top:8px}
+.masthead .trip b{color:var(--ink);font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:10px;margin-top:18px}
+.stat{min-width:0;background:var(--raise);border:1px solid var(--line);border-radius:11px;padding:11px 15px}
+.stat .v{font-family:var(--serif);font-weight:600;font-size:26px;line-height:1;font-variant-numeric:tabular-nums}
+.stat .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-top:6px}
+.stat.flag .v{color:var(--salmon)}
+
+/* ---- gear tally ---- */
+.gear{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:16px}
+.gcard{background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);padding:13px 15px}
+.gcard h3{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-deep);
+  display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap;margin:0 0 11px}
+.gcard h3 .tot{margin-left:auto;color:var(--faint);font-weight:400;letter-spacing:.04em}
+.tally{display:flex;flex-wrap:wrap;gap:7px}
+.tchip{display:inline-flex;align-items:baseline;gap:6px;border:1px solid var(--line);border-radius:9px;padding:6px 11px;background:var(--raise)}
+.tchip .tsz{font-family:var(--mono);font-weight:600;font-size:12.5px;color:var(--ink)}
+.tchip .tx{font-family:var(--mono);font-size:10px;color:var(--faint)}
+.tchip .tn{font-family:var(--serif);font-weight:600;font-size:16px;line-height:1;color:var(--accent-deep);font-variant-numeric:tabular-nums}
+
+/* ---- print / theme controls ---- */
+.tools{margin-left:auto;display:flex;gap:8px}
+.btn{font-family:var(--sans);font-weight:700;font-size:12.5px;border:1px solid var(--line-2);background:var(--surface);
+  color:var(--ink);border-radius:9px;padding:9px 15px;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-deep)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---- legend ---- */
+.legend{display:flex;flex-wrap:wrap;gap:10px 20px;padding:12px 16px;margin-bottom:16px;
+  background:var(--raise);border:1px solid var(--line);border-radius:11px;font-size:12.5px;color:var(--muted)}
+.legend .li{display:flex;align-items:center;gap:8px}
+.legend b{color:var(--ink);font-weight:600}
+.legend .sw{font-family:var(--mono);font-size:10px;font-weight:600;border-radius:6px;padding:3px 8px}
+.legend .sw.j{background:var(--accent-soft);color:var(--accent-deep)}
+.legend .sw.b{background:var(--surface-2);color:var(--muted)}
+.legend .sw.k{background:var(--gold-soft);color:var(--gold)}
+
+/* ---- room cards ---- */
+.rooms{display:flex;flex-direction:column;gap:14px}
+.room{background:var(--surface);border:1px solid var(--line-2);border-radius:14px;box-shadow:var(--shadow);
+  overflow:hidden;break-inside:avoid}
+.room__hd{display:flex;align-items:center;gap:10px 12px;flex-wrap:wrap;padding:13px 16px;
+  background:var(--surface-2);border-bottom:1px solid var(--line)}
+.room__name{font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:-.01em}
+.room__loc{font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--faint)}
+.room__hd .sp{margin-left:auto}
+.chip{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.03em;border-radius:20px;
+  padding:4px 10px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
+.chip.bed{background:var(--gold-soft);color:var(--gold)}
+.chip.count{background:var(--accent-soft);color:var(--accent-deep)}
+
+.people{display:flex;flex-direction:column}
+.person{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr) minmax(0,auto);
+  gap:9px 14px;align-items:center;padding:11px 16px 11px 13px;border-top:1px solid var(--line);
+  border-left:3px solid var(--gc,transparent)}
+.person:first-child{border-top:0}
+.p-name{font-weight:700;font-size:14.5px;letter-spacing:-.01em;min-width:0}
+.p-grp{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);min-width:0}
+.p-grp .dot{width:8px;height:8px;border-radius:50%;background:var(--gc,var(--line-2));flex:0 0 auto}
+.p-sizes{display:flex;gap:7px;justify-content:flex-end;flex-wrap:wrap}
+.sz{font-family:var(--mono);font-size:11px;font-weight:600;border-radius:7px;padding:4px 9px;white-space:nowrap;
+  font-variant-numeric:tabular-nums;display:inline-flex;gap:5px;align-items:center}
+.sz .szk{color:var(--faint);font-weight:600;letter-spacing:.02em}
+.sz.j{background:var(--accent-soft);color:var(--accent-deep)}
+.sz.b{background:var(--surface-2);color:var(--muted)}
+
+.footer{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);
+  font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.02em;
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media(max-width:600px){
+  .person{grid-template-columns:1fr;gap:6px;padding:13px 14px 13px 12px}
+  .p-sizes{justify-content:flex-start}
+  .masthead h1{font-size:26px}
+  .titlerow{flex-direction:column;align-items:stretch;gap:12px}
+  .tools{margin-left:0}
+  .tools .btn{flex:1 1 auto;justify-content:center}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .stat{min-width:0}
+  .masthead .trip,.legend .li{overflow-wrap:anywhere}
+}
+
+@media print{
+  @page{size:letter;margin:13mm 12mm}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  html,body{background:#fff}
+  .no-print{display:none !important}
+  .report{max-width:none;padding:0}
+  .masthead{box-shadow:none;margin-bottom:14px}
+  .room{box-shadow:none;break-inside:avoid}
+  .rooms{gap:11px}
+  .stat{background:#fff}
+}
+</style>
+</head>
+<body>
+<div class="report">
+  <header class="masthead">
+    <div class="brand"><span class="mk">🎣</span><span>Talon Lodge &amp; Spa · Rooming</span></div>
+    <div class="titlerow">
+      <h1>Room Assignment Report</h1>
+      <div class="tools no-print">
+        <button class="btn" id="themeBtn" onclick="RR.theme()">◐ Theme</button>
+        <button class="btn primary" onclick="window.print()">⎙ Print / Save PDF</button>
+      </div>
+    </div>
+    <div class="trip" id="trip"></div>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="legend">
+    <span class="li"><span class="sw k">🛏 KING</span><b>Bed configuration</b> for the room</span>
+    <span class="li"><span class="sw j">Jacket</span> issued float-coat size</span>
+    <span class="li"><span class="sw b">Boot</span> issued deck-boot size</span>
+    <span class="li"><span class="dot" style="width:9px;height:9px;border-radius:50%;background:var(--accent);display:inline-block"></span> colour marks each <b>travelling group</b></span>
+  </div>
+
+  <div class="gear" id="gear"></div>
+
+  <div class="rooms" id="rooms"></div>
+
+  <div class="footer">
+    <span>Talon Lodge &amp; Spa · Sitka, Alaska</span>
+    <span>Room Assignment Report</span>
+  </div>
+</div>
+
+<script>
+(function(){
+  var TRIP={season:'2026',dates:'May 25–29',pkg:'4-Night / 3-Day Sportfishing Package',party:27,nights:4};
+  // group -> colour cue (works on light & dark surfaces)
+  var GC={Marshall:'#0e9b88',McFarland:'#cf6a44',Kerstetter:'#c39329',Gaines:'#5b7fa6',Lufkin:'#7a9640',Gomez:'#9a6889'};
+  var ROOMS=[
+    {name:'Bluff House',building:'Bluff House',detail:'Three Bedrooms',bed:'KING',guests:[
+      {n:'Chris Marshall',g:'Marshall',j:'XL',b:'13'},
+      {n:'Chuck Roesel',g:'Marshall',j:'XL',b:'11'},
+      {n:'Gwen Younger',g:'Marshall',j:'M',b:'9'},
+      {n:'Kathy Marshall',g:'Marshall',j:'L',b:'9'},
+      {n:'Phil Younger',g:'Marshall',j:'L',b:'10'},
+      {n:'Sally Roesel',g:'Marshall',j:'L',b:'10'}
+    ]},
+    {name:'Cedar 1',building:'Cedar',detail:'',bed:'KING',guests:[
+      {n:'Laurie McFarland',g:'McFarland',j:'M',b:'8'},
+      {n:'Tim McFarland',g:'McFarland',j:'XL',b:'11'}
+    ]},
+    {name:'Cedar 2',building:'Cedar',detail:'',bed:'',guests:[
+      {n:'Jennifer Kerstetter',g:'Kerstetter',j:'M',b:'7'},
+      {n:'Kyle Kerstetter',g:'Kerstetter',j:'XXL',b:'13'}
+    ]},
+    {name:'Main Cedar',building:'Cedar',detail:'Cedar 3 · 4 · 5',bed:'ALL KINGS',guests:[
+      {n:'David Rogers',g:'Gaines',j:'XL',b:'13'},
+      {n:'Renee Franklin',g:'Gaines',j:'L',b:'8'},
+      {n:'Teresa Gaines',g:'Gaines',j:'L',b:'8'},
+      {n:'Yul Hodge',g:'Gaines',j:'XL',b:'10'}
+    ]},
+    {name:'Spruce 1',building:'Spruce',detail:'',bed:'KING',guests:[
+      {n:'Devin Stewart',g:'Lufkin',j:'XL',b:'9'},
+      {n:'Onni Lufkin',g:'Lufkin',j:'XL',b:'9'}
+    ]},
+    {name:'Spruce 2',building:'Spruce',detail:'',bed:'',guests:[
+      {n:'Beau Reinhard',g:'Lufkin',j:'L',b:'11'},
+      {n:'Shelli Reinhard',g:'Lufkin',j:'M',b:'8'}
+    ]},
+    {name:'Main Spruce',building:'Spruce',detail:'Spruce 3 · 4 · 5',bed:'KING',guests:[
+      {n:'Bob Gomez',g:'Gomez',j:'XL',b:'8'},
+      {n:'Jeff Langhorst',g:'Gomez',j:'XL',b:'10'},
+      {n:'Jim Schiffer',g:'Gomez',j:'L',b:'9'},
+      {n:'Lisa Young',g:'Gomez',j:'S',b:'6'},
+      {n:'Lisa Schiffer',g:'Gomez',j:'L',b:'10'},
+      {n:'Marija Langhorst',g:'Gomez',j:'L',b:'8'}
+    ]}
+  ];
+  var esc=function(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');};
+
+  var placed=ROOMS.reduce(function(s,r){return s+r.guests.length;},0);
+  document.getElementById('trip').innerHTML='<b>'+esc(TRIP.season)+' · '+esc(TRIP.dates)+'</b> · '+esc(TRIP.pkg);
+  var gap=TRIP.party-placed;
+  document.getElementById('stats').innerHTML=
+    stat(TRIP.party,'Guests in party')+
+    stat(placed,'In rooms'+(gap>0?' · '+gap+' to place':''),gap>0)+
+    stat(ROOMS.length,'Rooms')+
+    stat(TRIP.nights,'Nights');
+  function stat(v,k,flag){return '<div class="stat'+(flag?' flag':'')+'"><div class="v">'+v+'</div><div class="k">'+esc(k)+'</div></div>';}
+
+  document.getElementById('rooms').innerHTML=ROOMS.map(function(r){
+    var bed=r.bed?'<span class="chip bed">🛏 '+esc(r.bed)+'</span>':'';
+    var loc=esc(r.building)+(r.detail?' · '+esc(r.detail):'');
+    var people=r.guests.map(function(p){
+      var c=GC[p.g]||'var(--line-2)';
+      return '<div class="person" style="--gc:'+c+'">'+
+        '<div class="p-name">'+esc(p.n)+'</div>'+
+        '<div class="p-grp"><span class="dot"></span>'+esc(p.g)+' Group</div>'+
+        '<div class="p-sizes">'+
+          '<span class="sz j"><span class="szk">Jacket</span>'+esc(p.j)+'</span>'+
+          '<span class="sz b"><span class="szk">Boot</span>'+esc(p.b)+'</span>'+
+        '</div></div>';
+    }).join('');
+    return '<section class="room">'+
+      '<div class="room__hd"><span class="room__name">'+esc(r.name)+'</span>'+
+        '<span class="room__loc">'+loc+'</span>'+
+        '<span class="sp"></span>'+bed+
+        '<span class="chip count">'+r.guests.length+' guest'+(r.guests.length===1?'':'s')+'</span></div>'+
+      '<div class="people">'+people+'</div></section>';
+  }).join('');
+
+  // ---- gear tally: jackets & boots needed by size ----
+  var JORD=['XS','S','M','L','XL','XXL','XXXL'];
+  function tally(key,order){
+    var m={};ROOMS.forEach(function(r){r.guests.forEach(function(p){var v=p[key];if(v==null||v==='')return;m[v]=(m[v]||0)+1;});});
+    var keys=Object.keys(m).sort(order?function(a,b){return order.indexOf(a)-order.indexOf(b);}:function(a,b){return (+a)-(+b);});
+    return {total:keys.reduce(function(s,k){return s+m[k];},0),
+      chips:keys.map(function(k){return '<span class="tchip"><span class="tsz">'+esc(k)+'</span><span class="tx">×</span><span class="tn">'+m[k]+'</span></span>';}).join('')};
+  }
+  function gcard(title,t){return '<div class="gcard"><h3>'+title+'<span class="tot">'+t.total+' total</span></h3><div class="tally">'+t.chips+'</div></div>';}
+  var jt=tally('j',JORD), bt=tally('b',null);
+  document.getElementById('gear').innerHTML=gcard('🧥 Jackets needed · by size',jt)+gcard('🥾 Boots needed · by size',bt);
+
+  window.RR={theme:function(){
+    var cur=document.documentElement.getAttribute('data-theme');
+    var next=cur==='dark'?'light':(cur==='light'?'':'dark');
+    if(next)document.documentElement.setAttribute('data-theme',next);
+    else document.documentElement.removeAttribute('data-theme');
+  }};
+})();
+</script>
+</body>
+</html>
