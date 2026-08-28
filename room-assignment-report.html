@@ -184,7 +184,9 @@ h1,h2,h3{margin:0;text-wrap:balance}
 
 <script>
 (function(){
-  var TRIP={season:'2026',dates:'May 25–29',pkg:'4-Night / 3-Day Sportfishing Package',party:27,nights:4};
+  // Package/trip context. NOTE: guest counts are NOT stored here — they are
+  // generated from the guest records on this package date (see below).
+  var TRIP={season:'2026',dates:'May 25–29',pkg:'4-Night / 3-Day Sportfishing Package',nights:4};
   // group -> colour cue (works on light & dark surfaces)
   var GC={Marshall:'#0e9b88',McFarland:'#cf6a44',Kerstetter:'#c39329',Gaines:'#5b7fa6',Lufkin:'#7a9640',Gomez:'#9a6889'};
   var ROOMS=[
@@ -229,13 +231,14 @@ h1,h2,h3{margin:0;text-wrap:balance}
   ];
   var esc=function(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');};
 
-  var placed=ROOMS.reduce(function(s,r){return s+r.guests.length;},0);
   document.getElementById('trip').innerHTML='<b>'+esc(TRIP.season)+' · '+esc(TRIP.dates)+'</b> · '+esc(TRIP.pkg);
-  var gap=TRIP.party-placed;
+  // ---- counts generated from the guest records on this package date ----
+  var guestCount=ROOMS.reduce(function(s,r){return s+r.guests.length;},0);   // total guest records
+  var buildings=Object.keys(ROOMS.reduce(function(m,r){m[r.building]=1;return m;},{})).length;
   document.getElementById('stats').innerHTML=
-    stat(TRIP.party,'Guests in party')+
-    stat(placed,'In rooms'+(gap>0?' · '+gap+' to place':''),gap>0)+
+    stat(guestCount,'Guests')+
     stat(ROOMS.length,'Rooms')+
+    stat(buildings,'Buildings')+
     stat(TRIP.nights,'Nights');
   function stat(v,k,flag){return '<div class="stat'+(flag?' flag':'')+'"><div class="v">'+v+'</div><div class="k">'+esc(k)+'</div></div>';}
 
