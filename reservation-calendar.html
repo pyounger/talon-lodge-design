@@ -84,6 +84,8 @@ td.cell{padding:0;min-width:104px}
 .st-reserved .cellbtn{background:var(--blue-soft);border-left-color:var(--blue)}
 .st-held .cellbtn{background:var(--salmon-soft);border-left-color:var(--salmon)}
 .st-prospect .cellbtn{background:var(--gold-soft);border-left-color:var(--gold);border-left-style:dashed}
+.cell.linked .cellbtn{background:linear-gradient(var(--raise),var(--raise)) padding-box,var(--surface)}
+.cellbtn .lk{font-size:9px;color:var(--faint);margin-left:3px;vertical-align:1px}
 .hold{display:inline-flex;align-items:center;gap:3px;margin-top:4px;font-family:var(--mono);font-size:9px;font-weight:600;background:var(--salmon);color:#fff;border-radius:20px;padding:1px 6px}
 .hold.warn{background:#b6442c} .hold.exp{background:#7a2a1a}
 .avail-num{font-family:var(--mono);font-size:11px;text-align:right;padding:8px;color:var(--muted);white-space:nowrap;background:var(--raise)}
@@ -183,49 +185,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "5/24-28 (M-F)",
    "series": "Standard",
    "available": 14,
-   "sold": 10,
+   "capacity": 24,
+   "note": "",
    "cells": [
     {
      "room": 0,
      "guest": "RUTLAND HOLD (14)",
      "party": 14,
-     "status": "held"
+     "status": "held",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "Florio (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "RUTLAND HOLD (14)",
      "party": 14,
-     "status": "held"
+     "status": "held",
+     "linked": false
     },
     {
      "room": 3,
      "guest": "RUTLAND HOLD (14)",
      "party": 14,
-     "status": "held"
+     "status": "held",
+     "linked": false
     },
     {
      "room": 4,
      "guest": "Knights of Columbus (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "RUTLAND HOLD (14)",
      "party": 14,
-     "status": "held"
+     "status": "held",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "Marshall (6)",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -233,50 +243,58 @@ td.avail-num.done{color:var(--accent-deep)}
    "n": 2,
    "label": "5/28-6/1 (F-Tu)",
    "series": "Winemaker",
-   "available": 0,
-   "sold": 2,
+   "available": 20,
+   "capacity": 22,
+   "note": "",
    "cells": [
     {
      "room": 0,
-     "guest": "135",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 1,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Dennison (2)",
+     "party": 2,
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 2,
-     "guest": "136",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 3,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 4,
-     "guest": "",
+     "guest": "WM",
      "party": null,
-     "status": "available"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 5,
-     "guest": "20.0",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     }
    ]
   },
@@ -284,50 +302,58 @@ td.avail-num.done{color:var(--accent-deep)}
    "n": 3,
    "label": "6/1-5 (Tu-Sa)",
    "series": "Chef",
-   "available": 0,
-   "sold": 10,
+   "available": 12,
+   "capacity": 22,
+   "note": "",
    "cells": [
     {
      "room": 0,
      "guest": "TRENT (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "Green (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 2,
-     "guest": "154",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 3,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Rasmussen (2) Pushed from 2026",
+     "party": 2,
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 4,
      "guest": "CHEF",
      "party": null,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "Sweeney (4)",
      "party": 4,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
-     "guest": "12.0",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     }
    ]
   },
@@ -335,50 +361,58 @@ td.avail-num.done{color:var(--accent-deep)}
    "n": 4,
    "label": "6/5-9 (Sa-W)",
    "series": "Standard",
-   "available": 0,
-   "sold": 16,
+   "available": 8,
+   "capacity": 24,
+   "note": "",
    "cells": [
     {
      "room": 0,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "Cook (2/4)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "Van Horn (6)",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 3,
      "guest": "Hyde (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 4,
      "guest": "Cook (2/4)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "McKee (4)",
      "party": 4,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
-     "guest": "8.0",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     }
    ]
   },
@@ -387,49 +421,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "6/9-13 (W-Su)",
    "series": "Standard",
    "available": 6,
-   "sold": 18,
+   "capacity": 24,
+   "note": "Mainardi and Verblaauw together",
    "cells": [
     {
      "room": 0,
      "guest": "Raff (2) Travis",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "Verblaauw (2) w/ Mainardi",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "Thompson (6/12)",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 3,
      "guest": "Mainardi (2) w/ Verblaauw",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 4,
-     "guest": "175",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 6,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Thompson (6/12)",
+     "party": 6,
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -438,49 +480,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "6/13-17 (Su-Thu)",
    "series": "Standard",
    "available": 10,
-   "sold": 14,
+   "capacity": 24,
+   "note": "Jack and Jason McCurdy made separate reservation but are together",
    "cells": [
     {
      "room": 0,
      "guest": "Jack McCurdy (2/4)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": true
     },
     {
      "room": 1,
      "guest": "Book GROUP OF 2 ONLY",
      "party": null,
-     "status": "prospect"
+     "status": "prospect",
+     "linked": false
     },
     {
      "room": 2,
-     "guest": "188",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 3,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Jason McCurdy (2/4)",
+     "party": 2,
+     "status": "confirmed",
+     "linked": true
     },
     {
      "room": 4,
      "guest": "Book GROUP OF 2 ONLY",
      "party": null,
-     "status": "prospect"
+     "status": "prospect",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "Hobeika (4)",
      "party": 4,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "KNOWLES (6) - Cpt Travis",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -489,49 +539,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "6/17-6/21 (Thu-M)",
    "series": "Standard",
    "available": 0,
-   "sold": 24,
+   "capacity": 24,
+   "note": "Tomchesson/Christensen together",
    "cells": [
     {
      "room": 0,
      "guest": "Tomchesson (2) w/christensen",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "Petroraio (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "Robertson (6)",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 3,
      "guest": "Christensen(2) w/ tomchesson",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 4,
      "guest": "Dupree (2) w/ Robertson",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "BUNCH (4) Cpt Travis",
      "party": 4,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "Butler (6) MARJO",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -540,49 +598,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "6/21-25 (M-F)",
    "series": "Standard",
    "available": 4,
-   "sold": 20,
+   "capacity": 24,
+   "note": "Hansen/Tessin together",
    "cells": [
     {
      "room": 0,
      "guest": "Hansen (2) w/ Tessin",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": true
     },
     {
      "room": 1,
      "guest": "Book GROUP OF 2 ONLY",
      "party": null,
-     "status": "prospect"
+     "status": "prospect",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "Bookhamer (6)",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 3,
      "guest": "Tessin (2) w/ Hansen",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": true
     },
     {
      "room": 4,
      "guest": "Book GROUP OF 2 ONLY",
      "party": null,
-     "status": "prospect"
+     "status": "prospect",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "Buss (4)",
      "party": 4,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "Koki (6)",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -591,49 +657,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "6/25-29 (F-Tu)",
    "series": "Standard",
    "available": 0,
-   "sold": 24,
+   "capacity": 24,
+   "note": "Adye/Davison/Patterson together",
    "cells": [
     {
      "room": 0,
      "guest": "Davison (2) cpt Travis",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "Patterson (2) cpt Travis",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "Schuler (6) Cpt James. sending a check mid september",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 3,
      "guest": "Adye (2) cpt Travis",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 4,
      "guest": "Emanuels (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "Reeves (4)",
      "party": 4,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "GINI (6) Marjo",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -642,49 +716,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "6/29-7/3 (Tu-Sa)",
    "series": "Standard",
    "available": 10,
-   "sold": 14,
+   "capacity": 24,
+   "note": "",
    "cells": [
     {
      "room": 0,
-     "guest": "242",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 1,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Shenoy (2)",
+     "party": 2,
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "VanRijn (6)",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 3,
-     "guest": "248",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 4,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 6,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Eberle (6)",
+     "party": 6,
+     "status": "reserved",
+     "linked": false
     }
    ]
   },
@@ -692,50 +774,58 @@ td.avail-num.done{color:var(--accent-deep)}
    "n": 11,
    "label": "7/5-9 (M-F)",
    "series": "Standard",
-   "available": 0,
-   "sold": 12,
+   "available": 12,
+   "capacity": 24,
+   "note": "Casperson/Hudson/Rath together",
    "cells": [
     {
      "room": 0,
      "guest": "Rath (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "Fox (2) Marjo",
      "party": 2,
-     "status": "reserved"
+     "status": "reserved",
+     "linked": false
     },
     {
      "room": 2,
-     "guest": "261",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 3,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Hudson (2)",
+     "party": 2,
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 4,
      "guest": "Casperson (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "Chamberlain (4)",
      "party": 4,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
-     "guest": "12.0",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     }
    ]
   },
@@ -744,49 +834,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "7/9-13 (F-Tu)",
    "series": "Chef",
    "available": 2,
-   "sold": 20,
+   "capacity": 22,
+   "note": "",
    "cells": [
     {
      "room": 0,
      "guest": "Murray (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "JENSEN (2) - Cpt Gavin",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "Claycomb (6) Travis",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 3,
-     "guest": "157",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 4,
-     "guest": "",
+     "guest": "CHEF",
      "party": null,
-     "status": "available"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "Preiss (4)",
      "party": 4,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "Garrett (6)",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -795,49 +893,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "7/13-17 (Tu-Sa)",
    "series": "Winemaker",
    "available": 2,
-   "sold": 20,
+   "capacity": 22,
+   "note": "",
    "cells": [
     {
      "room": 0,
-     "guest": "281",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 1,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Heneke (2/8)",
+     "party": 2,
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "Heneke (6/8)",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 3,
      "guest": "Linford (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 4,
      "guest": "WM",
      "party": null,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "Shirley (4)",
      "party": 4,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "Urioste (6) Travis",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -846,49 +952,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "7/17-21 (Sa-W)",
    "series": "Standard",
    "available": 8,
-   "sold": 16,
+   "capacity": 24,
+   "note": "",
    "cells": [
     {
      "room": 0,
      "guest": "Garcia (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "Heimberger (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 3,
      "guest": "OKeefe (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 4,
-     "guest": "299",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 5,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Gulsby (4)",
+     "party": 4,
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "Keller",
      "party": null,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -897,49 +1011,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "7/21-25 (W-Su)",
    "series": "Chef",
    "available": 0,
-   "sold": 22,
+   "capacity": 22,
+   "note": "",
    "cells": [
     {
      "room": 0,
      "guest": "Thomson (2/4)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "Thomson (2/4)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "Akradi (6)",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 3,
      "guest": "NOAH (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 4,
      "guest": "CHEF",
      "party": null,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "Walker (4)",
      "party": 4,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "Hallman (6)",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -948,49 +1070,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "7/25-29 (Su-Thu)",
    "series": "Standard",
    "available": 2,
-   "sold": 22,
+   "capacity": 24,
+   "note": "",
    "cells": [
     {
      "room": 0,
      "guest": "LINDSLEY (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "Pion (2)- want to switch to a room w/King bed if one becomes available",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "Jared (6/12) w/ Koehler",
      "party": 6,
-     "status": "reserved"
+     "status": "reserved",
+     "linked": false
     },
     {
      "room": 3,
      "guest": "Weisman (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 4,
-     "guest": "333",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 5,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Precht (4)",
+     "party": 4,
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "Koehler (6/12) CPT James - w/ Jared - sending a check of deposit",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -999,49 +1129,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "7/29-8/2 (Thu-M)",
    "series": "Standard",
    "available": 4,
-   "sold": 20,
+   "capacity": 24,
+   "note": "",
    "cells": [
     {
      "room": 0,
-     "guest": "339",
+     "guest": "",
      "party": null,
-     "status": "reserved"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 1,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Neubach (2/18) Gavin",
+     "party": 2,
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "Neubach (6/18) Cpt Travis",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 3,
-     "guest": "341",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 4,
-     "guest": "",
+     "guest": "O'BRIEN",
      "party": null,
-     "status": "available"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "Neubach (4/18) Gavin",
      "party": 4,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "Neubach (6/18) Cpt Marjo",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -1050,49 +1188,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "8/2-6 (M-F)",
    "series": "Standard",
    "available": 10,
-   "sold": 14,
+   "capacity": 24,
+   "note": "",
    "cells": [
     {
      "room": 0,
      "guest": "Winborn (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 1,
-     "guest": "288",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 3,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Ross (2)",
+     "party": 2,
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 4,
-     "guest": "354",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 5,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Marini (4) Marjo",
+     "party": 4,
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "HAWKINS (6) cpt Travis (moved from '26)",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -1101,49 +1247,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "8/6-10 (F-Tu)",
    "series": "Winemaker",
    "available": 0,
-   "sold": 22,
+   "capacity": 22,
+   "note": "",
    "cells": [
     {
      "room": 0,
      "guest": "Brown (2/4)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "Brown (2/4)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "Wilson (6) Travis",
      "party": 6,
-     "status": "reserved"
+     "status": "reserved",
+     "linked": false
     },
     {
      "room": 3,
      "guest": "Branovan (2) - reschedule from 2025",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 4,
      "guest": "WM",
      "party": null,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "Hare (4)",
      "party": 4,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "Randag (6)",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -1152,49 +1306,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "8/10-14 (Tu-Sa)",
    "series": "Standard",
    "available": 6,
-   "sold": 18,
+   "capacity": 24,
+   "note": "",
    "cells": [
     {
      "room": 0,
      "guest": "Joseph Wallace (2/4)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "Joseph Wallace (2/4)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 2,
-     "guest": "374",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 3,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Godlove (2)",
+     "party": 2,
+     "status": "reserved",
+     "linked": false
     },
     {
      "room": 4,
      "guest": "David Wallace (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "Lamont (4)",
      "party": 4,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "McCartney (6) w/ wallaces",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -1203,49 +1365,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "8/14-18 (Sa-W)",
    "series": "Standard",
    "available": 0,
-   "sold": 24,
+   "capacity": 24,
+   "note": "Carr wants to fish with schimsk. Were told they couldnt because we already have 2 groups of 4. they said that is ok.Would like a king bed if one becomes available",
    "cells": [
     {
      "room": 0,
      "guest": "Schimsk (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "W.Jones (2) fish w/Jamieson",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": true
     },
     {
      "room": 2,
      "guest": "Godlove (6) Travis",
      "party": 6,
-     "status": "reserved"
+     "status": "reserved",
+     "linked": false
     },
     {
      "room": 3,
      "guest": "Jamieson (2) - fish w/Jones",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": true
     },
     {
      "room": 4,
      "guest": "CARR (2) Marjo",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "Black (4)",
      "party": 4,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "Sayer (6) Cpt James - Pushed from 2026/get credited 6k deposit if we can rebook their 2026 space",
      "party": 6,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -1254,49 +1424,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "8/18-22 (W-Su)",
    "series": "Standard",
    "available": 10,
-   "sold": 14,
+   "capacity": 24,
+   "note": "",
    "cells": [
     {
      "room": 0,
      "guest": "Weisberg (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "McAullife (2) MarJo",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": true
     },
     {
      "room": 2,
-     "guest": "399",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 3,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Adkins (2)",
+     "party": 2,
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 4,
      "guest": "Price (2) MarJo",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": true
     },
     {
      "room": 5,
-     "guest": "401",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 6,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Watts (6) James",
+     "party": 6,
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -1305,49 +1483,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "8/22-26 (Su-Thu)",
    "series": "Standard",
    "available": 16,
-   "sold": 8,
+   "capacity": 24,
+   "note": "",
    "cells": [
     {
      "room": 0,
      "guest": "Reese (2)",
      "party": 2,
-     "status": "confirmed"
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 1,
-     "guest": "409",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 3,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 4,
-     "guest": "",
+     "guest": "Chef",
      "party": null,
-     "status": "available"
+     "status": "held",
+     "linked": false
     },
     {
      "room": 5,
-     "guest": "413",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 6,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Plath (6)",
+     "party": 6,
+     "status": "reserved",
+     "linked": false
     }
    ]
   },
@@ -1356,49 +1542,57 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "8/26-30 (Thu-M)",
    "series": "Standard",
    "available": 16,
-   "sold": 8,
+   "capacity": 24,
+   "note": "",
    "cells": [
     {
      "room": 0,
-     "guest": "415",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 3,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Dahodwala (2)",
+     "party": 2,
+     "status": "confirmed",
+     "linked": false
     },
     {
      "room": 4,
-     "guest": "416",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 6,
-     "guest": "",
-     "party": null,
-     "status": "available"
+     "guest": "Wright (6) Travis",
+     "party": 6,
+     "status": "confirmed",
+     "linked": false
     }
    ]
   },
@@ -1407,58 +1601,125 @@ td.avail-num.done{color:var(--accent-deep)}
    "label": "8/30-9/3 (Sa-W)",
    "series": "Standard",
    "available": 0,
-   "sold": 564,
+   "capacity": 0,
+   "note": "",
    "cells": [
     {
      "room": 0,
-     "guest": "0.0",
+     "guest": "",
      "party": null,
-     "status": "confirmed"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 1,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 2,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 3,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 4,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 5,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
     },
     {
      "room": 6,
      "guest": "",
      "party": null,
-     "status": "available"
+     "status": "available",
+     "linked": false
+    }
+   ]
+  },
+  {
+   "n": 26,
+   "label": "9/3-7 (W-Su)",
+   "series": "Standard",
+   "available": null,
+   "capacity": null,
+   "note": "",
+   "cells": [
+    {
+     "room": 0,
+     "guest": "",
+     "party": null,
+     "status": "available",
+     "linked": false
+    },
+    {
+     "room": 1,
+     "guest": "",
+     "party": null,
+     "status": "available",
+     "linked": false
+    },
+    {
+     "room": 2,
+     "guest": "",
+     "party": null,
+     "status": "available",
+     "linked": false
+    },
+    {
+     "room": 3,
+     "guest": "",
+     "party": null,
+     "status": "available",
+     "linked": false
+    },
+    {
+     "room": 4,
+     "guest": "",
+     "party": null,
+     "status": "available",
+     "linked": false
+    },
+    {
+     "room": 5,
+     "guest": "",
+     "party": null,
+     "status": "available",
+     "linked": false
+    },
+    {
+     "room": 6,
+     "guest": "",
+     "party": null,
+     "status": "available",
+     "linked": false
     }
    ]
   }
  ],
  "totals": {
-  "possible": 26,
-  "sold": 392,
+  "possible": 564,
   "remaining": 172,
-  "pct": 0.695035461
+  "confirmed": 392,
+  "pct": 0.695
  }
 };
   var ROOMS=DATA.rooms, WEEKS=DATA.weeks;
@@ -1484,9 +1745,13 @@ td.avail-num.done{color:var(--accent-deep)}
     var mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     return '<span class="hold '+cls+'" title="holds until '+mo[d.getMonth()]+' '+d.getDate()+'">⏳ '+txt+'</span>';}
 
-  function weekCounts(w){var total=ROOMS.reduce(function(s,r){return s+r.cap;},0);var sold=0;
-    ROOMS.forEach(function(_,r){var c=cellOf(w,r);if(c.status==='confirmed'||c.status==='reserved')sold+=(+c.party||_.cap||0);});
-    return {total,sold,avail:total-sold};}
+  // A booking's bed count = its stated (n), else the whole room. Markers (WM/CHEF/"Book group…") count 0.
+  // Only confirmed + reserved (deposit-pending) beds are "taken"; holds and prospects are not — matches the sheet's Available column exactly.
+  function isMarker(g){g=(g||'').trim();return /^(WM|CHEF|Book\b|book\b)/.test(g)||/GROUP OF/i.test(g);}
+  function weekCounts(w){var total=(w.capacity!=null?+w.capacity:0);var sold=0;
+    ROOMS.forEach(function(rm,r){var c=cellOf(w,r);
+      if((c.status==='confirmed'||c.status==='reserved')&&c.guest&&!isMarker(c.guest))sold+=(+c.party||rm.cap||0);});
+    return {total:total,sold:sold,avail:total-sold};}
 
   function render(){
     // header
@@ -1496,10 +1761,10 @@ td.avail-num.done{color:var(--accent-deep)}
       var cls=w.series==='Winemaker'?'wine':(w.series==='Chef'?'chef':'');
       var wc=weekCounts(w);
       var cells=ROOMS.map(function(_,r){var c=cellOf(w,r);
-        var inner=c.status==='available'?'<span class="g">—</span>':('<span class="g">'+esc(c.guest||'')+'</span>'+(c.party?'<span class="p"> · '+c.party+'</span>':'')+(c.status==='held'?'<br>'+holdChip(c.hold):''));
-        return '<td class="cell st-'+c.status+'"><button class="cellbtn" onclick="C.edit('+wi+','+r+')">'+inner+'</button></td>';
+        var inner=c.status==='available'?'<span class="g">—</span>':('<span class="g">'+esc(c.guest||'')+'</span>'+(c.party?'<span class="p"> · '+c.party+'</span>':'')+(c.linked?'<span class="lk" title="Linked reservation — booked separately but travelling together">⛓</span>':'')+(c.status==='held'?'<br>'+holdChip(c.hold):''));
+        return '<td class="cell st-'+c.status+(c.linked?' linked':'')+'"><button class="cellbtn" onclick="C.edit('+wi+','+r+')">'+inner+'</button></td>';
       }).join('');
-      return '<tr class="'+cls+'"><td class="wk"><div class="wl">'+esc(w.label.replace(/\s*\(.*/,''))+'</div><div class="wd">'+esc((w.label.match(/\((.*)\)/)||[])[1]||'')+'</div>'+(w.series!=='Standard'?'<span class="ser '+w.series+'">'+w.series+'</span>':'')+'</td>'+cells+'<td class="avail-num'+(wc.avail===0?' done':'')+'"><b>'+wc.avail+'</b><br>open</td></tr>';
+      return '<tr class="'+cls+'"><td class="wk"><div class="wl">'+esc(w.label.replace(/\s*\(.*/,''))+'</div><div class="wd">'+esc((w.label.match(/\((.*)\)/)||[])[1]||'')+'</div>'+(w.series!=='Standard'?'<span class="ser '+w.series+'">'+w.series+'</span>':'')+'</td>'+cells+'<td class="avail-num'+(wc.total===0?' off':wc.avail===0?' done':'')+'">'+(wc.total===0?'<span class="g">—</span>':'<b>'+wc.avail+'</b><br>open')+'</td></tr>';
     }).join('');
     // stats
     var tot=WEEKS.reduce(function(a,w){var wc=weekCounts(w);a.sold+=wc.sold;a.total+=wc.total;return a;},{sold:0,total:0});
