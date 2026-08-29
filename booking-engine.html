@@ -13,6 +13,10 @@
   .lede{color:var(--muted);margin:0 0 16px;font-size:13.5px;max-width:74ch}
   .chip{font:600 11px var(--sans);border:1px solid var(--line-2);border-radius:20px;padding:3px 9px;color:var(--muted);background:var(--surface-2)}
   .chip.price{color:var(--accent-deep);border-color:var(--accent);background:var(--accent-soft)}
+  .chip.base{color:var(--faint);text-decoration:line-through;border-color:var(--line)}
+  .chip.lim{color:var(--gold,#a9791f);border-color:var(--gold,#a9791f);background:var(--gold-soft,#f3e8d0)}
+  .lastminute{display:flex;gap:9px;align-items:center;background:var(--gold-soft,#f3e8d0);border:1px solid var(--gold,#a9791f);color:var(--gold,#a9791f);border-radius:10px;padding:9px 13px;margin:0 0 12px;font-size:13px;font-weight:600}
+  .lastminute b{color:var(--ink)}
   .chip.ok{color:var(--accent-deep);border-color:var(--accent);background:var(--accent-soft)}
   .chip.warn{color:var(--salmon);border-color:var(--salmon);background:var(--salmon-soft)}
   .steps{display:flex;gap:6px;margin:0 0 18px;flex-wrap:wrap}
@@ -304,7 +308,29 @@
   const partyLabel=i=>{const p=party().find(x=>x.i===i);return p?p.label:('Guest '+(i+1));};
 
   // ---- totals ---- (S.acts[id]: guest -> {parts:[slotIdx]}, day -> {days:n}, flat -> {})
-  const roomsSubtotal=()=>S.rooms.reduce((s,id)=>{const r=roomById(id);return s+r.occMax*r.price;},0);
+  // ---- revenue management (dynamic package pricing) — mirrors Package Management rules ----
+  const REV_DEFAULT={enabled:true,days:30,discount:15,floor:0,limitedOffer:false,tiers:[{t:80,p:10},{t:90,p:20}]};
+  let REV=Object.assign({},REV_DEFAULT);
+  try{const r=JSON.parse(localStorage.getItem('talon_pkg_revmgmt_v1'));if(r&&typeof r==='object'){REV=Object.assign({},REV_DEFAULT,r);if(!Array.isArray(REV.tiers)||!REV.tiers.length)REV.tiers=(r.threshold?[{t:+r.threshold,p:+(r.surge||0)}]:REV_DEFAULT.tiers);}}catch(e){}
+  let RAWPKGS=[];try{RAWPKGS=JSON.parse(localStorage.getItem('talon_packages_v1'))||[];}catch(e){}
+  const REV_NOW=new Date();
+  function soldPctForDate(d){const rp=RAWPKGS.find(p=>p.arrival_start_date===d);if(!rp)return 0;if(rp.sold_pct!=null&&rp.sold_pct!=='')return Math.max(0,Math.min(100,+rp.sold_pct));const rms=rp.rooms||[];if(!rms.length)return 0;return Math.round(rms.filter(r=>r.booked).length/rms.length*100);}
+  function revForDate(d){
+    if(!REV.enabled||!d)return {pct:0};
+    const days=Math.ceil((new Date(d+'T00:00:00')-REV_NOW)/86400000), sold=soldPctForDate(d);
+    const inWindow=(days>=0&&days<=+REV.days), hasAvail=sold<100;
+    if(inWindow&&hasAvail&&+REV.discount>0)return {pct:-Math.abs(+REV.discount),dir:'down',limited:!!REV.limitedOffer,reason:REV.limitedOffer?'Limited-time offer':'Last-minute'};
+    if(!inWindow){const t=(REV.tiers||[]).filter(x=>+x.p>0&&x.t!==''&&sold>=+x.t).sort((a,b)=>+b.t-+a.t)[0];if(t)return {pct:+Math.abs(+t.p),dir:'up',reason:'High demand'};}
+    return {pct:0};
+  }
+  const roomAdj=()=>revForDate(S.date);
+  function roomPrice(r){const a=roomAdj();if(!a.pct)return r.price;let dc=Math.round(r.price*(1+a.pct/100)/5)*5;if(a.dir==='down'&&+REV.floor>0)dc=Math.max(dc,+REV.floor);return dc;}
+  function priceChips(r){const a=roomAdj(),dp=roomPrice(r);
+    if(!a.pct)return `<span class="chip price">${money(dp)} / person</span>`;
+    if(a.dir==='down'&&a.limited)return `<span class="chip base">${money(r.price)}</span><span class="chip price">${money(dp)} / person</span><span class="chip lim">${a.reason} −${Math.abs(a.pct)}%</span>`;
+    return `<span class="chip price">${money(dp)} / person</span>`;
+  }
+  const roomsSubtotal=()=>S.rooms.reduce((s,id)=>{const r=roomById(id);return s+r.occMax*roomPrice(r);},0);
   const actParts=a=>{const e=S.acts[a.id];return (e&&e.parts)?e.parts:[];};
   const actQtyOf=a=>{const e=S.acts[a.id];if(!e)return 0;if(a.unit==='flat')return 1;if(a.unit==='day')return e.days||1;return (e.parts?e.parts.length:0);};
   const actDates=a=>{const e=S.acts[a.id];return (e&&e.dates)?e.dates:[];};
@@ -374,6 +400,7 @@
     const deadend=remaining>0&&!fits;
     const roomsLine=S.rooms.length?S.rooms.map(id=>esc(roomById(id).name)).join(' + ')+(roomsSubtotal()?' · est. '+money(roomsSubtotal())+' (double occ.)':''):'Add rooms until your group is covered exactly — no more, no less.';
     el('stage').innerHTML=`<button class="back" onclick="BE.go(2)">← Change date</button>
+      ${(()=>{const a=roomAdj();return a.dir==='down'&&a.limited?`<div class="lastminute">✦ <span><b>Limited-time offer</b> — book this date and save ${Math.abs(a.pct)}% on the package rate, while rooms remain.</span></div>`:'';})()}
       <div class="selbar ${deadend?'blocked':''}"><div>
         <div class="meter">${covered?`Your party of <b>${S.guests}</b> is covered ✓`:`Sleeps <b>${selCap}</b> of ${S.guests} · <b>${remaining}</b> more to place`}</div>
         <div class="sub ${deadend?'warnsub':''}">${deadend?`No open room fits your last ${remaining} guest${remaining===1?'':'s'} without going over. <a href="#" onclick="BE.go(1);return false" style="color:inherit;font-weight:700">Edit party size</a>, or remove a room and pick smaller accommodations.`:roomsLine}</div></div>
@@ -383,7 +410,7 @@
         <div class="rphoto">${r.photo?`<img ${imgAttr(r.photo)} alt="${esc(r.name)}" loading="lazy" onerror="this.remove();this.parentNode.textContent='🛏️'">`:'🛏️'}${sel?'<div class="tick">✓</div>':''}</div>
         <div class="rbody"><div class="t">${esc(r.name)} <span class="chip" style="font-weight:600">${esc(r.type)}</span></div>
           <div class="d">${esc(r.desc||r.beds)}</div>
-          <div class="rmeta"><span class="chip">sleeps ${r.occMax}</span><span class="chip price">${money(r.price)} / person</span>${over?`<span class="chip warn">${covered?'party covered':overBy+' over'}</span>`:''}</div>
+          <div class="rmeta"><span class="chip">sleeps ${r.occMax}</span>${priceChips(r)}${over?`<span class="chip warn">${covered?'party covered':overBy+' over'}</span>`:''}</div>
           <div class="rfoot">${r.mp?`<a class="mp" href="${esc(r.mp)}" target="_blank" rel="noopener">🔄 360° tour ↗</a>`:'<span></span>'}
           <button class="${sel?'btn-ghost':'btn-primary'} btn-sm" ${over?'disabled':''} onclick="BE.toggleRoom(${r.id})">${sel?'Remove':'Add room'}</button></div>
         </div></div>`;}).join('')}</div>
@@ -469,7 +496,7 @@
           <div class="li"><span class="m">Party</span><span>${S.guests} guests · double occ.</span></div>
           <div style="margin-top:8px">${inclExclPanel()}</div></div>
         <div class="sec"><div class="seclabel"><span class="lbl">Rooms</span><button class="edit" onclick="BE.go(3)">Edit</button></div>
-          ${sel.map(r=>`<div class="li"><span>${esc(r.name)} <span class="m">· sleeps ${r.occMax} · ${money(r.price)}/person</span></span><span>${money(r.occMax*r.price)}</span></div>`).join('')}
+          ${sel.map(r=>`<div class="li"><span>${esc(r.name)} <span class="m">· sleeps ${r.occMax} · ${money(roomPrice(r))}/person</span></span><span>${money(r.occMax*roomPrice(r))}</span></div>`).join('')}
           <div class="li sub"><span class="m">Rooms subtotal</span><span>${money(roomsSubtotal())}</span></div></div>
         <div class="sec"><div class="seclabel"><span class="lbl">Additional requested activities</span><button class="edit" onclick="BE.go(6)">${acts.length?'Edit':'Add'}</button></div>
           ${acts.length?acts.map(a=>`<div class="li"><span>${a.emoji} ${esc(a.name)}${a.unit==='guest'?` <span class="m">· ${actDates(a).map(fmtShort).join(', ')||'no day'} · ${actParts(a).map(partyLabel).join(', ')||'no one'} · ${money(a.price)}/guest/day</span>`:(a.unit==='day'?` <span class="m">· ${actQtyOf(a)} day${actQtyOf(a)>1?'s':''} × ${money(a.price)}</span>`:' <span class="m">· whole group</span>')}</span><span>${money(actLine(a))}</span></div>`).join('')+`<div class="li sub"><span class="m">Requested activities · fees paid during checkout</span><span>${money(actsSubtotal())}</span></div>`:`<div class="li"><span class="m">None — just the package. </span><button class="edit" onclick="BE.go(6)">Browse activities</button></div>`}</div>
