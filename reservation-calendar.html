@@ -1753,6 +1753,25 @@ td.avail-num.done{color:var(--accent-deep)}
       if((c.status==='confirmed'||c.status==='reserved')&&c.guest&&!isMarker(c.guest))sold+=(+c.party||rm.cap||0);});
     return {total:total,sold:sold,avail:total-sold};}
 
+  // Rule 2: a group that spans several rooms and is shown with a single bare total (e.g. RUTLAND HOLD (14))
+  // is split into per-room allocation — (2/14) in a 2-bed room, (6/14) in a 6-bed room, etc.
+  // Bookings already written as a fraction (Thompson (6/12), Neubach (2/18)) are left as-is.
+  function groupBase(g){return (g||'').replace(/\s*\([^)]*\)\s*$/,'').trim();}
+  function weekGroups(w){
+    var map={};
+    ROOMS.forEach(function(rm,r){var c=cellOf(w,r);
+      if(!c.guest||c.status==='prospect'||c.status==='available'||isMarker(c.guest))return;
+      var m=c.guest.match(/\((\d+)(?:\/(\d+))?\)/);
+      var total=m?(m[2]?+m[2]:+m[1]):null, hasSlash=!!(m&&m[2]);
+      var k=groupBase(c.guest).toUpperCase();
+      if(!map[k])map[k]={base:groupBase(c.guest),rooms:[],total:total,hasSlash:hasSlash};
+      map[k].rooms.push(r); if(total!=null)map[k].total=total; if(hasSlash)map[k].hasSlash=true;});
+    var alloc={};
+    Object.keys(map).forEach(function(k){var g=map[k];
+      if(g.rooms.length>=2 && !g.hasSlash && g.total!=null){var left=g.total;
+        g.rooms.forEach(function(r){var n=Math.min(ROOMS[r].cap,left);left-=n;alloc[r]={num:n,total:g.total,name:g.base};});}});
+    return alloc;}
+
   function render(){
     // header
     document.getElementById('thead').innerHTML='<tr><th class="wk">Departure</th>'+ROOMS.map(function(r){return '<th>'+esc(r.name)+'<div class="cap">sleeps '+r.cap+'</div></th>';}).join('')+'<th style="text-align:right">Open</th></tr>';
@@ -1760,9 +1779,13 @@ td.avail-num.done{color:var(--accent-deep)}
     document.getElementById('tbody').innerHTML=WEEKS.map(function(w,wi){
       var cls=w.series==='Winemaker'?'wine':(w.series==='Chef'?'chef':'');
       var wc=weekCounts(w);
-      var cells=ROOMS.map(function(_,r){var c=cellOf(w,r);
-        var inner=c.status==='available'?'<span class="g">—</span>':('<span class="g">'+esc(c.guest||'')+'</span>'+(c.party?'<span class="p"> · '+c.party+'</span>':'')+(c.linked?'<span class="lk" title="Linked reservation — booked separately but travelling together">⛓</span>':'')+(c.status==='held'?'<br>'+holdChip(c.hold):''));
-        return '<td class="cell st-'+c.status+(c.linked?' linked':'')+'"><button class="cellbtn" onclick="C.edit('+wi+','+r+')">'+inner+'</button></td>';
+      var GA=weekGroups(w);
+      var cells=ROOMS.map(function(_,r){var c=cellOf(w,r);var ga=GA[r];
+        var inner;
+        if(c.status==='available'){inner='<span class="g">—</span>';}
+        else if(ga){inner='<span class="g">'+esc(ga.name)+'</span><span class="p"> · '+ga.num+'/'+ga.total+'</span>'+(c.linked?'<span class="lk" title="Linked reservation — booked separately but travelling together">⛓</span>':'')+(c.status==='held'?'<br>'+holdChip(c.hold):'');}
+        else{inner='<span class="g">'+esc(c.guest||'')+'</span>'+(c.party?'<span class="p"> · '+c.party+'</span>':'')+(c.linked?'<span class="lk" title="Linked reservation — booked separately but travelling together">⛓</span>':'')+(c.status==='held'?'<br>'+holdChip(c.hold):'');}
+        return '<td class="cell st-'+c.status+(c.linked?' linked':'')+(ga?' grouped':'')+'"><button class="cellbtn" onclick="C.edit('+wi+','+r+')">'+inner+'</button></td>';
       }).join('');
       return '<tr class="'+cls+'"><td class="wk"><div class="wl">'+esc(w.label.replace(/\s*\(.*/,''))+'</div><div class="wd">'+esc((w.label.match(/\((.*)\)/)||[])[1]||'')+'</div>'+(w.series!=='Standard'?'<span class="ser '+w.series+'">'+w.series+'</span>':'')+'</td>'+cells+'<td class="avail-num'+(wc.total===0?' off':wc.avail===0?' done':'')+'">'+(wc.total===0?'<span class="g">—</span>':'<b>'+wc.avail+'</b><br>open')+'</td></tr>';
     }).join('');
