@@ -23,7 +23,9 @@
   .lrow{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;padding:11px 12px;border-bottom:1px solid var(--line);cursor:pointer}
   .lrow:hover{background:var(--surface-2)}.lrow.sel{background:var(--accent-soft)}
   .lrow .n{font-weight:700;font-size:13px}.lrow .s{font-size:11.5px;color:var(--faint)}
-  .lrow .pr{font:600 12px var(--sans);color:var(--accent-deep);white-space:nowrap;text-align:right}
+  .lrow .pr{font:600 12px var(--sans);color:var(--accent-deep);text-align:right;flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+  .lrow .pr .p1{white-space:nowrap}
+  .lrow .pr .prsub{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:flex-end}
   .tag{display:inline-block;font:600 9.5px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:2px 6px;border-radius:20px;margin-left:6px;vertical-align:middle}
   .tag.published{background:var(--accent-soft);color:var(--accent-deep)}
   .tag.draft{background:var(--surface-2);color:var(--faint);border:1px solid var(--line-2)}
@@ -93,6 +95,25 @@
   .pvroom .rrate{font:800 15px var(--sans)}
   .avail{display:inline-block;font:700 10px var(--mono);padding:2px 7px;border-radius:20px}
   .avail.y{background:var(--accent-soft);color:var(--accent-deep)}.avail.n{background:var(--surface-2);color:var(--faint)}
+  /* revenue management */
+  .revcard{background:var(--surface);border:1px solid var(--line-2);border-radius:12px;box-shadow:var(--shadow);padding:13px 16px;margin-bottom:14px}
+  .revcard .revtop{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap}
+  .rmtoggle{display:inline-flex;align-items:center;gap:8px;font:700 14px var(--sans);cursor:pointer}
+  .rmhint{font-size:12px;color:var(--muted)}
+  .revrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:11px}
+  .revrow .rl{font:700 9.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint);min-width:96px}
+  .revrow.down .rl{color:var(--accent-deep)} .revrow.up .rl{color:#bd5836}
+  .revrow input{width:60px;font:600 13px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:7px;padding:5px 7px}
+  .revrow input:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+  .revrow .hint{font-size:11.5px;color:var(--faint)}
+  .revprev{margin-top:12px;padding:9px 13px;background:var(--surface-2);border:1px solid var(--line);border-radius:9px;font-size:12.5px;color:var(--muted)}
+  .revprev b{color:var(--ink);font-weight:600}
+  .revtag{font:700 9.5px var(--mono);letter-spacing:.03em;border-radius:20px;padding:2px 7px;white-space:nowrap;margin-left:6px}
+  .revtag.down{background:var(--accent-soft);color:var(--accent-deep)}
+  .revtag.up{background:#f4e5de;color:#bd5836}
+  .pr-base{color:var(--faint);text-decoration:line-through;font-weight:600;font-size:12px;margin-right:5px}
+  .revcond{font-size:12.5px;color:var(--muted);margin-top:7px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .revcond input{width:60px;font:600 12.5px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:7px;padding:4px 6px}
   .infobtn{background:none;border:1px solid var(--line-2);border-radius:50%;width:22px;height:22px;cursor:pointer;color:var(--muted);font-weight:700}
   .roomexp{padding:0 12px 12px;font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line)}
 </style>
@@ -127,6 +148,8 @@
       <button class="btn-ghost btn-sm" onclick="PM.bulkStatus()">Set on all</button>
     </div>
   </div>
+
+  <div id="revpanel"></div>
 
   <div class="grid">
     <div class="card">
@@ -220,8 +243,34 @@
     else if(!prices.length)label='Contact for pricing';
     else if(Math.min(...prices)===Math.max(...prices))label=money(Math.min(...prices))+' / person';
     else label=money(Math.min(...prices))+' – '+money(Math.max(...prices))+' / person';
-    return {label,minPeople,soldOut:rows.length&&avail.length===0};
+    return {label,minPeople,soldOut:rows.length&&avail.length===0,min:(prices.length?Math.min(...prices):null),max:(prices.length?Math.max(...prices):null)};
   }
+
+  // ---- Revenue management (automatic dynamic pricing) ----
+  const RKEY='talon_pkg_revmgmt_v1';
+  const REV_DEFAULT={enabled:true,days:30,discount:15,threshold:80,surge:10};
+  let REV=Object.assign({},REV_DEFAULT);
+  try{const r=JSON.parse(localStorage.getItem(RKEY));if(r&&typeof r==='object')REV=Object.assign({},REV_DEFAULT,r);}catch(e){}
+  const saveRev=()=>{try{localStorage.setItem(RKEY,JSON.stringify(REV));}catch(e){}};
+  const REV_TODAY=new Date();
+  function daysToArrival(p){if(!p.arrival_start_date)return null;return Math.ceil((parseDate(p.arrival_start_date)-REV_TODAY)/86400000);}
+  function soldPct(p){if(p.sold_pct!=null&&p.sold_pct!=='')return Math.max(0,Math.min(100,+p.sold_pct));const rooms=p.rooms||[];if(!rooms.length)return 0;return Math.round(rooms.filter(r=>r.booked).length/rooms.length*100);}
+  function revAdjust(d,s){
+    if(!REV.enabled)return {pct:0,d,s};
+    const inWindow=(d!=null&&d>=0&&d<=+REV.days), hasAvail=s<100;
+    if(inWindow&&hasAvail&&+REV.discount>0)return {pct:-Math.abs(+REV.discount),reason:'Last-minute',dir:'down',d,s};
+    if(!inWindow&&s>=+REV.threshold&&+REV.surge>0)return {pct:+Math.abs(+REV.surge),reason:'High demand',dir:'up',d,s};
+    return {pct:0,d,s};
+  }
+  const applyPct=(v,pct)=>v==null?null:Math.round(v*(1+pct/100)/5)*5; // round to $5
+  function pricingFor(p){
+    const ps=priceSummary(p), adj=revAdjust(daysToArrival(p),soldPct(p));
+    if(ps.min==null||adj.pct===0||ps.soldOut)return {ps,adj,label:ps.label,baseLabel:ps.label,changed:false};
+    const emin=applyPct(ps.min,adj.pct),emax=applyPct(ps.max,adj.pct);
+    const eff=emin===emax?money(emin)+' / person':money(emin)+' – '+money(emax)+' / person';
+    return {ps,adj,label:eff,baseLabel:ps.label,changed:true};
+  }
+  function revBadge(adj){if(!adj||adj.pct===0)return '';const sign=adj.pct>0?'+':'−';return `<span class="revtag ${adj.dir}">${esc(adj.reason)} ${sign}${Math.abs(adj.pct)}%</span>`;}
   // §2.3
   function dateRange(p){if(!p.arrival_start_date)return '';const s=parseDate(p.arrival_start_date);
     const nights=p.nights||0;const e=parseDate(addDays(p.arrival_start_date,nights));
@@ -251,20 +300,36 @@
       includes:inc,excludes:exc,species:['King Salmon','Silver (Coho) Salmon','Halibut'],activities:[],arrival_days:[]};
     return [
       {...base,id:uid(),title_override:'',series:'Standard',description:"Four nights of guided saltwater sportfishing out of Sitka, based from the lodge's private island setting.",arrival_start_date:'2027-05-24',rooms:rooms3()},
-      {...base,id:uid(),title_override:'',series:'Winemaker Series',description:"Our four-night guided sportfishing package hosted with a visiting winemaker — special wine dinners alongside your days on the water.",arrival_start_date:'2027-05-28',rooms:rooms3()},
+      {...base,id:uid(),title_override:'',series:'Winemaker Series',description:"Our four-night guided sportfishing package hosted with a visiting winemaker — special wine dinners alongside your days on the water.",arrival_start_date:'2027-05-28',sold_pct:85,rooms:rooms3()},
       {...base,id:uid(),title_override:'',series:'Visiting Chef Series',description:"Our four-night guided sportfishing package with a visiting guest chef crafting special menus throughout your stay.",arrival_start_date:'2027-06-01',rooms:rooms3()},
       {...base,id:uid(),title_override:'',series:'Standard',description:"Four nights of guided saltwater sportfishing out of Sitka.",arrival_start_date:'2027-06-05',rooms:rooms3()}
     ];
   }
 
+  // ---- revenue management panel ----
+  function renderRev(){
+    const host=el('revpanel'); if(!host)return;
+    const on=REV.enabled, ex=6195;
+    const disc=applyPct(ex,-Math.abs(+REV.discount)), surg=applyPct(ex,+Math.abs(+REV.surge));
+    host.innerHTML=`<div class="revcard">
+      <div class="revtop">
+        <label class="rmtoggle"><input type="checkbox" id="rm_on" ${on?'checked':''} onchange="PM.revSet()"> Revenue management</label>
+        <span class="rmhint">Automatic dynamic pricing on the computed package price — read live by the booking engine.</span>
+      </div>
+      <div class="revrow down"><span class="rl">Last-minute</span> within <input type="number" min="0" id="rm_days" value="${REV.days}" onchange="PM.revSet()"> days of arrival → <input type="number" min="0" max="90" id="rm_disc" value="${REV.discount}" onchange="PM.revSet()">% off <span class="hint">while rooms remain</span></div>
+      <div class="revrow up"><span class="rl">High demand</span> at <input type="number" min="0" max="100" id="rm_thr" value="${REV.threshold}" onchange="PM.revSet()">% sold or more, outside that window → +<input type="number" min="0" max="90" id="rm_surge" value="${REV.surge}" onchange="PM.revSet()">%</div>
+      <div class="revprev">${on?`Example on a <b>${money(ex)}</b> base — last-minute → <b>${money(disc)}</b> <span class="revtag down">−${Math.abs(+REV.discount)}%</span> · at ${REV.threshold}%+ sold → <b>${money(surg)}</b> <span class="revtag up">+${Math.abs(+REV.surge)}%</span>`:`Dynamic pricing is <b>off</b> — packages show their base computed price.`}</div>
+    </div>`;
+  }
+
   // ---- list ----
   function renderList(){
     el('count').textContent=pkgs.length;
-    el('list').innerHTML=pkgs.map(p=>{const ps=priceSummary(p);const ser=p.series&&p.series!=='Standard';
+    el('list').innerHTML=pkgs.map(p=>{const pr=pricingFor(p);const ser=p.series&&p.series!=='Standard';
       return `<div class="lrow ${editing&&editing.id===p.id?'sel':''}" onclick="PM.edit('${p.id}')">
         <div style="min-width:0"><div class="n">${esc(displayTitle(p))}<span class="tag ${p.status}">${p.status}</span>${ser?'<span class="tag series">'+esc(p.series.replace(' Series',''))+'</span>':''}</div>
         <div class="s">${esc(p.category)}${p.arrival_start_date?' · '+dateRange(p).split(' (')[0]:''}</div></div>
-        <div class="pr">${ps.label}</div></div>`;}).join('')||'<div class="empty">No packages yet.</div>';
+        <div class="pr"><span class="p1">${pr.label}</span>${pr.changed?`<span class="prsub"><span class="pr-base">${esc(pr.baseLabel.replace(' / person',''))}</span>${revBadge(pr.adj)}</span>`:''}</div></div>`;}).join('')||'<div class="empty">No packages yet.</div>';
   }
 
   // ---- editor ----
@@ -273,7 +338,7 @@
     if(!editing){el('editor').innerHTML='<div class="empty">Select a package, or click <b>+ New</b>.</div>';el('edhd').textContent='Edit package';return;}
     const p=editing;el('edhd').textContent=p.saved?('Edit — '+displayTitle(p)):'New package';
     const cat=catByName(p.category);const usesSpecies=cat&&cat.uses_species;const mode=resolvedMode(p);
-    const ps=priceSummary(p);
+    const ps=priceSummary(p);const pr=pricingFor(p);
     el('editor').innerHTML=`<div class="form">
       <div class="frow">
         <div class="fld" style="flex:2"><label>Title override <span class="hint">(blank = auto)</span></label><input id="f_title" value="${esc(p.title_override)}" placeholder="${esc(autoTitle(p))}"></div>
@@ -309,7 +374,11 @@
             <td><input type="number" style="max-width:64px" value="${on&&pr.occ_min_override!=null?pr.occ_min_override:''}" ${on?'':'disabled'} placeholder="${r.occMin}" oninput="PM.roomField('${r.id}','occ_min_override',this.value)"></td>
             <td>${on?`<input class="ck" type="checkbox" ${pr.booked?'checked':''} onchange="PM.roomBooked('${r.id}',this.checked)">`:''}</td>
           </tr>`;}).join('')}</tbody></table></div>
-      <div class="hint">Computed price range: <b>${ps.label}</b>${ps.minPeople?` · min ${ps.minPeople} people`:''}. Series increase (${money(seriesByName(p.series).rate||0)}) is added to each room's rate. Affiliated rooms are cross-listed.</div>
+      <div class="hint">Base price range: <b>${ps.label}</b>${ps.minPeople?` · min ${ps.minPeople} people`:''}. Series increase (${money(seriesByName(p.series).rate||0)}) is added to each room's rate. Affiliated rooms are cross-listed.</div>
+      <div class="revcond">Revenue price: <b>${pr.label}</b>${revBadge(pr.adj)} · arrives in ${pr.adj.d==null?'—':pr.adj.d+' day'+(pr.adj.d===1?'':'s')}
+        <label style="font:700 9px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin-left:6px">Sold&nbsp;%</label>
+        <input type="number" min="0" max="100" id="f_sold" value="${p.sold_pct??''}" placeholder="${soldPct(p)}" onchange="PM.live()">
+        <span class="hint">live from availability in production</span></div>
 
       ${ACTS.length?`<div class="seclbl"><span>Optional add-ons &amp; included activities</span></div>
       <div style="overflow-x:auto"><table class="rtable"><thead><tr><th>Use</th><th>Activity</th><th>Rate / person $</th><th>Included?</th></tr></thead>
@@ -354,7 +423,8 @@
     if(el('f_desc'))p.description=el('f_desc').value;
     if(el('f_dep'))p.deposit=el('f_dep').value===''?null:+el('f_dep').value;
     if(el('f_depA'))p.deposit_adult=el('f_depA').value===''?null:+el('f_depA').value;
-    if(el('f_depC'))p.deposit_child=el('f_depC').value===''?null:+el('f_depC').value;}
+    if(el('f_depC'))p.deposit_child=el('f_depC').value===''?null:+el('f_depC').value;
+    if(el('f_sold'))p.sold_pct=el('f_sold').value===''?null:+el('f_sold').value;}
 
   function recordShape(p){const cat=catByName(p.category);
     return {id:p.id,title:displayTitle(p),title_override:p.title_override||null,series:p.series,category:/Lodging only/.test(p.category)?null:p.category,
@@ -373,11 +443,16 @@
       species:[],rooms:[],activities:[],arrival_days:[]};renderList();renderEditor();},
     cancel(){editing=null;renderList();renderEditor();},
     live(){syncScalars();renderEditor();},
+    revSet(){REV.enabled=el('rm_on').checked;REV.days=+el('rm_days').value||0;REV.discount=+el('rm_disc').value||0;REV.threshold=+el('rm_thr').value||0;REV.surge=+el('rm_surge').value||0;saveRev();renderRev();renderList();if(editing)renderEditor();},
     toggleRoom(id,on){syncScalars();const r=roomById(id);if(on){(editing.rooms=editing.rooms||[]).push({room_id:isNaN(+id)?id:+id,rate_per_person:null,rate_adult:null,rate_child:null,occ_min_override:null,occ_max_override:null,booked:false});}
       else editing.rooms=editing.rooms.filter(x=>String(x.room_id)!==String(id));renderEditor();},
     roomField(id,k,v){const pr=(editing.rooms||[]).find(x=>String(x.room_id)===String(id));if(!pr)return;pr[k]=v===''?null:(k.startsWith('rate')||k.startsWith('occ')?+v:v);
-      // update computed hints + json without wiping the field being typed: light refresh of hint only
-      const hint=[...document.querySelectorAll('.hint')].find(h=>/Computed price range/.test(h.textContent));const ps=priceSummary(editing);if(hint)hint.innerHTML=`Computed price range: <b>${ps.label}</b>${ps.minPeople?` · min ${ps.minPeople} people`:''}. Series increase (${money(seriesByName(editing.series).rate||0)}) is added to each room's rate. Affiliated rooms are cross-listed.`;},
+      // light refresh of the price hints without wiping the field being typed
+      const ps=priceSummary(editing),pc=pricingFor(editing);
+      const hint=[...document.querySelectorAll('.hint')].find(h=>/Base price range/.test(h.textContent));
+      if(hint)hint.innerHTML=`Base price range: <b>${ps.label}</b>${ps.minPeople?` · min ${ps.minPeople} people`:''}. Series increase (${money(seriesByName(editing.series).rate||0)}) is added to each room's rate. Affiliated rooms are cross-listed.`;
+      const rc=document.querySelector('.revcond');
+      if(rc)rc.innerHTML=`Revenue price: <b>${pc.label}</b>${revBadge(pc.adj)} · arrives in ${pc.adj.d==null?'—':pc.adj.d+' day'+(pc.adj.d===1?'':'s')}<label style="font:700 9px var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin-left:6px">Sold&nbsp;%</label><input type="number" min="0" max="100" id="f_sold" value="${editing.sold_pct??''}" placeholder="${soldPct(editing)}" onchange="PM.live()"><span class="hint">live from availability in production</span>`;},
     roomBooked(id,v){const pr=(editing.rooms||[]).find(x=>String(x.room_id)===String(id));if(pr){pr.booked=v;syncScalars();renderEditor();}},
     toggleAct(id,on){syncScalars();if(on){(editing.activities=editing.activities||[]).push({activity_id:id,rate_per_person:(actById(id)||{}).price??null,is_included:false});}
       else editing.activities=editing.activities.filter(x=>String(x.activity_id)!==String(id));renderEditor();},
@@ -473,7 +548,7 @@
     </div></div></div></div>`;
   }
 
-  renderList();renderEditor();
+  renderRev();renderList();renderEditor();
 })();
 </script>
 </body></html>
