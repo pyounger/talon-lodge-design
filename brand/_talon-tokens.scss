@@ -1,0 +1,129 @@
+// =============================================================================
+// Talon Lodge & Spa — Design Tokens  (DRAFT for talon-app2026-ui/src/_talon-tokens.scss)
+// -----------------------------------------------------------------------------
+// Source of truth: the talon-lodge-design prototypes (guest-portal, booking
+// engine, reservation calendar, et al). This is a proposal to reconcile against
+// the tokens already drafted in the Stella repo — same naming convention
+// (--talon-*), so it should drop in with minimal edits. Nothing here is wired
+// to Daxa yet; the intent is that Daxa's programmable colours/fonts read FROM
+// these tokens so there is one source of truth.
+//
+// Three-state theming: bare :root = light; prefers-color-scheme:dark for system
+// dark; [data-theme] wins over both so an explicit toggle always applies.
+// =============================================================================
+
+:root {
+  // ---- Brand ----------------------------------------------------------------
+  --talon-accent:        #0e7c6f;   // the teal — primary brand
+  --talon-accent-deep:   #0a544c;   // pressed / headings on tint
+  --talon-accent-soft:   #dcece6;   // tint backgrounds
+  --talon-salmon:        #bd5836;   // secondary — alerts, "held"
+  --talon-salmon-deep:   #9a4529;
+  --talon-salmon-soft:   #f6e2da;
+  --talon-gold:          #a9791f;   // tertiary — "prospect", highlights
+  --talon-gold-soft:     #f3e8d0;
+  --talon-blue:          #3b6ea5;   // info — "reserved / deposit due"
+  --talon-blue-soft:     #e4eefa;
+
+  // ---- Neutrals & surfaces --------------------------------------------------
+  --talon-paper:         #eef3f1;   // app background
+  --talon-surface:       #ffffff;   // cards / panels
+  --talon-surface-2:     #e6efeb;   // sunken rows
+  --talon-raise:         #f5f9f7;   // faint raised fill
+  --talon-ink:           #12292a;   // primary text
+  --talon-muted:         #4f645f;   // secondary text
+  --talon-faint:         #7a8b86;   // labels / captions
+  --talon-line:          #d6e2dd;   // hairline borders
+  --talon-line-2:        #c1d1cb;   // stronger borders
+
+  // ---- Semantic status (alias the brand hues) -------------------------------
+  --talon-success:       var(--talon-accent);
+  --talon-warning:       var(--talon-gold);
+  --talon-danger:        var(--talon-salmon);
+  --talon-info:          var(--talon-blue);
+
+  // ---- Type: families -------------------------------------------------------
+  // Display currently resolves to the system sans (Phil's chosen header look,
+  // 2026-08). Drop a brand face into brand/fonts/ and change one line here.
+  --talon-font-display:  ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --talon-font-body:     "Instrument Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --talon-font-mono:     "IBM Plex Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+
+  // ---- Type: scale (9 sizes, 12px → hero) -----------------------------------
+  --talon-text-xs:       12px;   // fine print, table captions
+  --talon-text-sm:       13px;
+  --talon-text-base:     14px;   // body default
+  --talon-text-md:       16px;
+  --talon-text-lg:       18px;
+  --talon-text-xl:       22px;   // section headings
+  --talon-text-2xl:      26px;
+  --talon-text-3xl:      32px;
+  --talon-text-display:  44px;   // hero
+
+  // ---- Type: weights & line-height ------------------------------------------
+  --talon-weight-normal:   400;
+  --talon-weight-medium:   500;
+  --talon-weight-semibold: 600;
+  --talon-weight-bold:     700;
+  --talon-weight-black:    900;
+  --talon-leading-tight:  1.15;
+  --talon-leading-snug:   1.3;
+  --talon-leading-body:   1.5;
+  --talon-tracking-label: 0.06em;  // uppercase mono labels
+
+  // ---- Spacing (4px base) ---------------------------------------------------
+  --talon-space-1:   4px;
+  --talon-space-2:   8px;
+  --talon-space-3:  12px;
+  --talon-space-4:  16px;
+  --talon-space-5:  24px;
+  --talon-space-6:  32px;
+  --talon-space-7:  48px;
+  --talon-space-8:  64px;
+
+  // ---- Corner radius --------------------------------------------------------
+  --talon-radius-sm:    6px;
+  --talon-radius-md:    9px;
+  --talon-radius-lg:   12px;
+  --talon-radius-xl:   18px;
+  --talon-radius-pill: 999px;
+
+  // ---- Elevation ------------------------------------------------------------
+  --talon-shadow-sm: 0 1px 2px rgba(18, 42, 43, .05);
+  --talon-shadow-md: 0 1px 2px rgba(18, 42, 43, .05), 0 10px 26px rgba(18, 42, 43, .07);
+  --talon-shadow-lg: 0 8px 22px rgba(18, 42, 43, .10), 0 24px 60px rgba(18, 42, 43, .12);
+}
+
+// ---- Dark palette: same brand at night, not an inversion --------------------
+// Redefine ONLY the colours; type/space/radius are theme-independent.
+@mixin talon-dark {
+  --talon-accent:      #38b8a6;
+  --talon-accent-deep: #5fd0bf;
+  --talon-accent-soft: #0f2a26;
+  --talon-salmon:      #e18a62;
+  --talon-salmon-deep: #eda588;
+  --talon-salmon-soft: #33211a;
+  --talon-gold:        #d9ad55;
+  --talon-gold-soft:   #2a2413;
+  --talon-blue:        #7ea6d6;
+  --talon-blue-soft:   #14243a;
+
+  --talon-paper:     #081210;
+  --talon-surface:   #0e1c1a;
+  --talon-surface-2: #152522;
+  --talon-raise:     #122320;
+  --talon-ink:       #e9f1ed;
+  --talon-muted:     #9bada9;
+  --talon-faint:     #6f817c;
+  --talon-line:      #20332d;
+  --talon-line-2:    #2e453e;
+
+  --talon-shadow-sm: 0 1px 2px rgba(0, 0, 0, .3);
+  --talon-shadow-md: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 30px rgba(0, 0, 0, .45);
+  --talon-shadow-lg: 0 12px 30px rgba(0, 0, 0, .5), 0 28px 70px rgba(0, 0, 0, .55);
+}
+
+:root:not([data-theme="light"]) {
+  @media (prefers-color-scheme: dark) { @include talon-dark; }
+}
+:root[data-theme="dark"] { @include talon-dark; }
