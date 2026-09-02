@@ -1,0 +1,216 @@
+<title>Guest Profile — Satisfaction</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --accent:#0e7c6f; --accent-deep:#0a544c; --accent-soft:#e0efe9;
+  --salmon:#c25e39; --salmon-soft:#f4e5de; --salmon-deep:#9a4529; --gold:#b9892b; --gold-soft:#f6ecd6;
+  --good:#4f9d8f; --paper:#eef3f1; --surface:#ffffff; --surface-2:#e6efeb; --raise:#f5f9f7;
+  --ink:#12292a; --muted:#5a6f6b; --faint:#84958f; --line:#d6e2dd; --line-2:#c1d1cb;
+  --sans:"Outfit",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --shadow:0 1px 2px rgba(18,42,43,.05),0 12px 30px rgba(18,42,43,.06);
+}
+:root:not([data-theme="light"]){ @media (prefers-color-scheme:dark){
+  --accent:#38b8a6; --accent-deep:#5fd0bf; --accent-soft:#0f2a26; --salmon:#e18a62; --salmon-soft:#33231b; --salmon-deep:#eda588; --gold:#e0b45e; --gold-soft:#2c2413; --good:#6fbfb0;
+  --paper:#081210; --surface:#0e1c1a; --surface-2:#152522; --raise:#122320; --ink:#e9f1ed; --muted:#9bada9; --faint:#6f817c; --line:#20332d; --line-2:#2e453e; --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px rgba(0,0,0,.45);
+}}
+:root[data-theme="dark"]{
+  --accent:#38b8a6; --accent-deep:#5fd0bf; --accent-soft:#0f2a26; --salmon:#e18a62; --salmon-soft:#33231b; --salmon-deep:#eda588; --gold:#e0b45e; --gold-soft:#2c2413; --good:#6fbfb0;
+  --paper:#081210; --surface:#0e1c1a; --surface-2:#152522; --raise:#122320; --ink:#e9f1ed; --muted:#9bada9; --faint:#6f817c; --line:#20332d; --line-2:#2e453e; --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:960px;margin:0 auto;padding:22px 20px 60px}
+.mono{font-family:var(--mono)}
+/* admin bar */
+.abar{display:flex;align-items:center;gap:10px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.abar img{height:24px;width:auto}
+.abar .bc{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--faint)}
+.abar .bc b{color:var(--muted);font-weight:600}
+.tools{margin-left:auto;display:flex;gap:6px}
+.tbtn{font-family:var(--mono);font-size:11px;font-weight:600;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);border-radius:8px;padding:7px 10px;cursor:pointer}
+/* internal banner */
+.internal{display:flex;align-items:center;gap:9px;margin-top:16px;padding:10px 14px;border:1px solid var(--gold);background:var(--gold-soft);border-radius:10px;font-size:12.5px;color:var(--ink)}
+.internal svg{width:16px;height:16px;stroke:var(--gold);fill:none;stroke-width:2;flex:0 0 auto}
+.internal b{color:var(--ink)}
+/* guest header */
+.ghead{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-top:18px}
+.ava{width:56px;height:56px;border-radius:50%;background:var(--accent-soft);color:var(--accent-deep);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;flex:0 0 auto}
+.gh-main h1{font-size:26px;font-weight:700;margin:0}
+.gh-meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:6px;font-size:13px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:20px}
+.pill.ret{background:var(--accent-soft);color:var(--accent-deep)}
+.gh-score{margin-left:auto;text-align:center}
+.gauge{position:relative;width:88px;height:88px;margin:0 auto}
+.gauge svg{transform:rotate(-90deg)}
+.gauge .v{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.gauge .v b{font-size:24px;font-weight:700;line-height:1}
+.gauge .v span{font-family:var(--mono);font-size:8px;color:var(--faint)}
+.gh-score .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);margin-top:4px}
+.gh-score .bnd{font-family:var(--mono);font-size:11px;font-weight:600;margin-top:2px}
+
+section{margin-top:26px}
+.sh{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+.sh h2{font-size:18px;font-weight:700;margin:0}
+.sh .hint{margin-left:auto;font-size:12px;color:var(--muted)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow)}
+
+/* score breakdown */
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dl{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line)}
+.dl:first-child{border-top:0}
+.dl .dn{flex:0 0 96px;font-weight:600;font-size:13px}
+.dl .track{flex:1;height:8px;border-radius:20px;background:var(--surface-2);overflow:hidden}
+.dl .track i{display:block;height:100%;background:var(--accent);border-radius:20px}
+.dl .dv{font-family:var(--mono);font-size:12px;color:var(--muted);width:34px;text-align:right}
+.calc{font-size:12.5px;color:var(--muted);line-height:1.7}
+.calc .row{display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid var(--line)}
+.calc .row:first-child{border-top:0}
+.calc b{color:var(--ink);font-variant-numeric:tabular-nums}
+.calc .tot{border-top:2px solid var(--line-2);margin-top:4px;font-weight:600;color:var(--ink)}
+
+/* action notes */
+.note{border:1px solid var(--line);border-left:3px solid var(--salmon);border-radius:10px;padding:14px 16px;margin-bottom:12px;background:var(--surface)}
+.note.offer{border-left-color:var(--gold)}
+.note .nh{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.note .ntag{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:20px}
+.note .ntag.act{background:var(--salmon-soft);color:var(--salmon-deep)}
+.note .ntag.offer{background:var(--gold-soft);color:var(--gold)}
+.note .dept{font-family:var(--mono);font-size:10px;color:var(--faint)}
+.note .src{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--faint)}
+.note .nt{font-size:15px;font-weight:500;margin:10px 0 6px}
+.note .why{font-size:12.5px;color:var(--muted);margin:0}
+.note .act-row{display:flex;gap:8px;margin-top:12px}
+.abtn{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;border:1px solid var(--line-2);background:var(--surface);color:var(--muted);border-radius:8px;padding:6px 11px;cursor:pointer}
+.abtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* history */
+.yr{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;background:var(--surface)}
+.yr .yh{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
+.yr .yh b{font-size:16px;font-weight:700}
+.yr .yh .ys{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.yr .yh .yb{margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:600}
+.cmt{padding:8px 0;border-top:1px solid var(--line);font-size:13px}
+.cmt:first-of-type{border-top:0}
+.cmt .cw{color:var(--ink)}
+.cmt .cm{font-family:var(--mono);font-size:10px;color:var(--faint);margin-top:3px}
+.cmt .ct{font-family:var(--mono);font-size:9px;font-weight:600;text-transform:uppercase;padding:1px 6px;border-radius:20px;margin-right:6px}
+.ct.praise{background:var(--accent-soft);color:var(--accent-deep)} .ct.act{background:var(--salmon-soft);color:var(--salmon-deep)} .ct.note{background:var(--surface-2);color:var(--muted)}
+.foot{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--faint);line-height:1.7}
+@media (max-width:720px){.cols2{grid-template-columns:1fr}.gh-score{margin-left:0}}
+@media print{.tools{display:none}body{background:#fff}}
+</style>
+
+<div class="wrap">
+  <div class="abar">
+    <img alt="Talon Lodge" src="__EAGLE__">
+    <span class="bc"><b>Guests</b> · Person 360 · Satisfaction</span>
+    <span class="tools"><button class="tbtn" onclick="TT('light')">Light</button><button class="tbtn" onclick="TT('dark')">Dark</button><button class="tbtn" onclick="TT('')">System</button></span>
+  </div>
+
+  <div class="internal">
+    <svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+    <span><b>Internal — staff only.</b> Satisfaction scores and survey notes are never shown to the guest.</span>
+  </div>
+
+  <div class="ghead">
+    <div class="ava" id="ava">RP</div>
+    <div class="gh-main">
+      <h1 id="gname">Rick Plath</h1>
+      <div class="gh-meta">
+        <span class="pill ret" id="retpill">Returning guest</span>
+        <span id="gmeta">Bluff House · Aug 22–26, 2027</span>
+      </div>
+    </div>
+    <div class="gh-score">
+      <div class="gauge" id="gauge"></div>
+      <div class="lbl">Satisfaction</div>
+      <div class="bnd" id="bnd"></div>
+    </div>
+  </div>
+
+  <section>
+    <div class="sh"><h2>Satisfaction score</h2><span class="hint">2027 survey · how it's built</span></div>
+    <div class="panel cols2">
+      <div id="deptlist"></div>
+      <div class="calc" id="calc"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sh"><h2>Act on next visit</h2><span class="hint">Carried forward from his survey comments</span></div>
+    <div id="notes"></div>
+  </section>
+
+  <section>
+    <div class="sh"><h2>Survey history</h2><span class="hint">Every survey appends here, year over year</span></div>
+    <div id="history"></div>
+  </section>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+(function(){
+  // ---- Rick Plath, response #40 (real) ----
+  var ANS=[
+    {id:'Q2',dept:'Service',title:'Overall service',rating:'Good',pts:75},
+    {id:'Q3',dept:'Facilities',title:'Lodge & accommodations',rating:'Met',pts:75,comment:'We have been guests before and know what to expect.'},
+    {id:'Q4',dept:'Culinary',title:'Breakfast',rating:'Excellent',pts:100,comment:'We had to wait over 30 minutes to be served biscuits and gravy. The meal was great.'},
+    {id:'Q5',dept:'Culinary',title:'Lunch',rating:'Good',pts:75,comment:'Can we request hot soup and the sandwiches that saltwater boats receive when river fishing? Great cookies.'},
+    {id:'Q6',dept:'Culinary',title:'Dinner',rating:'Excellent',pts:100},
+    {id:'Q7',dept:'Guiding',title:'Fishing guides & service',rating:'Good',pts:75,comment:'We knew what to expect. Great people.'}
+    // Q8 Massage — skipped (excluded from score)
+  ];
+  var RECOMMEND='Yes', OVERALL='Incredible hospitality.';
+  var NOTES=[
+    {tag:'act',dept:'Culinary / Kitchen',src:'2027 · Breakfast',text:'Waited 30+ minutes for breakfast (biscuits & gravy). The food was great — it was the wait.',why:'He rated breakfast Excellent anyway, so the score hides it — but a returning guest will notice if it repeats. Flag the kitchen to expedite his table.'},
+    {tag:'offer',dept:'Culinary / Kitchen',src:'2027 · Lunch',text:'Would like hot soup and the saltwater-boat sandwiches on his river-fishing days.',why:'A specific, easy request. Pre-stock it for his river days next season and it becomes a delight, not a complaint.'}
+  ];
+  function getc(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim()||v;}
+  function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+  function band(v){return v>=90?['Exceptional',getc('--accent-deep')]:v>=75?['Strong',getc('--accent')]:v>=60?['Watch',getc('--gold')]:['At-risk',getc('--salmon')];}
+
+  var DEPTS={};ANS.forEach(function(a){(DEPTS[a.dept]=DEPTS[a.dept]||[]).push(a);});
+  var dscore={};Object.keys(DEPTS).forEach(function(d){dscore[d]=DEPTS[d].reduce(function(s,a){return s+a.pts;},0)/DEPTS[d].length;});
+  var overall=Object.keys(dscore).reduce(function(s,d){return s+dscore[d];},0)/Object.keys(dscore).length;
+
+  function render(){
+    // gauge
+    var b=band(overall),r=39,circ=2*Math.PI*r,off=circ*(1-overall/100);
+    document.getElementById('gauge').innerHTML='<svg width="88" height="88"><circle cx="44" cy="44" r="'+r+'" fill="none" stroke="var(--surface-2)" stroke-width="8"/><circle cx="44" cy="44" r="'+r+'" fill="none" stroke="'+b[1]+'" stroke-width="8" stroke-linecap="round" stroke-dasharray="'+circ+'" stroke-dashoffset="'+off+'"/></svg><div class="v"><b>'+overall.toFixed(0)+'</b><span>/100</span></div>';
+    document.getElementById('bnd').innerHTML='<span style="color:'+b[1]+'">'+b[0]+'</span>';
+
+    // department bars
+    document.getElementById('deptlist').innerHTML=Object.keys(dscore).sort(function(a,c){return dscore[c]-dscore[a];}).map(function(d){
+      return '<div class="dl"><span class="dn">'+d+'</span><span class="track"><i style="width:'+dscore[d]+'%"></i></span><span class="dv">'+dscore[d].toFixed(0)+'</span></div>';
+    }).join('')+'<div class="dl"><span class="dn">Recommends</span><span class="track" style="background:transparent"></span><span class="dv" style="color:'+getc('--accent-deep')+'">'+RECOMMEND+'</span></div>';
+
+    // "how it's scored" example
+    var rows=ANS.map(function(a){return '<div class="row"><span>'+esc(a.title)+' — '+a.rating+'</span><b>'+a.pts+'</b></div>';}).join('');
+    document.getElementById('calc').innerHTML='<div style="font-weight:600;color:var(--ink);margin-bottom:6px">How this score is built</div>'+rows+
+      '<div class="row tot"><span>Departments averaged → guest score</span><b>'+overall.toFixed(0)+'</b></div>'+
+      '<div style="margin-top:8px;font-size:11px">Excellent/Exceeded 100 · Good/Met 75 · Average 40 · Poor/Failed 0. Massage skipped, so it isn’t counted.</div>';
+
+    // action notes
+    document.getElementById('notes').innerHTML=NOTES.map(function(nn,i){
+      return '<div class="note '+(nn.tag==='offer'?'offer':'')+'"><div class="nh"><span class="ntag '+nn.tag+'">'+(nn.tag==='act'?'Fix':'Delight')+'</span><span class="dept">'+esc(nn.dept)+'</span><span class="src">'+esc(nn.src)+'</span></div><div class="nt">'+esc(nn.text)+'</div><p class="why">'+esc(nn.why)+'</p><div class="act-row"><button class="abtn on" onclick="P.tog(this)">Carry to next stay</button><button class="abtn" onclick="P.tog(this)">Mark addressed</button></div></div>';
+    }).join('');
+
+    // history
+    var CMT=ANS.filter(function(a){return a.comment;}).map(function(a){
+      var isAct=/wait|slow|request|can we|issue|problem/i.test(a.comment) && a.pts<100 || /30 min|wait/i.test(a.comment);
+      return {w:a.comment, q:a.title, t: /wait|30 min/i.test(a.comment)?'act':(/request|can we/i.test(a.comment)?'act':'note')};
+    });
+    CMT.unshift({w:OVERALL,q:'Overall',t:'praise'});
+    var hist='<div class="yr"><div class="yh"><b>2027 season</b><span class="ys">Aug 22–26 · Bluff House</span><span class="yb" style="color:'+b[1]+'">'+overall.toFixed(0)+' · '+b[0]+'</span></div>'+
+      CMT.map(function(c){return '<div class="cmt"><div class="cw"><span class="ct '+c.t+'">'+(c.t==='praise'?'Praise':c.t==='act'?'Action':'Note')+'</span>'+esc(c.w)+'</div><div class="cm">'+esc(c.q)+'</div></div>';}).join('')+'</div>'+
+      '<div class="yr" style="opacity:.7"><div class="yh"><b>2026 season</b><span class="ys">illustrative — history accrues each year</span><span class="yb" style="color:var(--faint)">— </span></div><div class="cmt"><div class="cw"><span class="ct note">Note</span>Prior years’ surveys will appear here, so the team sees the whole relationship at a glance.</div></div></div>';
+    document.getElementById('history').innerHTML=hist;
+
+    document.getElementById('foot').innerHTML='Guest score links to the person record (staff-only). Comments become carry-forward notes so the lodge can anticipate a returning guest’s known issues and preferences — service memory across seasons. Source: Talon Guest Satisfaction Survey response #40, 2027.';
+  }
+  window.P={tog:function(el){el.parentNode.querySelectorAll('.abtn').forEach(function(b){b.classList.remove('on');});el.classList.add('on');}};
+  window.TT=function(m){var r=document.documentElement;if(m)r.setAttribute('data-theme',m);else r.removeAttribute('data-theme');render();};
+  render();
+})();
+</script>
