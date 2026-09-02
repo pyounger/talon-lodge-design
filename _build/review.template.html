@@ -1,0 +1,232 @@
+<title>Talon Platform — Project Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#eef3f1; --surface:#ffffff; --raise:#f5f9f7;
+  --ink:#12292a; --muted:#4f645f; --faint:#7a8b86;
+  --line:#d6e2dd; --line-2:#c1d1cb;
+  --accent:#0e7c6f; --accent-deep:#0a544c; --accent-soft:#dcece6;
+  --salmon:#bd5836; --salmon-deep:#9a4529; --salmon-soft:#f2e2db;
+  --gold:#a9791f; --gold-soft:#f3e8d0;
+  --shadow:0 1px 2px rgba(18,42,43,.05),0 12px 30px rgba(18,42,43,.09);
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Cascadia Code",Consolas,monospace;
+}
+:root:not([data-theme="light"]){ @media (prefers-color-scheme:dark){
+  --paper:#081210; --surface:#0e1c1a; --raise:#122320; --ink:#e9f1ed; --muted:#9bada9; --faint:#6f817c;
+  --line:#20332d; --line-2:#2e453e; --accent:#38b8a6; --accent-deep:#5fd0bf; --accent-soft:#0f2a26;
+  --salmon:#e18a62; --salmon-deep:#eda588; --salmon-soft:#31231b; --gold:#d9ad55; --gold-soft:#2a2413;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --paper:#081210; --surface:#0e1c1a; --raise:#122320; --ink:#e9f1ed; --muted:#9bada9; --faint:#6f817c;
+  --line:#20332d; --line-2:#2e453e; --accent:#38b8a6; --accent-deep:#5fd0bf; --accent-soft:#0f2a26;
+  --salmon:#e18a62; --salmon-deep:#eda588; --salmon-soft:#31231b; --gold:#d9ad55; --gold-soft:#2a2413;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 34px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+.doc{max-width:860px;margin:0 auto;padding:0 clamp(14px,3vw,26px)}
+h1,h2,h3{margin:0;text-wrap:balance}
+.tools{position:fixed;top:14px;right:14px;display:flex;gap:8px;z-index:9}
+.btn{font-weight:700;font-size:12.5px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);border-radius:9px;padding:9px 14px;cursor:pointer;box-shadow:var(--shadow)}
+.btn:hover{background:var(--raise)}
+
+/* cover */
+.cover{min-height:96vh;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;position:relative;padding:40px 0}
+.cover .eagle{height:120px;width:auto;margin-bottom:26px;filter:drop-shadow(0 6px 16px rgba(18,42,43,.18))}
+.cover .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-deep)}
+.cover h1{font-family:var(--serif);font-weight:900;font-size:clamp(38px,7vw,68px);line-height:1;letter-spacing:-.02em;margin:18px 0 0;max-width:14ch}
+.cover .sub{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(18px,3vw,26px);color:var(--muted);margin-top:16px}
+.cover .meta{margin-top:40px;font-family:var(--mono);font-size:12px;letter-spacing:.03em;color:var(--faint);display:flex;flex-wrap:wrap;gap:6px 22px}
+.cover .rule{position:absolute;left:0;bottom:40px;width:120px;height:4px;background:var(--accent);border-radius:3px}
+
+/* sections */
+.sec{padding:30px 0 8px;border-top:1px solid var(--line)}
+.sec.brk{break-before:page}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-deep);display:flex;align-items:center;gap:10px}
+.eyebrow::before{content:"";width:22px;height:2px;background:var(--accent);border-radius:2px}
+.sec h2{font-family:var(--serif);font-weight:600;font-size:clamp(24px,4vw,36px);line-height:1.05;letter-spacing:-.01em;margin:12px 0 0}
+.lead{font-size:17px;color:var(--muted);max-width:66ch;margin:14px 0 0}
+.lead b{color:var(--ink);font-weight:600}
+.prose{max-width:66ch}
+.prose p{font-size:15px;color:var(--muted);margin:13px 0}
+.prose p b{color:var(--ink);font-weight:600}
+.k{font-family:var(--mono);font-size:.86em;background:var(--raise);border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--accent-deep);white-space:nowrap}
+
+/* key facts */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:20px}
+.fact{background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:13px 16px}
+.fact .v{font-family:var(--serif);font-weight:600;font-size:26px;line-height:1;font-variant-numeric:tabular-nums}
+.fact .l{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:6px}
+.fact.a{border-left:3px solid var(--accent)} .fact.g{border-left:3px solid var(--gold)} .fact.s{border-left:3px solid var(--salmon)}
+
+/* figures */
+figure{margin:22px 0 6px}
+.shot{border-radius:12px;overflow:hidden;border:1px solid var(--line-2);box-shadow:var(--shadow);background:var(--surface)}
+.shot img{width:100%;height:auto;display:block}
+figcaption{font-size:13px;color:var(--faint);margin:11px 2px 0;max-width:72ch}
+figcaption b{color:var(--muted);font-weight:600}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:680px){.two{grid-template-columns:1fr}}
+
+/* callouts + lists */
+.callout{margin-top:20px;border:1px solid var(--line-2);border-left:3px solid var(--accent);border-radius:10px;background:var(--surface);padding:15px 18px}
+.callout.warn{border-left-color:var(--salmon)} .callout.gold{border-left-color:var(--gold)}
+.callout h4{font-family:var(--mono);font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent-deep);margin:0 0 9px}
+.callout.warn h4{color:var(--salmon-deep)} .callout.gold h4{color:var(--gold)}
+.callout p{font-size:14px;color:var(--muted);margin:8px 0 0} .callout p:first-of-type{margin-top:0} .callout b{color:var(--ink);font-weight:600}
+.rules{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:11px;counter-reset:r}
+.rules li{position:relative;padding-left:38px;font-size:15px;color:var(--muted)}
+.rules li::before{counter-increment:r;content:counter(r);position:absolute;left:0;top:-1px;width:24px;height:24px;border-radius:7px;background:var(--accent-soft);color:var(--accent-deep);font:700 12px var(--mono);display:grid;place-items:center}
+.rules li b{color:var(--ink);font-weight:600}
+
+/* repos + stack */
+.repos{display:grid;grid-template-columns:1fr;gap:12px;margin-top:20px}
+.repo{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+.repo .badge{font-family:var(--mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:20px}
+.repo.build .badge{background:var(--accent-soft);color:var(--accent-deep)} .repo.docs .badge{background:var(--gold-soft);color:var(--gold)}
+.repo .rn{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--ink)}
+.repo .rd{font-size:13px;color:var(--muted);flex:1;min-width:180px}
+.stackgrid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:16px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+@media(max-width:560px){.stackgrid{grid-template-columns:1fr}}
+.stackgrid div{padding:12px 16px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);font-size:14px}
+.stackgrid div:nth-child(2n){border-right:0}
+.stackgrid .sk{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:4px}
+.stackgrid .sv b{color:var(--ink);font-weight:600} .stackgrid .sv{color:var(--muted)}
+
+.foot{border-top:1px solid var(--line);margin-top:30px;padding:22px 0 40px;font-family:var(--mono);font-size:11px;color:var(--faint);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
+@media print{
+  @page{size:letter;margin:16mm 15mm}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  html,body{background:#fff}
+  .tools{display:none !important}
+  .doc{max-width:none;padding:0}
+  .cover{min-height:auto;height:232mm;justify-content:center}
+  .sec.brk{break-before:page}
+  figure,.callout,.repo,.fact,.shot{break-inside:avoid}
+  .lead,.prose{max-width:none}
+}
+</style>
+
+<div class="tools no-print"><button class="btn" onclick="R.theme()">◐ Theme</button><button class="btn" onclick="window.print()">⎙ Save PDF</button></div>
+
+<div class="doc">
+
+  <header class="cover">
+    <img class="eagle" src="__EAGLE__" alt="Talon Lodge">
+    <div class="eyebrow">Talon Lodge &amp; Spa · Sitka, Alaska</div>
+    <h1>Guest Platform — Project Review</h1>
+    <div class="sub">Build status &amp; walkthrough for the team</div>
+    <div class="meta"><span>Prepared August 28, 2026</span><span>Repository · talon-lodge-design</span><span>Status · Interactive prototypes</span></div>
+    <div class="rule"></div>
+  </header>
+
+  <section class="sec brk">
+    <div class="eyebrow">Executive summary</div>
+    <h2>One platform for the whole guest lifecycle</h2>
+    <p class="lead">From the first inquiry to the post-stay survey, every screen reads and writes <b>a single golden record per guest</b>. We've prototyped the full journey — sell it, prepare the guest, run the stay, bill it at checkout — plus the check-in decisions that decide <b>who pays for what</b> and <b>how each guest's fish gets home</b>.</p>
+    <div class="facts">
+      <div class="fact g"><div class="v">9</div><div class="l">Reports &amp; tools</div></div>
+      <div class="fact a"><div class="v">30</div><div class="l">App modules</div></div>
+      <div class="fact"><div class="v">60</div><div class="l">Screens &amp; docs</div></div>
+      <div class="fact s"><div class="v">4</div><div class="l">Lodge tenants</div></div>
+    </div>
+    <div class="prose">
+      <p><b>What this review covers:</b> what's been built, how the guest lifecycle and data model work, the new check-in / payment / fish process, the report deliverables, the production stack, and the open decisions we need to make together.</p>
+      <p>Everything shown is a <b>working prototype</b> today, running on shared browser storage — the stand-in for the one production database. The build target is <b>Angular + Laravel on Aurora MySQL</b>, across four lodge brands.</p>
+    </div>
+  </section>
+
+  <section class="sec brk">
+    <div class="eyebrow">What we've built</div>
+    <h2>The complete build inventory</h2>
+    <p class="lead">The whole prototype set at a glance, so nothing gets rebuilt — reports &amp; deliverables, the app modules by area, and the design specs.</p>
+    <figure><div class="shot"><img src="__IMG_build-inventory__" alt="Build inventory schematic"></div>
+      <figcaption><b>Build inventory.</b> 9 reports/tools (each print-ready), 30 app modules across Setup → Sales → Pre-arrival → Operations → Records, plus reference tooling and 12 design-spec docs. Island Ops is flagged as a separate app.</figcaption></figure>
+  </section>
+
+  <section class="sec brk">
+    <div class="eyebrow">How it works · 1</div>
+    <h2>The system reads left-to-right as one guest's journey</h2>
+    <p class="lead">Six phases — set up the inventory, sell it, prepare the guest, run the stay, follow up, and merge the history. Each phase writes back to one People &amp; Trip record; nothing is a silo.</p>
+    <figure><div class="shot"><img src="__IMG_module-map__" alt="Capability map by phase"></div>
+      <figcaption><b>Capability map.</b> Every module arranged by the stay phase it serves, standing on shared platform services (billing, comms, availability, storage, auth, multi-site tenancy).</figcaption></figure>
+  </section>
+
+  <section class="sec brk">
+    <div class="eyebrow">How it works · 2</div>
+    <h2>Everything hangs off one person</h2>
+    <p class="lead">A guest is matched to a single <span class="k">person</span> master record, then accumulates groups, trips, per-trip profiles, and day-by-day asset assignments over years of visits. History only accumulates — it's never overwritten.</p>
+    <figure><div class="shot"><img src="__IMG_db-erd__" alt="Data model — the schema spine"></div>
+      <figcaption><b>The data model.</b> Intake → matching → <span class="mono">person</span> → group / trip / trip-profiles / assignments / assets. Rooms, boats, guides, spa and activities are all <b>assets</b>; anything scheduled is an <b>assignment</b> (person + asset + date).</figcaption></figure>
+  </section>
+
+  <section class="sec brk">
+    <div class="eyebrow">Check-in, payment &amp; fish</div>
+    <h2>The lead decides; each guest confirms</h2>
+    <p class="lead">At check-in — in the portal, or at the desk if it wasn't done before arrival — the group lead sets <b>who pays</b> for each guest's activities, spa &amp; massage, alcohol and fish processing, and <b>how the fish is handled</b>. When a guest is made responsible, their own portal gets the tasks to confirm.</p>
+    <figure><div class="shot"><img src="__IMG_checkin-process-map__" alt="Check-in and billing process map"></div>
+      <figcaption><b>Process &amp; tools map.</b> Lead decisions → guest confirmations → checkout folios &amp; fish processing, with each step's tool and status (built / extend).</figcaption></figure>
+    <div class="callout warn"><h4>⚠ FedEx fish — required risk disclaimer</h4><p>If a guest chooses to ship their catch by FedEx, they must read and accept a disclaimer before confirming: shipments can be delayed and fish can thaw, spoil or be lost — <b>Talon Lodge and the fish-processing company do not absorb this risk.</b> Acceptance (who &amp; when) is recorded on the guest's record.</p></div>
+  </section>
+
+  <section class="sec brk">
+    <div class="eyebrow">The reports · 1</div>
+    <h2>Billing &amp; check-in</h2>
+    <figure><div class="shot"><img src="__IMG_billing-report__" alt="Billing report"></div>
+      <figcaption><b>Billing report — checkout folio.</b> By package → group → guest: activities, spa and alcohol with prices, each charge routed to the responsible payer, and a folio per payer with the total to bill. <em>Rates are indicative pending the real catalog.</em></figcaption></figure>
+    <figure><div class="shot"><img src="__IMG_payment-responsibility__" alt="Payment responsibility screen"></div>
+      <figcaption><b>Payment Responsibility (check-in).</b> The lead assigns, per guest, who pays each category — Self, the Group lead, or another guest. Feeds the folios above.</figcaption></figure>
+    <figure><div class="shot"><img src="__IMG_guest-confirmations__" alt="Guest confirmations screen"></div>
+      <figcaption><b>Guest Confirmations (portal).</b> The assigned guest confirms their charges and their fish handling — take-home or FedEx with the required disclaimer shown here.</figcaption></figure>
+  </section>
+
+  <section class="sec brk">
+    <div class="eyebrow">The reports · 2</div>
+    <h2>Rooming &amp; transfer day</h2>
+    <figure><div class="shot"><img src="__IMG_room-assignment-report__" alt="Room assignment report"></div>
+      <figcaption><b>Room Assignment report.</b> Guests by room with jacket/boot sizes, group colour cues, bed config, and a gear-needed tally. Counts generate from the guest records.</figcaption></figure>
+    <figure><div class="shot"><img src="__IMG_arrivals-departures-report__" alt="Arrivals and departures overview"></div>
+      <figcaption><b>Arrivals &amp; Departures overview.</b> Who's coming and who's leaving, by flight, with returning-guest badges and a movement-by-group summary. A phone-first <b>greeter app</b> pairs with it for bag-counting on transfer day.</figcaption></figure>
+  </section>
+
+  <section class="sec brk">
+    <div class="eyebrow">Stack &amp; repositories</div>
+    <h2>Where the production system gets built</h2>
+    <p class="lead">The prototypes are the behavioral source of truth. The production build is a conventional three-tier app, split for team access.</p>
+    <div class="repos">
+      <div class="repo build"><span class="badge">Build</span><span class="rn">stellainternational/talon-app2026-ui</span><span class="rd">Angular 20 + Material (Daxa theme) — staff console &amp; guest portal.</span></div>
+      <div class="repo build"><span class="badge">Build</span><span class="rn">stellainternational/talon-app2026-api</span><span class="rd">Laravel on Aurora MySQL — models, availability engine, data-import migration.</span></div>
+      <div class="repo docs"><span class="badge">Master docs</span><span class="rn">pyounger/talon-lodge-design</span><span class="rd">These prototypes, reports, schema docs and matching/merge rules — the blueprint.</span></div>
+    </div>
+    <div class="stackgrid">
+      <div><span class="sk">Database</span><span class="sv"><b>Aurora MySQL 8</b> · soft-delete everywhere · no hard deletes</span></div>
+      <div><span class="sk">Back end</span><span class="sv"><b>Laravel (PHP 8.2+)</b> · the data-import migration lives here</span></div>
+      <div><span class="sk">Front end</span><span class="sv"><b>Angular 20 + Material</b> · Daxa theme · rebrand via Sass</span></div>
+      <div><span class="sk">Services</span><span class="sv"><b>S3</b> storage · <b>SES</b> magic-link · <b>Stripe</b> billing · multi-site</span></div>
+    </div>
+  </section>
+
+  <section class="sec brk">
+    <div class="eyebrow">For the team to decide</div>
+    <h2>Open decisions &amp; next steps</h2>
+    <ol class="rules">
+      <li><b>Finalize rates.</b> Real spa-treatment prices (Denali Deep, Aurora Refresher, Sitka Swedish + base 50-min), activity rates, alcohol, and the fish-processing fee — so folio totals are live, not indicative.</li>
+      <li><b>Billing granularity.</b> Does checkout bill <b>per guest</b> or <b>per group</b> (lead settles)? And do we add a <b>tax/fee line</b> (Sitka) to the total?</li>
+      <li><b>Embed the tools in the portal</b> and expose the lead tools at the front desk — so "in the portal" and "at check-in" are the same tool in two places.</li>
+      <li><b>One shared record.</b> Wire the lead's choices to drive each guest's confirmations and the billing folios from one dataset (proven in the shared demo; the production DB closes it).</li>
+      <li><b>Extend Fish Processing</b> to assign per-share cost responsibility and to consume each guest's take / FedEx choice for the processor and shipping list.</li>
+      <li><b>Begin the Angular / Laravel port</b> — stand up the schema, the assignment scheduler, and the guest-portal magic-link; the prototypes are the behavioral spec.</li>
+    </ol>
+    <div class="callout gold"><h4>Where to review the live versions</h4><p>Every report and tool in this document is also a live, interactive page (private links), and each carries a print PDF in the <span class="k">talon-lodge-design</span> repo. The <b>shared demo</b> shows the payment → confirmation → billing flow updating live from one dataset.</p></div>
+  </section>
+
+  <div class="foot"><span>Talon Lodge &amp; Spa · Guest Platform · Project Review</span><span>talon-lodge-design · Aug 28, 2026</span></div>
+</div>
+<script>window.R={theme:function(){var c=document.documentElement.getAttribute('data-theme');var n=c==='dark'?'light':(c==='light'?'':'dark');if(n)document.documentElement.setAttribute('data-theme',n);else document.documentElement.removeAttribute('data-theme');}};</script>

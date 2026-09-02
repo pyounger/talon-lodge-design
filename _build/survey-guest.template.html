@@ -1,0 +1,147 @@
+<title>Talon Guest Survey</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --accent:#0e7c6f; --accent-deep:#0a544c; --accent-soft:#e0efe9;
+  --salmon:#c25e39; --salmon-soft:#f4e5de; --gold:#b9892b; --gold-soft:#f6ecd6;
+  --paper:#eef3f1; --surface:#ffffff; --surface-2:#e6efeb;
+  --ink:#12292a; --muted:#5a6f6b; --faint:#84958f; --on:#fff;
+  --line:#d6e2dd; --line-2:#c1d1cb; --sky-1:#0a544c; --sky-2:#0e7c6f; --sky-3:#2a9d8f;
+  --sans:"Outfit",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:ui-serif,Georgia,"Times New Roman",serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --shadow:0 1px 2px rgba(18,42,43,.05),0 12px 30px rgba(18,42,43,.06);
+}
+:root:not([data-theme="light"]){ @media (prefers-color-scheme:dark){
+  --accent:#38b8a6; --accent-deep:#5fd0bf; --accent-soft:#0f2a26; --salmon:#e18a62; --salmon-soft:#33231b; --gold:#e0b45e; --gold-soft:#2c2413;
+  --paper:#081210; --surface:#0e1c1a; --surface-2:#152522; --ink:#e9f1ed; --muted:#9bada9; --faint:#6f817c; --line:#20332d; --line-2:#2e453e; --sky-1:#04211d; --sky-2:#0a3a34; --sky-3:#12564d;
+}}
+:root[data-theme="dark"]{
+  --accent:#38b8a6; --accent-deep:#5fd0bf; --accent-soft:#0f2a26; --salmon:#e18a62; --salmon-soft:#33231b; --gold:#e0b45e; --gold-soft:#2c2413;
+  --paper:#081210; --surface:#0e1c1a; --surface-2:#152522; --ink:#e9f1ed; --muted:#9bada9; --faint:#6f817c; --line:#20332d; --line-2:#2e453e; --sky-1:#04211d; --sky-2:#0a3a34; --sky-3:#12564d;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.topbar{display:flex;align-items:center;gap:11px;padding:15px 22px;background:var(--surface);border-bottom:1px solid var(--line)}
+.topbar img{height:28px;width:auto}
+.tb-name{display:flex;flex-direction:column;line-height:1.1}
+.tb-name b{font-weight:600;font-size:15px}
+.tb-name span{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
+.tools{margin-left:auto;display:flex;gap:6px}
+.tbtn{font-family:var(--mono);font-size:11px;font-weight:600;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);border-radius:8px;padding:7px 10px;cursor:pointer}
+
+.hero{background:linear-gradient(135deg,var(--sky-1),var(--sky-2) 55%,var(--sky-3));color:var(--on);text-shadow:0 1px 3px rgba(4,16,14,.6)}
+.hero .in{max-width:660px;margin:0 auto;padding:34px 22px}
+.hero .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 8px}
+.hero h1{font-family:var(--serif);font-weight:600;font-size:clamp(24px,5vw,34px);line-height:1.12;margin:0 0 8px}
+.hero p{margin:0;opacity:.94;font-size:14px}
+
+.wrap{max-width:660px;margin:0 auto;padding:24px 22px 40px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
+.q{font-weight:600;font-size:16px;margin:0 0 4px}
+.qsub{font-size:13px;color:var(--muted);margin:0 0 14px}
+.opts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.opt{font-weight:600;font-size:13px;text-align:center;padding:12px 6px;border:1px solid var(--line-2);border-radius:10px;background:var(--surface);color:var(--ink);cursor:pointer;transition:.12s}
+.opt small{display:block;font-family:var(--mono);font-size:9px;font-weight:500;color:var(--faint);text-transform:uppercase;letter-spacing:.03em;margin-top:3px}
+.opt:hover{border-color:var(--accent)}
+.opt.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep)}
+.opt.on small{color:var(--accent-deep)}
+.opt.na{grid-column:auto}
+.yn{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.yn .opt{padding:16px}
+textarea{width:100%;min-height:96px;resize:vertical;font-family:var(--sans);font-size:15px;color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:10px;padding:12px}
+textarea:focus{outline:2px solid var(--accent-soft);outline-offset:1px;border-color:var(--accent)}
+.sec-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-deep);margin:26px 4px 10px}
+.sec-label:first-of-type{margin-top:6px}
+
+.submitbar{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:14px 22px;display:flex;align-items:center;gap:14px}
+.submitbar .prog{flex:1;font-family:var(--mono);font-size:11px;color:var(--faint)}
+.btn{font-weight:600;font-size:15px;background:var(--accent);color:var(--on);border:1px solid var(--accent);border-radius:10px;padding:12px 22px;cursor:pointer}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+
+.done{max-width:520px;margin:0 auto;padding:70px 22px;text-align:center;display:none}
+.done.show{display:block}
+.done .mark{width:64px;height:64px;margin:0 auto 20px;border-radius:50%;background:var(--accent-soft);display:flex;align-items:center;justify-content:center}
+.done .mark svg{width:32px;height:32px;stroke:var(--accent);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.done h2{font-family:var(--serif);font-weight:600;font-size:28px;margin:0 0 10px}
+.done p{color:var(--muted);margin:0}
+@media (max-width:520px){.opts{grid-template-columns:1fr 1fr}}
+</style>
+
+<div id="form">
+  <header class="topbar">
+    <img alt="Talon Lodge" src="__EAGLE__">
+    <span class="tb-name"><b>Talon Lodge &amp; Spa</b><span>Guest Survey</span></span>
+    <span class="tools"><button class="tbtn" onclick="TT('light')">Light</button><button class="tbtn" onclick="TT('dark')">Dark</button><button class="tbtn" onclick="TT('')">System</button></span>
+  </header>
+
+  <section class="hero"><div class="in">
+    <p class="eyebrow">Tommy Florio · May 24–28, 2027</p>
+    <h1>How was your stay?</h1>
+    <p>Thank you for spending your week with us. A few questions — about three minutes — and every answer goes straight to the team that can act on it.</p>
+  </div></section>
+
+  <div class="wrap">
+    <div id="questions"></div>
+    <div class="card">
+      <p class="q">Anything else we should know?</p>
+      <p class="qsub">Praise, a problem, or an idea — it reaches management and the right department.</p>
+      <textarea id="comments" placeholder="Your thoughts on your stay and how we can improve…"></textarea>
+    </div>
+  </div>
+
+  <div class="submitbar">
+    <span class="prog" id="prog"></span>
+    <button class="btn" id="submit" onclick="P.submit()">Submit</button>
+  </div>
+</div>
+
+<div class="done" id="done">
+  <div class="mark"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div>
+  <h2>Thank you, Tommy.</h2>
+  <p>Your feedback is on its way to our team. We hope to see you on the water again soon.</p>
+</div>
+
+<script>
+(function(){
+  var RATE=[['ex','Excellent'],['good','Good'],['avg','Average'],['poor','Poor']];
+  var SEC=[
+    {label:'Overall'},
+    {id:'q2', q:'Overall service during your stay', sub:'The whole experience, start to finish.', scale:RATE},
+    {label:'Your stay'},
+    {id:'q3', q:'Lodge & accommodations', sub:'Rooms, the main lodge, beach bar and massage pavilion.', scale:RATE},
+    {label:'Dining'},
+    {id:'q4', q:'Breakfast', scale:RATE},
+    {id:'q5', q:'Lunch', sub:'On the boat or at the lodge.', scale:RATE},
+    {id:'q6', q:'Dinner', scale:RATE},
+    {label:'On the water & spa'},
+    {id:'q7', q:'Fishing guides & service', sub:'Your time out fishing.', scale:RATE},
+    {id:'q8', q:'Massage', sub:'If you had one.', scale:RATE, na:true},
+    {label:'Coming back'},
+    {id:'q9', q:'Would you recommend Talon Lodge to friends and family?', scale:[['yes','Yes'],['no','No']], yn:true},
+    {id:'q10', q:'Are you planning a future stay?', sub:'If you haven’t already booked.', scale:[['yes','Yes'],['no','No']], yn:true}
+  ];
+  var answers={};
+  var required=SEC.filter(function(s){return s.id && !s.na;}).map(function(s){return s.id;});
+  function esc(s){return (s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+
+  function render(){
+    document.getElementById('questions').innerHTML=SEC.map(function(s){
+      if(s.label)return '<div class="sec-label">'+esc(s.label)+'</div>';
+      var opts=s.scale.map(function(o){
+        return '<button class="opt'+(answers[s.id]===o[0]?' on':'')+'" onclick="P.pick(\''+s.id+'\',\''+o[0]+'\')">'+esc(o[1])+'</button>';
+      }).join('');
+      if(s.na)opts+='<button class="opt na'+(answers[s.id]==='na'?' on':'')+'" onclick="P.pick(\''+s.id+'\',\'na\')">Didn’t use</button>';
+      return '<div class="card"><p class="q">'+esc(s.q)+'</p>'+(s.sub?'<p class="qsub">'+esc(s.sub)+'</p>':'')+'<div class="'+(s.yn?'yn':'opts')+'">'+opts+'</div></div>';
+    }).join('');
+    var done=required.filter(function(id){return answers[id];}).length;
+    document.getElementById('prog').textContent=done+' of '+required.length+' answered';
+    document.getElementById('submit').disabled=done<required.length;
+  }
+  window.P={
+    pick:function(id,val){answers[id]=val;render();},
+    submit:function(){document.getElementById('form').style.display='none';document.getElementById('done').classList.add('show');window.scrollTo(0,0);}
+  };
+  window.TT=function(m){var r=document.documentElement;if(m)r.setAttribute('data-theme',m);else r.removeAttribute('data-theme');};
+  render();
+})();
+</script>

@@ -1,0 +1,10 @@
+const fs=require('fs');
+const S='C:/Users/Phil/AppData/Local/Temp/claude/C--Users-Phil-OneDrive-Documents-vessel-public/4717bc68-92d5-4010-bbc6-9e9ecbee5a31/scratchpad';
+const png=fs.readFileSync(S+'/favicon-48.png');
+const dir=Buffer.alloc(6); dir.writeUInt16LE(0,0); dir.writeUInt16LE(1,2); dir.writeUInt16LE(1,4);
+const ent=Buffer.alloc(16);
+ent.writeUInt8(48,0); ent.writeUInt8(48,1); ent.writeUInt8(0,2); ent.writeUInt8(0,3);
+ent.writeUInt16LE(1,4); ent.writeUInt16LE(32,6); ent.writeUInt32LE(png.length,8); ent.writeUInt32LE(22,12);
+const ico=Buffer.concat([dir,ent,png]);
+fs.writeFileSync('C:/Users/Phil/OneDrive/Documents/Development/talon-app2026-ui/public/favicon.ico',ico);
+console.log('favicon.ico written: '+ico.length+' bytes (48x48 PNG-in-ICO)');

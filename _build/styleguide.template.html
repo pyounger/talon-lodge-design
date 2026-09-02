@@ -1,0 +1,264 @@
+<title>Talon Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --talon-accent:#0e7c6f; --talon-accent-deep:#0a544c; --talon-accent-soft:#dcece6;
+  --talon-salmon:#bd5836; --talon-salmon-deep:#9a4529; --talon-salmon-soft:#f6e2da;
+  --talon-gold:#a9791f; --talon-gold-soft:#f3e8d0;
+  --talon-blue:#3b6ea5; --talon-blue-soft:#e4eefa;
+  --talon-paper:#eef3f1; --talon-surface:#ffffff; --talon-surface-2:#e6efeb; --talon-raise:#f5f9f7;
+  --talon-ink:#12292a; --talon-muted:#4f645f; --talon-faint:#7a8b86;
+  --talon-line:#d6e2dd; --talon-line-2:#c1d1cb;
+  --talon-font-display:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --talon-font-body:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --talon-font-mono:"IBM Plex Mono",ui-monospace,"Cascadia Code",Consolas,monospace;
+  --talon-text-xs:12px; --talon-text-sm:13px; --talon-text-base:14px; --talon-text-md:16px; --talon-text-lg:18px;
+  --talon-text-xl:22px; --talon-text-2xl:26px; --talon-text-3xl:32px; --talon-text-display:44px;
+  --talon-space-1:4px; --talon-space-2:8px; --talon-space-3:12px; --talon-space-4:16px; --talon-space-5:24px; --talon-space-6:32px; --talon-space-7:48px; --talon-space-8:64px;
+  --talon-radius-sm:6px; --talon-radius-md:9px; --talon-radius-lg:12px; --talon-radius-xl:18px; --talon-radius-pill:999px;
+  --talon-shadow-sm:0 1px 2px rgba(18,42,43,.05);
+  --talon-shadow-md:0 1px 2px rgba(18,42,43,.05),0 10px 26px rgba(18,42,43,.07);
+  --talon-shadow-lg:0 8px 22px rgba(18,42,43,.10),0 24px 60px rgba(18,42,43,.12);
+}
+:root:not([data-theme="light"]){ @media (prefers-color-scheme:dark){
+  --talon-accent:#38b8a6; --talon-accent-deep:#5fd0bf; --talon-accent-soft:#0f2a26;
+  --talon-salmon:#e18a62; --talon-salmon-deep:#eda588; --talon-salmon-soft:#33211a;
+  --talon-gold:#d9ad55; --talon-gold-soft:#2a2413; --talon-blue:#7ea6d6; --talon-blue-soft:#14243a;
+  --talon-paper:#081210; --talon-surface:#0e1c1a; --talon-surface-2:#152522; --talon-raise:#122320;
+  --talon-ink:#e9f1ed; --talon-muted:#9bada9; --talon-faint:#6f817c; --talon-line:#20332d; --talon-line-2:#2e453e;
+  --talon-shadow-sm:0 1px 2px rgba(0,0,0,.3);
+  --talon-shadow-md:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.45);
+  --talon-shadow-lg:0 12px 30px rgba(0,0,0,.5),0 28px 70px rgba(0,0,0,.55);
+}}
+:root[data-theme="dark"]{
+  --talon-accent:#38b8a6; --talon-accent-deep:#5fd0bf; --talon-accent-soft:#0f2a26;
+  --talon-salmon:#e18a62; --talon-salmon-deep:#eda588; --talon-salmon-soft:#33211a;
+  --talon-gold:#d9ad55; --talon-gold-soft:#2a2413; --talon-blue:#7ea6d6; --talon-blue-soft:#14243a;
+  --talon-paper:#081210; --talon-surface:#0e1c1a; --talon-surface-2:#152522; --talon-raise:#122320;
+  --talon-ink:#e9f1ed; --talon-muted:#9bada9; --talon-faint:#6f817c; --talon-line:#20332d; --talon-line-2:#2e453e;
+  --talon-shadow-sm:0 1px 2px rgba(0,0,0,.3);
+  --talon-shadow-md:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.45);
+  --talon-shadow-lg:0 12px 30px rgba(0,0,0,.5),0 28px 70px rgba(0,0,0,.55);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--talon-paper);color:var(--talon-ink);font-family:var(--talon-font-body);font-size:var(--talon-text-base);line-height:var(--talon-leading-body,1.5);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:var(--talon-space-6) var(--talon-space-5) var(--talon-space-8)}
+.mono{font-family:var(--talon-font-mono)}
+.eyebrow{font-family:var(--talon-font-mono);font-size:var(--talon-text-xs);letter-spacing:.09em;text-transform:uppercase;color:var(--talon-faint)}
+
+/* masthead */
+.mast{display:flex;align-items:flex-start;gap:var(--talon-space-4);padding-bottom:var(--talon-space-5);border-bottom:1px solid var(--talon-line);margin-bottom:var(--talon-space-6);flex-wrap:wrap}
+.mast .brand{display:flex;align-items:center;gap:10px}
+.mast img{height:34px;width:auto}
+.mast h1{font-family:var(--talon-font-display);font-weight:900;font-size:var(--talon-text-display);line-height:1.02;letter-spacing:-.015em;margin:10px 0 6px}
+.mast p{max-width:60ch;color:var(--talon-muted);font-size:var(--talon-text-md);margin:0}
+.toggle{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tbtn{font-family:var(--talon-font-mono);font-size:var(--talon-text-xs);font-weight:600;letter-spacing:.03em;border:1px solid var(--talon-line-2);background:var(--talon-surface);color:var(--talon-ink);border-radius:var(--talon-radius-md);padding:8px 12px;cursor:pointer}
+.tbtn:hover{border-color:var(--talon-accent);color:var(--talon-accent-deep)}
+
+/* section */
+section{margin-top:var(--talon-space-7)}
+.sec-h{display:flex;align-items:baseline;gap:12px;margin-bottom:var(--talon-space-4);padding-bottom:10px;border-bottom:1px solid var(--talon-line)}
+.sec-h h2{font-family:var(--talon-font-display);font-weight:700;font-size:var(--talon-text-2xl);letter-spacing:-.01em;margin:0}
+.sec-h .n{font-family:var(--talon-font-mono);font-size:var(--talon-text-xs);color:var(--talon-faint)}
+.sec-h .note{margin-left:auto;font-size:var(--talon-text-sm);color:var(--talon-muted)}
+
+/* swatches */
+.sw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:var(--talon-space-3)}
+.sw{border:1px solid var(--talon-line);border-radius:var(--talon-radius-lg);overflow:hidden;background:var(--talon-surface);box-shadow:var(--talon-shadow-sm)}
+.sw .chip{height:74px}
+.sw .meta{padding:9px 11px}
+.sw .nm{font-weight:600;font-size:var(--talon-text-sm)}
+.sw .tok{font-family:var(--talon-font-mono);font-size:11px;color:var(--talon-muted);margin-top:2px;word-break:break-all}
+.sw .hex{font-family:var(--talon-font-mono);font-size:11px;color:var(--talon-faint);text-transform:uppercase}
+.grp-lbl{grid-column:1/-1;font-family:var(--talon-font-mono);font-size:var(--talon-text-xs);letter-spacing:.06em;text-transform:uppercase;color:var(--talon-accent-deep);margin:var(--talon-space-3) 0 2px}
+
+/* type scale */
+.type-row{display:flex;align-items:baseline;gap:var(--talon-space-4);padding:12px 0;border-bottom:1px solid var(--talon-line)}
+.type-row .tk{flex:0 0 168px;font-family:var(--talon-font-mono);font-size:11px;color:var(--talon-muted)}
+.type-row .sample{font-family:var(--talon-font-display);font-weight:700;color:var(--talon-ink);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fonts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--talon-space-4);margin-bottom:var(--talon-space-5)}
+.fontcard{border:1px solid var(--talon-line);border-radius:var(--talon-radius-lg);padding:var(--talon-space-4);background:var(--talon-surface)}
+.fontcard .big{font-size:34px;line-height:1.05;margin:2px 0 8px}
+.fontcard .lbl{font-family:var(--talon-font-mono);font-size:11px;color:var(--talon-faint);text-transform:uppercase;letter-spacing:.05em}
+.fontcard .use{font-size:var(--talon-text-sm);color:var(--talon-muted);margin-top:6px}
+
+/* spacing */
+.space-row{display:flex;align-items:center;gap:var(--talon-space-4);padding:7px 0}
+.space-row .tk{flex:0 0 148px;font-family:var(--talon-font-mono);font-size:11px;color:var(--talon-muted)}
+.space-bar{height:16px;background:var(--talon-accent);border-radius:3px}
+
+/* radius + shadow */
+.rr{display:flex;gap:var(--talon-space-4);flex-wrap:wrap}
+.rr .box{width:104px;text-align:center}
+.rr .b{height:78px;background:var(--talon-accent-soft);border:1px solid var(--talon-accent);margin-bottom:8px}
+.rr .tk{font-family:var(--talon-font-mono);font-size:11px;color:var(--talon-muted)}
+.sh{display:flex;gap:var(--talon-space-5);flex-wrap:wrap}
+.sh .box{width:150px;text-align:center}
+.sh .b{height:84px;background:var(--talon-surface);border-radius:var(--talon-radius-lg);margin-bottom:10px}
+.sh .tk{font-family:var(--talon-font-mono);font-size:11px;color:var(--talon-muted)}
+
+/* components */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--talon-space-5)}
+.panel{background:var(--talon-surface);border:1px solid var(--talon-line);border-radius:var(--talon-radius-lg);padding:var(--talon-space-5);box-shadow:var(--talon-shadow-md)}
+.panel h3{font-family:var(--talon-font-display);font-weight:700;font-size:var(--talon-text-lg);margin:0 0 var(--talon-space-3)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:var(--talon-space-3)}
+.btn{font-weight:600;font-size:var(--talon-text-sm);border-radius:var(--talon-radius-md);padding:9px 15px;cursor:pointer;border:1px solid var(--talon-line-2);background:var(--talon-surface);color:var(--talon-ink)}
+.btn.primary{background:var(--talon-accent);border-color:var(--talon-accent);color:#fff}
+.btn.ghost{background:transparent}
+.btn.danger{background:var(--talon-salmon);border-color:var(--talon-salmon);color:#fff}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--talon-font-mono);font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:var(--talon-radius-pill)}
+.pill .dot{width:8px;height:8px;border-radius:50%}
+.pill.confirmed{background:var(--talon-accent-soft);color:var(--talon-accent-deep)} .pill.confirmed .dot{background:var(--talon-accent)}
+.pill.reserved{background:var(--talon-blue-soft);color:var(--talon-blue)} .pill.reserved .dot{background:var(--talon-blue)}
+.pill.held{background:var(--talon-salmon-soft);color:var(--talon-salmon-deep)} .pill.held .dot{background:var(--talon-salmon)}
+.pill.prospect{background:var(--talon-gold-soft);color:var(--talon-gold)} .pill.prospect .dot{background:var(--talon-gold)}
+.field{margin-bottom:var(--talon-space-3)}
+.field label{display:block;font-family:var(--talon-font-mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--talon-faint);margin-bottom:5px}
+.field input{width:100%;border:1px solid var(--talon-line-2);background:var(--talon-surface);color:var(--talon-ink);border-radius:var(--talon-radius-md);padding:9px 11px;font-size:var(--talon-text-base);font-family:var(--talon-font-body)}
+.field input:focus{outline:0;border-color:var(--talon-accent);box-shadow:0 0 0 3px var(--talon-accent-soft)}
+.mini-tbl{width:100%;border-collapse:collapse;font-size:var(--talon-text-sm)}
+.mini-tbl th{font-family:var(--talon-font-mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--talon-faint);text-align:left;padding:6px 8px;border-bottom:1px solid var(--talon-line-2)}
+.mini-tbl td{padding:8px;border-bottom:1px solid var(--talon-line)}
+.foot{margin-top:var(--talon-space-8);padding-top:var(--talon-space-5);border-top:1px solid var(--talon-line);font-family:var(--talon-font-mono);font-size:var(--talon-text-xs);color:var(--talon-faint);line-height:1.7}
+.foot b{color:var(--talon-muted)}
+@media (max-width:640px){.type-row .tk{flex-basis:110px}.mast h1{font-size:34px}}
+</style>
+
+<div class="wrap">
+  <header class="mast">
+    <div>
+      <div class="brand"><img alt="Talon Lodge" src="__EAGLE__"><span class="eyebrow">Talon Lodge &amp; Spa · Design System</span></div>
+      <h1>The look &amp; feel</h1>
+      <p>The single source of truth for colour, type, spacing, and shape — drafted from the guest-portal and reservation prototypes. Every screen reads from these tokens, so the palette below is the one decision that everything else inherits.</p>
+    </div>
+    <div class="toggle">
+      <button class="tbtn" onclick="TT('light')">☀ Light</button>
+      <button class="tbtn" onclick="TT('dark')">☾ Dark</button>
+      <button class="tbtn" onclick="TT('')">◐ System</button>
+    </div>
+  </header>
+
+  <section>
+    <div class="sec-h"><span class="n">01</span><h2>Colour</h2><span class="note">Change a token → the whole app follows. Dark mode is a re-themed palette, not an inversion.</span></div>
+    <div class="sw-grid" id="sw-brand"></div>
+  </section>
+
+  <section>
+    <div class="sec-h"><span class="n">02</span><h2>Typography</h2><span class="note">Display resolves to the system sans (your header choice). Drop a brand face into brand/fonts/ to change it in one line.</span></div>
+    <div class="fonts" id="fonts"></div>
+    <div id="typescale"></div>
+  </section>
+
+  <section>
+    <div class="sec-h"><span class="n">03</span><h2>Spacing</h2><span class="note">4px base. Layout uses gap, not hand-set margins.</span></div>
+    <div id="spacing"></div>
+  </section>
+
+  <section>
+    <div class="sec-h"><span class="n">04</span><h2>Radius &amp; elevation</h2></div>
+    <div class="rr" id="radius" style="margin-bottom:var(--talon-space-6)"></div>
+    <div class="sh" id="shadow"></div>
+  </section>
+
+  <section>
+    <div class="sec-h"><span class="n">05</span><h2>Components</h2><span class="note">The tokens applied — nothing here uses a hard-coded colour or size.</span></div>
+    <div class="cards">
+      <div class="panel">
+        <h3>Buttons</h3>
+        <div class="row"><button class="btn primary">Primary</button><button class="btn">Secondary</button><button class="btn ghost">Ghost</button></div>
+        <div class="row"><button class="btn danger">Cancel reservation</button></div>
+      </div>
+      <div class="panel">
+        <h3>Status pills</h3>
+        <div class="row"><span class="pill confirmed"><span class="dot"></span>Confirmed</span><span class="pill reserved"><span class="dot"></span>Reserved</span></div>
+        <div class="row"><span class="pill held"><span class="dot"></span>Held</span><span class="pill prospect"><span class="dot"></span>Prospect</span></div>
+      </div>
+      <div class="panel">
+        <h3>Form field</h3>
+        <div class="field"><label>Primary traveler</label><input value="Tommy Florio"></div>
+        <div class="field"><label>Confirmation code</label><input value="TL27-01-607938"></div>
+      </div>
+      <div class="panel">
+        <h3>Table</h3>
+        <table class="mini-tbl"><thead><tr><th>Room</th><th>Guests</th><th>Status</th></tr></thead><tbody>
+          <tr><td>Spruce House</td><td>6</td><td><span class="pill confirmed"><span class="dot"></span>Confirmed</span></td></tr>
+          <tr><td>Bluff House</td><td>6</td><td><span class="pill reserved"><span class="dot"></span>Reserved</span></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot">
+    <b>Source</b> — talon-lodge-design prototypes · drafted for <b>talon-app2026-ui/src/_talon-tokens.scss</b> (Andy's naming convention). Reconcile against the repo copy once access lands.<br>
+    <b>Open decisions</b> — brand display typeface (empty brand/fonts/, currently system sans) · final teal · dark-mode surfaces · whether Daxa reads these tokens directly.<br>
+    <b>Rule</b> — colours &amp; sizes come from tokens, never hand-written in a component (npm run lint:style). Wording lives in public/i18n/en.json.
+  </div>
+</div>
+
+<script>
+(function(){
+  var BRAND=[
+    ['GROUP','Brand'],
+    ['Accent · teal','--talon-accent','#0e7c6f'],
+    ['Accent deep','--talon-accent-deep','#0a544c'],
+    ['Accent soft','--talon-accent-soft','#dcece6'],
+    ['Salmon','--talon-salmon','#bd5836'],
+    ['Salmon deep','--talon-salmon-deep','#9a4529'],
+    ['Salmon soft','--talon-salmon-soft','#f6e2da'],
+    ['Gold','--talon-gold','#a9791f'],
+    ['Gold soft','--talon-gold-soft','#f3e8d0'],
+    ['Blue · info','--talon-blue','#3b6ea5'],
+    ['Blue soft','--talon-blue-soft','#e4eefa'],
+    ['GROUP','Neutrals & surfaces'],
+    ['Paper','--talon-paper','#eef3f1'],
+    ['Surface','--talon-surface','#ffffff'],
+    ['Surface 2','--talon-surface-2','#e6efeb'],
+    ['Raise','--talon-raise','#f5f9f7'],
+    ['Ink · text','--talon-ink','#12292a'],
+    ['Muted','--talon-muted','#4f645f'],
+    ['Faint','--talon-faint','#7a8b86'],
+    ['Line','--talon-line','#d6e2dd'],
+    ['Line 2','--talon-line-2','#c1d1cb']
+  ];
+  var g=document.getElementById('sw-brand'),html='';
+  BRAND.forEach(function(r){
+    if(r[0]==='GROUP'){html+='<div class="grp-lbl">'+r[1]+'</div>';return;}
+    html+='<div class="sw"><div class="chip" style="background:var('+r[1]+')"></div><div class="meta"><div class="nm">'+r[0]+'</div><div class="tok">'+r[1]+'</div><div class="hex">'+r[2]+'</div></div></div>';
+  });
+  g.innerHTML=html;
+
+  var FONTS=[
+    ['Display','--talon-font-display','Aa','Guided sportfishing','Headings, hero, section titles'],
+    ['Body','--talon-font-body','Aa','Instrument Sans','Paragraphs, controls, tables'],
+    ['Mono','--talon-font-mono','Aa','TL27-01','Labels, codes, data']
+  ];
+  document.getElementById('fonts').innerHTML=FONTS.map(function(f){
+    return '<div class="fontcard"><div class="lbl">'+f[0]+' · '+f[1]+'</div><div class="big" style="font-family:var('+f[1]+')">'+f[3]+'</div><div class="use">'+f[4]+'</div></div>';
+  }).join('');
+
+  var SCALE=[['--talon-text-display','44px'],['--talon-text-3xl','32px'],['--talon-text-2xl','26px'],['--talon-text-xl','22px'],['--talon-text-lg','18px'],['--talon-text-md','16px'],['--talon-text-base','14px'],['--talon-text-sm','13px'],['--talon-text-xs','12px']];
+  document.getElementById('typescale').innerHTML=SCALE.map(function(s){
+    return '<div class="type-row"><span class="tk">'+s[0]+' · '+s[1]+'</span><span class="sample" style="font-size:var('+s[0]+')">Talon Lodge &amp; Spa</span></div>';
+  }).join('');
+
+  var SPACE=[['--talon-space-1','4px'],['--talon-space-2','8px'],['--talon-space-3','12px'],['--talon-space-4','16px'],['--talon-space-5','24px'],['--talon-space-6','32px'],['--talon-space-7','48px'],['--talon-space-8','64px']];
+  document.getElementById('spacing').innerHTML=SPACE.map(function(s){
+    return '<div class="space-row"><span class="tk">'+s[0]+' · '+s[1]+'</span><div class="space-bar" style="width:var('+s[0]+')"></div></div>';
+  }).join('');
+
+  var RAD=[['--talon-radius-sm','6px'],['--talon-radius-md','9px'],['--talon-radius-lg','12px'],['--talon-radius-xl','18px'],['--talon-radius-pill','pill']];
+  document.getElementById('radius').innerHTML=RAD.map(function(r){
+    return '<div class="box"><div class="b" style="border-radius:var('+r[0]+')"></div><div class="tk">'+r[0].replace('--talon-radius-','')+' · '+r[1]+'</div></div>';
+  }).join('');
+
+  var SH=[['--talon-shadow-sm','sm'],['--talon-shadow-md','md'],['--talon-shadow-lg','lg']];
+  document.getElementById('shadow').innerHTML=SH.map(function(s){
+    return '<div class="box"><div class="b" style="box-shadow:var('+s[0]+')"></div><div class="tk">'+s[0].replace('--talon-shadow-','shadow-')+'</div></div>';
+  }).join('');
+
+  window.TT=function(m){var r=document.documentElement;if(m)r.setAttribute('data-theme',m);else r.removeAttribute('data-theme');};
+})();
+</script>
