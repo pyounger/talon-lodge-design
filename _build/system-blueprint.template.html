@@ -190,7 +190,7 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
       <span class="tag draft">Draft for review</span>
       <span class="tag">For the Talon team &amp; Stella dev</span>
       <span class="tag">v1 · September 2026</span>
-      <span class="tag">15 screens · working prototypes</span>
+      <span class="tag">19 stages · 30 screens</span>
     </div>
   </header>
 
@@ -220,41 +220,57 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
   <nav class="toc">
     <h2>Contents</h2>
     <div class="toc-phase">
-      <div class="toc-ph">A · Foundation</div>
+      <div class="toc-ph">A · Foundation &amp; setup</div>
       <ol>
         <li><span class="n">01</span><a href="#s1">The person record — the spine</a></li>
-        <li><span class="n">02</span><a href="#s2">The offerings — every asset</a></li>
+        <li><span class="n">02</span><a href="#s2">Resource &amp; catalog setup</a></li>
       </ol>
     </div>
     <div class="toc-phase">
-      <div class="toc-ph">B · Booking &amp; pre-arrival</div>
+      <div class="toc-ph">B · Packages &amp; availability</div>
       <ol>
-        <li><span class="n">03</span><a href="#s3">Booking &amp; the guest list</a></li>
-        <li><span class="n">04</span><a href="#s4">The guest portal &amp; profile</a></li>
+        <li><span class="n">03</span><a href="#s-pkg">Package set-up &amp; pricing</a></li>
+        <li><span class="n">04</span><a href="#s-cal">The season availability calendar</a></li>
       </ol>
     </div>
     <div class="toc-phase">
-      <div class="toc-ph">C · Assignment</div>
+      <div class="toc-ph">C · The reservation</div>
       <ol>
-        <li><span class="n">05</span><a href="#s5">Rooms</a></li>
-        <li><span class="n">06</span><a href="#s6">Activities &amp; spa</a></li>
-        <li><span class="n">07</span><a href="#s7">Boats</a></li>
+        <li><span class="n">05</span><a href="#s-res">Making a reservation</a></li>
+        <li><span class="n">06</span><a href="#s-cap">Booking capacity &amp; holds</a></li>
+        <li><span class="n">07</span><a href="#s-pay">Who pays — payment responsibility</a></li>
       </ol>
     </div>
     <div class="toc-phase">
-      <div class="toc-ph">D · On-property</div>
+      <div class="toc-ph">D · Pre-arrival</div>
       <ol>
-        <li><span class="n">08</span><a href="#s8">Breakfast &amp; beverages</a></li>
-        <li><span class="n">09</span><a href="#s9">Fish processing</a></li>
-        <li><span class="n">10</span><a href="#s10">The daily run sheet</a></li>
+        <li><span class="n">08</span><a href="#s3">The guest list</a></li>
+        <li><span class="n">09</span><a href="#s4">The guest portal &amp; profile</a></li>
       </ol>
     </div>
     <div class="toc-phase">
-      <div class="toc-ph">E · Post-stay</div>
+      <div class="toc-ph">E · Assignment</div>
       <ol>
-        <li><span class="n">11</span><a href="#s11">The satisfaction survey</a></li>
-        <li><span class="n">12</span><a href="#s12">Scoring &amp; analysis</a></li>
-        <li><span class="n">13</span><a href="#s13">It travels with the guest</a></li>
+        <li><span class="n">10</span><a href="#s5">Rooms</a></li>
+        <li><span class="n">11</span><a href="#s6">Activities &amp; spa</a></li>
+        <li><span class="n">12</span><a href="#s-sch">Scheduling &amp; the resource board</a></li>
+        <li><span class="n">13</span><a href="#s7">Boats</a></li>
+      </ol>
+    </div>
+    <div class="toc-phase">
+      <div class="toc-ph">F · On-property</div>
+      <ol>
+        <li><span class="n">14</span><a href="#s8">Breakfast &amp; beverages</a></li>
+        <li><span class="n">15</span><a href="#s9">Fish processing</a></li>
+        <li><span class="n">16</span><a href="#s10">The daily run sheet</a></li>
+      </ol>
+    </div>
+    <div class="toc-phase">
+      <div class="toc-ph">G · Post-stay</div>
+      <ol>
+        <li><span class="n">17</span><a href="#s11">The satisfaction survey</a></li>
+        <li><span class="n">18</span><a href="#s12">Scoring &amp; analysis</a></li>
+        <li><span class="n">19</span><a href="#s13">It travels with the guest</a></li>
       </ol>
     </div>
     <div class="toc-phase">
@@ -267,7 +283,7 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
 
   <!-- ========================================================= -->
   <!-- PHASE A -->
-  <div class="phase" id="pA"><div class="pl">Phase A</div><h2>Foundation</h2><p class="pd">Before a single booking, two things must exist: one clean record per human being, and a catalog of everything the lodge can offer. The whole platform is built on these two.</p></div>
+  <div class="phase" id="pA"><div class="pl">Phase A</div><h2>Foundation &amp; setup</h2><p class="pd">Before a single booking, two things must exist: one clean record per human being, and every resource the lodge offers — rooms, activities, crew, menus — entered once as a catalog. The whole platform is built on these two.</p></div>
 
   <!-- STAGE 1 -->
   <section class="stage" id="s1">
@@ -306,8 +322,8 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
 
   <!-- STAGE 2 -->
   <section class="stage" id="s2">
-    <div class="stage-h"><span class="stage-num">02</span><h3 class="stage-t">The offerings — every asset</h3></div>
-    <p class="stage-lede">Rooms, activities, boats, guides, breakfast and beverages are all the same kind of thing: an <strong>asset</strong> with a type and a bag of properties. Setting them up once here is what lets every later screen assign them to guests. This is also the schema trick that lets the lodge add a new offering without a database migration.</p>
+    <div class="stage-h"><span class="stage-num">02</span><h3 class="stage-t">Resource &amp; catalog setup</h3></div>
+    <p class="stage-lede">Rooms, activities, boats, guides, breakfast and beverages are all the same kind of thing: an <strong>asset</strong> with a type and a bag of properties. Each one is entered <strong>once</strong> in its own admin editor and exported to seed production — that catalog is what every later screen draws from. It's also the schema trick that lets the lodge add a new offering without a database migration.</p>
     <div class="who"><span class="chip admin">Admin · setup</span></div>
 
     <div class="cols split">
@@ -329,16 +345,200 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
       <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · asset catalog</span></div><img src="__IMG_assets__" alt="Asset catalog showing rooms, activities and boats with crew"></div>
       <figcaption><b>The asset catalog.</b> Rooms, activities, and boats-with-crew shown as typed assets. Breakfast and beverage offerings live in the same catalog, further down.</figcaption>
     </figure>
+
+    <p class="stage-lede" style="font-size:15px;margin-top:30px">Each resource type has its own editor. Enter it once, <b>export the catalog</b> to seed production, and it's live everywhere. Below: rooms, activities, and the team &amp; crew that create activity availability — plus menus, beverages, the massage menu, fish types and vendors, which follow the same pattern.</p>
+
+    <div class="cols split">
+      <figure style="margin-top:16px">
+        <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · rooms</span></div><img src="__IMG_roomsadmin__" alt="Rooms admin editor"></div>
+        <figcaption><b>Rooms.</b> Each room is an asset — photos, 360° tour, beds, occupancy, bathrooms.</figcaption>
+      </figure>
+      <figure style="margin-top:16px">
+        <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · activities</span></div><img src="__IMG_activitiesadmin__" alt="Activities admin editor"></div>
+        <figcaption><b>Activities.</b> Add-ons with pricing, minimums, and arrival-day vs in-stay rates.</figcaption>
+      </figure>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · team &amp; crew</span></div><img src="__IMG_teamadmin__" alt="Team and crew setup — guides, therapists, boats, captains, deckhands"></div>
+      <figcaption><b>Team &amp; crew.</b> Guides (with what each can run and their booking order), therapists, boats, captains and deckhands. Capabilities and boat crew are asset-links — this is what the scheduling engine reads to work out what's bookable each day.</figcaption>
+    </figure>
   </section>
 
   <!-- ========================================================= -->
-  <!-- PHASE B -->
-  <div class="phase" id="pB"><div class="pl">Phase B</div><h2>Booking &amp; pre-arrival</h2><p class="pd">A booking turns a person into a booked guest, gathers their travelling party, and hands each of them a portal to get ready for the trip.</p></div>
+  <!-- PHASE B · PACKAGES & AVAILABILITY -->
+  <div class="phase" id="pB"><div class="pl">Phase B</div><h2>Packages &amp; availability</h2><p class="pd">With resources catalogued, the lodge builds its sellable product: packages priced off those assets, and a season calendar that shows exactly what's open on every departure.</p></div>
+
+  <!-- STAGE 3 · PACKAGES -->
+  <section class="stage" id="s-pkg">
+    <div class="stage-h"><span class="stage-num">03</span><h3 class="stage-t">Package set-up &amp; pricing</h3></div>
+    <p class="stage-lede">A package is one departure — its series, category, what's included and excluded, its rooms and activities, deposit and pricing. The title, price range and date range are <strong>computed, never stored</strong>, and dynamic pricing is applied to the base rate automatically. The booking engine reads all of this live.</p>
+    <div class="who"><span class="chip admin">Admin · setup</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>Each package is <b>one departure</b> — series, category, nights, adventure days, Includes / Does-Not-Include lists.</li>
+        <li>Rooms &amp; activities are <b>read live</b> from their catalogs; a package's title, price range and date range are <b>computed</b>, not typed.</li>
+        <li><b>Publishing is guarded</b> — a package can't go live oversold or mis-configured.</li>
+        <li><b>Revenue management</b> applies dynamic pricing to the base package rate only (not activities or spa): a <b>last-minute discount</b> within a set window of arrival while rooms remain, a price floor, and high-demand step-ups. <span class="u">The confirmed rule is 10% within 15 days of departure.</span></li>
+        <li>The <b>deposit never changes</b> with dynamic pricing.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>A <b>packages</b> row points at rooms and activities through <b>package_assets</b>. Computed fields (title, price range, dates) are derived at read time from the assets and the season, never persisted. Revenue-management parameters live on the package.</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · package management</span></div><img src="__IMG_packages__" alt="Package setup with revenue management"></div>
+      <figcaption><b>Package management.</b> The package with its includes/excludes, and the revenue-management panel — last-minute discount, price floor and high-demand tiers, with a live pricing example.</figcaption>
+    </figure>
+  </section>
+
+  <!-- STAGE 4 · CALENDAR -->
+  <section class="stage" id="s-cal">
+    <div class="stage-h"><span class="stage-num">04</span><h3 class="stage-t">The season availability calendar</h3></div>
+    <p class="stage-lede">Every 4-night departure × every room, for the whole season, on one grid. Availability is the rooms selected in the package times their occupancy. Each cell's colour is its booking state, holds carry a countdown, and clicking a booking opens its full reservation detail.</p>
+    <div class="who"><span class="chip admin">Admin · reservations</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>The grid is <b>every departure × every room</b>; availability = the package's selected rooms × their minimum occupancy.</li>
+        <li>Each cell carries a <b>booking state</b> — Available · Confirmed (deposit in) · Reserved (deposit due) · Held (guest deciding) · Prospect (to book).</li>
+        <li>A <b>Held</b> cell shows a countdown (e.g. "3d left") so the desk knows when a soft hold expires.</li>
+        <li>Special weeks (<b>Winemaker</b>, <b>Chef</b>) are flagged on their departures.</li>
+        <li>Clicking a booking opens the <b>reservation detail</b> — lead, status, confirmation code, party, payment history and accommodations; open cells add a new booking.</li>
+        <li>The whole season <b>exports to Google Sheets</b> for offline review.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>The grid is derived: <b>trips</b> and their room <b>assignments</b> placed against each package's <b>package_assets</b> and dates. Cell state comes from the trip's booking status and deposit; the hold countdown from the hold's timestamp.</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · reservation calendar</span></div><img src="__IMG_rescal__" alt="2027 season availability calendar"></div>
+      <figcaption><b>The 2027 season calendar.</b> Beds sold, remaining and % sold up top; every departure and room below, colour-coded by state, with real holds counting down. This is the reservation desk's home screen.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- PHASE C · THE RESERVATION -->
+  <div class="phase" id="pC0"><div class="pl">Phase C</div><h2>The reservation</h2><p class="pd">How a booking actually gets made — the guest's step-by-step reservation, the capacity gate that makes it safe, and who pays for what.</p></div>
+
+  <!-- STAGE 5 · RESERVATION WIZARD -->
+  <section class="stage" id="s-res">
+    <div class="stage-h"><span class="stage-num">05</span><h3 class="stage-t">Making a reservation</h3></div>
+    <p class="stage-lede">The reservation is a guided nine-step flow: <strong>season &amp; party → arrival date → rooms → your details → guest list → activities → review → deposit → confirm</strong>. A date is only offered when the open rooms can seat the party exactly; submitting creates the booking and resolves the booker to a person. Here are the steps that matter most.</p>
+    <div class="who"><span class="chip guest">Guest · reserve</span><span class="chip admin">Admin · can book too</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>Party size is in <b>doubles</b> (double occupancy); a date appears only when available rooms seat the party <b>exactly</b> — no more, no less.</li>
+        <li>The guest picks <b>rooms</b> until the party is covered exactly, then enters lead details.</li>
+        <li>The <b>guest list</b> can be filled now or later; each guest is set to <b>send a portal invite</b> or <b>managed by the lead</b>, and returning guests are matched live (Past-Guest badge).</li>
+        <li><b>Activities</b> are optional add-ons — pick who joins and which day; fees are <b>paid at checkout</b>, not in the deposit.</li>
+        <li><b>Review</b> shows the whole order and the payment schedule: deposit due now, balance due 120 days before arrival.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>Submitting creates a <b>reservation_request</b> that resolves into a <b>group</b> + <b>trip</b>, with <b>group_persons</b> (lead + members) and an <b>assignment</b> per chosen activity. Rooms and activities are the same <b>assets</b> read by the calendar; each guest resolves to one <b>person</b> (Stage 1).</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">reserve · 1. season &amp; party</span></div><img src="__IMG_bookengine__" alt="Reservation step 1 — available packages and dates"></div>
+      <figcaption><b>Step 1 — season &amp; party.</b> Pick the season, the arrival window and the party size; the package's includes/excludes are shown up front. The nine-step bar tracks the whole reservation.</figcaption>
+    </figure>
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">reserve · 3. rooms</span></div><img src="__IMG_res_rooms__" alt="Reservation step 3 — room selection"></div>
+      <figcaption><b>Step 3 — rooms.</b> Only rooms that can seat the remaining party are offered, with photos and 360° tours. The meter enforces covering the party exactly.</figcaption>
+    </figure>
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">reserve · 5. guest list</span></div><img src="__IMG_res_guests__" alt="Reservation step 5 — the guest list"></div>
+      <figcaption><b>Step 5 — the guest list.</b> Name each traveller now or later; choose a portal invite or lead-managed access per guest. Returning guests match to their existing record as you type.</figcaption>
+    </figure>
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">reserve · 6. activities</span></div><img src="__IMG_res_activities__" alt="Reservation step 6 — activities selection"></div>
+      <figcaption><b>Step 6 — activities.</b> Optional add-ons from the same catalog, priced per guest/day, with who-joins and which-day pickers. Fees are payable at the lodge, not in the deposit.</figcaption>
+    </figure>
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">reserve · 7. review</span></div><img src="__IMG_res_review__" alt="Reservation step 7 — review and payment schedule"></div>
+      <figcaption><b>Step 7 — review.</b> The full order — trip, rooms, activities, lead, guest list — with the payment schedule: deposit now, balance 120 days before arrival. Then deposit and confirm.</figcaption>
+    </figure>
+  </section>
+
+  <!-- STAGE 6 · CAPACITY -->
+  <section class="stage" id="s-cap">
+    <div class="stage-h"><span class="stage-num">06</span><h3 class="stage-t">Booking capacity &amp; holds</h3></div>
+    <p class="stage-lede">Behind every activity and spa booking is one capacity gate. A request enters through one of three doors, becomes a <strong>hold</strong> that reserves real capacity on a real date, and is confirmed into an <strong>assignment</strong>. The whole reserve step is a single locked transaction, so the last seat can only be sold once.</p>
+    <div class="who"><span class="chip admin">Admin · architecture</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>Three doors — the <b>booking flow</b>, the <b>guest portal</b>, and an <b>admin</b> booking directly — all funnel through the same capacity gate.</li>
+        <li>The reserve step is a <b>single locked transaction</b> (lock · re-check · insert) so a seat is sold exactly once.</li>
+        <li>The life of a booking: <b>Request → Hold → Assignment → Released</b> — and only <b>Hold</b> and <b>Assignment</b> consume capacity.</li>
+        <li>A guest booking that fits the rules skips Request and lands directly on a <b>Hold</b>; party &gt; 6, mixed-group, or over-capacity waits as a <b>Request</b> for the admin.</li>
+        <li><b>Holds don't auto-expire</b> — they hold until an admin releases them; releasing returns the seats.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>Every booking is an <b>assignment</b> row moving through states; capacity is checked against the asset's limit at reserve time inside one transaction. The guest portal reads each item's status back (Requested → Approved / Declined).</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · scheduling architecture</span></div><img src="__IMG_booking__" alt="Booking capacity architecture — three doors, atomic reserve, state machine"></div>
+      <figcaption><b>How a seat is sold once.</b> Three doors into one atomic reserve, and the booking state machine — only Hold and Assignment consume capacity, so two groups can't grab the same guide.</figcaption>
+    </figure>
+  </section>
+
+  <!-- STAGE 7 · PAYMENT -->
+  <section class="stage" id="s-pay">
+    <div class="stage-h"><span class="stage-num">07</span><h3 class="stage-t">Who pays — payment responsibility</h3></div>
+    <p class="stage-lede">At check-in — in the portal or at the desk — the group lead sets who pays for each guest's add-ons. Every activity, spa and alcohol charge routes to the chosen payer's folio at checkout, and each guest confirms what they're responsible for and how their fish gets home.</p>
+    <div class="who"><span class="chip admin">Admin · check-in</span><span class="chip guest">Guest · confirms</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>Per guest, per charge type — <b>activities, spa &amp; massage, alcohol, fish processing</b> — the payer is <b>Self</b>, the <b>group lead</b>, or another guest.</li>
+        <li>Shortcuts set a whole group at once: <b>lead covers everything</b>, or <b>everyone pays own</b>.</li>
+        <li>The guest sees their <b>folio</b> and confirms responsibility; the choice saves to each guest's record automatically.</li>
+        <li><b>Fish handling</b> is chosen here too — carry it on the plane, or ship via FedEx.</li>
+        <li><span class="u">No card number is ever stored</span> — only a payment-method reference.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>Charge routing is stored per guest per charge type and applied to the folio at checkout; fish handling lands in <b>fish_processing</b>. Payment uses a <code>payment_method_id</code> reference — never a raw card number.</p>
+      </div>
+    </div>
+
+    <div class="cols split">
+      <figure style="margin-top:16px">
+        <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · payment responsibility</span></div><img src="__IMG_payment__" alt="Admin payment responsibility screen"></div>
+        <figcaption><b>Admin — who pays.</b> Per group, per guest, per charge type, routed to a payer.</figcaption>
+      </figure>
+      <figure style="margin-top:16px">
+        <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">portal · check-in confirmations</span></div><img src="__IMG_confirmations__" alt="Guest check-in confirmations"></div>
+        <figcaption><b>Guest — confirm &amp; fish handling.</b> The guest's folio to confirm, and how their catch gets home.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- PHASE D · PRE-ARRIVAL -->
+  <div class="phase" id="pB"><div class="pl">Phase D</div><h2>Pre-arrival</h2><p class="pd">Once booked, the party is gathered and each guest gets a portal to ready themselves — profile, dietary needs, flights and fishing licence — before they arrive.</p></div>
 
   <!-- STAGE 3 -->
   <section class="stage" id="s3">
-    <div class="stage-h"><span class="stage-num">03</span><h3 class="stage-t">Booking &amp; the guest list</h3></div>
-    <p class="stage-lede">The person who books becomes the <strong>group lead</strong>. After the reservation is confirmed, the system asks the lead for their guest list; each traveller is matched to the master database and gets their own portal invite. From that moment the lodge can see, per guest, exactly how ready they are for the trip.</p>
+    <div class="stage-h"><span class="stage-num">08</span><h3 class="stage-t">The guest list</h3></div>
+    <p class="stage-lede">Once the booking is made, the lead's guest list is gathered — each traveller matched to the master database (Stage 1) and given their own portal invite. From that moment the lodge sees, per guest, exactly how ready they are for the trip: profile, address, sizing, emergency contact, health, airfare and licence.</p>
     <div class="who"><span class="chip admin">Admin · roster</span><span class="chip guest">Guest · guest list</span></div>
 
     <div class="cols split">
@@ -364,7 +564,7 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
 
   <!-- STAGE 4 -->
   <section class="stage" id="s4">
-    <div class="stage-h"><span class="stage-num">04</span><h3 class="stage-t">The guest portal &amp; profile</h3></div>
+    <div class="stage-h"><span class="stage-num">09</span><h3 class="stage-t">The guest portal &amp; profile</h3></div>
     <p class="stage-lede">Between booking and arrival, the guest does their own preparation in a portal built for them — not the admin app. They complete a profile for <strong>this</strong> trip: personal details, dietary needs, emergency contact, flights, and their fishing licence. Anything they request is reviewed by the lodge within 24 hours.</p>
     <div class="who"><span class="chip guest">Guest · self-service</span><span class="chip admin">Admin · reviews requests</span></div>
 
@@ -396,11 +596,11 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
 
   <!-- ========================================================= -->
   <!-- PHASE C -->
-  <div class="phase" id="pC"><div class="pl">Phase C</div><h2>Assignment</h2><p class="pd">With the party known and the offerings set, the lodge places each individual guest — into a room, onto activities and the spa, and onto a boat. Every placement is per person, and every placement flows into the daily run sheet.</p></div>
+  <div class="phase" id="pC"><div class="pl">Phase E</div><h2>Assignment</h2><p class="pd">With the party known and the offerings set, the lodge places each individual guest — into a room, onto activities and the spa, onto the scheduling board, and onto a boat. Every placement is per person, and every placement flows into the daily run sheet.</p></div>
 
   <!-- STAGE 5 -->
   <section class="stage" id="s5">
-    <div class="stage-h"><span class="stage-num">05</span><h3 class="stage-t">Rooms</h3></div>
+    <div class="stage-h"><span class="stage-num">10</span><h3 class="stage-t">Rooms</h3></div>
     <p class="stage-lede">The reservation assigns the room(s) to the group; here the team places <strong>each individual guest</strong> into one of them. Over-capacity is accepted and flagged, never blocked — the lodge always knows better than the software. Every placement attaches to the guest, so it flows straight to the rooming list and the daily report.</p>
     <div class="who"><span class="chip admin">Admin · lodging</span></div>
 
@@ -426,7 +626,7 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
 
   <!-- STAGE 6 -->
   <section class="stage" id="s6">
-    <div class="stage-h"><span class="stage-num">06</span><h3 class="stage-t">Activities &amp; spa</h3></div>
+    <div class="stage-h"><span class="stage-num">11</span><h3 class="stage-t">Activities &amp; spa</h3></div>
     <p class="stage-lede">Every activity and spa request — whether it came from the reservation or from the guest's own portal — lands in <strong>one approval queue</strong> on a 24-hour clock. Approving confirms it and the guest sees it as scheduled. Massage is booked per person, with a therapist, treatment and time for each appointment.</p>
     <div class="who"><span class="chip admin">Admin · concierge</span></div>
 
@@ -450,9 +650,37 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
     </figure>
   </section>
 
+  <!-- STAGE 12 · SCHEDULING -->
+  <section class="stage" id="s-sch">
+    <div class="stage-h"><span class="stage-num">12</span><h3 class="stage-t">Scheduling &amp; the resource board</h3></div>
+    <p class="stage-lede">The activities calendar. Pick a package — its real arrival→departure dates become the grid — choose a group, then tick the <strong>individual guests</strong> on each activity. Bookings save against the actual date, so groups the same week compete for the same guides; the engine assigns the <strong>lead guide first</strong>. A resource board shows what every guide, therapist and boat holds, by date.</p>
+    <div class="who"><span class="chip admin">Admin · scheduling</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>The package's real dates become the calendar; stay days are bookable, arrival &amp; departure are travel days.</li>
+        <li>Every activity is booked to the <b>named individuals</b>, not just the group — it attaches to the person.</li>
+        <li>Bookings save against the <b>actual date</b> and are shared across every group that week, so they compete for the same guides.</li>
+        <li>A guide holds <b>one activity per day</b> for up to its guest cap; the <b>lead guide is assigned first</b>, and lead-only activities (e.g. Kayak, Whale Watching) go dark once the lead is taken — the tightest bottleneck.</li>
+        <li>A booked adventure <b>pulls that guest off the boat</b> for the day; boats seated in Boat Assignments show on this master calendar.</li>
+        <li>The <b>resource board</b> shows each guide, therapist and boat's holds per date, for the selected package.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>Reads the trip's <b>assignments</b> against the team <b>assets</b> and their <b>asset_links</b> (capabilities, crew). Per-date resource availability is computed from what each guide/therapist/boat already holds; the lead-first rule and the one-activity-per-day cap are enforced at booking time.</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · availability &amp; scheduling</span></div><img src="__IMG_scheduling__" alt="Scheduling calendar with activity availability and resource board"></div>
+      <figcaption><b>Availability &amp; scheduling.</b> The activity-availability grid for the trip — adventures, spa &amp; wellness, travel-day add-ons — over the real dates, with a massage already booked. Below it, the resource board: what each guide, therapist and boat holds by day.</figcaption>
+    </figure>
+  </section>
+
   <!-- STAGE 7 -->
   <section class="stage" id="s7">
-    <div class="stage-h"><span class="stage-num">07</span><h3 class="stage-t">Boats</h3></div>
+    <div class="stage-h"><span class="stage-num">13</span><h3 class="stage-t">Boats</h3></div>
     <p class="stage-lede">Guests are seated on boats for their sportfishing — pick the day, then a group, then a boat. Each boat seats up to its set capacity, groups can share, and a guest keeps a "home boat" for the trip that can be switched for any single day. The key rule: on a day a guest has an adventure booked, that <strong>activity wins</strong> and they come off the boat.</p>
     <div class="who"><span class="chip admin">Admin · dock</span></div>
 
@@ -478,11 +706,11 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
 
   <!-- ========================================================= -->
   <!-- PHASE D -->
-  <div class="phase" id="pD"><div class="pl">Phase D</div><h2>On-property</h2><p class="pd">While guests are at the lodge, operations run day to day: what everyone eats, what they catch and take home, and a single run sheet that puts every person in the right place each morning.</p></div>
+  <div class="phase" id="pD"><div class="pl">Phase F</div><h2>On-property</h2><p class="pd">While guests are at the lodge, operations run day to day: what everyone eats, what they catch and take home, and a single run sheet that puts every person in the right place each morning.</p></div>
 
   <!-- STAGE 8 -->
   <section class="stage" id="s8">
-    <div class="stage-h"><span class="stage-num">08</span><h3 class="stage-t">Breakfast &amp; beverages</h3></div>
+    <div class="stage-h"><span class="stage-num">14</span><h3 class="stage-t">Breakfast &amp; beverages</h3></div>
     <p class="stage-lede">Each night, the lodge takes the next morning's breakfast and the day's beverage order — <strong>per guest</strong>. Breakfast is free choice from that day's menu; beverages roll onto the boat-stocking list by whichever boat the guest is on that day. It produces two outputs: a kitchen sheet and a boat-stocking list.</p>
     <div class="who"><span class="chip admin">Admin · kitchen &amp; dock</span><span class="chip guest">Guest · can pre-set</span></div>
 
@@ -508,7 +736,7 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
 
   <!-- STAGE 9 -->
   <section class="stage" id="s9">
-    <div class="stage-h"><span class="stage-num">09</span><h3 class="stage-t">Fish processing</h3></div>
+    <div class="stage-h"><span class="stage-num">15</span><h3 class="stage-t">Fish processing</h3></div>
     <p class="stage-lede">At the end of each fishing day, the group's catch is logged once. The engine yields filet weight per species (count × average weight × recovery %), totals the day, and splits it into however many take-home shares the group wants — <strong>one named guest per share</strong>. Each share's poundage lands on that guest's own record, so it rolls up per individual for the trip.</p>
     <div class="who"><span class="chip admin">Admin · processing</span></div>
 
@@ -535,7 +763,7 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
 
   <!-- STAGE 10 -->
   <section class="stage" id="s10">
-    <div class="stage-h"><span class="stage-num">10</span><h3 class="stage-t">The daily run sheet</h3></div>
+    <div class="stage-h"><span class="stage-num">16</span><h3 class="stage-t">The daily run sheet</h3></div>
     <p class="stage-lede">Everything above comes together here: the dock-and-spa run sheet for a single day, <strong>every assignment by individual guest</strong>. Boats list their captain, deckhand and seated guests; the spa lists each appointment by time; adventures list each guide's guests; and anyone not on the water is accounted for. This one sheet is why every stage insists on attaching to the person.</p>
     <div class="who"><span class="chip admin">Admin · daily ops</span></div>
 
@@ -562,11 +790,11 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
 
   <!-- ========================================================= -->
   <!-- PHASE E -->
-  <div class="phase" id="pE"><div class="pl">Phase E</div><h2>Post-stay</h2><p class="pd">A day after the guest checks out, the loop closes: a survey goes out, the answers become a score and a set of notes, and both attach back to the individual record — ready for the next visit.</p></div>
+  <div class="phase" id="pE"><div class="pl">Phase G</div><h2>Post-stay</h2><p class="pd">A day after the guest checks out, the loop closes: a survey goes out, the answers become a score and a set of notes, and both attach back to the individual record — ready for the next visit.</p></div>
 
   <!-- STAGE 11 -->
   <section class="stage" id="s11">
-    <div class="stage-h"><span class="stage-num">11</span><h3 class="stage-t">The satisfaction survey</h3></div>
+    <div class="stage-h"><span class="stage-num">17</span><h3 class="stage-t">The satisfaction survey</h3></div>
     <p class="stage-lede">One day after checkout, each guest is automatically sent a pre-identified survey — short, on one standardized scale, grouped by department. If a rating is average or poor, it quietly asks how the lodge could do better. And if the guest is planning a return, it invites them to look at next year's calendar with a standing discount.</p>
     <div class="who"><span class="chip guest">Guest · post-stay</span></div>
 
@@ -593,7 +821,7 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
 
   <!-- STAGE 12 -->
   <section class="stage" id="s12">
-    <div class="stage-h"><span class="stage-num">12</span><h3 class="stage-t">Scoring &amp; analysis</h3></div>
+    <div class="stage-h"><span class="stage-num">18</span><h3 class="stage-t">Scoring &amp; analysis</h3></div>
     <p class="stage-lede">Every response becomes a number. Each rating maps to points, questions roll up into department scores, and the departments average into one guest satisfaction score from 0–100. Low answers flag the department for follow-up now; a monthly rollup goes to each department. Recommend and rebook are tracked separately as advocacy, not folded into the score.</p>
     <div class="who"><span class="chip admin">Admin · reports</span></div>
 
@@ -621,7 +849,7 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
 
   <!-- STAGE 13 -->
   <section class="stage" id="s13">
-    <div class="stage-h"><span class="stage-num">13</span><h3 class="stage-t">It travels with the guest</h3></div>
+    <div class="stage-h"><span class="stage-num">19</span><h3 class="stage-t">It travels with the guest</h3></div>
     <p class="stage-lede">The loop closes back to Stage 1. On the guest's staff-only profile, the score is published with a plain breakdown of how it was built — and, more importantly, their survey comments become <strong>carry-forward notes the lodge acts on in future years</strong>. A comment can catch what a score hides: a breakfast rated "excellent" whose note mentions a 30-minute wait becomes a flag for next season.</p>
     <div class="who"><span class="chip admin">Admin · staff-only profile</span></div>
 
