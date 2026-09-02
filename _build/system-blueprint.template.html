@@ -1,0 +1,666 @@
+<title>Talon Lodge System Blueprint</title>
+<style>
+:root{
+  --paper:#eef3f1; --surface:#fff; --surface-2:#e7efec; --surface-3:#f4f8f6;
+  --ink:#112524; --muted:#566c68; --faint:#83948f; --line:#d7e1de; --line-2:#c4d1cd;
+  --accent:#0e7c6f; --accent-deep:#0a544c; --accent-soft:#dcefe9;
+  --salmon:#c25e39; --salmon-soft:#f6e6df; --gold:#a9791f; --gold-soft:#f4ead2;
+  --good:#2f7d51; --good-soft:#dcefe1; --warn:#b07d1a; --warn-soft:#f4ead2; --stop:#b1442c; --stop-soft:#f6e2db;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"Cascadia Code","SF Mono",Consolas,monospace;
+  --shadow:0 1px 2px rgba(16,40,40,.05),0 10px 30px rgba(16,40,40,.07);
+  --shadow-lg:0 2px 6px rgba(16,40,40,.08),0 24px 60px rgba(16,40,40,.12);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0a1413; --surface:#0f1e1c; --surface-2:#152522; --surface-3:#0c1917;
+  --ink:#e9f1ed; --muted:#9cadA9; --faint:#71837e; --line:#22352f; --line-2:#31473f;
+  --accent:#38b8a6; --accent-deep:#5fcdbd; --accent-soft:#122f2a;
+  --salmon:#e18a62; --salmon-soft:#31221b; --gold:#d8ad55; --gold-soft:#2a2413;
+  --good:#54c084; --good-soft:#12271b; --warn:#d8ad55; --warn-soft:#2a2413; --stop:#e08165; --stop-soft:#2e1a14;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.4); --shadow-lg:0 3px 8px rgba(0,0,0,.35),0 28px 64px rgba(0,0,0,.5);
+}}
+:root[data-theme="dark"]{
+  --paper:#0a1413; --surface:#0f1e1c; --surface-2:#152522; --surface-3:#0c1917;
+  --ink:#e9f1ed; --muted:#9cadA9; --faint:#71837e; --line:#22352f; --line-2:#31473f;
+  --accent:#38b8a6; --accent-deep:#5fcdbd; --accent-soft:#122f2a;
+  --salmon:#e18a62; --salmon-soft:#31221b; --gold:#d8ad55; --gold-soft:#2a2413;
+  --good:#54c084; --good-soft:#12271b; --warn:#d8ad55; --warn-soft:#2a2413; --stop:#e08165; --stop-soft:#2e1a14;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.4); --shadow-lg:0 3px 8px rgba(0,0,0,.35),0 28px 64px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;font-size:16px}
+.wrap{max-width:1000px;margin:0 auto;padding:0 24px}
+a{color:var(--accent-deep);text-decoration:none}
+a:hover{text-decoration:underline}
+.eyebrow{font:600 11px/1.2 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin:0}
+h1,h2,h3{letter-spacing:-.02em;text-wrap:balance;margin:0}
+strong{font-weight:650}
+code{font-family:var(--mono);font-size:.88em;background:var(--surface-2);padding:1px 6px;border-radius:5px;color:var(--accent-deep)}
+
+/* ---- masthead ---- */
+.mast{padding:64px 0 40px;border-bottom:1px solid var(--line)}
+.mast-brand{display:flex;align-items:center;gap:14px;margin-bottom:34px}
+.mast-brand img{height:44px;width:auto;display:block}
+.mast-brand .bt{font:700 15px var(--sans);letter-spacing:-.01em;line-height:1.1}
+.mast-brand .bs{font:600 10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.mast h1{font:800 clamp(34px,6vw,60px)/1.04 var(--sans);margin:16px 0 0}
+.mast .sub{font-size:clamp(17px,2.4vw,21px);color:var(--muted);max-width:60ch;margin:18px 0 0;line-height:1.5}
+.mast-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.tag{font:600 11px var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:5px 11px;border-radius:20px;border:1px solid var(--line-2);color:var(--muted);background:var(--surface)}
+.tag.draft{color:var(--salmon);border-color:var(--salmon);background:var(--salmon-soft)}
+
+/* ---- intro / principle ---- */
+.lead{padding:44px 0}
+.lead p{font-size:17px;color:var(--ink);max-width:70ch;margin:0 0 16px}
+.lead p.mut{color:var(--muted)}
+.principle{margin:26px 0;padding:26px 28px;border-radius:16px;background:var(--accent-soft);border:1px solid var(--line-2);box-shadow:var(--shadow)}
+.principle .k{font:600 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent-deep);margin:0 0 8px}
+.principle .v{font:700 clamp(19px,2.6vw,25px)/1.35 var(--sans);letter-spacing:-.015em;color:var(--ink);margin:0}
+.principle .v em{font-style:normal;color:var(--accent-deep);border-bottom:2px solid var(--accent)}
+
+/* ---- legend ---- */
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:8px 0 4px}
+.legend .li{display:flex;gap:11px;align-items:flex-start;padding:13px 15px;background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow)}
+.legend .sw{flex:none;width:12px;height:12px;border-radius:4px;margin-top:5px}
+.legend .lt{font-weight:650;font-size:14px}
+.legend .ld{font-size:12.5px;color:var(--muted);line-height:1.45}
+.sw.admin{background:var(--gold)} .sw.guest{background:var(--salmon)} .sw.both{background:linear-gradient(135deg,var(--gold) 0 50%,var(--salmon) 50% 100%)}
+.sw.rule{background:var(--accent)} .sw.schema{background:var(--ink)}
+
+/* ---- contents ---- */
+.toc{margin:40px 0;padding:26px 28px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.toc h2{font:700 13px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 16px}
+.toc-phase{margin:0 0 14px}
+.toc-phase:last-child{margin-bottom:0}
+.toc-ph{font:700 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent-deep);margin:0 0 6px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2px 20px}
+.toc li{display:flex;gap:10px;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.toc li .n{font:700 12px var(--mono);color:var(--accent);min-width:22px}
+.toc li a{color:var(--ink);font-weight:550}
+
+/* ---- phase band ---- */
+.phase{margin:70px 0 0;padding:22px 0 6px;border-top:2px solid var(--accent)}
+.phase .pl{font:700 12px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.phase h2{font:800 clamp(24px,3.4vw,34px)/1.1 var(--sans);margin:8px 0 0}
+.phase .pd{color:var(--muted);margin:10px 0 0;max-width:62ch;font-size:15.5px}
+
+/* ---- stage ---- */
+.stage{padding:44px 0;border-bottom:1px solid var(--line)}
+.stage-h{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.stage-num{font:800 15px var(--mono);color:#fff;background:var(--accent);width:34px;height:34px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;flex:none;letter-spacing:0}
+.stage-t{font:800 clamp(21px,3vw,29px)/1.15 var(--sans)}
+.stage-lede{font-size:16.5px;color:var(--muted);max-width:72ch;margin:14px 0 0;line-height:1.55}
+.stage-lede strong{color:var(--ink)}
+.who{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 0}
+.who .chip{font:600 11px var(--mono);letter-spacing:.05em;text-transform:uppercase;padding:5px 11px;border-radius:7px;display:inline-flex;align-items:center;gap:7px}
+.who .chip::before{content:"";width:9px;height:9px;border-radius:3px}
+.chip.admin{color:var(--gold);background:var(--gold-soft)} .chip.admin::before{background:var(--gold)}
+.chip.guest{color:var(--salmon);background:var(--salmon-soft)} .chip.guest::before{background:var(--salmon)}
+
+.cols{display:grid;grid-template-columns:1fr;gap:22px;margin-top:24px}
+@media(min-width:860px){.cols.split{grid-template-columns:1fr 1fr}}
+
+.rules{margin:0;padding:0;list-style:none}
+.rules h4,.schema-b h4{font:700 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:0 0 12px}
+.rules li{position:relative;padding:0 0 12px 22px;font-size:14.5px;line-height:1.5}
+.rules li::before{content:"";position:absolute;left:2px;top:8px;width:7px;height:7px;border-radius:2px;background:var(--accent)}
+.rules li:last-child{padding-bottom:0}
+.rules li b{font-weight:650}
+.rules li .u{color:var(--salmon);font-weight:600}
+
+.schema-b{background:var(--surface-3);border:1px solid var(--line);border-left:3px solid var(--ink);border-radius:11px;padding:16px 18px}
+.schema-b p{margin:0;font:500 13px/1.65 var(--mono);color:var(--muted)}
+.schema-b p b{color:var(--ink);font-weight:600}
+.schema-b p code{background:var(--surface-2);color:var(--accent-deep)}
+
+/* ---- screenshot frame ---- */
+figure{margin:26px 0 0}
+.screen{border:1px solid var(--line-2);border-radius:14px;overflow:hidden;box-shadow:var(--shadow-lg);background:var(--surface)}
+.screen-bar{display:flex;align-items:center;gap:7px;padding:10px 14px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.screen-bar .dot{width:11px;height:11px;border-radius:50%;background:var(--line-2)}
+.screen-bar .u{margin-left:12px;font:600 11px var(--mono);color:var(--faint);letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.screen img{display:block;width:100%;height:auto}
+figcaption{font-size:13px;color:var(--muted);margin:12px 2px 0;line-height:1.5}
+figcaption b{color:var(--ink);font-weight:600}
+
+/* ---- build status ---- */
+.status{padding:56px 0}
+.status h2{font:800 clamp(23px,3.2vw,32px)/1.1 var(--sans);margin:0 0 6px}
+.status .sd{color:var(--muted);max-width:66ch;margin:0 0 28px;font-size:15.5px}
+.slane{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:820px){.slane{grid-template-columns:repeat(3,1fr)}}
+.lane{border:1px solid var(--line);border-radius:14px;padding:20px;background:var(--surface);box-shadow:var(--shadow)}
+.lane .lh{display:flex;align-items:center;gap:9px;margin:0 0 6px}
+.lane .lh .b{width:11px;height:11px;border-radius:50%}
+.lane .lh .t{font:700 14px var(--sans)}
+.lane .ls{font:600 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+.lane ul{margin:0;padding:0;list-style:none}
+.lane li{padding:7px 0 7px 18px;position:relative;font-size:13.5px;border-top:1px solid var(--line);line-height:1.45}
+.lane li:first-child{border-top:0}
+.lane li::before{content:"";position:absolute;left:2px;top:14px;width:6px;height:6px;border-radius:50%}
+.lane.go .lh .b,.lane.go li::before{background:var(--good)} .lane.go{border-top:3px solid var(--good)}
+.lane.mid .lh .b,.lane.mid li::before{background:var(--warn)} .lane.mid{border-top:3px solid var(--warn)}
+.lane.dev .lh .b,.lane.dev li::before{background:var(--stop)} .lane.dev{border-top:3px solid var(--stop)}
+
+/* ---- footer ---- */
+.foot{padding:40px 0 70px;color:var(--faint);font-size:13px;border-top:1px solid var(--line);line-height:1.6}
+.foot b{color:var(--muted)}
+.backtop{display:inline-block;margin-top:10px;font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+hr.soft{border:0;border-top:1px solid var(--line);margin:0}
+</style>
+
+<div class="wrap">
+
+  <!-- ===================== MASTHEAD ===================== -->
+  <header class="mast">
+    <div class="mast-brand">
+      <img src="__EAGLE__" alt="Talon Lodge">
+      <div><div class="bt">Talon Lodge &amp; Spa</div><div class="bs">Sitka, Alaska</div></div>
+    </div>
+    <p class="eyebrow">System Blueprint · Guest Lifecycle</p>
+    <h1>One guest, start to finish.</h1>
+    <p class="sub">How the whole platform fits together — from the master record a guest is born into, through every room, boat, activity, meal and massage, to the survey score and notes that travel with them into the next season.</p>
+    <div class="mast-meta">
+      <span class="tag draft">Draft for review</span>
+      <span class="tag">For the Talon team &amp; Stella dev</span>
+      <span class="tag">v1 · September 2026</span>
+      <span class="tag">15 screens · working prototypes</span>
+    </div>
+  </header>
+
+  <!-- ===================== INTRO ===================== -->
+  <section class="lead">
+    <p>This document walks the entire guest lifecycle in the order it actually happens, one stage at a time. Every stage shows the <strong>business rules</strong> that govern it, whether the screen is <strong>admin-facing</strong> or <strong>guest-facing</strong>, how it <strong>maps to the database</strong>, and a screenshot of the working prototype so there's no guessing what "done" looks like.</p>
+    <p class="mut">It has two audiences. For the <strong>Talon team</strong>, it's the place to confirm the rules match how the lodge really runs — mark anything that's wrong and we'll change it. For <strong>Stella's developers</strong>, it's the guide to what each screen does and the schema it writes to. Everything pictured is a real, clickable prototype; the closing section is honest about what's fully built versus what still needs the backend.</p>
+
+    <div class="principle">
+      <p class="k">The one idea everything else hangs on</p>
+      <p class="v">Everything funnels to the <em>individual guest</em>. The group is only how people book — every assignment, order, catch, score and note attaches to the one person, and accumulates across every visit, forever.</p>
+    </div>
+  </section>
+
+  <!-- ===================== LEGEND ===================== -->
+  <section aria-label="Legend">
+    <p class="eyebrow" style="margin-bottom:14px">How to read each stage</p>
+    <div class="legend">
+      <div class="li"><span class="sw admin"></span><div><div class="lt">Admin-facing</div><div class="ld">A screen the lodge team uses — setup, assignments, operations, reporting.</div></div></div>
+      <div class="li"><span class="sw guest"></span><div><div class="lt">Guest-facing</div><div class="ld">A screen the guest sees — their portal, profile, requests and survey.</div></div></div>
+      <div class="li"><span class="sw rule"></span><div><div class="lt">Business rule</div><div class="ld">A rule the lodge runs on. These are the lines to check and edit.</div></div></div>
+      <div class="li"><span class="sw schema"></span><div><div class="lt">Maps to schema</div><div class="ld">The database tables the screen reads and writes, for the dev team.</div></div></div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTENTS ===================== -->
+  <nav class="toc">
+    <h2>Contents</h2>
+    <div class="toc-phase">
+      <div class="toc-ph">A · Foundation</div>
+      <ol>
+        <li><span class="n">01</span><a href="#s1">The person record — the spine</a></li>
+        <li><span class="n">02</span><a href="#s2">The offerings — every asset</a></li>
+      </ol>
+    </div>
+    <div class="toc-phase">
+      <div class="toc-ph">B · Booking &amp; pre-arrival</div>
+      <ol>
+        <li><span class="n">03</span><a href="#s3">Booking &amp; the guest list</a></li>
+        <li><span class="n">04</span><a href="#s4">The guest portal &amp; profile</a></li>
+      </ol>
+    </div>
+    <div class="toc-phase">
+      <div class="toc-ph">C · Assignment</div>
+      <ol>
+        <li><span class="n">05</span><a href="#s5">Rooms</a></li>
+        <li><span class="n">06</span><a href="#s6">Activities &amp; spa</a></li>
+        <li><span class="n">07</span><a href="#s7">Boats</a></li>
+      </ol>
+    </div>
+    <div class="toc-phase">
+      <div class="toc-ph">D · On-property</div>
+      <ol>
+        <li><span class="n">08</span><a href="#s8">Breakfast &amp; beverages</a></li>
+        <li><span class="n">09</span><a href="#s9">Fish processing</a></li>
+        <li><span class="n">10</span><a href="#s10">The daily run sheet</a></li>
+      </ol>
+    </div>
+    <div class="toc-phase">
+      <div class="toc-ph">E · Post-stay</div>
+      <ol>
+        <li><span class="n">11</span><a href="#s11">The satisfaction survey</a></li>
+        <li><span class="n">12</span><a href="#s12">Scoring &amp; analysis</a></li>
+        <li><span class="n">13</span><a href="#s13">It travels with the guest</a></li>
+      </ol>
+    </div>
+  </nav>
+
+  <!-- ========================================================= -->
+  <!-- PHASE A -->
+  <div class="phase" id="pA"><div class="pl">Phase A</div><h2>Foundation</h2><p class="pd">Before a single booking, two things must exist: one clean record per human being, and a catalog of everything the lodge can offer. The whole platform is built on these two.</p></div>
+
+  <!-- STAGE 1 -->
+  <section class="stage" id="s1">
+    <div class="stage-h"><span class="stage-num">01</span><h3 class="stage-t">The person record — the spine</h3></div>
+    <p class="stage-lede">People arrive through three different doors, but the system keeps exactly <strong>one master record per human</strong>. Every arrival is matched against who's already known; certain matches fold in, new people get a fresh record, and uncertain cases wait for a human. From then on, a person's whole history lives on that single record.</p>
+    <div class="who"><span class="chip admin">Admin · back office</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>One <b>master Person</b> per human — history only ever accumulates, it is never overwritten.</li>
+        <li>Three intake doors all run the <b>same matching engine</b>: the website contact form, a reservation booking, and the guest list.</li>
+        <li><b>Tiered matching:</b> Tier 1 — exact email → auto-link · Tier 2 — phone + nickname-equivalent name (Bob = Robert) → auto-link · Tier 3 — name only, no contact → <span class="u">waits in a review queue</span> for a human.</li>
+        <li>A <b>role</b> (lead / member) lives on a person's membership in a group, <b>not</b> on the person — so a past guest can become a lead later and the record shows both.</li>
+        <li>A <b>booking agent</b> or shared inbox is stored on the group, and is <span class="u">never</span> merged into a guest's person record.</li>
+        <li>Nothing is ever hard-deleted (soft-delete only), and <b>every merge is reversible</b> — the losing and surviving records are snapshotted so a merge can be undone precisely.</li>
+      </ul>
+      <div>
+        <div class="schema-b">
+          <h4>Maps to schema</h4>
+          <p>Intake rows (<code>inquiries</code>, <code>leads</code>, <code>reservation_requests</code>, <code>guest_list_entries</code>) each keep their raw data plus a <code>person_id</code>. The matcher resolves to one <b>persons</b> row with child <code>person_emails</code> · <code>person_phones</code> · <code>person_name_aliases</code>. Merges are logged in <b>merge_history</b> (undo-safe); unresolved Tier-3 cases sit in <b>merge_review_queue</b>.</p>
+        </div>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · record management</span></div><img src="__IMG_record__" alt="Master record management — three intake doors into one matching engine into one master person"></div>
+      <figcaption><b>Master-record management.</b> Three intake doors → one matching engine → one master person. The tier table on the right is the exact decision the engine makes for every incoming name.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · data model</span></div><img src="__IMG_dberd__" alt="Database schema diagram — everything hangs off one person"></div>
+      <figcaption><b>The schema spine, for the dev team.</b> The relationship backbone of the locked v4 database: a person becomes a master record and gathers groups, trips, per-trip profiles and day-by-day asset assignments. Every later stage in this document writes into this map.</figcaption>
+    </figure>
+  </section>
+
+  <!-- STAGE 2 -->
+  <section class="stage" id="s2">
+    <div class="stage-h"><span class="stage-num">02</span><h3 class="stage-t">The offerings — every asset</h3></div>
+    <p class="stage-lede">Rooms, activities, boats, guides, breakfast and beverages are all the same kind of thing: an <strong>asset</strong> with a type and a bag of properties. Setting them up once here is what lets every later screen assign them to guests. This is also the schema trick that lets the lodge add a new offering without a database migration.</p>
+    <div class="who"><span class="chip admin">Admin · setup</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>Every offering is an <b>asset</b> of a type — Room, Activity, Boat, Guide, Captain, Deckhand, Breakfast, Beverage — with a JSON <b>properties</b> bag (description, photos, capacity, price…).</li>
+        <li><b>Guides link to activities</b>; <b>captains and deckhands crew the boats</b> — those relationships are stored as asset-to-asset links.</li>
+        <li>Breakfast is offered as <b>4–5 options per morning</b>; beverages are sold <b>by the 6-pack</b> and stocked onto boats.</li>
+        <li>A package bundles assets (rooms + activities) as <b>package assets</b>, which is what drives availability and pricing later.</li>
+        <li>New field or new asset type? It's <b>defined as data</b>, so it appears everywhere without a code change.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>One <b>assets</b> table (<code>asset_type</code> + <code>properties</code> JSON) covers every offering; crew and guides attach via <b>asset_links</b>. Packages point at assets through <b>package_assets</b>. All type-specific fields are governed by <b>field_definitions</b> (the meta-schema) — no migration to add a room amenity or a new tour.</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · asset catalog</span></div><img src="__IMG_assets__" alt="Asset catalog showing rooms, activities and boats with crew"></div>
+      <figcaption><b>The asset catalog.</b> Rooms, activities, and boats-with-crew shown as typed assets. Breakfast and beverage offerings live in the same catalog, further down.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- PHASE B -->
+  <div class="phase" id="pB"><div class="pl">Phase B</div><h2>Booking &amp; pre-arrival</h2><p class="pd">A booking turns a person into a booked guest, gathers their travelling party, and hands each of them a portal to get ready for the trip.</p></div>
+
+  <!-- STAGE 3 -->
+  <section class="stage" id="s3">
+    <div class="stage-h"><span class="stage-num">03</span><h3 class="stage-t">Booking &amp; the guest list</h3></div>
+    <p class="stage-lede">The person who books becomes the <strong>group lead</strong>. After the reservation is confirmed, the system asks the lead for their guest list; each traveller is matched to the master database and gets their own portal invite. From that moment the lodge can see, per guest, exactly how ready they are for the trip.</p>
+    <div class="who"><span class="chip admin">Admin · roster</span><span class="chip guest">Guest · guest list</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>The <b>booker becomes the group lead</b>; a scheduled post-confirmation message requests the full guest list.</li>
+        <li>Each named traveller is <b>matched to the master record</b> (Stage 1) and linked to the group as a member, with their own portal invite.</li>
+        <li><b>Availability</b> for a package = the rooms selected × their max occupancy; publishing is guarded so a package can't go live oversold.</li>
+        <li>A <b>repeat-guest badge</b> (R2, R3, R4…) surfaces returning guests at a glance, clickable through to their prior years.</li>
+        <li><b>Pre-trip readiness</b> is tracked across seven dimensions — profile, address, sizing, emergency contact, health, airfare, fishing licence — so the team can chase exactly what's missing.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>A <b>group</b> is created with the lead on <code>group_persons.role = lead</code>; each guest becomes a <code>member</code> row. The booking is the <b>trip</b> (Group ↔ Trip is 1:1). Readiness is computed from each guest's <b>trip_profiles</b> completeness. Returning-guest counts come straight off the person's history across all trips.</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · package guest list</span></div><img src="__IMG_guestlist__" alt="Package guest list with pre-trip readiness bars and repeat-guest badges"></div>
+      <figcaption><b>The package guest list.</b> Every booked guest across all groups, with repeat-guest badges and a per-guest readiness bar. The top strip rolls the whole package up — here, 64% ready, with airfare and licence the biggest gaps.</figcaption>
+    </figure>
+  </section>
+
+  <!-- STAGE 4 -->
+  <section class="stage" id="s4">
+    <div class="stage-h"><span class="stage-num">04</span><h3 class="stage-t">The guest portal &amp; profile</h3></div>
+    <p class="stage-lede">Between booking and arrival, the guest does their own preparation in a portal built for them — not the admin app. They complete a profile for <strong>this</strong> trip: personal details, dietary needs, emergency contact, flights, and their fishing licence. Anything they request is reviewed by the lodge within 24 hours.</p>
+    <div class="who"><span class="chip guest">Guest · self-service</span><span class="chip admin">Admin · reviews requests</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>The profile exists <b>per trip</b> and is <b>copied forward</b> from the guest's last visit — people change (boot size, diet, medical), so each trip snapshots its own, preserving history.</li>
+        <li>The guest captures dietary needs, allergies, emergency contact, flights in &amp; out, and uploads their <b>Alaska fishing licence</b>.</li>
+        <li>Every activity or spa request the guest makes is <b>reviewed within 24 hours</b> before it's confirmed (Stage 6).</li>
+        <li>The portal is deliberately its own experience — <b>no admin sidebar</b>, luxury tone, real photography, no emoji.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>Writes a <b>trip_profiles</b> row (structured core fields + a <code>details</code> JSON governed by <b>field_definitions</b>), versioned and copied from the prior trip. The licence and photos become <b>stay_media</b>. Requests are written as pending <b>assignments</b> awaiting approval.</p>
+      </div>
+    </div>
+
+    <div class="cols split">
+      <figure style="margin-top:0">
+        <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">portal · home</span></div><img src="__IMG_portalhome__" alt="Guest portal home screen"></div>
+        <figcaption><b>Portal home.</b> The guest's trip at a glance — days-to-go, and photo tiles for details, flights, payments, adventures, spa and licence.</figcaption>
+      </figure>
+      <figure style="margin-top:0">
+        <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">portal · personal info</span></div><img src="__IMG_portalprof__" alt="Guest portal personal information screen"></div>
+        <figcaption><b>Personal information.</b> Sectioned profile with progress, dietary chips, emergency contact and licence upload — saved automatically.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- PHASE C -->
+  <div class="phase" id="pC"><div class="pl">Phase C</div><h2>Assignment</h2><p class="pd">With the party known and the offerings set, the lodge places each individual guest — into a room, onto activities and the spa, and onto a boat. Every placement is per person, and every placement flows into the daily run sheet.</p></div>
+
+  <!-- STAGE 5 -->
+  <section class="stage" id="s5">
+    <div class="stage-h"><span class="stage-num">05</span><h3 class="stage-t">Rooms</h3></div>
+    <p class="stage-lede">The reservation assigns the room(s) to the group; here the team places <strong>each individual guest</strong> into one of them. Over-capacity is accepted and flagged, never blocked — the lodge always knows better than the software. Every placement attaches to the guest, so it flows straight to the rooming list and the daily report.</p>
+    <div class="who"><span class="chip admin">Admin · lodging</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>Each <b>individual guest</b> is placed into a specific room — not just the group into a building.</li>
+        <li>Over-capacity is <b>accepted and flagged</b>, never blocked.</li>
+        <li>Staff can move anyone to any room lodge-wide from one board (24 guests / 24 beds when the lodge is full).</li>
+        <li>The assignment attaches to the guest, so it appears on the rooming list and the daily run sheet automatically.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>A per-person <b>assignment</b> of a Room asset to the guest for the trip. The room-level occupancy view is derived; the source of truth is one row per guest.</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · room assignments</span></div><img src="__IMG_rooms__" alt="Lodge-wide room assignment board with every guest placed"></div>
+      <figcaption><b>Room assignments, lodge-wide.</b> Every guest placed by name, tagged with their group, with a move-anyone dropdown per person and live occupancy on each room.</figcaption>
+    </figure>
+  </section>
+
+  <!-- STAGE 6 -->
+  <section class="stage" id="s6">
+    <div class="stage-h"><span class="stage-num">06</span><h3 class="stage-t">Activities &amp; spa</h3></div>
+    <p class="stage-lede">Every activity and spa request — whether it came from the reservation or from the guest's own portal — lands in <strong>one approval queue</strong> on a 24-hour clock. Approving confirms it and the guest sees it as scheduled. Massage is booked per person, with a therapist, treatment and time for each appointment.</p>
+    <div class="who"><span class="chip admin">Admin · concierge</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>Requests from <b>both</b> the reservation flow and the guest portal land in a single queue, each on a <b>24-hour review clock</b>.</li>
+        <li>Approving sets the request to <b>confirmed</b>; the guest immediately sees it as "scheduled" in their portal.</li>
+        <li><b>Massage is per person</b> — each appointment carries its own guest, therapist, treatment and time.</li>
+        <li>Activities carry a guide (or pilot + vendor for fly-outs) and cap party size; the specific guide and boat are set on the scheduling calendar.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>Each request is an <b>assignment</b> (person + asset + trip + date) with a status; approval flips it to confirmed. Massage detail — therapist, treatment, time — lives in the assignment's <code>details</code> JSON, so the daily report and portal both read it. The SLA clock is tracked server-side.</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · activity approvals</span></div><img src="__IMG_approvals__" alt="Activity and spa approval queue with 24-hour clock"></div>
+      <figcaption><b>The approval queue.</b> Activity and spa requests grouped by party, each with a 24-hour clock. Note the massage request expands to a per-guest appointment with its own therapist and treatment.</figcaption>
+    </figure>
+  </section>
+
+  <!-- STAGE 7 -->
+  <section class="stage" id="s7">
+    <div class="stage-h"><span class="stage-num">07</span><h3 class="stage-t">Boats</h3></div>
+    <p class="stage-lede">Guests are seated on boats for their sportfishing — pick the day, then a group, then a boat. Each boat seats up to its set capacity, groups can share, and a guest keeps a "home boat" for the trip that can be switched for any single day. The key rule: on a day a guest has an adventure booked, that <strong>activity wins</strong> and they come off the boat.</p>
+    <div class="who"><span class="chip admin">Admin · dock</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>Seat guests by <b>day → group → boat</b>; each boat seats up to its <b>set capacity</b> (6, 4 or 2, from the crew setup).</li>
+        <li>Groups can <b>share a boat</b>, and if a group doesn't fully fit you choose who goes on it and place the rest elsewhere.</li>
+        <li>A guest has a <b>home boat</b> for the trip; a per-day switch overrides it for one day only.</li>
+        <li><span class="u">Activity-priority rule:</span> any day a guest has a scheduled adventure, that activity takes priority and they <b>drop off the boat</b> for the day.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>Boat seating is a per-person <b>assignment</b> of a Boat asset, keyed by trip and date (home seating with per-day overrides). Captain and deckhand come from the boat's <b>asset_links</b>. The activity-priority rule is resolved at read time against the day's confirmed adventures.</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · boat assignments</span></div><img src="__IMG_boats__" alt="Boat assignment board with groups and crewed boats"></div>
+      <figcaption><b>Boat assignments.</b> Pick the date, then a group, then seat guests on a boat. Every boat shows its crew and open seats; the whole fleet is visible at once.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- PHASE D -->
+  <div class="phase" id="pD"><div class="pl">Phase D</div><h2>On-property</h2><p class="pd">While guests are at the lodge, operations run day to day: what everyone eats, what they catch and take home, and a single run sheet that puts every person in the right place each morning.</p></div>
+
+  <!-- STAGE 8 -->
+  <section class="stage" id="s8">
+    <div class="stage-h"><span class="stage-num">08</span><h3 class="stage-t">Breakfast &amp; beverages</h3></div>
+    <p class="stage-lede">Each night, the lodge takes the next morning's breakfast and the day's beverage order — <strong>per guest</strong>. Breakfast is free choice from that day's menu; beverages roll onto the boat-stocking list by whichever boat the guest is on that day. It produces two outputs: a kitchen sheet and a boat-stocking list.</p>
+    <div class="who"><span class="chip admin">Admin · kitchen &amp; dock</span><span class="chip guest">Guest · can pre-set</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>Orders are captured <b>per guest, per night</b>, for the following morning.</li>
+        <li>Breakfast is <b>free choice</b> from that day's menu (mains + add-ons/mods).</li>
+        <li>Beverages are ordered by the 6-pack and <b>roll onto the boat-stocking list</b> for the boat that guest is on that day.</li>
+        <li>Two outputs come from the same order: a <b>kitchen sheet</b> (by guest) and a <b>boat-stocking list</b> (by boat).</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>Each order is an <b>assignment</b> per guest per day, with the picks in <code>details</code> JSON. The menu and beverage catalogs are Breakfast and Beverage <b>assets</b>. Boat-stocking is derived by joining orders to the day's boat seating.</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · meal &amp; beverage orders</span></div><img src="__IMG_meals__" alt="Per-guest breakfast and beverage order board"></div>
+      <figcaption><b>Meal &amp; beverage orders.</b> Per guest, per night: breakfast from the day's menu on the left, the beverage order on the right — which then loads onto that guest's boat.</figcaption>
+    </figure>
+  </section>
+
+  <!-- STAGE 9 -->
+  <section class="stage" id="s9">
+    <div class="stage-h"><span class="stage-num">09</span><h3 class="stage-t">Fish processing</h3></div>
+    <p class="stage-lede">At the end of each fishing day, the group's catch is logged once. The engine yields filet weight per species (count × average weight × recovery %), totals the day, and splits it into however many take-home shares the group wants — <strong>one named guest per share</strong>. Each share's poundage lands on that guest's own record, so it rolls up per individual for the trip.</p>
+    <div class="who"><span class="chip admin">Admin · processing</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>Catch is logged <b>per group, per fishing day</b>, by species.</li>
+        <li>Filet yield = <b>count × average weight × recovery %</b>, summed to a day total in pounds of filet.</li>
+        <li>The day's filet is split into N <b>take-home shares</b>, each assigned to <b>one named guest</b>.</li>
+        <li>Each share's poundage <b>attaches to that guest's record</b> — the catch funnels to the individual, just like every other assignment.</li>
+        <li>Per guest: how the fish goes home (carry-on / ship), whether they keep collars &amp; bellies, and who pays.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p><b>fish_catch</b> (trip, group, date, species, count, avg_weight, recovery) → <b>fish_catch_split</b> (share_index, person_id, lbs) → <b>fish_payment</b> (payer, method). Every share row references a person; <b>no card number is ever stored</b>, only a payment-method reference.</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · fish processing</span></div><img src="__IMG_fish__" alt="Fish processing catch entry with yield and named take-home shares"></div>
+      <figcaption><b>Fish processing.</b> The day's catch yields 189.9 lb of filet, split into six equal shares of 31.65 lb — each tied to a named guest, so it lands on their record for the trip.</figcaption>
+    </figure>
+  </section>
+
+  <!-- STAGE 10 -->
+  <section class="stage" id="s10">
+    <div class="stage-h"><span class="stage-num">10</span><h3 class="stage-t">The daily run sheet</h3></div>
+    <p class="stage-lede">Everything above comes together here: the dock-and-spa run sheet for a single day, <strong>every assignment by individual guest</strong>. Boats list their captain, deckhand and seated guests; the spa lists each appointment by time; adventures list each guide's guests; and anyone not on the water is accounted for. This one sheet is why every stage insists on attaching to the person.</p>
+    <div class="who"><span class="chip admin">Admin · daily ops</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>The sheet is entirely <b>by individual</b> — boats name each seated guest under their crew; the spa names each guest by time; adventures name each guide's guests.</li>
+        <li>A guest booked on an adventure is <b>pulled off the boat</b> for that day (the activity-priority rule from Stage 7, made visible).</li>
+        <li>An <b>evening</b> massage keeps a guest on the water that day; a day-spa booking takes them off it.</li>
+        <li>Everyone present but not on a boat or activity is listed under <b>"Enjoying the Island,"</b> grouped by party — nobody is unaccounted for.</li>
+        <li>The sheet pulls live from boat assignments and approvals, and prints for the dock.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>Pure read model: it joins the day's <b>assignments</b> (boats, activities, spa) with the trip roster from <b>trip_profiles</b>, applies the activity-priority rule, and groups the remainder. No new tables — it's the payoff of the individual-first design.</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · daily boat &amp; activity report</span></div><img src="__IMG_daily__" alt="Daily run sheet listing every guest by boat, spa, adventure and island"></div>
+      <figcaption><b>The daily run sheet.</b> One day, every guest placed. Two anglers are off the Retriever because they're on the float plane; a guest with an evening massage stays on her boat; everyone else is on the island — all resolved automatically.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- PHASE E -->
+  <div class="phase" id="pE"><div class="pl">Phase E</div><h2>Post-stay</h2><p class="pd">A day after the guest checks out, the loop closes: a survey goes out, the answers become a score and a set of notes, and both attach back to the individual record — ready for the next visit.</p></div>
+
+  <!-- STAGE 11 -->
+  <section class="stage" id="s11">
+    <div class="stage-h"><span class="stage-num">11</span><h3 class="stage-t">The satisfaction survey</h3></div>
+    <p class="stage-lede">One day after checkout, each guest is automatically sent a pre-identified survey — short, on one standardized scale, grouped by department. If a rating is average or poor, it quietly asks how the lodge could do better. And if the guest is planning a return, it invites them to look at next year's calendar with a standing discount.</p>
+    <div class="who"><span class="chip guest">Guest · post-stay</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>Sent automatically <b>one day after checkout</b>, pre-identified to the guest (no "who are you?" step).</li>
+        <li>Ratings are standardized to <b>one 4-point scale</b> (Excellent / Good / Average / Poor), grouped by department.</li>
+        <li>Any <b>Average or Poor</b> rating reveals a "Tell us — how can we do better?" field, captured for service recovery.</li>
+        <li>Answering that they're planning a future stay reveals a <b>rebook prompt</b> to review next-year availability.</li>
+        <li><b>Business rule:</b> a 10% discount is automatic for reservations made within <b>15 days</b> of departure — and the survey lands inside that window.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>A survey response is another record type pointing at the guest's <b>person</b> (like an inquiry or a booking). Answers and write-ins are stored per question; the response feeds Stage 12's scoring.</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · guest survey</span></div><img src="__IMG_survey__" alt="Guest satisfaction survey"></div>
+      <figcaption><b>The guest survey.</b> Pre-identified, one scale, grouped by department. Average/poor answers open a "how can we do better?" field; a return-visit answer opens the rebook prompt with the standing 10% offer.</figcaption>
+    </figure>
+  </section>
+
+  <!-- STAGE 12 -->
+  <section class="stage" id="s12">
+    <div class="stage-h"><span class="stage-num">12</span><h3 class="stage-t">Scoring &amp; analysis</h3></div>
+    <p class="stage-lede">Every response becomes a number. Each rating maps to points, questions roll up into department scores, and the departments average into one guest satisfaction score from 0–100. Low answers flag the department for follow-up now; a monthly rollup goes to each department. Recommend and rebook are tracked separately as advocacy, not folded into the score.</p>
+    <div class="who"><span class="chip admin">Admin · reports</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>Each rating → points: Excellent 100 · Good 75 · Average 40 · Poor 0.</li>
+        <li>Questions roll up into departments — <b>Service, Facilities, Culinary, Guiding, Spa</b> — and the answered departments average into the <b>0–100 guest score</b>.</li>
+        <li>Bands: 90–100 Exceptional · 75–89 Strong · 60–74 Watch · under 60 At-risk (auto-flags follow-up).</li>
+        <li>Any Average/Poor answer raises a <b>service-recovery flag</b> routed to that department.</li>
+        <li><b>Recommend</b> and <b>rebook</b> are tracked separately as advocacy/retention, never inside the score.</li>
+        <li>Each department receives a <b>monthly analysis</b> of its own scores and comments.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>Scores are computed from the response and written to <b>survey_scores</b>, linked to the person and the trip. Department rollups and top-box percentages are derived; the latest and average score also cache onto the person for quick history.</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · survey dashboard</span></div><img src="__IMG_dashboard__" alt="Survey scoring and analysis dashboard"></div>
+      <figcaption><b>The analysis dashboard.</b> A season's responses rolled into an overall score, department cards, per-question breakdowns and a service-recovery panel — the monthly view each department receives.</figcaption>
+    </figure>
+  </section>
+
+  <!-- STAGE 13 -->
+  <section class="stage" id="s13">
+    <div class="stage-h"><span class="stage-num">13</span><h3 class="stage-t">It travels with the guest</h3></div>
+    <p class="stage-lede">The loop closes back to Stage 1. On the guest's staff-only profile, the score is published with a plain breakdown of how it was built — and, more importantly, their survey comments become <strong>carry-forward notes the lodge acts on in future years</strong>. A comment can catch what a score hides: a breakfast rated "excellent" whose note mentions a 30-minute wait becomes a flag for next season.</p>
+    <div class="who"><span class="chip admin">Admin · staff-only profile</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>The score is published on the guest's profile for <b>staff eyes only</b> — never shown to the guest.</li>
+        <li>The profile shows <b>how the score was built</b> (answer → points → department → score), so it's transparent to management.</li>
+        <li>Survey comments become <b>carry-forward notes</b>, tagged <b>Fix</b> or <b>Delight</b>, routed to a department and dated to the year.</li>
+        <li>Notes catch what the number hides — an "Excellent" breakfast whose comment flags a long wait still raises a Fix note.</li>
+        <li>Each note carries <b>Carry-to-next-stay</b> / <b>Mark-addressed</b>, and a year-over-year comment history shows the whole relationship.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>The score reads from <b>survey_scores</b>; the carry-forward notes are person-linked records with a tag, department, source year and status. Because they hang off the <b>person</b>, they resurface automatically the next time that guest books — the accumulation promised in Stage 1.</p>
+      </div>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · guest profile — satisfaction (staff only)</span></div><img src="__IMG_profilesat__" alt="Admin-only guest profile satisfaction view with score and carry-forward notes"></div>
+      <figcaption><b>The guest's satisfaction profile.</b> Staff-only. The score and how it's built, plus the "act on next visit" notes drawn from the guest's own comments — the memory the lodge brings to the returning guest.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- BUILD STATUS -->
+  <section class="status">
+    <p class="eyebrow" style="margin-bottom:12px">Where the build actually stands</p>
+    <h2>What's ready, and what needs the backend</h2>
+    <p class="sd">Every screen in this document is a working prototype. What separates a convincing prototype from a live production system is the system-of-record backbone — and that split is honest below.</p>
+    <div class="slane">
+      <div class="lane go">
+        <div class="lh"><span class="b"></span><span class="t">Built &amp; demonstrable</span></div>
+        <div class="ls">Front-end · logic · prototypes</div>
+        <ul>
+          <li>Every screen shown here, end to end</li>
+          <li>The scoring, availability, yield and rollup logic (real math)</li>
+          <li>The matching &amp; merge engine, validated on real data</li>
+          <li>The guest portal home &amp; profile in the production app</li>
+          <li>The design system — tokens, brand, no-emoji luxury tone</li>
+        </ul>
+      </div>
+      <div class="lane mid">
+        <div class="lh"><span class="b"></span><span class="t">Built, awaits wiring</span></div>
+        <div class="ls">Front-end done · needs the API</div>
+        <ul>
+          <li>Persisting profiles, assignments, orders &amp; scores</li>
+          <li>Publishing survey scores to the live guest record</li>
+          <li>Turning prototype boards into API-backed screens</li>
+          <li>The locked v4 database schema (migrations authored)</li>
+        </ul>
+      </div>
+      <div class="lane dev">
+        <div class="lh"><span class="b"></span><span class="t">Stella / backend</span></div>
+        <div class="ls">By design · not ours to build</div>
+        <ul>
+          <li>Authentication, sessions &amp; access control</li>
+          <li>The survey scheduler (checkout + 1 day)</li>
+          <li>Outbound email &amp; the 24-hour SLA clock</li>
+          <li>Payments (fish shipping &amp; balances)</li>
+          <li>Server config, environments &amp; deploy</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="foot">
+    <p><b>Talon Lodge &amp; Spa · System Blueprint · v1 · September 2026.</b> A draft for review. The business rules on every stage are the lines to check against how the lodge really runs — mark anything that's wrong and it will be corrected before the dev team builds to it. Screens are working prototypes captured from the design repository; production screens live in the app under access-gated areas.</p>
+    <a class="backtop" href="#pA">↑ Back to top</a>
+  </footer>
+
+</div>
