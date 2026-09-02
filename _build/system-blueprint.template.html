@@ -143,6 +143,31 @@ figcaption b{color:var(--ink);font-weight:600}
 .lane.mid .lh .b,.lane.mid li::before{background:var(--warn)} .lane.mid{border-top:3px solid var(--warn)}
 .lane.dev .lh .b,.lane.dev li::before{background:var(--stop)} .lane.dev{border-top:3px solid var(--stop)}
 
+/* ---- api appendix ---- */
+.api-conv{background:var(--surface-3);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:24px 0 8px}
+.api-conv .row{display:grid;grid-template-columns:150px 1fr;gap:9px 18px;font-size:13.5px;align-items:baseline}
+.api-conv .k{font:600 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.api-conv .v{color:var(--muted);line-height:1.5}
+.api-group{margin:38px 0 0}
+.api-group .gh{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:0 0 2px}
+.api-group .gh .gn{font:800 19px var(--sans);letter-spacing:-.01em}
+.api-group .gh .gs{font:600 11px var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:.08em}
+.eplist{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:14px;background:var(--surface);box-shadow:var(--shadow)}
+.ep{display:grid;grid-template-columns:60px 1fr;gap:14px;padding:13px 16px;border-top:1px solid var(--line);align-items:start}
+.ep:first-child{border-top:0}
+.ep .m{font:700 10px var(--mono);letter-spacing:.03em;text-align:center;padding:4px 0;border-radius:6px}
+.m.get{color:var(--accent-deep);background:var(--accent-soft)}
+.m.post{color:var(--gold);background:var(--gold-soft)}
+.m.put{color:var(--salmon);background:var(--salmon-soft)}
+.m.del{color:var(--stop);background:var(--stop-soft)}
+.ep .path{font:600 13px var(--mono);color:var(--ink);word-break:break-word;line-height:1.5}
+.ep .desc{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.45}
+.ep .desc .stg{color:var(--accent);font-weight:600}
+.pl{margin:16px 0 2px;background:var(--surface-3);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;padding:0;overflow:hidden}
+.pl-lbl{font:700 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);padding:11px 16px 0}
+.pl pre{margin:0;padding:10px 16px 15px;font:500 12.5px/1.62 var(--mono);color:var(--ink);white-space:pre;overflow-x:auto}
+.pl .cm{color:var(--faint)}
+
 /* ---- footer ---- */
 .foot{padding:40px 0 70px;color:var(--faint);font-size:13px;border-top:1px solid var(--line);line-height:1.6}
 .foot b{color:var(--muted)}
@@ -230,6 +255,12 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
         <li><span class="n">11</span><a href="#s11">The satisfaction survey</a></li>
         <li><span class="n">12</span><a href="#s12">Scoring &amp; analysis</a></li>
         <li><span class="n">13</span><a href="#s13">It travels with the guest</a></li>
+      </ol>
+    </div>
+    <div class="toc-phase">
+      <div class="toc-ph">Appendix · for the dev team</div>
+      <ol>
+        <li><span class="n">API</span><a href="#apiapp">API contract — endpoints &amp; payloads</a></li>
       </ol>
     </div>
   </nav>
@@ -655,6 +686,169 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
         </ul>
       </div>
     </div>
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- APPENDIX · API CONTRACT -->
+  <div class="phase" id="apiapp"><div class="pl">Appendix</div><h2>API contract</h2><p class="pd">A proposed contract for the endpoints each screen needs and the shapes they exchange — for Stella's team to ratify against the locked v4 schema. Grouped to match the stages above; representative payloads shown, not every field.</p></div>
+
+  <section class="stage" style="border-bottom:0;padding-bottom:20px">
+
+    <div class="api-conv">
+      <div class="row">
+        <span class="k">Base</span><span class="v"><code>/api/v1</code> · JSON in and out.</span>
+        <span class="k">Auth</span><span class="v">Staff calls send a Bearer session (RBAC); <code>/portal/*</code> uses the guest's magic-link session. <b>Auth is Stella's — this contract assumes it.</b></span>
+        <span class="k">IDs</span><span class="v">Every entity has a ULID <code>id</code>. Servers stamp <code>created_by</code> / <code>updated_by</code> + timestamps.</span>
+        <span class="k">Deletes</span><span class="v">Soft-delete only (<code>active:false</code>) — no endpoint hard-deletes.</span>
+        <span class="k">Lists</span><span class="v"><code>{ data:[…], meta:{ total, page, per_page } }</code>. Errors: <code>{ error:{ code, message, fields? } }</code>.</span>
+        <span class="k">Money</span><span class="v">No card number is ever sent or stored — only a <code>payment_method_id</code> reference.</span>
+      </div>
+    </div>
+
+    <!-- 1 -->
+    <div class="api-group">
+      <div class="gh"><span class="gn">1 · People &amp; matching</span><span class="gs">Stage 01</span></div>
+      <div class="eplist">
+        <div class="ep"><span class="m post">POST</span><div><div class="path">/intake/:channel</div><div class="desc"><span class="stg">Stage 01</span> · channel = <code>inquiry|lead|reservation|guest-list</code>. Runs the matcher, returns the resolved person and the tier decision.</div></div></div>
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/persons/:id</div><div class="desc">The master record — emails, phones, aliases, every group/trip/role, and cached rollups.</div></div></div>
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/persons?q=&amp;page=</div><div class="desc">Search by <code>canonical_name</code> / email / phone.</div></div></div>
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/merge-review</div><div class="desc">The Tier-3 queue awaiting a human decision.</div></div></div>
+        <div class="ep"><span class="m post">POST</span><div><div class="path">/merges</div><div class="desc"><code>{ survivor_id, loser_id }</code> — combine two people; snapshotted and reversible.</div></div></div>
+        <div class="ep"><span class="m post">POST</span><div><div class="path">/merges/:id/undo</div><div class="desc">Reverse the most recent not-yet-undone merge on a survivor.</div></div></div>
+      </div>
+      <div class="pl"><div class="pl-lbl">POST /intake/:channel → 200</div><pre>{ "person_id": "01J…",
+  "match": { "tier": 2, "action": "auto-link",   <span class="cm">// tier 3 → "review"</span>
+             "signal": "phone + nickname (Bob=Robert)" },
+  "created": false }</pre></div>
+      <div class="pl"><div class="pl-lbl">GET /persons/:id → 200</div><pre>{ "id":"01J…", "canonical_name":"Phil Younger",
+  "emails":["phil@…"], "phones":["480…"], "aliases":["Philip"],
+  "memberships":[ { "group_id":"…","trip_id":"…","role":"lead","year":2027 },
+                  { "group_id":"…","trip_id":"…","role":"member","year":2019 } ],
+  "rollups": { "total_trips":3, "latest_survey_score":79, "avg_survey_score":86 } }</pre></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="api-group">
+      <div class="gh"><span class="gn">2 · Assets &amp; catalog</span><span class="gs">Stage 02</span></div>
+      <div class="eplist">
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/assets?type=</div><div class="desc"><span class="stg">Stage 02</span> · type = <code>room|activity|boat|guide|breakfast|beverage…</code>. Returns the <code>properties</code> JSON per asset.</div></div></div>
+        <div class="ep"><span class="m post">POST</span><div><div class="path">/assets</div><div class="desc">Create an asset of a type with its <code>properties</code> bag.</div></div></div>
+        <div class="ep"><span class="m put">PATCH</span><div><div class="path">/assets/:id</div><div class="desc">Edit an asset; <code>properties</code> is validated by its field-definitions.</div></div></div>
+        <div class="ep"><span class="m post">POST</span><div><div class="path">/asset-links</div><div class="desc"><code>{ from_asset_id, to_asset_id, capability }</code> — link a guide to an activity, a captain/deckhand to a boat.</div></div></div>
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/field-definitions?target=</div><div class="desc">target = <code>asset|trip_profile|assignment|person</code>. The meta-schema that drives every form — no migration to add a field.</div></div></div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="api-group">
+      <div class="gh"><span class="gn">3 · Packages, availability &amp; the guest list</span><span class="gs">Stage 03</span></div>
+      <div class="eplist">
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/packages/:id</div><div class="desc"><span class="stg">Stage 03</span> · dates, nights, and its <code>package_assets</code> (rooms + activities).</div></div></div>
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/packages/:id/availability</div><div class="desc">Computed capacity (Σ selected rooms × max occupancy) and remaining seats.</div></div></div>
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/packages/:id/guests</div><div class="desc">Every booked guest with per-guest readiness across the seven dimensions + repeat-guest count.</div></div></div>
+        <div class="ep"><span class="m post">POST</span><div><div class="path">/trips</div><div class="desc"><code>{ package_id, lead:{person…} }</code> — the booking: creates the group + trip (1:1) and sets the lead.</div></div></div>
+        <div class="ep"><span class="m post">POST</span><div><div class="path">/trips/:id/members</div><div class="desc"><code>{ guests:[{name,email?}] }</code> — matches each to a person, links as member, issues portal invites.</div></div></div>
+      </div>
+      <div class="pl"><div class="pl-lbl">GET /packages/:id/guests → 200 (one row)</div><pre>{ "person_id":"…", "name":"Kathy Marshall", "group":"Marshall",
+  "room":"Bluff House", "returning_count":2,
+  "readiness": { "score":4, "of":7,
+    "profile":true, "address":false, "sizing":true, "emergency":false,
+    "health":true, "airfare":false, "license":true } }</pre></div>
+    </div>
+
+    <!-- 4 -->
+    <div class="api-group">
+      <div class="gh"><span class="gn">4 · Guest portal</span><span class="gs">Stage 04 · guest session</span></div>
+      <div class="eplist">
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/portal/trip</div><div class="desc"><span class="stg">Stage 04</span> · the guest's current trip — dates, booking code, party, days-to-go.</div></div></div>
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/portal/profile</div><div class="desc">This trip's profile (copied forward from the last visit).</div></div></div>
+        <div class="ep"><span class="m put">PUT</span><div><div class="path">/portal/profile</div><div class="desc">Autosave the profile — partial patches accepted.</div></div></div>
+        <div class="ep"><span class="m post">POST</span><div><div class="path">/portal/media</div><div class="desc">Upload fishing licence / photo → <code>stay_media</code> (multipart).</div></div></div>
+        <div class="ep"><span class="m post">POST</span><div><div class="path">/portal/requests</div><div class="desc"><code>{ asset_id, date, guest_ids[] }</code> — an activity or spa request → a pending assignment (Stage 06).</div></div></div>
+      </div>
+      <div class="pl"><div class="pl-lbl">PUT /portal/profile — trip_profiles</div><pre>{ "version":3,
+  "core": { "first":"Tommy","last":"Florio","dob":"1979-04-12",
+            "email":"…","phone":"…","address":"…" },
+  "details": { "diet":["none"], "allergies":"",
+               "emergency":{ "name":"Dana Florio","phone":"…","rel":"spouse" },
+               "boot":"11","jacket":"L" } }   <span class="cm">// details JSON governed by field_definitions</span></pre></div>
+    </div>
+
+    <!-- 5 -->
+    <div class="api-group">
+      <div class="gh"><span class="gn">5 · Assignments — rooms, activities, spa, boats</span><span class="gs">Stages 05–07</span></div>
+      <div class="eplist">
+        <div class="ep"><span class="m post">POST</span><div><div class="path">/assignments</div><div class="desc"><span class="stg">Stages 05–07</span> · the one scheduler for everything: <code>{ person_id, asset_id, trip_id, date?, details }</code>.</div></div></div>
+        <div class="ep"><span class="m put">PATCH</span><div><div class="path">/assignments/:id</div><div class="desc">Reassign, retime, or confirm/decline.</div></div></div>
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/trips/:id/rooms</div><div class="desc">Room allocation, lodge-wide, with occupancy. <span class="stg">Stage 05</span></div></div></div>
+        <div class="ep"><span class="m put">PUT</span><div><div class="path">/trips/:id/rooms/:person_id</div><div class="desc"><code>{ room_asset_id }</code> — over-capacity returns <code>200</code> with a <code>flag</code>, never <code>409</code>.</div></div></div>
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/approvals?status=pending</div><div class="desc">The activity &amp; spa queue with SLA clock. <span class="stg">Stage 06</span></div></div></div>
+        <div class="ep"><span class="m post">POST</span><div><div class="path">/approvals/:id/approve · /decline</div><div class="desc">Flip a request to confirmed (guest sees "scheduled") or decline it.</div></div></div>
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/trips/:id/boats?date=</div><div class="desc">Seating for a day, home-boat with per-day overrides. <span class="stg">Stage 07</span></div></div></div>
+        <div class="ep"><span class="m put">PUT</span><div><div class="path">/trips/:id/boats</div><div class="desc"><code>{ date, seating:{ person_id: boat_asset_id } }</code>.</div></div></div>
+      </div>
+      <div class="pl"><div class="pl-lbl">POST /assignments — the unified shape (a massage)</div><pre>{ "person_id":"…", "asset_id":"asset_massage", "trip_id":"…",
+  "date":"2027-05-26", "status":"confirmed",
+  "details": { "time":"4:30 PM", "therapist_id":"…",
+               "treatment":"Northern Release" } }
+<span class="cm">// rooms/boats/activities/breakfast all use this one endpoint; details JSON differs by asset_type</span></pre></div>
+    </div>
+
+    <!-- 6 -->
+    <div class="api-group">
+      <div class="gh"><span class="gn">6 · On-property — meals &amp; fish</span><span class="gs">Stages 08–09</span></div>
+      <div class="eplist">
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/trips/:id/meals?date=</div><div class="desc"><span class="stg">Stage 08</span> · per-guest breakfast + beverage order for the morning.</div></div></div>
+        <div class="ep"><span class="m put">PUT</span><div><div class="path">/trips/:id/meals/:person_id?date=</div><div class="desc">Set one guest's picks (an assignment with <code>details</code>).</div></div></div>
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/trips/:id/meals/kitchen?date= · /boats?date=</div><div class="desc">Derived kitchen sheet (by guest) and boat-stocking list (by boat).</div></div></div>
+        <div class="ep"><span class="m post">POST</span><div><div class="path">/trips/:id/catch</div><div class="desc"><span class="stg">Stage 09</span> · log the day's catch → yields filet weight per species + day total.</div></div></div>
+        <div class="ep"><span class="m put">PUT</span><div><div class="path">/trips/:id/catch/:date/splits</div><div class="desc"><code>{ shares:[{ person_id }] }</code> — split the day's filet into named take-home shares.</div></div></div>
+        <div class="ep"><span class="m post">POST</span><div><div class="path">/trips/:id/catch/:date/payment</div><div class="desc"><code>{ payer_person_id, payment_method_id }</code>.</div></div></div>
+      </div>
+      <div class="pl"><div class="pl-lbl">POST /trips/:id/catch → fish_catch + fish_catch_split</div><pre>{ "date":"2027-05-25", "group":"Marshall",
+  "lines":[ { "species":"King Salmon","count":6,"avg_weight":17,"recovery":45 },
+            { "species":"Silver Salmon","count":20,"avg_weight":7,"recovery":40 } ],
+  "day_total_lbs":189.9,
+  "splits":[ { "share":1,"person_id":"…chris","lbs":31.65 },
+             { "share":2,"person_id":"…chuck","lbs":31.65 } ] }   <span class="cm">// 6 shares</span></pre></div>
+    </div>
+
+    <!-- 7 -->
+    <div class="api-group">
+      <div class="gh"><span class="gn">7 · The daily run sheet</span><span class="gs">Stage 10 · read model</span></div>
+      <div class="eplist">
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/trips/:id/daily?date= · /properties/:id/daily?date=</div><div class="desc"><span class="stg">Stage 10</span> · pure read model. Joins the day's assignments, applies the activity-priority rule, groups the rest. No writes.</div></div></div>
+      </div>
+      <div class="pl"><div class="pl-lbl">GET /daily?date= → 200</div><pre>{ "date":"2027-05-26",
+  "boats":[ { "boat":"Retriever","captain":"James Lecrone","deckhand":"Emily Rose",
+              "guests":["Jim Schiffer","Lisa Schiffer"] } ],   <span class="cm">// Bob & Jeff pulled off — on the float plane</span>
+  "spa":[ { "time":"4:30 PM","guest":"Kathy Marshall","therapist":"Lori Strachan","treatment":"Northern Release" } ],
+  "adventures":[ { "name":"Freshwater Fishing by Float Plane","time":"8:00 AM",
+                   "guide":"Ted Deering","guests":["Bob Gomez","Jeff Langhorst"] } ],
+  "island":[ { "group":"Lufkin","guests":["Beau Reinhard","Onni Lufkin","…"] } ] }</pre></div>
+    </div>
+
+    <!-- 8 -->
+    <div class="api-group">
+      <div class="gh"><span class="gn">8 · Survey, scoring &amp; the record</span><span class="gs">Stages 11–13</span></div>
+      <div class="eplist">
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/portal/survey/:token</div><div class="desc"><span class="stg">Stage 11</span> · the pre-identified survey (guest token from the checkout+1 send).</div></div></div>
+        <div class="ep"><span class="m post">POST</span><div><div class="path">/portal/survey/:token</div><div class="desc"><code>{ answers:[…], write_ins:{…}, rebook:bool }</code> — submit; triggers scoring.</div></div></div>
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/persons/:id/satisfaction</div><div class="desc"><span class="stg">Stages 12–13</span> · staff-only. The score, its build breakdown, and department rollups.</div></div></div>
+        <div class="ep"><span class="m get">GET</span><div><div class="path">/persons/:id/notes</div><div class="desc">Carry-forward notes drawn from survey comments.</div></div></div>
+        <div class="ep"><span class="m post">POST</span><div><div class="path">/persons/:id/notes</div><div class="desc"><code>{ tag, dept, source_year, text }</code> — add a Fix/Delight note.</div></div></div>
+        <div class="ep"><span class="m put">PATCH</span><div><div class="path">/persons/:id/notes/:noteId</div><div class="desc">Carry to next stay, or mark addressed.</div></div></div>
+      </div>
+      <div class="pl"><div class="pl-lbl">GET /persons/:id/satisfaction → 200</div><pre>{ "trip_id":"…", "score":79, "band":"Strong",
+  "departments":{ "Service":75,"Facilities":75,"Culinary":92,"Guiding":75 },
+  "recommend":true, "rebook":false,
+  "build":[ { "q":"Breakfast","answer":"Excellent","points":100 }, … ],
+  "notes":[ { "tag":"fix","dept":"Culinary","source_year":2027,
+              "text":"Waited 30+ min for breakfast","status":"carry" },
+            { "tag":"delight","dept":"Culinary","source_year":2027,
+              "text":"Hot soup + saltwater sandwiches on river days","status":"open" } ] }</pre></div>
+    </div>
+
   </section>
 
   <!-- FOOTER -->
