@@ -173,6 +173,13 @@ figcaption b{color:var(--ink);font-weight:600}
 .foot b{color:var(--muted)}
 .backtop{display:inline-block;margin-top:10px;font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
 hr.soft{border:0;border-top:1px solid var(--line);margin:0}
+@media print{
+  figure{break-inside:avoid;page-break-inside:avoid}
+  .screen{break-inside:avoid;page-break-inside:avoid}
+  .screen img{break-inside:avoid;page-break-inside:avoid}
+  .stage-h,.phase{break-after:avoid;page-break-after:avoid}
+  .legend .li,.lane,.api-group .eplist,.pl{break-inside:avoid;page-break-inside:avoid}
+}
 </style>
 
 <div class="wrap">
