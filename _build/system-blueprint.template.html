@@ -190,7 +190,7 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
       <span class="tag draft">Draft for review</span>
       <span class="tag">For the Talon team &amp; Stella dev</span>
       <span class="tag">v1 · September 2026</span>
-      <span class="tag">23 stages · 38 screens</span>
+      <span class="tag">23 stages · 46 screens</span>
     </div>
   </header>
 
@@ -281,6 +281,7 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
       <div class="toc-ph">Appendix · for the dev team</div>
       <ol>
         <li><span class="n">API</span><a href="#apiapp">API contract — endpoints &amp; payloads</a></li>
+        <li><span class="n">DEV</span><a href="#tooling">Internal tooling &amp; build tracking</a></li>
       </ol>
     </div>
   </nav>
@@ -463,6 +464,10 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
       <figcaption><b>Step 1 — season &amp; party.</b> Pick the season, the arrival window and the party size; the package's includes/excludes are shown up front. The nine-step bar tracks the whole reservation.</figcaption>
     </figure>
     <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">reserve · 2. arrival date</span></div><img src="__IMG_res_dates__" alt="Reservation step 2 — available arrival dates"></div>
+      <figcaption><b>Step 2 — the available dates.</b> This is the availability engine at work: it lists only the departures whose open rooms can seat the party <b>exactly</b>, each showing rooms open and how many it sleeps. The guest picks a date, then continues to rooms.</figcaption>
+    </figure>
+    <figure>
       <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">reserve · 3. rooms</span></div><img src="__IMG_res_rooms__" alt="Reservation step 3 — room selection"></div>
       <figcaption><b>Step 3 — rooms.</b> Only rooms that can seat the remaining party are offered, with photos and 360° tours. The meter enforces covering the party exactly.</figcaption>
     </figure>
@@ -477,6 +482,14 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
     <figure>
       <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">reserve · 7. review</span></div><img src="__IMG_res_review__" alt="Reservation step 7 — review and payment schedule"></div>
       <figcaption><b>Step 7 — review.</b> The full order — trip, rooms, activities, lead, guest list — with the payment schedule: deposit now, balance 120 days before arrival. Then deposit and confirm.</figcaption>
+    </figure>
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">reserve · cancellation policy &amp; travel insurance</span></div><img src="__IMG_res_insurance__" alt="Cancellation policy and travel insurance acknowledgment"></div>
+      <figcaption><b>Before deposit — the guest must acknowledge.</b> Continuing from review raises the cancellation policy and a <b>travel-insurance</b> notice (weather and flights in remote SE Alaska are outside anyone's control), with a link to the full policy. The guest clicks <b>"I understand — continue"</b> to move forward — the one required acknowledgment in the flow.</figcaption>
+    </figure>
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">reserve · 8. deposit</span></div><img src="__IMG_res_deposit__" alt="Reservation step 8 — deposit payment method"></div>
+      <figcaption><b>Step 8 — deposit.</b> Secure the reservation with the per-person deposit; credit card (with the processing fee shown) or no-fee check / ACH. Paying confirms the booking; the balance is due before arrival.</figcaption>
     </figure>
   </section>
 
@@ -882,6 +895,10 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
       <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">display · evening — breakfast &amp; activities</span></div><img src="__IMG_disp_evening__" alt="Evening guest display — tomorrow's breakfast menu"></div>
       <figcaption><b>The evening display.</b> Tomorrow's breakfast — the signature dish featured on the left, the full morning menu on the right — rotating with the day's activities and cocktails for the lobby screen.</figcaption>
     </figure>
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">display · evening — tomorrow's activities</span></div><img src="__IMG_disp_evening_act__" alt="Evening display slide showing an available activity for tomorrow"></div>
+      <figcaption><b>Nightly — what's available tomorrow.</b> The evening display also rotates each featured activity with its <b>open spaces</b> ("Available tomorrow · Freshwater Fishing by Float Plane · 6 spaces"), computed live from guide and boat availability, so guests can see what to book at the bar that night.</figcaption>
+    </figure>
   </section>
 
   <!-- STAGE 20 · DEPARTURE & BILLING -->
@@ -1198,6 +1215,29 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
               "text":"Hot soup + saltwater sandwiches on river days","status":"open" } ] }</pre></div>
     </div>
 
+  </section>
+
+  <!-- ========================================================= -->
+  <!-- APPENDIX · INTERNAL TOOLING -->
+  <div class="phase" id="tooling"><div class="pl">Appendix</div><h2>Internal tooling &amp; build tracking</h2><p class="pd">The scaffolding behind the prototypes — for the team, not guests. A single test hub that runs every screen, the capability map, the live record-matching playground, and the build inventory that tracks every screen so nothing gets rebuilt.</p></div>
+
+  <section class="stage" style="border-bottom:0">
+    <figure style="margin-top:8px">
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · test hub</span></div><img src="__IMG_testhub__" alt="Test hub — unified app shell listing every tool"></div>
+      <figcaption><b>The test hub.</b> One app shell that runs every module behind a role switcher ("view as Administrator"), with a left rail grouping all of Setup, Operate, Displays and Guest tools — and a one-click reset of the demo data. This is how the whole prototype set is exercised together.</figcaption>
+    </figure>
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · module map</span></div><img src="__IMG_modulemap__" alt="Module / capability map by guest journey"></div>
+      <figcaption><b>The module map.</b> Every module arranged by the guest journey — the five lifecycle phases across the top, all feeding the single People &amp; Trip record, on a shared layer of platform services (billing, comms, availability, media, auth, tenancy). Nothing is a silo.</figcaption>
+    </figure>
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · master-record playground</span></div><img src="__IMG_playground__" alt="Live matching and merge playground"></div>
+      <figcaption><b>The record playground.</b> The real matching + merge logic running live — simulate an arrival and watch it auto-link, attach, or flag for review; work the review queue; merge two records and undo it. The interactive proof behind Stage 1.</figcaption>
+    </figure>
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">talon · build inventory</span></div><img src="__IMG_buildinv__" alt="Build inventory — full manifest of everything built"></div>
+      <figcaption><b>The build inventory.</b> A live manifest of the whole set — 9 reports &amp; tools, 30 app modules, 20 reference docs — grouped by area so nothing gets rebuilt. This is the master checklist of everything that exists today.</figcaption>
+    </figure>
   </section>
 
   <!-- FOOTER -->
