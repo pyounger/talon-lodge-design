@@ -197,7 +197,7 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
       <span class="tag draft">Draft for review</span>
       <span class="tag">For the Talon team &amp; Stella dev</span>
       <span class="tag">v1 · September 2026</span>
-      <span class="tag">23 stages · 50 screens</span>
+      <span class="tag">23 stages · 51 screens</span>
     </div>
   </header>
 
@@ -507,6 +507,7 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
         <h4>Business rules</h4>
         <li>The agent takes the caller's name, email and phone and <b>checks the guest database</b> — the same tiered matcher; a returning guest surfaces prior stays, usual package, satisfaction and on-file notes, to greet them and carry forward what's known.</li>
         <li>Same availability as the guest widget: only departures with an <b>open room that fits the party</b> appear (with a rooms-open count), and the room step lists only the rooms available on that departure.</li>
+        <li>The lead can <b>build the guest list</b> — names and emails for the party — and choose whether each guest gets their own portal invite or the <b>lead is the single primary contact</b> for all communications; a guest without their own email can share the lead's.</li>
         <li>A running <b>purchase summary</b> builds through the call; submitting logs the reservation and sets the deposit hold.</li>
         <li>The confirmation <b>text and email</b> carry the reservation link and the <b>cancellation &amp; travel-insurance policy link, placed before the payment link</b>.</li>
         <li><span class="u">Phone card payments are consent-gated:</span> send the policy → the guest confirms they've <b>read &amp; understand</b> it (recorded, timestamped) → only then is the deposit charged, and the <b>agent never sees or types the card number</b> — it's captured by the PCI processor.</li>
@@ -528,6 +529,10 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
       </figure>
     </div>
 
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">call center · guest list</span></div><img src="__IMG_cc_guests__" alt="Call-center guest list — lead as primary contact"></div>
+      <figcaption><b>The guest list.</b> The lead builds the party by name and email. Each guest can take their own portal invite, or — as shown — the <b>lead is the single primary contact</b> for everyone, with the lead's email carrying every invite, confirmation and the reservation email; a guest without their own email shares the lead's.</figcaption>
+    </figure>
     <figure>
       <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">call center · purchase summary</span></div><img src="__IMG_cc_confirm__" alt="Call-center purchase summary"></div>
       <figcaption><b>Purchase summary.</b> The agent reads back the whole order — package, room, add-ons, total, deposit and balance — before submitting.</figcaption>

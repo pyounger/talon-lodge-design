@@ -158,6 +158,18 @@ aside.sum .body{padding:16px 18px}
 .csb{flex:1;min-width:0}.cst{font-weight:700;font-size:13.5px}
 .csd{font-size:12.5px;color:var(--muted);margin:2px 0 9px;line-height:1.45}
 .csok{display:inline-flex;align-items:center;gap:7px;font:700 12px var(--sans);color:var(--good)}
+.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:10px;overflow:hidden;flex-wrap:wrap}
+.seg .segopt{background:var(--surface);border:0;padding:9px 15px;font:600 12.5px var(--sans);color:var(--muted);cursor:pointer}
+.seg .segopt.on{background:var(--accent);color:#fff}
+.gcard{display:flex;gap:12px;border:1px solid var(--line);border-radius:12px;padding:14px 15px;margin-top:12px;background:var(--surface)}
+.gcard.lead{background:var(--accent-soft);border-color:var(--line-2)}
+.gcard .gnum{width:26px;height:26px;border-radius:50%;background:var(--surface-2);color:var(--muted);display:grid;place-items:center;font:700 12px var(--mono);flex:none}
+.gcard.lead .gnum{background:var(--accent);color:#fff}
+.gcard .ginfo{flex:1;min-width:0}.gcard .gname{font-weight:700}
+.gcard .gsub{font-size:12.5px;color:var(--muted);margin-top:2px}
+.ldpill{font:700 9px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent-deep);background:var(--surface);border-radius:20px;padding:2px 8px;margin-left:4px;white-space:nowrap}
+.leadmail{background:none;border:0;color:var(--accent-deep);font:600 11.5px var(--sans);cursor:pointer;padding:6px 0 0;display:block;text-align:left}
+.leadmail:hover{text-decoration:underline}
 svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .schema{max-width:1200px;margin:0 auto;padding:6px 22px 30px;font:500 12px/1.6 var(--mono);color:var(--faint)}
 .schema b{color:var(--muted);font-weight:600}
@@ -273,9 +285,10 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
   const S={step:1, guest:{first:'',last:'',email:'',phone:''}, match:null, checked:false,
     year:2027, from:SEASON[2027].start, to:SEASON[2027].end, guests:2,
     date:null, pkg:null, room:null, acts:{}, code:null, sent:{sms:false,email:false},
-    pay:{consentSent:false,acked:false,ackTime:null,charged:false}};
+    pay:{consentSent:false,acked:false,ackTime:null,charged:false},
+    guestList:[], comms:'individual'};
 
-  const STEPS=[['1','Guest'],['2','Trip'],['3','Package'],['4','Room'],['5','Add-ons'],['6','Confirm']];
+  const STEPS=[['1','Guest'],['2','Trip'],['3','Package'],['4','Room'],['5','Add-ons'],['6','Guests'],['7','Confirm']];
   function maxReachable(){
     if(!S.checked)return 1;
     if(!S.date||!S.pkg)return 2;
@@ -399,7 +412,7 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
         <div class="pr">${money(a.price)}<span class="hint" style="font-weight:400"> / guest</span><br><span class="hint" style="font-weight:400">${on?money(actLine(a))+' total':''}</span></div>
       </div>`;}).join('');
     el('main').innerHTML=`<div class="panel">
-      ${pnav('← Room',4,'Review &amp; confirm →','RD.go(6)',false)}
+      ${pnav('← Room',4,'Guest list →','RD.go(6)',false)}
       <p class="eyebrow">Step 5 · Pre-arrival add-ons</p>
       <h2 style="margin-top:6px">Additional activities</h2>
       <p class="lede">Optional guided adventures the guest can purchase now to lock in their spot. Their package already includes ${S.pkg.days} guided sportfishing days — these are extras.</p>
@@ -407,12 +420,42 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
     </div>`;
   }
 
+  function ensureGuestList(){const need=Math.max(0,S.guests-1);
+    if(!Array.isArray(S.guestList))S.guestList=[];
+    while(S.guestList.length<need)S.guestList.push({first:'',last:'',email:''});
+    if(S.guestList.length>need)S.guestList=S.guestList.slice(0,need);}
+  const leadName=()=>((S.guest.first||'')+' '+(S.guest.last||'')).trim()||'Group lead';
+  const namedCount=()=>1+S.guestList.filter(g=>(g.first||g.last)).length;
+  function guestListStep(){
+    ensureGuestList();
+    const le=S.guest.email||'';
+    const rows=S.guestList.map((g,i)=>`<div class="gcard"><div class="gnum">${i+2}</div><div class="ginfo">
+        <div class="frow"><div class="fld"><label>First name</label><input value="${esc(g.first)}" oninput="RD.glf(${i},'first',this.value)"></div>
+          <div class="fld"><label>Last name</label><input value="${esc(g.last)}" oninput="RD.glf(${i},'last',this.value)"></div></div>
+        <div class="fld" style="margin-top:8px"><label>Email ${S.comms==='lead'?`<span class="hint" style="text-transform:none;letter-spacing:0">— optional, all comms go to the lead</span>`:''}</label>
+          <input type="email" value="${esc(g.email)}" placeholder="${S.comms==='lead'?'optional':'guest@example.com'}" oninput="RD.glf(${i},'email',this.value)">
+          ${le?`<button type="button" class="leadmail" onclick="RD.useLeadEmail(${i})">↳ Use the lead's email (${esc(le)})</button>`:''}</div>
+      </div></div>`).join('');
+    el('main').innerHTML=`<div class="panel">
+      ${pnav('← Add-ons',5,'Review &amp; confirm →','RD.go(7)',false)}
+      <p class="eyebrow">Step 6 · Guest list</p>
+      <h2 style="margin-top:6px">Who else is coming?</h2>
+      <p class="lede">Party of ${S.guests}. The lead is guest 1 — add the other ${Math.max(0,S.guests-1)} traveler${S.guests-1!==1?'s':''} by name and email. A guest without their own email can share the lead's, or the lead can be the single point of contact for everyone.</p>
+      <div class="seg" style="margin-top:16px">
+        <button class="segopt ${S.comms==='individual'?'on':''}" onclick="RD.setComms('individual')">Each guest gets their own invite</button>
+        <button class="segopt ${S.comms==='lead'?'on':''}" onclick="RD.setComms('lead')">Send all communications to the lead</button>
+      </div>
+      ${S.comms==='lead'?`<p class="hint" style="margin-top:9px">Every invite, confirmation and the reservation email go to <b>${esc(le||leadName())}</b> as the primary contact. Guest emails below are optional.</p>`:`<p class="hint" style="margin-top:9px">Each named guest with an email gets their own portal invite.</p>`}
+      <div class="gcard lead"><div class="gnum">1</div><div class="ginfo"><div class="gname">${esc(leadName())} <span class="ldpill">Group lead</span>${S.comms==='lead'?' <span class="ldpill" style="color:var(--gold);background:var(--gold-soft)">Primary contact</span>':''}</div><div class="gsub">${esc(le||'—')}${S.guest.phone?' · '+esc(S.guest.phone):''}</div></div></div>
+      ${rows||'<p class="hint" style="margin-top:12px">A party of 1 — just the lead.</p>'}
+    </div>`;
+  }
   function confirmStep(){
     if(S.code){return confirmedStep();}
     const acts=selectedActs();
     el('main').innerHTML=`<div class="panel">
-      ${pnav('← Add-ons',5,'Submit reservation request →','RD.submit()',false)}
-      <p class="eyebrow">Step 6 · Review</p>
+      ${pnav('← Guest list',6,'Submit reservation request →','RD.submit()',false)}
+      <p class="eyebrow">Step 7 · Review</p>
       <h2 style="margin-top:6px">Purchase summary</h2>
       <p class="lede">Read this back to the guest before submitting.</p>
       <div style="margin-top:16px;border:1px solid var(--line);border-radius:12px;overflow:hidden">
@@ -420,6 +463,7 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
         <div style="padding:4px 16px">
           <div class="sline"><span class="l"><b>${esc(S.pkg.series==='Standard'?'Sportfishing Package':S.pkg.series)}</b> · ${fmtD(S.date)}</span><span class="r">${money(packageTotal())}</span></div>
           <div class="sline"><span class="l">${esc(S.room.name)} · ${esc(S.room.type)} · party of ${S.guests} · ${money(roomRate())}/person</span><span class="r"></span></div>
+          <div class="sline"><span class="l">Guest list · <b>${namedCount()}</b> of ${S.guests} named${S.comms==='lead'?` · all communications to <b>${esc(leadName())}</b>`:''}</span><span class="r"></span></div>
           ${acts.length?acts.map(a=>`<div class="sline"><span class="l">${esc(a.name)} · ${S.guests} × ${money(a.price)}</span><span class="r">${money(actLine(a))}</span></div>`).join(''):'<div class="sline empty"><span class="l">No add-ons</span><span class="r"></span></div>'}
           <div class="stot"><span>Total</span><span class="r">${money(grand())}</span></div>
         </div>
@@ -499,6 +543,7 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
     rows.push(`<div class="sline"><span class="l">Dates</span><span class="r">${S.date?fmtShort(S.date):'<span class="hint">—</span>'}</span></div>`);
     rows.push(`<div class="sline"><span class="l">Package</span><span class="r">${S.pkg?esc(S.pkg.series==='Standard'?'Sportfishing':S.pkg.series):'<span class="hint">—</span>'}</span></div>`);
     rows.push(`<div class="sline"><span class="l">Room</span><span class="r">${S.room?esc(S.room.name):'<span class="hint">—</span>'}</span></div>`);
+    if(S.guestList&&S.guestList.some(g=>g.first||g.last))rows.push(`<div class="sline"><span class="l">Named${S.comms==='lead'?' · comms → lead':''}</span><span class="r">${namedCount()} of ${S.guests}</span></div>`);
     if(S.room)rows.push(`<div class="sline"><span class="l"><b>Package</b> · ${money(roomRate())}×${S.guests}</span><span class="r">${money(packageTotal())}</span></div>`);
     selectedActs().forEach(a=>rows.push(`<div class="sline"><span class="l">${esc(a.name)}</span><span class="r">${money(actLine(a))}</span></div>`));
     let html=rows.join('');
@@ -508,7 +553,7 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
     el('sumbody').innerHTML=html;
   }
 
-  function render(){renderSteps();({1:guestStep,2:tripStep,3:packageStep,4:roomStep,5:addonStep,6:confirmStep}[S.step])();renderSum();}
+  function render(){renderSteps();({1:guestStep,2:tripStep,3:packageStep,4:roomStep,5:addonStep,6:guestListStep,7:confirmStep}[S.step])();renderSum();}
 
   /* ---------- API ---------- */
   window.RD={
@@ -528,13 +573,16 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
     pickPkg(d,id){S.date=d;S.pkg=PACKAGES.find(p=>String(p.id)===String(id))||packageForDate(d);S.room=null;render();},
     pickRoom(id){S.room=ROOMS.find(r=>String(r.id)===String(id))||null;render();},
     toggleAct(id){S.acts[id]=!S.acts[id];render();},
+    glf(i,f,v){if(!S.guestList[i])S.guestList[i]={first:'',last:'',email:''};S.guestList[i][f]=v;renderSum();},
+    useLeadEmail(i){if(!S.guestList[i])S.guestList[i]={first:'',last:'',email:''};S.guestList[i].email=S.guest.email||'';render();},
+    setComms(v){S.comms=v;render();},
     submit(){S.code='TL'+String(S.year).slice(2)+'-'+Math.floor(1000+Math.random()*9000);render();toast('Reservation '+S.code+' submitted');},
     sendSms(){S.sent.sms=true;render();toast('Confirmation text sent');},
     sendEmail(){S.sent.email=true;render();toast('Reservation email sent');},
     sendConsent(){S.pay.consentSent=true;render();toast('Policy & consent sent to the guest');},
     guestAck(){S.pay.acked=true;S.pay.ackTime=new Date().toLocaleString('en-US',{hour:'numeric',minute:'2-digit',month:'short',day:'numeric'});render();toast('Guest acknowledged the policy');},
     chargeCard(){if(!S.pay.acked){toast('Guest must acknowledge the policy first');return;}S.pay.charged=true;render();toast('Deposit charged securely');},
-    reset(){Object.assign(S,{step:1,guest:{first:'',last:'',email:'',phone:''},match:null,checked:false,year:2027,from:SEASON[2027].start,to:SEASON[2027].end,guests:2,date:null,pkg:null,room:null,acts:{},code:null,sent:{sms:false,email:false},pay:{consentSent:false,acked:false,ackTime:null,charged:false}});render();}
+    reset(){Object.assign(S,{step:1,guest:{first:'',last:'',email:'',phone:''},match:null,checked:false,year:2027,from:SEASON[2027].start,to:SEASON[2027].end,guests:2,date:null,pkg:null,room:null,acts:{},code:null,sent:{sms:false,email:false},pay:{consentSent:false,acked:false,ackTime:null,charged:false},guestList:[],comms:'individual'});render();}
   };
 
   el('schema').innerHTML='Maps to Andy’s schema → caller runs the same <b>resolveGuestForCandidate()</b> matcher (Tier 1 email · 2 phone · 3 name) against <b>persons</b>; submit creates a <b>reservation_request</b> → <b>group</b> + <b>trip</b> + room/activity <b>assignments</b>, resolves the caller to one <b>person</b> (new record if no match), sets the deposit hold, and queues the SMS + email (comms service) with a Stripe <b>payment_link</b>. No card number is entered by the agent.';
