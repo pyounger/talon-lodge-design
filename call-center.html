@@ -137,8 +137,27 @@ aside.sum .body{padding:16px 18px}
 .comm .cd{font-size:12px;color:var(--faint)}
 .comm .preview{margin-top:12px;background:var(--surface-3);border:1px solid var(--line);border-radius:9px;padding:11px 13px;font-size:12.5px;color:var(--muted);line-height:1.5}
 .comm .preview b{color:var(--ink)}
+.comm .lnkrow{display:flex;flex-direction:column;gap:7px;margin-top:9px}
+.comm .lnk{display:flex;align-items:center;gap:8px;font:600 12px var(--sans);color:var(--accent-deep);background:var(--surface);border:1px solid var(--line-2);border-radius:8px;padding:8px 10px}
+.comm .lnk .u{margin-left:auto;font:500 10.5px var(--mono);color:var(--faint);white-space:nowrap}
+.comm .lnk.pol{color:var(--gold);border-color:var(--gold)}
+.comm .lnk.pay{color:#fff;background:var(--accent);border-color:var(--accent)}
+.comm .lnk.pay .u{color:rgba(255,255,255,.82)}
+.comm .lnk svg{flex:none}
 .comm .sent{margin-top:12px;display:flex;align-items:center;gap:8px;font:700 12px var(--sans);color:var(--good)}
 .comm .btn{margin-top:12px;width:100%}
+.cardpay{margin-top:22px;border:1px solid var(--line-2);border-radius:14px;padding:18px 20px;background:var(--surface-3)}
+.cardpay .cph{display:flex;align-items:center;gap:9px;font:800 15px var(--sans)}
+.cardpay .cpd{font-size:13px;color:var(--muted);margin:8px 0 12px;line-height:1.5}
+.cardpay .cpd b{color:var(--ink)}
+.cstep{display:flex;gap:13px;padding:14px 0;border-top:1px solid var(--line)}
+.cstep+.cstep{}
+.cstep .csn{width:24px;height:24px;border-radius:50%;background:var(--surface-2);color:var(--faint);display:grid;place-items:center;font:700 12px var(--mono);flex:none}
+.cstep.on .csn{background:var(--accent);color:#fff}
+.cstep.done .csn{background:var(--good);color:#fff}
+.csb{flex:1;min-width:0}.cst{font-weight:700;font-size:13.5px}
+.csd{font-size:12.5px;color:var(--muted);margin:2px 0 9px;line-height:1.45}
+.csok{display:inline-flex;align-items:center;gap:7px;font:700 12px var(--sans);color:var(--good)}
 svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .schema{max-width:1200px;margin:0 auto;padding:6px 22px 30px;font:500 12px/1.6 var(--mono);color:var(--faint)}
 .schema b{color:var(--muted);font-weight:600}
@@ -253,7 +272,8 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
   /* ---------- state ---------- */
   const S={step:1, guest:{first:'',last:'',email:'',phone:''}, match:null, checked:false,
     year:2027, from:SEASON[2027].start, to:SEASON[2027].end, guests:2,
-    date:null, pkg:null, room:null, acts:{}, code:null, sent:{sms:false,email:false}};
+    date:null, pkg:null, room:null, acts:{}, code:null, sent:{sms:false,email:false},
+    pay:{consentSent:false,acked:false,ackTime:null,charged:false}};
 
   const STEPS=[['1','Guest'],['2','Trip'],['3','Package'],['4','Room'],['5','Add-ons'],['6','Confirm']];
   function maxReachable(){
@@ -413,7 +433,7 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
   }
 
   function confirmedStep(){
-    const s=S.sent;
+    const s=S.sent, p=S.pay;
     el('main').innerHTML=`<div class="panel">
       <div class="done-hero">
         <p class="eyebrow" style="color:var(--good)">Reservation submitted</p>
@@ -425,17 +445,45 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
         <div class="comm">
           <div class="ch"><span class="ic sms"><svg class="i" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
             <div><div class="ct">Confirmation text</div><div class="cd">SMS to ${esc(S.guest.phone||'—')}</div></div></div>
-          <div class="preview"><b>Talon Lodge:</b> Thanks ${esc(S.guest.first||'')}! Your ${esc(S.pkg.series==='Standard'?'Sportfishing':S.pkg.series)} stay ${fmtShort(S.date)} is reserved. Confirmation ${S.code}. Check your email to pay the deposit &amp; hold your dates.</div>
+          <div class="preview"><b>Talon Lodge:</b> Thanks ${esc(S.guest.first||'')}! Your ${esc(S.pkg.series==='Standard'?'Sportfishing':S.pkg.series)} stay ${fmtShort(S.date)} is reserved (${S.code}).<br>
+            View your reservation: <b>talonlodge.com/r/${S.code}</b><br>
+            Please review our cancellation &amp; travel-insurance policy, then pay your deposit to hold your dates.</div>
           ${s.sms?`<div class="sent"><svg class="i" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Text sent to ${esc(S.guest.phone)}</div>`
             :`<button class="btn btn-primary" onclick="RD.sendSms()">Send confirmation text</button>`}
         </div>
         <div class="comm">
           <div class="ch"><span class="ic mail"><svg class="i" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="m4 6 8 6 8-6"/></svg></span>
             <div><div class="ct">Reservation email</div><div class="cd">to ${esc(S.guest.email||'—')}</div></div></div>
-          <div class="preview">Full reservation summary, the itemized purchase, and a secure <b>payment link</b> — deposit ${money(depositDue())} now by <b>card, check or ACH</b>, balance ${money(balanceDue())} before arrival.</div>
+          <div class="preview">The full reservation and itemized purchase, with everything the guest needs before paying:
+            <div class="lnkrow">
+              <span class="lnk"><svg class="i" viewBox="0 0 24 24"><path d="M14 3h7v7"/><path d="M10 14 21 3"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5"/></svg> View reservation <span class="u">talonlodge.com/r/${S.code}</span></span>
+              <span class="lnk pol"><svg class="i" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Cancellation policy &amp; travel insurance <span class="u">review before paying</span></span>
+              <span class="lnk pay"><svg class="i" viewBox="0 0 24 24"><path d="M2 7h20v12H2z"/><path d="M2 11h20"/></svg> Pay deposit — ${money(depositDue())} <span class="u">card · check · ACH</span></span>
+            </div>
+            <div style="margin-top:9px">Balance ${money(balanceDue())} due before arrival. The <b>policy link comes before the payment link</b> — the guest reviews the cancellation terms and travel-insurance recommendation first.</div>
+          </div>
           ${s.email?`<div class="sent"><svg class="i" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Email sent to ${esc(S.guest.email)}</div>`
             :`<button class="btn btn-primary" onclick="RD.sendEmail()">Send reservation &amp; payment email</button>`}
         </div>
+      </div>
+      <div class="cardpay">
+        <div class="cph"><svg class="i" viewBox="0 0 24 24"><path d="M2 7h20v12H2z"/><path d="M2 11h20"/></svg> Paying by credit card on the call?</div>
+        <p class="cpd">A card <b>can't be charged until the guest has the cancellation &amp; travel-insurance policy and confirms they've read and understand it</b>. This runs that consent before any charge:</p>
+        <div class="cstep ${p.consentSent?'done':'on'}"><div class="csn">1</div>
+          <div class="csb"><div class="cst">Send the policy &amp; consent</div>
+            <div class="csd">Texts and emails the guest the cancellation and travel-insurance policy with an “I have read and understand” confirmation to sign.</div>
+            ${p.consentSent?`<div class="csok"><svg class="i" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Sent to ${esc(S.guest.phone||'—')} &amp; ${esc(S.guest.email||'—')} — awaiting the guest's acknowledgment</div>`:`<button class="btn btn-primary btn-sm" onclick="RD.sendConsent()">Send policy &amp; consent →</button>`}
+          </div></div>
+        <div class="cstep ${p.acked?'done':(p.consentSent?'on':'')}"><div class="csn">2</div>
+          <div class="csb"><div class="cst">Guest acknowledges</div>
+            <div class="csd">The guest opens the link and confirms they have read and understand the policy — recorded on their record.</div>
+            ${p.acked?`<div class="csok"><svg class="i" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Guest acknowledged the policy · ${esc(p.ackTime)}</div>`:(p.consentSent?`<button class="btn btn-ghost btn-sm" onclick="RD.guestAck()">▸ Demo: guest confirms on their device</button>`:`<span class="hint">Send the consent first.</span>`)}
+          </div></div>
+        <div class="cstep ${p.charged?'done':(p.acked?'on':'')}"><div class="csn">3</div>
+          <div class="csb"><div class="cst">Charge the deposit</div>
+            <div class="csd">Enabled only once the guest has acknowledged. The card is captured through the <b>secure (PCI) processor</b> — the agent never sees or types the card number.</div>
+            ${p.charged?`<div class="csok"><svg class="i" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Deposit ${money(depositDue())} charged securely — card captured by the processor</div>`:`<button class="btn btn-primary btn-sm" ${p.acked?'':'disabled'} onclick="RD.chargeCard()">Charge deposit ${money(depositDue())} →</button>`}
+          </div></div>
       </div>
       <div class="actions" style="justify-content:center"><button class="btn btn-ghost" onclick="RD.reset()">＋ Start a new call</button></div>
     </div>`;
@@ -483,7 +531,10 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
     submit(){S.code='TL'+String(S.year).slice(2)+'-'+Math.floor(1000+Math.random()*9000);render();toast('Reservation '+S.code+' submitted');},
     sendSms(){S.sent.sms=true;render();toast('Confirmation text sent');},
     sendEmail(){S.sent.email=true;render();toast('Reservation email sent');},
-    reset(){Object.assign(S,{step:1,guest:{first:'',last:'',email:'',phone:''},match:null,checked:false,year:2027,from:SEASON[2027].start,to:SEASON[2027].end,guests:2,date:null,pkg:null,room:null,acts:{},code:null,sent:{sms:false,email:false}});render();}
+    sendConsent(){S.pay.consentSent=true;render();toast('Policy & consent sent to the guest');},
+    guestAck(){S.pay.acked=true;S.pay.ackTime=new Date().toLocaleString('en-US',{hour:'numeric',minute:'2-digit',month:'short',day:'numeric'});render();toast('Guest acknowledged the policy');},
+    chargeCard(){if(!S.pay.acked){toast('Guest must acknowledge the policy first');return;}S.pay.charged=true;render();toast('Deposit charged securely');},
+    reset(){Object.assign(S,{step:1,guest:{first:'',last:'',email:'',phone:''},match:null,checked:false,year:2027,from:SEASON[2027].start,to:SEASON[2027].end,guests:2,date:null,pkg:null,room:null,acts:{},code:null,sent:{sms:false,email:false},pay:{consentSent:false,acked:false,ackTime:null,charged:false}});render();}
   };
 
   el('schema').innerHTML='Maps to Andy’s schema → caller runs the same <b>resolveGuestForCandidate()</b> matcher (Tier 1 email · 2 phone · 3 name) against <b>persons</b>; submit creates a <b>reservation_request</b> → <b>group</b> + <b>trip</b> + room/activity <b>assignments</b>, resolves the caller to one <b>person</b> (new record if no match), sets the deposit hold, and queues the SMS + email (comms service) with a Stripe <b>payment_link</b>. No card number is entered by the agent.';
