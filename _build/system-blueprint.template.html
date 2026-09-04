@@ -197,7 +197,7 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
       <span class="tag draft">Draft for review</span>
       <span class="tag">For the Talon team &amp; Stella dev</span>
       <span class="tag">v1 · September 2026</span>
-      <span class="tag">23 stages · 46 screens</span>
+      <span class="tag">23 stages · 50 screens</span>
     </div>
   </header>
 
@@ -243,7 +243,7 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
     <div class="toc-phase">
       <div class="toc-ph">C · The reservation</div>
       <ol>
-        <li><span class="n">05</span><a href="#s-res">Making a reservation</a></li>
+        <li><span class="n">05</span><a href="#s-res">The reservation — guest widget &amp; call center</a></li>
         <li><span class="n">06</span><a href="#s-cap">Booking capacity &amp; holds</a></li>
         <li><span class="n">07</span><a href="#s-pay">Who pays — payment responsibility</a></li>
       </ol>
@@ -447,7 +447,7 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
 
   <!-- STAGE 5 · RESERVATION WIZARD -->
   <section class="stage" id="s-res">
-    <div class="stage-h"><span class="stage-num">05</span><h3 class="stage-t">The availability widget &amp; reservation</h3></div>
+    <div class="stage-h"><span class="stage-num">05</span><h3 class="stage-t">The reservation — guest widget &amp; call center</h3></div>
     <p class="stage-lede">This is the public <strong>availability widget</strong> on the lodge websites, and the reservation it flows into. The guest enters their <strong>dates and party size</strong>; every package that fits <strong>renders as a result</strong>; they open a package to see the <strong>rooms available</strong>, pick a room, and move through a guided nine-step flow — <strong>season &amp; party → arrival date → rooms → your details → guest list → activities → review → deposit → confirm</strong>. A date is only offered when the open rooms can seat the party exactly; submitting creates the booking and resolves the booker to a person.</p>
     <div class="who"><span class="chip guest">Guest · public site &amp; reserve</span><span class="chip admin">Admin · can book too</span></div>
 
@@ -497,6 +497,44 @@ hr.soft{border:0;border-top:1px solid var(--line);margin:0}
     <figure>
       <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">reserve · 8. deposit</span></div><img src="__IMG_res_deposit__" alt="Reservation step 8 — deposit payment method"></div>
       <figcaption><b>Step 8 — deposit.</b> Secure the reservation with the per-person deposit; credit card (with the processing fee shown) or no-fee check / ACH. Paying confirms the booking; the balance is due before arrival.</figcaption>
+    </figure>
+
+    <p class="stage-lede" style="font-size:15.5px;margin-top:34px"><b>The agent path — the call-center reservation desk.</b> The same reservation, taken by a reservation agent on the phone. It leads with a <b>guest-database lookup</b> so a returning caller is greeted by name with their history, runs the same availability, and closes with a compliance step for taking a card over the phone.</p>
+    <div class="who"><span class="chip admin">Admin · reservation agent</span></div>
+
+    <div class="cols split">
+      <ul class="rules">
+        <h4>Business rules</h4>
+        <li>The agent takes the caller's name, email and phone and <b>checks the guest database</b> — the same tiered matcher; a returning guest surfaces prior stays, usual package, satisfaction and on-file notes, to greet them and carry forward what's known.</li>
+        <li>Same availability as the guest widget: only departures with an <b>open room that fits the party</b> appear (with a rooms-open count), and the room step lists only the rooms available on that departure.</li>
+        <li>A running <b>purchase summary</b> builds through the call; submitting logs the reservation and sets the deposit hold.</li>
+        <li>The confirmation <b>text and email</b> carry the reservation link and the <b>cancellation &amp; travel-insurance policy link, placed before the payment link</b>.</li>
+        <li><span class="u">Phone card payments are consent-gated:</span> send the policy → the guest confirms they've <b>read &amp; understand</b> it (recorded, timestamped) → only then is the deposit charged, and the <b>agent never sees or types the card number</b> — it's captured by the PCI processor.</li>
+      </ul>
+      <div class="schema-b">
+        <h4>Maps to schema</h4>
+        <p>Same as the reservation: a <b>reservation_request</b> → <b>group</b> + <b>trip</b> + <b>assignments</b>, resolving the caller to one <b>person</b> (a new record if no match). The policy acknowledgment (who &amp; when) is stored on the person; the charge runs through a <code>payment_link</code> / PCI capture — no card number is stored or typed by the agent.</p>
+      </div>
+    </div>
+
+    <div class="cols split">
+      <figure style="margin-top:16px">
+        <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">call center · guest lookup</span></div><img src="__IMG_cc_checked__" alt="Call-center guest database lookup — returning guest"></div>
+        <figcaption><b>Guest lookup.</b> A returning caller surfaces with prior stays, usual package, satisfaction and on-file notes.</figcaption>
+      </figure>
+      <figure style="margin-top:16px">
+        <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">call center · availability</span></div><img src="__IMG_cc_pkg__" alt="Call-center package availability"></div>
+        <figcaption><b>Availability.</b> Only packages that fit render, with a rooms-open count; nav sits at the top.</figcaption>
+      </figure>
+    </div>
+
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">call center · purchase summary</span></div><img src="__IMG_cc_confirm__" alt="Call-center purchase summary"></div>
+      <figcaption><b>Purchase summary.</b> The agent reads back the whole order — package, room, add-ons, total, deposit and balance — before submitting.</figcaption>
+    </figure>
+    <figure>
+      <div class="screen"><div class="screen-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="u">call center · confirm, policy &amp; card consent</span></div><img src="__IMG_cc_done__" alt="Call-center confirmation with policy links and phone-card consent gate"></div>
+      <figcaption><b>Confirm, send &amp; collect.</b> On submit: a confirmation text and email (reservation link → cancellation/travel-insurance policy → payment link), and the phone-card <b>consent gate</b> — send policy → guest acknowledges read &amp; understand → only then charge the deposit.</figcaption>
     </figure>
   </section>
 

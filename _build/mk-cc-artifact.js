@@ -1,0 +1,10 @@
+const fs=require('fs');
+const D="C:/Users/Phil/OneDrive/Documents/Development/talon-lodge-design";
+const OUT="C:/Users/Phil/AppData/Local/Temp/claude/C--Users-Phil-OneDrive-Documents-vessel-public/4717bc68-92d5-4010-bbc6-9e9ecbee5a31/scratchpad/call-center.artifact.html";
+const eagle=fs.readFileSync(D+"/_build/eagle-datauri.txt","utf8").trim();
+let s=fs.readFileSync(D+"/call-center.html","utf8");
+s=s.replace("el('logo').src='brand/logo/talon-eagle-mark.png';","el('logo').src='"+eagle+"';");
+const i=s.indexOf("<title>");
+let body=s.slice(i).replace(/<\/body>\s*<\/html>\s*$/,"");
+fs.writeFileSync(OUT, body);
+console.log("written; eagle inlined:", body.includes("data:image/png"), "bytes:", body.length);
