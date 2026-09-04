@@ -462,10 +462,9 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
 
   /* ---------- API ---------- */
   window.RD={
-    gf(f,v){S.guest[f]=v;if(S.checked){S.checked=false;S.match=null;const mb=el('matchbox');if(mb)mb.innerHTML='';}},
+    gf(f,v){S.guest[f]=v;if(S.checked){S.checked=false;S.match=null;const mb=el('matchbox');if(mb)mb.innerHTML='';const fwd=document.querySelector('.pnav .fwd');if(fwd)fwd.disabled=true;}},
     check(){const g=S.guest;if(!(g.first||g.last||g.email||g.phone)){toast('Enter a name, email or phone first');return;}
-      S.match=matchGuest(g);S.checked=true;const mb=el('matchbox');if(mb)mb.innerHTML=matchHTML();renderSteps();
-      const cont=[...document.querySelectorAll('.actions .btn-primary')][0];if(cont)cont.disabled=false;
+      S.match=matchGuest(g);S.checked=true;render();   // full re-render so the top-nav Continue enables
       toast(S.match?('Returning guest — '+S.match.first+' '+S.match.last):'New guest — no prior record');},
     go(n){ if(n>S.step){ // gate forward moves
         if(n>=2&&!S.checked){toast('Check the guest first');return;}
