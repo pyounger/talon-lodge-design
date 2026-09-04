@@ -1,0 +1,490 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Talon Lodge — Reservation Desk</title>
+<style>
+:root{--paper:#f3f6f5;--surface:#fff;--surface-2:#eaf1ee;--surface-3:#f4f8f6;--ink:#122a2b;--muted:#586d6a;--faint:#7f918d;--line:#d7e1de;--line-2:#c2cfcb;--accent:#0e7c6f;--accent-deep:#0a544c;--accent-soft:#e2efeb;--salmon:#c25e39;--salmon-soft:#f4e5de;--gold:#a9791f;--gold-soft:#f4ead2;--good:#2f7d51;--good-soft:#dcefe1;--sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Code","SF Mono",Consolas,monospace;--shadow:0 1px 2px rgba(18,42,43,.05),0 8px 22px rgba(18,42,43,.06);--shadow-lg:0 2px 6px rgba(18,42,43,.08),0 20px 50px rgba(18,42,43,.12)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--surface-3:#0c1917;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#d8ad55;--gold-soft:#2a2413;--good:#54c084;--good-soft:#12271b;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35);--shadow-lg:0 3px 8px rgba(0,0,0,.35),0 24px 56px rgba(0,0,0,.5)}}
+:root[data-theme="dark"]{--paper:#0a1413;--surface:#0f1e1c;--surface-2:#152522;--surface-3:#0c1917;--ink:#e9f1ed;--muted:#9bada9;--faint:#72847f;--line:#22352f;--line-2:#324a43;--accent:#38b8a6;--accent-deep:#57c9b9;--accent-soft:#12302b;--salmon:#e18a62;--salmon-soft:#33231b;--gold:#d8ad55;--gold-soft:#2a2413;--good:#54c084;--good-soft:#12271b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;font-size:14.5px}
+.eyebrow{font:600 10.5px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0}
+h1,h2,h3{letter-spacing:-.01em;margin:0}
+code{font-family:var(--mono);font-size:.9em;background:var(--surface-2);padding:1px 5px;border-radius:5px;color:var(--accent-deep)}
+.btn{font:700 13px var(--sans);border-radius:9px;padding:10px 16px;cursor:pointer;border:1px solid transparent;transition:.12s}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover:not(:disabled){background:var(--accent-deep)}
+.btn-ghost{background:var(--surface);border-color:var(--line-2);color:var(--ink)}.btn-ghost:hover{background:var(--surface-2)}
+.btn-sm{padding:7px 12px;font-size:12.5px}
+input,select{font:500 14px var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line-2);border-radius:9px;padding:10px 12px;width:100%}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+label{font:600 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint);display:block;margin:0 0 6px}
+
+/* header */
+header.top{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:11px 22px}
+header.top .brand{display:flex;align-items:center;gap:11px}
+header.top img{height:30px;width:auto;display:block}
+header.top .bt{font:800 15px var(--sans);line-height:1}
+header.top .bs{font:600 9.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+header.top .live{margin-left:6px;display:inline-flex;align-items:center;gap:6px;font:600 11px var(--mono);color:var(--good)}
+header.top .live .dot{width:7px;height:7px;border-radius:50%;background:var(--good)}
+header.top .agent{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--muted)}
+header.top .agent .av{width:30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent-deep);display:grid;place-items:center;font:700 11px var(--mono)}
+
+/* stepbar */
+.steps{display:flex;gap:6px;flex-wrap:wrap;padding:14px 22px 0;max-width:1200px;margin:0 auto}
+.step{display:flex;align-items:center;gap:8px;font:600 12px var(--sans);color:var(--faint);padding:7px 12px;border-radius:20px;border:1px solid transparent;white-space:nowrap}
+.step .n{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font:700 11px var(--mono);background:var(--surface-2);color:var(--faint)}
+.step.on{color:var(--ink);background:var(--surface);border-color:var(--line-2);box-shadow:var(--shadow)}
+.step.on .n{background:var(--accent);color:#fff}
+.step.done{color:var(--accent-deep)}.step.done .n{background:var(--accent-soft);color:var(--accent-deep)}
+
+/* layout */
+.wrap{max-width:1200px;margin:0 auto;padding:16px 22px 60px;display:grid;grid-template-columns:1fr 340px;gap:22px;align-items:start}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px}
+.panel h2{font:800 20px var(--sans)}
+.panel .lede{color:var(--muted);font-size:13.5px;margin:6px 0 0;max-width:60ch}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:520px){.frow{grid-template-columns:1fr}}
+.fld{margin-top:14px}
+.actions{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap}
+.actions .left{margin-right:auto}
+
+/* guest match banner */
+.match{margin-top:18px;border-radius:14px;padding:16px 18px;border:1px solid var(--line-2)}
+.match.past{background:var(--gold-soft);border-color:var(--gold)}
+.match.new{background:var(--accent-soft)}
+.match .mh{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.match .pill{font:700 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:20px}
+.match.past .pill{background:var(--gold);color:#fff}
+.match.new .pill{background:var(--accent);color:#fff}
+.match .mn{font:800 17px var(--sans)}
+.match .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:14px}
+.match .kv .k{font:600 9.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+.match .kv .v{font-weight:650;font-size:14px;margin-top:2px}
+.match .notes{margin-top:12px;font-size:13px;color:var(--muted);border-top:1px dashed var(--line-2);padding-top:10px}
+.match .notes b{color:var(--ink)}
+
+/* stepper */
+.pty{display:flex;align-items:center;gap:0;width:max-content;border:1px solid var(--line-2);border-radius:10px;overflow:hidden}
+.pty button{background:var(--surface);border:0;width:40px;height:42px;font:700 18px var(--sans);cursor:pointer;color:var(--accent-deep)}
+.pty button:hover{background:var(--surface-2)}
+.pty .val{min-width:46px;text-align:center;font:800 16px var(--sans);border-left:1px solid var(--line);border-right:1px solid var(--line);height:42px;display:grid;place-items:center}
+
+/* result cards */
+.rgrid{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.rcard{border:1px solid var(--line-2);border-radius:13px;padding:14px 16px;cursor:pointer;background:var(--surface);transition:.12s;display:flex;gap:14px;align-items:center}
+.rcard:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.rcard.sel{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 1px var(--accent)}
+.rcard .body{flex:1;min-width:0}
+.rcard .t{font:800 15px var(--sans)}
+.rcard .series{font:600 10px var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.rcard .series.special{color:var(--gold)}.rcard .series.std{color:var(--accent)}
+.rcard .d{font-size:12.5px;color:var(--muted);margin-top:2px}
+.rcard .right{text-align:right;white-space:nowrap}
+.rcard .price{font:800 15px var(--sans)}
+.rcard .sub{font-size:11px;color:var(--faint)}
+.rcard .tick{width:22px;height:22px;border-radius:50%;border:2px solid var(--line-2);flex:none;display:grid;place-items:center}
+.rcard.sel .tick{background:var(--accent);border-color:var(--accent);color:#fff}
+.rphoto{width:74px;height:56px;border-radius:9px;object-fit:cover;background:var(--surface-2);flex:none}
+.hint{font-size:12px;color:var(--faint)}
+.selbar{display:flex;align-items:center;gap:12px;background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:11px 15px;margin-top:6px}
+.selbar .meter{font-size:13px}.selbar .meter b{color:var(--accent-deep)}
+.selbar .ok{color:var(--good)}
+
+/* addon */
+.addon{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-top:10px}
+.addon.on{border-color:var(--accent);background:var(--accent-soft)}
+.addon .ck{width:22px;height:22px;border-radius:6px;border:2px solid var(--line-2);flex:none;margin-top:2px;display:grid;place-items:center;cursor:pointer}
+.addon.on .ck{background:var(--accent);border-color:var(--accent);color:#fff}
+.addon .body{flex:1}
+.addon .t{font-weight:700}
+.addon .d{font-size:12.5px;color:var(--muted);margin-top:2px}
+.addon .pr{white-space:nowrap;font-weight:700;color:var(--accent-deep)}
+.addon .qty{display:flex;align-items:center;gap:8px;margin-top:8px}
+.addon .qty .pty{transform:scale(.85);transform-origin:left}
+
+/* summary aside */
+aside.sum{position:sticky;top:78px;background:var(--surface);border:1px solid var(--line-2);border-radius:16px;box-shadow:var(--shadow-lg);overflow:hidden}
+aside.sum .sh{padding:15px 18px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+aside.sum .sh .t{font:800 14px var(--sans)}
+aside.sum .sh .s{font:600 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+aside.sum .body{padding:16px 18px}
+.sline{display:flex;justify-content:space-between;gap:10px;padding:7px 0;font-size:13px;border-top:1px solid var(--line)}
+.sline:first-child{border-top:0}
+.sline .l{color:var(--muted)}.sline .l b{color:var(--ink);font-weight:650}
+.sline .r{font-weight:650;white-space:nowrap;font-variant-numeric:tabular-nums}
+.sline.empty{color:var(--faint);font-style:italic}
+.stot{display:flex;justify-content:space-between;gap:10px;margin-top:12px;padding-top:12px;border-top:2px solid var(--line-2);font-weight:800}
+.stot .r{font-size:17px;color:var(--accent-deep);font-variant-numeric:tabular-nums}
+.dep{margin-top:12px;background:var(--accent-soft);border-radius:11px;padding:11px 13px;font-size:12.5px}
+.dep .d1{display:flex;justify-content:space-between;font-weight:700}
+.dep .d2{display:flex;justify-content:space-between;color:var(--muted);margin-top:4px}
+
+/* confirm / comms */
+.done-hero{text-align:center;padding:14px 0 6px}
+.done-hero .code{font:800 26px var(--mono);color:var(--accent-deep);letter-spacing:.02em}
+.done-hero .sub{color:var(--muted);margin-top:6px;font-size:13.5px}
+.comms{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+@media(max-width:640px){.comms{grid-template-columns:1fr}}
+.comm{border:1px solid var(--line-2);border-radius:13px;padding:16px;background:var(--surface)}
+.comm .ch{display:flex;align-items:center;gap:10px}
+.comm .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:none}
+.comm .ic.sms{background:var(--accent-soft);color:var(--accent-deep)}
+.comm .ic.mail{background:var(--gold-soft);color:var(--gold)}
+.comm .ct{font-weight:700;font-size:14px}
+.comm .cd{font-size:12px;color:var(--faint)}
+.comm .preview{margin-top:12px;background:var(--surface-3);border:1px solid var(--line);border-radius:9px;padding:11px 13px;font-size:12.5px;color:var(--muted);line-height:1.5}
+.comm .preview b{color:var(--ink)}
+.comm .sent{margin-top:12px;display:flex;align-items:center;gap:8px;font:700 12px var(--sans);color:var(--good)}
+.comm .btn{margin-top:12px;width:100%}
+svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.schema{max-width:1200px;margin:0 auto;padding:6px 22px 30px;font:500 12px/1.6 var(--mono);color:var(--faint)}
+.schema b{color:var(--muted);font-weight:600}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:11px 18px;border-radius:9px;font-size:13px;opacity:0;transition:.2s;z-index:40;pointer-events:none}.toast.show{opacity:1}
+</style></head>
+<body>
+<header class="top">
+  <div class="brand"><img id="logo" alt="Talon Lodge"><div><div class="bt">Talon Lodge &amp; Spa</div><div class="bs">Reservation Desk</div></div></div>
+  <span class="live"><span class="dot"></span>On call</span>
+  <div class="agent"><span>Agent · <b>Dana K.</b></span><span class="av">DK</span></div>
+</header>
+
+<nav class="steps" id="steps"></nav>
+<div class="wrap">
+  <main id="main"></main>
+  <aside class="sum">
+    <div class="sh"><div class="t">Reservation</div><div class="s" id="sumcode">New call</div></div>
+    <div class="body" id="sumbody"></div>
+  </aside>
+</div>
+<div class="schema" id="schema"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const el=id=>document.getElementById(id);
+  const esc=s=>(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+  const money=n=>'$'+Math.round(n).toLocaleString('en-US');
+  function toast(t){const e=el('toast');e.textContent=t;e.classList.add('show');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('show'),2000);}
+  // eagle logo (optional; falls back silently)
+  el('logo').src='brand/logo/talon-eagle-mark.png';el('logo').onerror=function(){this.remove();};
+
+  const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],MO=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const parseD=s=>{const[y,m,d]=String(s).split('-').map(Number);return new Date(y,m-1,d);};
+  const addDays=(s,n)=>{const dt=parseD(s);dt.setDate(dt.getDate()+n);return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');};
+  const fmtD=s=>{const d=parseD(s);return WD[d.getDay()]+', '+MO[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear();};
+  const fmtShort=s=>{const d=parseD(s);return MO[d.getMonth()]+' '+d.getDate();};
+
+  /* ---------- PAST GUESTS (master records) — matched on email / phone / name ---------- */
+  const PAST=[
+    {first:'Phil',last:'Younger',email:'phil@talonlodge.com',phone:'480-483-0205',stays:3,lastYear:2025,pkg:'Sportfishing Package',score:9.2,notes:'Melon allergy. Prefers Bluff House. Travels with the Marshall group.'},
+    {first:'Chris',last:'Marshall',email:'crm.alaska@pm.me',phone:'907-315-6529',stays:4,lastYear:2025,pkg:'Winemaker Series',score:9.6,notes:'Group lead. Big-boat angler. Repeat Winemaker week guest.'},
+    {first:'David',last:'Rogers',email:'dmr1914@gmail.com',phone:'248-894-5530',stays:2,lastYear:2024,pkg:'Sportfishing Package',score:8.4,notes:'Early riser — likes first boat out.'},
+    {first:'Teresa',last:'Gaines',email:'teresagaines20@gmail.com',phone:'201-390-7876',stays:2,lastYear:2024,pkg:'Sportfishing Package',score:8.8,notes:'Gets seasick — will bring medication. Seat mid-boat.'},
+    {first:'Bob',last:'Gomez',email:'bob@bobgomezgroup.com',phone:'480-695-3229',stays:5,lastYear:2025,pkg:'Visiting Chef Series',score:9.1,notes:'Annual group of 6. Prefers Main Spruce.'},
+    {first:'Jennifer',last:'Kerstetter',email:'jenkerst@outlook.com',phone:'248-890-1273',stays:1,lastYear:2023,pkg:'Sportfishing Package',score:8.0,notes:'Anniversary trip last visit.'}
+  ];
+  const digits=s=>String(s||'').replace(/\D/g,'');
+  function matchGuest(g){
+    const em=(g.email||'').trim().toLowerCase(), ph=digits(g.phone), ln=(g.last||'').trim().toLowerCase(), fn=(g.first||'').trim().toLowerCase();
+    // Tier 1 email, Tier 2 phone, Tier 3 name (first+last)
+    let m=PAST.find(p=>p.email.toLowerCase()===em&&em);
+    if(m)return{...m,tier:1,how:'email'};
+    m=PAST.find(p=>digits(p.phone)===ph&&ph.length>=10);
+    if(m)return{...m,tier:2,how:'phone'};
+    m=PAST.find(p=>p.last.toLowerCase()===ln&&p.first.toLowerCase()===fn&&ln);
+    if(m)return{...m,tier:3,how:'name'};
+    return null;
+  }
+
+  /* ---------- packages / rooms / activities (shared with the guest widget) ---------- */
+  const PKG_INCLUDES=['All Meals','Non-Alcoholic Beverages','Guided Adventure (Sportfishing)','4 Nights Lodging'];
+  const PKG_EXCLUDES=['Airfare','Alcohol','Fishing License','Fish Processing Fees','Taxes'];
+  const PKG_DEFAULT=[
+    {id:'sportfishing',name:'Sportfishing Package',series:'Standard',nights:4,days:3,includes:PKG_INCLUDES,excludes:PKG_EXCLUDES},
+    {id:'winemaker',name:'Winemaker Series',series:'Winemaker Series',nights:4,days:3,includes:PKG_INCLUDES,excludes:PKG_EXCLUDES,dates:['2027-05-28','2027-07-13','2027-08-06','2028-05-28','2028-07-13','2028-08-06']},
+    {id:'chef',name:'Visiting Chef Series',series:'Visiting Chef Series',nights:4,days:3,includes:PKG_INCLUDES,excludes:PKG_EXCLUDES,dates:['2027-06-01','2027-07-09','2027-07-21','2028-06-01','2028-07-09','2028-07-21']}
+  ];
+  let PKGS_FROM_STORE=false;
+  function loadPackages(){try{const s=JSON.parse(localStorage.getItem('talon_packages_v1'));if(s&&s.length){PKGS_FROM_STORE=true;return s.filter(p=>!p.status||p.status==='published').map(p=>({
+    id:p.id,name:p.title_override||((!p.series||p.series==='Standard')?'Sportfishing Package':p.series),series:p.series||'Standard',
+    nights:+p.nights||4,days:+(p.adventure_days_max||p.adventure_days_min)||3,includes:Array.isArray(p.includes)?p.includes:PKG_INCLUDES,excludes:Array.isArray(p.excludes)?p.excludes:PKG_EXCLUDES,
+    dates:p.arrival_start_date?[p.arrival_start_date]:(Array.isArray(p.dates)?p.dates:undefined)}));}}catch(e){}return PKG_DEFAULT;}
+  const PACKAGES=loadPackages();
+  const STANDARD=PACKAGES.find(p=>p.series==='Standard'||p.name==='Sportfishing Package')||PACKAGES[0];
+  const SPECIAL={};PACKAGES.forEach(p=>{if(p.dates)p.dates.forEach(d=>SPECIAL[d]=p);});
+  const packageForDate=d=>SPECIAL[d]||STANDARD;
+  const SEASON={2027:{start:'2027-05-24',end:'2027-09-05'},2028:{start:'2028-05-22',end:'2028-09-03'}};
+  if(PKGS_FROM_STORE){const byY={};Object.keys(SPECIAL).forEach(d=>{const y=d.slice(0,4);(byY[y]=byY[y]||[]).push(d);});Object.keys(byY).forEach(y=>{const ds=byY[y].sort();SEASON[y]={start:ds[0],end:ds[ds.length-1]};});}
+  // weekly departures across the season
+  function arrivals(year){const set=new Set(Object.keys(SPECIAL).filter(d=>d.slice(0,4)===String(year)));
+    if(!PKGS_FROM_STORE){let d=SEASON[year].start;while(d<=SEASON[year].end){set.add(d);d=addDays(d,4);}}
+    return [...set].sort();}
+
+  const ROOM_SEED=[
+    {id:1,name:'Spruce 1',type:'Room',occMax:2,beds:'King or 2 XL-Twin'},{id:2,name:'Spruce 2',type:'Room',occMax:2,beds:'2 XL-Full'},
+    {id:3,name:'Spruce House',type:'House',occMax:6,beds:'3 bedrooms'},{id:4,name:'Cedar 1',type:'Room',occMax:2,beds:'King or 2 XL-Twin'},
+    {id:5,name:'Cedar 2',type:'Room',occMax:2,beds:'2 XL-Full'},{id:6,name:'Cedar House',type:'House',occMax:4,beds:'3 bedrooms'},
+    {id:7,name:'Bluff House',type:'House',occMax:6,beds:'3 bedrooms · private hot tub'}
+  ];
+  function loadRooms(){try{const s=JSON.parse(localStorage.getItem('talon_rooms_v1'));if(s&&s.length)return s.map(r=>({id:r.id,name:r.name,type:r.type||'Room',occMax:r.occMax||r.occMin||2,beds:r.beds||''}));}catch(e){}return ROOM_SEED;}
+  const ROOMS=loadRooms().map(r=>({...r,rate:r.type==='House'?6695:6195}));
+
+  const ACT_SEED=[
+    {id:'a1',name:'Massage',unit:'guest',price:125,min:null,desc:'Open-air massage pavilion treatment.'},
+    {id:'a2',name:'Freshwater Fishing by Float Plane',unit:'guest',price:1500,min:2,desc:'Fly to remote Tongass streams for wild trout, steelhead and salmon.'},
+    {id:'a3',name:'ATV Kruzof Island Tour',unit:'guest',price:450,min:2,desc:'Guided Kruzof Island tour to Shelikof Bay.'},
+    {id:'a4',name:'Kayak & Lunch',unit:'guest',price:450,min:2,desc:'Paddle Degroff Bay with a prepared boat lunch.'},
+    {id:'a5',name:'Float Plane Tour',unit:'guest',price:400,min:2,desc:'40-minute floatplane tour from the lodge dock.'},
+    {id:'a7',name:'Whale & Wildlife Viewing',unit:'guest',price:400,min:4,desc:'Humpback, gray, minke and orca whales in our waters.'}
+  ];
+  function loadActs(){try{const s=JSON.parse(localStorage.getItem('talon_activities_v1'));if(s&&s.length){const m=s.map(a=>({id:'act'+(a.id||a.name),name:a.name,unit:'guest',price:+(a.withinPrice??a.priceFrom??a.priceTo??0)||0,min:a.minPeople??null,desc:a.desc||a.priceText||'',status:a.status})).filter(a=>a.price>0&&a.status!=='inactive');if(m.length)return m;}}catch(e){}return ACT_SEED;}
+  const ACTS=loadActs();
+
+  const DEPOSIT={perPerson:1000, feePct:2.99};
+
+  /* ---------- state ---------- */
+  const S={step:1, guest:{first:'',last:'',email:'',phone:''}, match:null, checked:false,
+    year:2027, from:SEASON[2027].start, to:SEASON[2027].end, guests:2,
+    date:null, pkg:null, room:null, acts:{}, code:null, sent:{sms:false,email:false}};
+
+  const STEPS=[['1','Guest'],['2','Trip'],['3','Package'],['4','Room'],['5','Add-ons'],['6','Confirm']];
+  function maxReachable(){
+    if(!S.checked)return 1;
+    if(!S.date||!S.pkg)return 2;
+    if(!S.room)return 4;   // package selected implies trip done
+    return 6;
+  }
+  function renderSteps(){el('steps').innerHTML=STEPS.map(([n,t])=>{
+    const i=+n,cls=i===S.step?'on':(i<S.step?'done':'');
+    return `<div class="step ${cls}" onclick="RD.go(${i})"><span class="n">${i<S.step?'✓':n}</span>${t}</div>`;}).join('');}
+
+  /* ---------- pricing ---------- */
+  const roomRate=()=>S.room?S.room.rate:0;
+  const packageTotal=()=>roomRate()*S.guests;            // per-person package rate × party (double occ.)
+  function actLine(a){return a.price*(a.unit==='guest'?S.guests:1);}
+  const selectedActs=()=>Object.keys(S.acts).filter(id=>S.acts[id]).map(id=>ACTS.find(a=>a.id===id)).filter(Boolean);
+  const actsTotal=()=>selectedActs().reduce((s,a)=>s+actLine(a),0);
+  const grand=()=>packageTotal()+actsTotal();
+  const depositDue=()=>DEPOSIT.perPerson*S.guests;
+  const balanceDue=()=>grand()-depositDue();
+
+  /* ---------- steps ---------- */
+  function guestStep(){
+    const g=S.guest;
+    el('main').innerHTML=`<div class="panel">
+      <p class="eyebrow">Step 1 · Caller</p>
+      <h2 style="margin-top:6px">Who are we booking?</h2>
+      <p class="lede">Take the caller's name and contact, then check the guest database. If they've stayed before, their history comes up so you can greet them by name and carry forward what we know.</p>
+      <div class="frow" style="margin-top:18px">
+        <div><label>First name</label><input id="g_first" value="${esc(g.first)}" oninput="RD.gf('first',this.value)"></div>
+        <div><label>Last name</label><input id="g_last" value="${esc(g.last)}" oninput="RD.gf('last',this.value)"></div>
+      </div>
+      <div class="frow" style="margin-top:14px">
+        <div><label>Email</label><input id="g_email" placeholder="guest@example.com" value="${esc(g.email)}" oninput="RD.gf('email',this.value)"></div>
+        <div><label>Phone</label><input id="g_phone" placeholder="(000) 000-0000" value="${esc(g.phone)}" oninput="RD.gf('phone',this.value)"></div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-ghost" onclick="RD.check()">↻ Check guest database</button>
+        <button class="btn btn-primary" ${S.checked?'':'disabled'} onclick="RD.go(2)">Continue to trip →</button>
+      </div>
+      <div id="matchbox">${S.checked?matchHTML():''}</div>
+    </div>`;
+  }
+  function matchHTML(){
+    const m=S.match;
+    if(!m)return `<div class="match new"><div class="mh"><span class="pill">New guest</span><span class="mn">${esc((S.guest.first+' '+S.guest.last).trim()||'New caller')}</span></div>
+      <p class="hint" style="margin-top:8px">No match in the guest database — we'll create a new master record when the reservation is submitted.</p></div>`;
+    return `<div class="match past"><div class="mh"><span class="pill">◆ Returning guest</span><span class="mn">${esc(m.first+' '+m.last)}</span><span class="hint">matched on ${m.how} · Tier ${m.tier}</span></div>
+      <div class="grid">
+        <div class="kv"><div class="k">Prior stays</div><div class="v">${m.stays}</div></div>
+        <div class="kv"><div class="k">Last visit</div><div class="v">${m.lastYear}</div></div>
+        <div class="kv"><div class="k">Usual package</div><div class="v">${esc(m.pkg)}</div></div>
+        <div class="kv"><div class="k">Satisfaction</div><div class="v">${m.score.toFixed(1)} / 10</div></div>
+      </div>
+      <div class="notes"><b>On file:</b> ${esc(m.notes)}</div></div>`;
+  }
+
+  function tripStep(){
+    el('main').innerHTML=`<div class="panel">
+      <p class="eyebrow">Step 2 · Trip</p>
+      <h2 style="margin-top:6px">When, and for how many?</h2>
+      <p class="lede">Enter the dates the guest is considering and the party size. We show only the packages and departures that can seat the party exactly.</p>
+      <div class="frow" style="margin-top:18px">
+        <div><label>Season</label><select id="t_year" onchange="RD.yr(this.value)">${Object.keys(SEASON).map(y=>`<option ${+y===S.year?'selected':''}>${y}</option>`).join('')}</select></div>
+        <div><label>Party size (double occ.)</label>
+          <div class="pty"><button onclick="RD.party(-2)">−</button><div class="val">${S.guests}</div><button onclick="RD.party(2)">+</button></div></div>
+      </div>
+      <div class="frow" style="margin-top:14px">
+        <div><label>Arrival from</label><input type="date" id="t_from" value="${S.from}" min="${SEASON[S.year].start}" max="${SEASON[S.year].end}" onchange="RD.setFrom(this.value)"></div>
+        <div><label>Arrival to</label><input type="date" id="t_to" value="${S.to}" min="${SEASON[S.year].start}" max="${SEASON[S.year].end}" onchange="RD.setTo(this.value)"></div>
+      </div>
+      <p class="hint" style="margin-top:10px">Full ${S.year} season is ${fmtShort(SEASON[S.year].start)} – ${fmtShort(SEASON[S.year].end)}. Party size is in twos.</p>
+      <div class="actions"><button class="btn btn-ghost left" onclick="RD.go(1)">← Guest</button>
+        <button class="btn btn-primary" onclick="RD.go(3)">Find availability →</button></div>
+    </div>`;
+  }
+
+  function fits(date){return ROOMS.some(r=>r.occMax>=S.guests) && true;}
+  function packageStep(){
+    const dates=arrivals(S.year).filter(d=>d>=S.from&&d<=S.to);
+    const rows=dates.map(d=>{const p=packageForDate(d);const sel=S.date===d&&S.pkg&&S.pkg.id===p.id;
+      const rate=6195; // display "from" per-person; final set at room step
+      return `<div class="rcard ${sel?'sel':''}" onclick="RD.pickPkg('${d}','${p.id}')">
+        <div class="body"><div class="series ${p.series==='Standard'?'std':'special'}">${esc(p.series==='Standard'?'Sportfishing':p.series)}</div>
+          <div class="t">${fmtD(d)}</div>
+          <div class="d">${p.nights} nights · ${p.days} adventure days · departs ${fmtShort(addDays(d,p.nights))}</div></div>
+        <div class="right"><div class="price">from ${money(rate)}</div><div class="sub">/ person · double occ.</div></div>
+        <div class="tick">${sel?'✓':''}</div></div>`;}).join('');
+    el('main').innerHTML=`<div class="panel">
+      <p class="eyebrow">Step 3 · Package</p>
+      <h2 style="margin-top:6px">Available packages</h2>
+      <p class="lede">For ${fmtShort(S.from)}–${fmtShort(S.to)}, party of ${S.guests}. Read the guest the dates and series; select the one they want.</p>
+      ${dates.length?`<div class="rgrid">${rows}</div>`:`<p class="hint" style="margin-top:16px">No departures in this range for a party of ${S.guests}. <a href="#" onclick="RD.go(2);return false">Widen the dates.</a></p>`}
+      <div class="actions"><button class="btn btn-ghost left" onclick="RD.go(2)">← Trip</button>
+        <button class="btn btn-primary" ${S.date?'':'disabled'} onclick="RD.go(4)">Choose accommodation →</button></div>
+    </div>`;
+  }
+
+  function roomStep(){
+    const avail=ROOMS.filter(r=>r.occMax>=S.guests);
+    const rows=avail.map(r=>{const sel=S.room&&S.room.id===r.id;
+      return `<div class="rcard ${sel?'sel':''}" onclick="RD.pickRoom(${r.id})">
+        <div class="body"><div class="t">${esc(r.name)} <span class="series std">${esc(r.type)}</span></div>
+          <div class="d">${esc(r.beds)} · sleeps up to ${r.occMax}</div></div>
+        <div class="right"><div class="price">${money(r.rate)}</div><div class="sub">/ person</div></div>
+        <div class="tick">${sel?'✓':''}</div></div>`;}).join('');
+    el('main').innerHTML=`<div class="panel">
+      <p class="eyebrow">Step 4 · Accommodation</p>
+      <h2 style="margin-top:6px">Choose the room</h2>
+      <p class="lede">${esc(S.pkg.series==='Standard'?'Sportfishing Package':S.pkg.series)} · ${fmtD(S.date)}. Showing rooms that seat a party of ${S.guests}.</p>
+      <div class="rgrid">${rows}</div>
+      <div class="actions"><button class="btn btn-ghost left" onclick="RD.go(3)">← Package</button>
+        <button class="btn btn-primary" ${S.room?'':'disabled'} onclick="RD.go(5)">Review activities →</button></div>
+    </div>`;
+  }
+
+  function addonStep(){
+    const rows=ACTS.map(a=>{const on=!!S.acts[a.id];const disabled=a.min&&a.min>S.guests;
+      return `<div class="addon ${on?'on':''} ${disabled?'':''}">
+        <div class="ck" onclick="${disabled?'':`RD.toggleAct('${a.id}')`}">${on?'✓':''}</div>
+        <div class="body"><div class="t">${esc(a.name)}${disabled?` <span class="hint">· min ${a.min} guests</span>`:''}</div>
+          <div class="d">${esc(a.desc)}</div></div>
+        <div class="pr">${money(a.price)}<span class="hint" style="font-weight:400"> / guest</span><br><span class="hint" style="font-weight:400">${on?money(actLine(a))+' total':''}</span></div>
+      </div>`;}).join('');
+    el('main').innerHTML=`<div class="panel">
+      <p class="eyebrow">Step 5 · Pre-arrival add-ons</p>
+      <h2 style="margin-top:6px">Additional activities</h2>
+      <p class="lede">Optional guided adventures the guest can purchase now to lock in their spot. Their package already includes ${S.pkg.days} guided sportfishing days — these are extras.</p>
+      <div style="margin-top:8px">${rows}</div>
+      <div class="actions"><button class="btn btn-ghost left" onclick="RD.go(4)">← Room</button>
+        <button class="btn btn-primary" onclick="RD.go(6)">Review &amp; confirm →</button></div>
+    </div>`;
+  }
+
+  function confirmStep(){
+    if(S.code){return confirmedStep();}
+    const acts=selectedActs();
+    el('main').innerHTML=`<div class="panel">
+      <p class="eyebrow">Step 6 · Review</p>
+      <h2 style="margin-top:6px">Purchase summary</h2>
+      <p class="lede">Read this back to the guest before submitting.</p>
+      <div style="margin-top:16px;border:1px solid var(--line);border-radius:12px;overflow:hidden">
+        <div style="background:var(--surface-2);padding:12px 16px;font-weight:700">${esc((S.guest.first+' '+S.guest.last).trim())}${S.match?' · <span class="hint" style="color:var(--gold);font-weight:700">Returning guest</span>':' · <span class="hint">New guest</span>'}</div>
+        <div style="padding:4px 16px">
+          <div class="sline"><span class="l"><b>${esc(S.pkg.series==='Standard'?'Sportfishing Package':S.pkg.series)}</b> · ${fmtD(S.date)}</span><span class="r">${money(packageTotal())}</span></div>
+          <div class="sline"><span class="l">${esc(S.room.name)} · ${esc(S.room.type)} · party of ${S.guests} · ${money(roomRate())}/person</span><span class="r"></span></div>
+          ${acts.length?acts.map(a=>`<div class="sline"><span class="l">${esc(a.name)} · ${S.guests} × ${money(a.price)}</span><span class="r">${money(actLine(a))}</span></div>`).join(''):'<div class="sline empty"><span class="l">No add-ons</span><span class="r"></span></div>'}
+          <div class="stot"><span>Total</span><span class="r">${money(grand())}</span></div>
+        </div>
+        <div style="padding:0 16px 14px"><div class="dep">
+          <div class="d1"><span>Deposit due now</span><span>${money(depositDue())}</span></div>
+          <div class="d2"><span>Balance before arrival</span><span>${money(balanceDue())}</span></div>
+          <div class="d2"><span>Card processing fee</span><span>+${DEPOSIT.feePct}% (card only)</span></div>
+        </div></div>
+      </div>
+      <div class="actions"><button class="btn btn-ghost left" onclick="RD.go(5)">← Add-ons</button>
+        <button class="btn btn-primary" onclick="RD.submit()">Submit reservation request →</button></div>
+    </div>`;
+  }
+
+  function confirmedStep(){
+    const s=S.sent;
+    el('main').innerHTML=`<div class="panel">
+      <div class="done-hero">
+        <p class="eyebrow" style="color:var(--good)">Reservation submitted</p>
+        <div class="code">${S.code}</div>
+        <div class="sub">${esc((S.guest.first+' '+S.guest.last).trim())} · ${esc(S.pkg.series==='Standard'?'Sportfishing Package':S.pkg.series)} · ${fmtD(S.date)} · ${money(grand())}</div>
+      </div>
+      <p class="lede" style="text-align:center;margin:14px auto 0;max-width:52ch">The request is logged and the deposit hold is set. Confirm with the guest while they're on the line.</p>
+      <div class="comms">
+        <div class="comm">
+          <div class="ch"><span class="ic sms"><svg class="i" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+            <div><div class="ct">Confirmation text</div><div class="cd">SMS to ${esc(S.guest.phone||'—')}</div></div></div>
+          <div class="preview"><b>Talon Lodge:</b> Thanks ${esc(S.guest.first||'')}! Your ${esc(S.pkg.series==='Standard'?'Sportfishing':S.pkg.series)} stay ${fmtShort(S.date)} is reserved. Confirmation ${S.code}. Check your email to pay the deposit &amp; hold your dates.</div>
+          ${s.sms?`<div class="sent"><svg class="i" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Text sent to ${esc(S.guest.phone)}</div>`
+            :`<button class="btn btn-primary" onclick="RD.sendSms()">Send confirmation text</button>`}
+        </div>
+        <div class="comm">
+          <div class="ch"><span class="ic mail"><svg class="i" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="m4 6 8 6 8-6"/></svg></span>
+            <div><div class="ct">Reservation email</div><div class="cd">to ${esc(S.guest.email||'—')}</div></div></div>
+          <div class="preview">Full reservation summary, the itemized purchase, and a secure <b>payment link</b> — deposit ${money(depositDue())} now by <b>card, check or ACH</b>, balance ${money(balanceDue())} before arrival.</div>
+          ${s.email?`<div class="sent"><svg class="i" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> Email sent to ${esc(S.guest.email)}</div>`
+            :`<button class="btn btn-primary" onclick="RD.sendEmail()">Send reservation &amp; payment email</button>`}
+        </div>
+      </div>
+      <div class="actions" style="justify-content:center"><button class="btn btn-ghost" onclick="RD.reset()">＋ Start a new call</button></div>
+    </div>`;
+  }
+
+  /* ---------- summary sidebar ---------- */
+  function renderSum(){
+    el('sumcode').textContent=S.code?('Confirmation '+S.code):(S.checked?'In progress':'New call');
+    const rows=[];
+    const name=(S.guest.first+' '+S.guest.last).trim();
+    rows.push(`<div class="sline"><span class="l">Guest</span><span class="r">${name?esc(name):'<span class="hint">—</span>'}${S.match?' <span class="hint" style="color:var(--gold)">◆</span>':''}</span></div>`);
+    rows.push(`<div class="sline"><span class="l">Party</span><span class="r">${S.guests} guests</span></div>`);
+    rows.push(`<div class="sline"><span class="l">Dates</span><span class="r">${S.date?fmtShort(S.date):'<span class="hint">—</span>'}</span></div>`);
+    rows.push(`<div class="sline"><span class="l">Package</span><span class="r">${S.pkg?esc(S.pkg.series==='Standard'?'Sportfishing':S.pkg.series):'<span class="hint">—</span>'}</span></div>`);
+    rows.push(`<div class="sline"><span class="l">Room</span><span class="r">${S.room?esc(S.room.name):'<span class="hint">—</span>'}</span></div>`);
+    if(S.room)rows.push(`<div class="sline"><span class="l"><b>Package</b> · ${money(roomRate())}×${S.guests}</span><span class="r">${money(packageTotal())}</span></div>`);
+    selectedActs().forEach(a=>rows.push(`<div class="sline"><span class="l">${esc(a.name)}</span><span class="r">${money(actLine(a))}</span></div>`));
+    let html=rows.join('');
+    if(S.room){html+=`<div class="stot"><span>Total</span><span class="r">${money(grand())}</span></div>
+      <div class="dep"><div class="d1"><span>Deposit now</span><span>${money(depositDue())}</span></div>
+      <div class="d2"><span>Balance before arrival</span><span>${money(balanceDue())}</span></div></div>`;}
+    el('sumbody').innerHTML=html;
+  }
+
+  function render(){renderSteps();({1:guestStep,2:tripStep,3:packageStep,4:roomStep,5:addonStep,6:confirmStep}[S.step])();renderSum();}
+
+  /* ---------- API ---------- */
+  window.RD={
+    gf(f,v){S.guest[f]=v;if(S.checked){S.checked=false;S.match=null;const mb=el('matchbox');if(mb)mb.innerHTML='';}},
+    check(){const g=S.guest;if(!(g.first||g.last||g.email||g.phone)){toast('Enter a name, email or phone first');return;}
+      S.match=matchGuest(g);S.checked=true;const mb=el('matchbox');if(mb)mb.innerHTML=matchHTML();renderSteps();
+      const cont=[...document.querySelectorAll('.actions .btn-primary')][0];if(cont)cont.disabled=false;
+      toast(S.match?('Returning guest — '+S.match.first+' '+S.match.last):'New guest — no prior record');},
+    go(n){ if(n>S.step){ // gate forward moves
+        if(n>=2&&!S.checked){toast('Check the guest first');return;}
+        if(n>=4&&!S.date){toast('Pick a package first');return;}
+        if(n>=5&&!S.room){toast('Pick a room first');return;}
+      }
+      S.step=n;window.scrollTo({top:0,behavior:'smooth'});render();},
+    yr(v){S.year=+v;S.from=SEASON[S.year].start;S.to=SEASON[S.year].end;S.date=null;S.pkg=null;render();},
+    party(d){S.guests=Math.max(2,Math.min(12,S.guests+d));if(S.room&&S.room.occMax<S.guests){S.room=null;}render();},
+    setFrom(v){S.from=v;},setTo(v){S.to=v;},
+    pickPkg(d,id){S.date=d;S.pkg=PACKAGES.find(p=>p.id===id)||packageForDate(d);render();},
+    pickRoom(id){S.room=ROOMS.find(r=>r.id===id);render();},
+    toggleAct(id){S.acts[id]=!S.acts[id];render();},
+    submit(){S.code='TL'+String(S.year).slice(2)+'-'+Math.floor(1000+Math.random()*9000);render();toast('Reservation '+S.code+' submitted');},
+    sendSms(){S.sent.sms=true;render();toast('Confirmation text sent');},
+    sendEmail(){S.sent.email=true;render();toast('Reservation email sent');},
+    reset(){Object.assign(S,{step:1,guest:{first:'',last:'',email:'',phone:''},match:null,checked:false,year:2027,from:SEASON[2027].start,to:SEASON[2027].end,guests:2,date:null,pkg:null,room:null,acts:{},code:null,sent:{sms:false,email:false}});render();}
+  };
+
+  el('schema').innerHTML='Maps to Andy’s schema → caller runs the same <b>resolveGuestForCandidate()</b> matcher (Tier 1 email · 2 phone · 3 name) against <b>persons</b>; submit creates a <b>reservation_request</b> → <b>group</b> + <b>trip</b> + room/activity <b>assignments</b>, resolves the caller to one <b>person</b> (new record if no match), sets the deposit hold, and queues the SMS + email (comms service) with a Stripe <b>payment_link</b>. No card number is entered by the agent.';
+  render();
+})();
+</script>
+</body></html>
