@@ -48,6 +48,8 @@ header.top .agent .av{width:30px;height:30px;border-radius:50%;background:var(--
 .fld{margin-top:14px}
 .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap}
 .actions .left{margin-right:auto}
+.pnav{display:flex;align-items:center;gap:10px;margin:-4px 0 20px;padding-bottom:16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.pnav .fwd{margin-left:auto}
 
 /* guest match banner */
 .match{margin-top:18px;border-radius:14px;padding:16px 18px;border:1px solid var(--line-2)}
@@ -229,6 +231,11 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
   ];
   function loadRooms(){try{const s=JSON.parse(localStorage.getItem('talon_rooms_v1'));if(s&&s.length)return s.map(r=>({id:r.id,name:r.name,type:r.type||'Room',occMax:r.occMax||r.occMin||2,beds:r.beds||''}));}catch(e){}return ROOM_SEED;}
   const ROOMS=loadRooms().map(r=>({...r,rate:r.type==='House'?6695:6195}));
+  // per-departure availability: a deterministic subset of rooms is already booked on each date
+  // (mirrors the guest widget; when real per-departure booked data exists it would be read instead)
+  function bookedFor(date){const y=+String(date).slice(0,4);const idx=arrivals(y).indexOf(date);if(idx<0)return [];return ROOMS.filter((_,i)=>((i+idx)%4)===0).map(r=>r.id);}
+  const availRooms=date=>{const b=bookedFor(date);return ROOMS.filter(r=>!b.includes(r.id));};
+  const roomsOpen=(date)=>availRooms(date).filter(r=>r.occMax>=S.guests);
 
   const ACT_SEED=[
     {id:'a1',name:'Massage',unit:'guest',price:125,min:null,desc:'Open-air massage pavilion treatment.'},
@@ -270,9 +277,13 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
   const balanceDue=()=>grand()-depositDue();
 
   /* ---------- steps ---------- */
+  function pnav(backLabel,backStep,fwdLabel,fwdOnclick,fwdDisabled){
+    return `<div class="pnav">${backLabel?`<button class="btn btn-ghost btn-sm" onclick="RD.go(${backStep})">${backLabel}</button>`:''}<button class="btn btn-primary fwd" ${fwdDisabled?'disabled':''} onclick="${fwdOnclick}">${fwdLabel}</button></div>`;
+  }
   function guestStep(){
     const g=S.guest;
     el('main').innerHTML=`<div class="panel">
+      <div class="pnav"><button class="btn btn-ghost btn-sm" onclick="RD.check()">↻ Check guest database</button><button class="btn btn-primary fwd" ${S.checked?'':'disabled'} onclick="RD.go(2)">Continue to trip →</button></div>
       <p class="eyebrow">Step 1 · Caller</p>
       <h2 style="margin-top:6px">Who are we booking?</h2>
       <p class="lede">Take the caller's name and contact, then check the guest database. If they've stayed before, their history comes up so you can greet them by name and carry forward what we know.</p>
@@ -283,10 +294,6 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
       <div class="frow" style="margin-top:14px">
         <div><label>Email</label><input id="g_email" placeholder="guest@example.com" value="${esc(g.email)}" oninput="RD.gf('email',this.value)"></div>
         <div><label>Phone</label><input id="g_phone" placeholder="(000) 000-0000" value="${esc(g.phone)}" oninput="RD.gf('phone',this.value)"></div>
-      </div>
-      <div class="actions">
-        <button class="btn btn-ghost" onclick="RD.check()">↻ Check guest database</button>
-        <button class="btn btn-primary" ${S.checked?'':'disabled'} onclick="RD.go(2)">Continue to trip →</button>
       </div>
       <div id="matchbox">${S.checked?matchHTML():''}</div>
     </div>`;
@@ -307,6 +314,7 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
 
   function tripStep(){
     el('main').innerHTML=`<div class="panel">
+      ${pnav('← Guest',1,'Find availability →','RD.go(3)',false)}
       <p class="eyebrow">Step 2 · Trip</p>
       <h2 style="margin-top:6px">When, and for how many?</h2>
       <p class="lede">Enter the dates the guest is considering and the party size. We show only the packages and departures that can seat the party exactly.</p>
@@ -320,47 +328,43 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
         <div><label>Arrival to</label><input type="date" id="t_to" value="${S.to}" min="${SEASON[S.year].start}" max="${SEASON[S.year].end}" onchange="RD.setTo(this.value)"></div>
       </div>
       <p class="hint" style="margin-top:10px">Full ${S.year} season is ${fmtShort(SEASON[S.year].start)} – ${fmtShort(SEASON[S.year].end)}. Party size is in twos.</p>
-      <div class="actions"><button class="btn btn-ghost left" onclick="RD.go(1)">← Guest</button>
-        <button class="btn btn-primary" onclick="RD.go(3)">Find availability →</button></div>
     </div>`;
   }
 
-  function fits(date){return ROOMS.some(r=>r.occMax>=S.guests) && true;}
   function packageStep(){
-    const dates=arrivals(S.year).filter(d=>d>=S.from&&d<=S.to);
+    // only departures that still have an open room big enough for the party
+    const dates=arrivals(S.year).filter(d=>d>=S.from&&d<=S.to).filter(d=>roomsOpen(d).length>0);
     const rows=dates.map(d=>{const p=packageForDate(d);const sel=S.date===d&&S.pkg&&S.pkg.id===p.id;
-      const rate=6195; // display "from" per-person; final set at room step
+      const open=roomsOpen(d).length;
       return `<div class="rcard ${sel?'sel':''}" onclick="RD.pickPkg('${d}','${p.id}')">
         <div class="body"><div class="series ${p.series==='Standard'?'std':'special'}">${esc(p.series==='Standard'?'Sportfishing':p.series)}</div>
           <div class="t">${fmtD(d)}</div>
           <div class="d">${p.nights} nights · ${p.days} adventure days · departs ${fmtShort(addDays(d,p.nights))}</div></div>
-        <div class="right"><div class="price">from ${money(rate)}</div><div class="sub">/ person · double occ.</div></div>
+        <div class="right"><div class="price">from ${money(6195)}</div><div class="sub">${open} room${open!==1?'s':''} open · / person</div></div>
         <div class="tick">${sel?'✓':''}</div></div>`;}).join('');
     el('main').innerHTML=`<div class="panel">
+      ${pnav('← Trip',2,'Choose accommodation →','RD.go(4)',!S.date)}
       <p class="eyebrow">Step 3 · Package</p>
       <h2 style="margin-top:6px">Available packages</h2>
       <p class="lede">For ${fmtShort(S.from)}–${fmtShort(S.to)}, party of ${S.guests}. Read the guest the dates and series; select the one they want.</p>
       ${dates.length?`<div class="rgrid">${rows}</div>`:`<p class="hint" style="margin-top:16px">No departures in this range for a party of ${S.guests}. <a href="#" onclick="RD.go(2);return false">Widen the dates.</a></p>`}
-      <div class="actions"><button class="btn btn-ghost left" onclick="RD.go(2)">← Trip</button>
-        <button class="btn btn-primary" ${S.date?'':'disabled'} onclick="RD.go(4)">Choose accommodation →</button></div>
     </div>`;
   }
 
   function roomStep(){
-    const avail=ROOMS.filter(r=>r.occMax>=S.guests);
-    const rows=avail.map(r=>{const sel=S.room&&S.room.id===r.id;
-      return `<div class="rcard ${sel?'sel':''}" onclick="RD.pickRoom(${r.id})">
+    const avail=roomsOpen(S.date);   // open on this departure AND seats the party
+    const rows=avail.map(r=>{const sel=S.room&&String(S.room.id)===String(r.id);
+      return `<div class="rcard ${sel?'sel':''}" onclick="RD.pickRoom('${esc(r.id)}')">
         <div class="body"><div class="t">${esc(r.name)} <span class="series std">${esc(r.type)}</span></div>
           <div class="d">${esc(r.beds)} · sleeps up to ${r.occMax}</div></div>
         <div class="right"><div class="price">${money(r.rate)}</div><div class="sub">/ person</div></div>
         <div class="tick">${sel?'✓':''}</div></div>`;}).join('');
     el('main').innerHTML=`<div class="panel">
+      ${pnav('← Package',3,'Review activities →','RD.go(5)',!S.room)}
       <p class="eyebrow">Step 4 · Accommodation</p>
       <h2 style="margin-top:6px">Choose the room</h2>
-      <p class="lede">${esc(S.pkg.series==='Standard'?'Sportfishing Package':S.pkg.series)} · ${fmtD(S.date)}. Showing rooms that seat a party of ${S.guests}.</p>
-      <div class="rgrid">${rows}</div>
-      <div class="actions"><button class="btn btn-ghost left" onclick="RD.go(3)">← Package</button>
-        <button class="btn btn-primary" ${S.room?'':'disabled'} onclick="RD.go(5)">Review activities →</button></div>
+      <p class="lede">${esc(S.pkg.series==='Standard'?'Sportfishing Package':S.pkg.series)} · ${fmtD(S.date)}. Showing the rooms <b>available</b> on this departure that seat a party of ${S.guests}.</p>
+      ${avail.length?`<div class="rgrid">${rows}</div>`:`<p class="hint" style="margin-top:16px">No open rooms on this departure fit a party of ${S.guests}. <a href="#" onclick="RD.go(3);return false">Choose another date.</a></p>`}
     </div>`;
   }
 
@@ -373,12 +377,11 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
         <div class="pr">${money(a.price)}<span class="hint" style="font-weight:400"> / guest</span><br><span class="hint" style="font-weight:400">${on?money(actLine(a))+' total':''}</span></div>
       </div>`;}).join('');
     el('main').innerHTML=`<div class="panel">
+      ${pnav('← Room',4,'Review &amp; confirm →','RD.go(6)',false)}
       <p class="eyebrow">Step 5 · Pre-arrival add-ons</p>
       <h2 style="margin-top:6px">Additional activities</h2>
       <p class="lede">Optional guided adventures the guest can purchase now to lock in their spot. Their package already includes ${S.pkg.days} guided sportfishing days — these are extras.</p>
       <div style="margin-top:8px">${rows}</div>
-      <div class="actions"><button class="btn btn-ghost left" onclick="RD.go(4)">← Room</button>
-        <button class="btn btn-primary" onclick="RD.go(6)">Review &amp; confirm →</button></div>
     </div>`;
   }
 
@@ -386,6 +389,7 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
     if(S.code){return confirmedStep();}
     const acts=selectedActs();
     el('main').innerHTML=`<div class="panel">
+      ${pnav('← Add-ons',5,'Submit reservation request →','RD.submit()',false)}
       <p class="eyebrow">Step 6 · Review</p>
       <h2 style="margin-top:6px">Purchase summary</h2>
       <p class="lede">Read this back to the guest before submitting.</p>
@@ -403,8 +407,6 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
           <div class="d2"><span>Card processing fee</span><span>+${DEPOSIT.feePct}% (card only)</span></div>
         </div></div>
       </div>
-      <div class="actions"><button class="btn btn-ghost left" onclick="RD.go(5)">← Add-ons</button>
-        <button class="btn btn-primary" onclick="RD.submit()">Submit reservation request →</button></div>
     </div>`;
   }
 
@@ -474,8 +476,8 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
     yr(v){S.year=+v;S.from=SEASON[S.year].start;S.to=SEASON[S.year].end;S.date=null;S.pkg=null;render();},
     party(d){S.guests=Math.max(2,Math.min(12,S.guests+d));if(S.room&&S.room.occMax<S.guests){S.room=null;}render();},
     setFrom(v){S.from=v;},setTo(v){S.to=v;},
-    pickPkg(d,id){S.date=d;S.pkg=PACKAGES.find(p=>p.id===id)||packageForDate(d);render();},
-    pickRoom(id){S.room=ROOMS.find(r=>r.id===id);render();},
+    pickPkg(d,id){S.date=d;S.pkg=PACKAGES.find(p=>String(p.id)===String(id))||packageForDate(d);S.room=null;render();},
+    pickRoom(id){S.room=ROOMS.find(r=>String(r.id)===String(id))||null;render();},
     toggleAct(id){S.acts[id]=!S.acts[id];render();},
     submit(){S.code='TL'+String(S.year).slice(2)+'-'+Math.floor(1000+Math.random()*9000);render();toast('Reservation '+S.code+' submitted');},
     sendSms(){S.sent.sms=true;render();toast('Confirmation text sent');},
