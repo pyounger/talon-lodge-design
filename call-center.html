@@ -283,7 +283,9 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
   function guestStep(){
     const g=S.guest;
     el('main').innerHTML=`<div class="panel">
-      <div class="pnav"><button class="btn btn-ghost btn-sm" onclick="RD.check()">↻ Check guest database</button><button class="btn btn-primary fwd" ${S.checked?'':'disabled'} onclick="RD.go(2)">Continue to trip →</button></div>
+      <div class="pnav">${S.checked
+        ? `<button class="btn btn-primary fwd" onclick="RD.go(2)">Continue to trip →</button>`
+        : `<button class="btn btn-primary fwd" onclick="RD.check()">↻ Check guest database</button>`}</div>
       <p class="eyebrow">Step 1 · Caller</p>
       <h2 style="margin-top:6px">Who are we booking?</h2>
       <p class="lede">Take the caller's name and contact, then check the guest database. If they've stayed before, their history comes up so you can greet them by name and carry forward what we know.</p>
@@ -462,7 +464,7 @@ svg.i{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;s
 
   /* ---------- API ---------- */
   window.RD={
-    gf(f,v){S.guest[f]=v;if(S.checked){S.checked=false;S.match=null;const mb=el('matchbox');if(mb)mb.innerHTML='';const fwd=document.querySelector('.pnav .fwd');if(fwd)fwd.disabled=true;}},
+    gf(f,v){S.guest[f]=v;if(S.checked){S.checked=false;S.match=null;const mb=el('matchbox');if(mb)mb.innerHTML='';const fwd=document.querySelector('.pnav .fwd');if(fwd){fwd.textContent='↻ Check guest database';fwd.setAttribute('onclick','RD.check()');fwd.disabled=false;}}},
     check(){const g=S.guest;if(!(g.first||g.last||g.email||g.phone)){toast('Enter a name, email or phone first');return;}
       S.match=matchGuest(g);S.checked=true;render();   // full re-render so the top-nav Continue enables
       toast(S.match?('Returning guest — '+S.match.first+' '+S.match.last):'New guest — no prior record');},
