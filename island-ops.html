@@ -121,6 +121,17 @@
   .nitem{border-left:2px solid var(--accent);padding:2px 0 2px 10px}
   .nitem .when{font:600 10.5px var(--mono);color:var(--faint)}
   .nitem .body{font-size:13px;white-space:pre-wrap}
+  .subtab .pill{display:inline-block;margin-left:6px;font:700 10px/1 var(--mono);padding:2px 5px;border-radius:20px;background:var(--surface-2);color:var(--faint)}
+  .subtab.on .pill{background:var(--surface);color:var(--accent-deep)}
+  /* Completed work reads quieter than live work and carries its wrap-up inline,
+     so the folder can be skimmed without opening every project. */
+  .prow.is-done .t{font-weight:600;color:var(--muted)}
+  .prow .wrapup{font-size:11.5px;color:var(--muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pyear{font:700 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);padding:11px 12px 7px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+  .donebox{background:var(--accent-soft);border:1px solid var(--accent);border-radius:8px;padding:11px 13px;display:flex;flex-direction:column;gap:7px}
+  .donebox .when{font:700 10.5px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--accent-deep)}
+  .donebox .body{font-size:13px;white-space:pre-wrap}
+  .nitem.wrapup{border-left-width:3px}
   .sample{background:var(--amber-soft);color:var(--amber);border:1px solid var(--amber);border-radius:8px;padding:9px 12px;font-size:12.5px;margin-bottom:14px}
   .rt{width:100%;font:500 12.5px/1.5 var(--mono);min-height:240px}
   .foot{margin-top:18px;font-size:11.5px;color:var(--faint);text-align:center}
@@ -270,13 +281,15 @@
   <section class="pane" id="pane-proj">
     <div class="hd card" style="margin-bottom:14px">
       <div class="toolbar">
+        <div class="subtabs">
+          <button class="subtab on" data-pfolder="active">Active<span class="pill" id="p-pactive"></span></button>
+          <button class="subtab" data-pfolder="done">Completed<span class="pill" id="p-pdone"></span></button>
+        </div>
         <select id="pfilter" style="width:auto">
-          <option value="open">Open (not done)</option>
-          <option value="all">All projects</option>
+          <option value="open">Every open project</option>
           <option value="someday">Someday</option>
           <option value="planned">Planned</option>
           <option value="active">In progress</option>
-          <option value="done">Done</option>
         </select>
         <input type="search" id="pq" placeholder="Search projects…">
       </div>
@@ -897,7 +910,11 @@ function seed() {
      notes: [{at: today(), by: 'Phil', text: 'Ramp decking is soft at the hinge end. Get lumber on the spring barge.'}]},
     {id: uid(), title: 'Replace guest room 3 window', area: 'Lodge', status: 'active', priority: 'normal', owner: '', due: '', cost: 1200,
      notes: [{at: today(), by: 'Phil', text: 'Seal failed, fogging between panes. Measured 34 x 52.'}]},
-    {id: uid(), title: 'Add shelving to the gear room', area: 'Shop & Grounds', status: 'someday', priority: 'low', owner: '', due: '', cost: 400, notes: []}
+    {id: uid(), title: 'Add shelving to the gear room', area: 'Shop & Grounds', status: 'someday', priority: 'low', owner: '', due: '', cost: 400, notes: []},
+    {id: uid(), title: 'Replace the generator exhaust manifold', area: 'Power & Fuel', status: 'done', priority: 'high', owner: 'Andy', due: yr + '-04-20', cost: 2200,
+     completedAt: yr + '-04-18', completedBy: 'Andy', finalCost: 2465,
+     notes: [{at: yr + '-04-05', by: 'Phil', text: 'Cracked at the number-three port, exhausting into the shed. Shut it down until it is fixed.'},
+             {at: yr + '-04-18', by: 'Andy', text: 'New manifold and gasket set in, ran four hours under load with no leaks. Over the estimate — freight on the manifold was $265.', kind: 'completion'}]}
   ];
   /* Repairs and orders are illustrative, not from the sheets — they attach to
      whatever real item matches, and simply don't appear if it isn't there. */
@@ -916,7 +933,7 @@ function seed() {
       status: 'ordered', receivedAt: '', cost: 312, by: 'Phil', notes: 'Barge to Sitka, then float out.'});
   }
 
-  return {v: 3, season: yr, sample: false, areas: AREAS0.slice(), groups: GROUPS0.slice(),
+  return {v: 4, season: yr, sample: false, areas: AREAS0.slice(), groups: GROUPS0.slice(),
           locations: LOCATIONS0.slice(), cats, items, tasks, projects,
           repairs, orders, snapshots: [], archives: []};
 }
@@ -925,7 +942,7 @@ function seed() {
 let S;
 try { S = JSON.parse(ls.get(KEY)) || seed(); } catch (e) { S = seed(); }
 let ui = {tab: 'inv', sub: 'items', cat: 'all', q: '', onlyLow: false, onlyNoPhoto: false,
-          pfilter: 'open', pq: '', proj: null, rfilter: 'out', ofilter: 'ordered', who: ls.get(WHO) || ''};
+          pfilter: 'open', pfolder: 'active', pq: '', proj: null, rfilter: 'out', ofilter: 'ordered', who: ls.get(WHO) || ''};
 const save = () => ls.set(KEY, JSON.stringify(S));
 
 /* ---------------- derived ---------------- */
@@ -1019,7 +1036,10 @@ function renderChrome() {
   $('#p-inv').textContent      = flagged ? flagged + ' low' : S.items.length;
   $('#p-setup').textContent    = st.filter(t => t.done).length + '/' + st.length;
   $('#p-shutdown').textContent = sd.filter(t => t.done).length + '/' + sd.length;
-  $('#p-proj').textContent     = S.projects.filter(p => p.status !== 'done').length;
+  const openP = openProjects().length, doneP = S.projects.length - openP;
+  $('#p-proj').textContent     = openP;
+  const pa = $('#p-pactive'); if (pa) pa.textContent = openP;
+  const pd = $('#p-pdone');   if (pd) pd.textContent = doneP;
   if (!warned) $('#sample-note').classList.remove('hide');
   $$('.tab').forEach(b => b.classList.toggle('on', b.dataset.tab === ui.tab));
   $$('.pane').forEach(p => p.classList.toggle('on', p.id === 'pane-' + ui.tab));
@@ -1571,33 +1591,85 @@ const P_STATUS = [
   {v: 'someday', label: 'Someday',     color: '#7f918d'},
   {v: 'planned', label: 'Planned',     color: '#a5762a'},
   {v: 'active',  label: 'In progress', color: '#0e7c6f'},
-  {v: 'done',    label: 'Done',        color: '#c2cfcb'}
+  {v: 'done',    label: 'Completed',   color: '#c2cfcb'}
 ];
 const stMeta = v => P_STATUS.find(s => s.v === v) || P_STATUS[0];
 
+/* A project is either live work or finished work. Finishing one does NOT remove
+   it — it moves to the Completed folder with its whole record intact, so the
+   active list stays short while nothing is lost. */
+const isDone       = p => p.status === 'done';
+const openProjects = () => S.projects.filter(p => !isDone(p));
+/* newest first; a save from before completion dates existed sorts to the bottom */
+const doneProjects = () => S.projects.filter(isDone)
+  .slice().sort((a, b) => String(b.completedAt || '').localeCompare(String(a.completedAt || '')));
+/* the wrap-up is the note written when the project was closed out */
+const wrapUp = p => (p.notes || []).slice().reverse().find(n => n.kind === 'completion') || null;
+
+const pMatches = (p, q) => !q || p.title.toLowerCase().includes(q) ||
+  (p.area || '').toLowerCase().includes(q) || (p.owner || '').toLowerCase().includes(q) ||
+  (p.notes || []).some(n => n.text.toLowerCase().includes(q));
+
+function pEmpty(done, q) {
+  if (done) return q ? 'No completed projects match.'
+    : 'Nothing completed yet. Finish a project in the Active folder and it lands here.';
+  if (q) return 'No projects match.';
+  return S.projects.length ? 'No open projects — the rest are in the Completed folder.' : 'No projects yet.';
+}
+
 function renderProjects() {
   const q = ui.pq.trim().toLowerCase();
-  const list = S.projects.filter(p =>
-    (ui.pfilter === 'all' || (ui.pfilter === 'open' ? p.status !== 'done' : p.status === ui.pfilter)) &&
-    (!q || p.title.toLowerCase().includes(q) || (p.area || '').toLowerCase().includes(q) ||
-      (p.notes || []).some(n => n.text.toLowerCase().includes(q)))
-  );
+  const done = ui.pfolder === 'done';
+  $$('[data-pfolder]').forEach(b => b.classList.toggle('on', b.dataset.pfolder === ui.pfolder));
+  /* the status filter only means anything among live projects */
+  $('#pfilter').classList.toggle('hide', done);
+
+  const list = (done ? doneProjects()
+                     : openProjects().filter(p => ui.pfilter === 'open' || p.status === ui.pfilter))
+    .filter(p => pMatches(p, q));
+
+  let year = '';
   $('#plist').innerHTML = list.length ? list.map(p => {
-    const m = stMeta(p.status);
-    return `<div class="prow${ui.proj === p.id ? ' sel' : ''}" data-proj="${p.id}">
+    const m = stMeta(p.status), w = done ? wrapUp(p) : null;
+    let head = '';
+    if (done) {   /* completed work groups by the year it was finished */
+      const y = String(p.completedAt || '').slice(0, 4) || 'Undated';
+      if (y !== year) { year = y; head = `<div class="pyear">${esc(y)}</div>`; }
+    }
+    const sub = done
+      ? (p.completedAt ? 'Completed ' + fmtDate(p.completedAt) : 'Completed')
+        + (p.completedBy ? ' · ' + esc(p.completedBy) : '') + (p.area ? ' · ' + esc(p.area) : '')
+      : esc(m.label) + (p.area ? ' · ' + esc(p.area) : '') + (p.owner ? ' · ' + esc(p.owner) : '')
+        + (p.due ? ' · due ' + fmtDate(p.due) : '');
+    return `${head}<div class="prow${ui.proj === p.id ? ' sel' : ''}${done ? ' is-done' : ''}" data-proj="${p.id}">
       <span class="dot" style="background:${m.color}"></span>
       <div style="flex:1;min-width:0"><div class="t">${esc(p.title)}</div>
-        <div class="sub">${esc(m.label)}${p.area ? ' · ' + esc(p.area) : ''}${p.owner ? ' · ' + esc(p.owner) : ''}${p.due ? ' · due ' + fmtDate(p.due) : ''}</div></div>
-      ${p.priority === 'high' ? '<span class="tag t-out">High</span>' : ''}
+        <div class="sub">${sub}</div>
+        ${w ? `<div class="wrapup">${esc(w.text)}</div>` : ''}</div>
+      ${!done && p.priority === 'high' ? '<span class="tag t-out">High</span>' : ''}
       ${(p.notes || []).length ? `<span class="sub">${p.notes.length}📝</span>` : ''}
     </div>`;
-  }).join('') : `<div class="empty">No projects match.</div>`;
+  }).join('') : `<div class="empty">${esc(pEmpty(done, q))}</div>`;
 
   const p = S.projects.find(x => x.id === ui.proj);
-  if (!p) { $('#pdetail').innerHTML = `<div class="empty">Pick a project on the left, or add a new one.</div>`; return; }
+  if (!p) { $('#pdetail').innerHTML = `<div class="empty">${done
+    ? 'Pick a completed project to read its wrap-up.'
+    : 'Pick a project on the left, or add a new one.'}</div>`; return; }
+  const finished = isDone(p), w = wrapUp(p);
+  const cost = p.finalCost === '' || p.finalCost == null ? '' : ' · final cost $' + esc(p.finalCost);
   $('#pdetail').innerHTML = `
-    <div class="hd"><h2>Project</h2><button class="btn-danger btn-sm" data-pdel="${p.id}">Delete</button></div>
+    <div class="hd"><h2>${finished ? 'Completed project' : 'Project'}</h2>
+      <div class="toolbar">
+        ${finished ? `<button class="btn-ghost btn-sm" data-preopen="${p.id}">Reopen</button>`
+                   : `<button class="btn-primary btn-sm" data-pdone="${p.id}">Mark complete…</button>`}
+        <button class="btn-danger btn-sm" data-pdel="${p.id}">Delete</button>
+      </div>
+    </div>
     <div class="form">
+      ${finished ? `<div class="donebox">
+        <div class="when">Completed${p.completedAt ? ' ' + fmtDate(p.completedAt) : ''}${p.completedBy ? ' · ' + esc(p.completedBy) : ''}${cost}</div>
+        <div class="body">${w ? esc(w.text) : 'No completion notes were recorded.'}</div>
+      </div>` : ''}
       <div class="fld"><label for="p-title">Title</label><input id="p-title" value="${esc(p.title)}" data-pf="title"></div>
       <div class="frow">
         <div class="fld"><label for="p-status">Status</label><select id="p-status" data-pf="status">${P_STATUS.map(s => `<option value="${s.v}"${p.status === s.v ? ' selected' : ''}>${s.label}</option>`).join('')}</select></div>
@@ -1611,7 +1683,7 @@ function renderProjects() {
       </div>
       <div class="fld"><label>Notes</label>
         <div class="notes">${(p.notes || []).slice().reverse().map((n, i) => `
-          <div class="nitem"><div class="when">${fmtDate(n.at)}${n.by ? ' · ' + esc(n.by) : ''}
+          <div class="nitem${n.kind === 'completion' ? ' wrapup' : ''}"><div class="when">${fmtDate(n.at)}${n.by ? ' · ' + esc(n.by) : ''}${n.kind === 'completion' ? ' · wrap-up' : ''}${n.kind === 'reopened' ? ' · reopened' : ''}
             <button class="btn-danger btn-xs" data-ndel="${(p.notes.length - 1 - i)}" style="margin-left:6px">✕</button></div>
             <div class="body">${esc(n.text)}</div></div>`).join('') || '<div class="sub">No notes yet.</div>'}</div>
       </div>
@@ -1623,6 +1695,46 @@ function renderProjects() {
         </div>
       </div>
     </div>`;
+}
+
+/* Closing a project out. The wrap-up note is the whole point — what was actually
+   done, what it ran to — so it is required, and it is filed as an ordinary note
+   (kind:'completion') so it stays in the project's history like any other. */
+function completeProject(id) {
+  const p = S.projects.find(x => x.id === id); if (!p) return;
+  ask('Complete "' + p.title + '"', [
+    {k: 'text', label: 'Completion notes', type: 'textarea',
+     ph: 'What was done, by whom, anything the next person should know…',
+     hint: 'Required — this is what the Completed folder shows.'},
+    {k: 'at',   label: 'Completed on', type: 'date', value: today()},
+    {k: 'cost', label: 'Final cost ($)', type: 'number', min: 0, value: p.cost || ''}
+  ], 'Mark complete').then(v => {
+    if (!v) return;
+    const text = (v.text || '').trim();
+    /* a textarea can't carry the browser's required check, so it is enforced here */
+    if (!text) { toast('Completion notes are required — nothing was changed.', true); return; }
+    p.status = 'done';
+    p.completedAt = v.at || today();
+    p.completedBy = ui.who;
+    p.finalCost = v.cost === '' ? '' : +v.cost;
+    (p.notes = p.notes || []).push({at: p.completedAt, by: ui.who, text, kind: 'completion'});
+    ui.pfolder = 'done';                    /* follow it, so it is obvious where it went */
+    save(); renderProjects(); renderChrome();
+    toast('Moved to Completed.');
+  });
+}
+
+/* Reopening puts it back on the active list. The completion record is cleared but
+   the wrap-up note stays, so the history still shows it was once called done. */
+function reopenProject(id) {
+  const p = S.projects.find(x => x.id === id); if (!p) return;
+  if (!confirm('Reopen "' + p.title + '"? It moves back to the active list. The completion notes stay in its history.')) return;
+  p.status = 'active';
+  p.completedAt = ''; p.completedBy = ''; p.finalCost = '';
+  (p.notes = p.notes || []).push({at: today(), by: ui.who, text: 'Reopened.', kind: 'reopened'});
+  ui.pfolder = 'active';
+  save(); renderProjects(); renderChrome();
+  toast('Back in Active.');
 }
 
 function render() {
@@ -2073,6 +2185,9 @@ document.addEventListener('click', e => {
     return;
   }
 
+  if (d.pfolder) { ui.pfolder = d.pfolder; ui.proj = null; renderProjects(); return; }
+  if (d.pdone)   { completeProject(d.pdone); return; }
+  if (d.preopen) { reopenProject(d.preopen); return; }
   if (d.proj) { ui.proj = d.proj; renderProjects(); return; }
   if (t.id === 'btn-add-proj') {
     ask('New project', [
@@ -2082,8 +2197,10 @@ document.addEventListener('click', e => {
       {k: 'priority', label: 'Priority', type: 'select', value: 'normal', options: ['low','normal','high'].map(v => ({v, label: v[0].toUpperCase() + v.slice(1)}))}
     ], 'Add project').then(v => {
       if (!v || !v.title.trim()) return;
-      const p = {id: uid(), title: v.title.trim(), area: v.area, status: v.status, priority: v.priority, owner: '', due: '', cost: '', notes: []};
-      S.projects.unshift(p); ui.proj = p.id; ui.pfilter = 'all'; $('#pfilter').value = 'all';
+      const p = {id: uid(), title: v.title.trim(), area: v.area, status: v.status, priority: v.priority,
+                 owner: '', due: '', cost: '', completedAt: '', completedBy: '', finalCost: '', notes: []};
+      S.projects.unshift(p); ui.proj = p.id;
+      ui.pfolder = 'active'; ui.pfilter = 'open'; $('#pfilter').value = 'open';
       save(); renderProjects(); renderChrome();
     });
     return;
@@ -2178,6 +2295,14 @@ document.addEventListener('change', e => {
   }
   if (d.pf) {
     const p = S.projects.find(x => x.id === ui.proj);
+    /* picking Completed from the status menu is the same action as the button, so
+       it asks for the wrap-up too rather than quietly filing an empty one. The
+       select is snapped back first — the dialog is what commits the change. */
+    if (d.pf === 'status') {
+      const val = e.target.value;
+      if (val === 'done' && !isDone(p)) { e.target.value = p.status; completeProject(p.id); return; }
+      if (val !== 'done' && isDone(p))  { e.target.value = 'done';   reopenProject(p.id);   return; }
+    }
     p[d.pf] = e.target.value; save(); renderProjects(); renderChrome(); return;
   }
   if (e.target.id === 'file-import') {
@@ -2252,6 +2377,17 @@ if (!(S.v >= 3)) {
   S.cats.forEach(c => { if (GEAR.includes(c.id) || looksLikeGear(c)) c.track.repairs = true; });
   S.v = 3;
 }
+/* Completed projects got their own folder in v4. A save from before that has done
+   projects with no completion record — keep them, just undated, rather than
+   inventing a date they were finished on. */
+S.projects = S.projects || [];
+S.projects.forEach(p => {
+  p.notes = p.notes || [];
+  if (p.completedAt == null) p.completedAt = '';
+  if (p.completedBy == null) p.completedBy = '';
+  if (p.finalCost  == null) p.finalCost  = '';
+});
+if (!(S.v >= 4)) S.v = 4;
 S.snapshots = S.snapshots || []; S.archives = S.archives || []; S.repairs = S.repairs || []; S.orders = S.orders || [];
 /* drop repair records whose item is gone, so the table can't show orphans */
 S.repairs = S.repairs.filter(r => S.items.some(i => i.id === r.itemId));
