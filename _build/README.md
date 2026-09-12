@@ -29,6 +29,23 @@ original machine (a Windows scratchpad). On a fresh clone or a different machine
 the two path constants at the top of each script (a source dir and the repo dir) before
 running. The logic is otherwise portable Node — no dependencies.
 
+## Regenerating the PDFs
+`node _build/render-pdf.js <in.html> <out.pdf>` (portable; `cdp-pdf.js` is the original
+Windows-only version, hard-coded to one file and one Chrome path). Set `CHROME` if Chromium
+isn't at `/opt/pw-browsers/chromium`.
+
+**Inline the webfonts first if the renderer has no direct internet access:**
+```
+node _build/inline-fonts.js style-guide.html /tmp/sg.html   # fetches via curl, embeds as data: URIs
+node _build/render-pdf.js   /tmp/sg.html     style-guide.pdf
+```
+Without this the Google Fonts `<link>` silently fails and the text falls back to the host's
+system font, which visibly changes the output. Note the docs' `--serif` token is a pure system
+stack (`ui-sans-serif, system-ui, …, "Segoe UI", Roboto, Helvetica, Arial`), so headings render
+in whatever the host provides — Segoe UI on Windows, and on Linux you'll want fontconfig to
+prefer Liberation Sans (Arial-metric, and named in the stack) over DejaVu Sans (which isn't).
+Check a regenerated PDF's page count against the previous one; it should not change.
+
 ## Not committed (regenerate as needed)
 - The eagle PNG source lives at `brand/logo/talon-eagle-mark.png` (regenerate
   `eagle-datauri.txt` from it if needed).
