@@ -532,7 +532,7 @@ table.rel td em{color:var(--muted);font-style:normal}
     <p class="intro">The prototypes in this manual are single-file HTML on shared browser storage — the behavioral source of truth. The production build is a conventional three-tier app, split across the repositories below.</p>
 
     <div class="repos">
-      <div class="repo build"><span class="badge">Build · team access</span><div class="rn">stellainternational/talon-app2026-ui</div><div class="rd">Angular 20 + Angular Material on the licensed Daxa admin theme. The staff console and the guest portal front end.</div></div>
+      <div class="repo build"><span class="badge">Build · team access</span><div class="rn">stellainternational/talon-app2026-ui</div><div class="rd">Angular 20 + Angular Material on the licensed Daxa admin theme for the staff console; the guest portal front end is built in Tailwind.</div></div>
       <div class="repo build"><span class="badge">Build · team access</span><div class="rn">stellainternational/talon-app2026-api</div><div class="rd">Laravel back end on Aurora MySQL. Models, migrations, the availability engine, and the data-import migration.</div></div>
       <div class="repo docs"><span class="badge">Master documentation</span><div class="rn">pyounger/talon-lodge-design</div><div class="rd">This manual, all 37 prototypes, the schema docs, and the matching / merge rules. The blueprint the build is measured against.</div></div>
     </div>
@@ -540,7 +540,7 @@ table.rel td em{color:var(--muted);font-style:normal}
     <div class="stackgrid">
       <div><span class="sk">Database</span><span class="sv"><b>Aurora MySQL 8</b> · InnoDB · Laravel migrations · soft-delete everywhere</span></div>
       <div><span class="sk">Back end</span><span class="sv"><b>Laravel (PHP 8.2+)</b> · Eloquent · the import migration lives here</span></div>
-      <div><span class="sk">Front end</span><span class="sv"><b>Angular 20 + Material</b> · Daxa theme · rebrand via Sass, no custom CSS</span></div>
+      <div><span class="sk">Front end</span><span class="sv"><b>Angular 20 + Material</b> · Daxa theme · rebrand via Sass, no custom CSS (staff console) · <b>Tailwind</b> for the guest portal — both driven by the Talon tokens</span></div>
       <div><span class="sk">Services</span><span class="sv"><b>S3</b> storage · <b>SES</b> magic-link · <b>Stripe</b> billing · multi-site tenancy</span></div>
     </div>
 

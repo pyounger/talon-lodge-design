@@ -34,9 +34,12 @@ Assumes the revised data model (DB_SCHEMA.md, incl. §0 meta-schema) is approved
 - [ ] **Payments** (Stripe): deposits, invoices, webhooks.
 - [ ] **Reports** (use the recognition photo, stay history, survey score, etc.).
 
-## 4. Frontend build (Angular / Daxa) — [DEV] scaffold, [GEN→DEV] screens
+## 4. Frontend build — [DEV] scaffold, [GEN→DEV] screens
+Two surfaces, two front ends (see UI_MAPPING.md): **staff/admin on Angular + Daxa**, **guest portal on Tailwind**.
 - [ ] Scaffold `talon-lodge-ui` from the licensed Daxa source; **pin versions + commit a lockfile** (UI_MAPPING gotcha).
-- [ ] Build admin + Guest Portal screens per UI_MAPPING — **theme framework only, no custom CSS**; forms driven by the meta-schema.
+- [ ] Build **admin** screens per UI_MAPPING — **theme framework only, no custom CSS**; forms driven by the meta-schema.
+- [ ] Build the **Guest Portal** in Tailwind per UI_MAPPING; forms driven by the meta-schema.
+- [ ] Point **both** front ends at `brand/_talon-tokens.scss` so the two surfaces stay one visual system.
 
 ## 5. Final data migration (the hard phase) — [GEN→DEV] + [DEV]
 - [ ] Run matching/merge over the three systems into the master DB; work the review queue; import guest photos.

@@ -24,7 +24,8 @@ Nothing in the lifecycle works until these exist. Built first.
 | Object storage (photos/videos/licenses) | ⬜ | S3, presigned URLs |
 | Settings table | ⬜ | Config in-app, not config files |
 | API scaffold (Laravel) | ⬜ | Awaiting `talon-lodge-api` repo |
-| UI shell (Angular + Daxa) | ⬜ | Theme captured in STYLE_GUIDE.md; awaiting `talon-lodge-ui` repo |
+| UI shell — staff/admin (Angular + Daxa) | ⬜ | Theme captured in STYLE_GUIDE.md; awaiting `talon-lodge-ui` repo |
+| UI shell — guest portal (Tailwind) | 🟡 | Separate front-end per [UI_MAPPING.md](UI_MAPPING.md); both read `brand/_talon-tokens.scss` |
 
 ## Phase 1 — Setup & Inventory
 | Module | Status | Depends on |
@@ -49,7 +50,7 @@ Nothing in the lifecycle works until these exist. Built first.
 | Module | Status | Depends on |
 |---|---|---|
 | Pre-arrival Communications (portal magic-link) | ⬜ | Comms, Auth |
-| Guest Portal — profile, flights, allergies/medical, age/gender, emergency contact, activity requests, billing/invoice status, fishing-license upload, photo/video download | ⬜ | Trip, Object storage, Billing |
+| Guest Portal — profile, flights, allergies/medical, age/gender, emergency contact, activity requests, billing/invoice status, fishing-license upload, photo/video download | 🟡 | Trip, Object storage, Billing · **Tailwind** (not Daxa); data-scoping layer done, shell + Agenda/Flights/Billing in progress |
 | Asset Assignment (guests → rooms/boats/guides by day) | ⬜ | Setup inventory, Trip |
 
 ## Phase 4 — On-Property

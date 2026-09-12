@@ -1,10 +1,29 @@
-# UI Mapping — Daxa → Talon Lodge Platform
+# UI Mapping — Talon Lodge Platform
 
-Pre-planning from Daxa's live demo (preview.hibootstrap.com/daxa-admin). Maps our
-screens onto Daxa's existing pages/components so we build look/feel-first with minimal
-from-scratch design, then wire the Laravel API behind it.
+Maps our screens onto the framework each surface is built in. **Two surfaces, two front-end
+approaches:**
+
+- **Staff / admin — Daxa** (Angular 20.1 + Angular Material), themed, no custom CSS.
+  Pre-planned from Daxa's live demo (preview.hibootstrap.com/daxa-admin) so we build
+  look/feel-first with minimal from-scratch design, then wire the Laravel API behind it.
+- **Guest portal — Tailwind.** Andy's decision, for greater flexibility and design control on
+  the one surface guests actually see. Applies to the guest portal *only*.
+
+Both surfaces take their brand values from the same token set, `brand/_talon-tokens.scss`.
 
 ## Build rules (non-negotiable)
+
+### Shared — the brand tokens are the contract
+- `brand/_talon-tokens.scss` (the `--talon-*` custom properties) is the **single source of truth
+  for color, typography and spacing on both surfaces.** Daxa's Sass palette and Tailwind's theme
+  config both read *from* these tokens.
+- A brand change is made **once, in the tokens** — never separately in each surface.
+- Two styling systems drifting apart on color and type is the main risk the split introduces.
+  The token discipline above is what prevents it; treat a hard-coded color in either surface as
+  a defect.
+- `STYLE_GUIDE.md` documents *which tokens and components to use*, not custom CSS.
+
+### Staff / admin — Daxa + Angular Material
 - **Use the theme framework — do not write custom CSS.** Style exclusively through Daxa's
   Sass theme variables and Angular Material's theming API (palettes, typography, density),
   plus Daxa's existing component classes/utilities. No bespoke stylesheets, no inline styles,
@@ -13,9 +32,15 @@ from-scratch design, then wire the Laravel API behind it.
   Material theme**, in one place — never by adding CSS on individual pages.
 - New screens are **composed from existing Daxa components**; if something's missing, build it
   from Daxa/Material primitives so it inherits the theme, rather than styling from scratch.
-- `STYLE_GUIDE.md` therefore documents *which theme tokens and components to use*, not custom CSS.
 
-## Daxa at a glance
+### Guest portal — Tailwind
+- The portal is built in **Tailwind**, not Daxa. This is a deliberate, scoped exception to the
+  rule above: it covers the guest portal only, and staff/admin screens stay on Daxa.
+- Tailwind's theme config must be **driven by `brand/_talon-tokens.scss`**, not Tailwind's
+  default palette, so the portal and the admin screens remain one visual system.
+- The prototype `guest-portal.html` stays the reference for portal behavior and layout.
+
+## Daxa at a glance (the staff/admin stack)
 - **Angular 20.1 + Angular Material 20.1** (purchased package v1.7.0; the demo advertises a
   newer build — we build against what's in the zip). Standalone components, SSR/SSG, Sass, TS.
 - Theme tokens + framework details captured in [`STYLE_GUIDE.md`](../STYLE_GUIDE.md).
@@ -26,7 +51,7 @@ from-scratch design, then wire the Laravel API behind it.
 - **License: Regular $18** (end users not charged — correct for Talon's internal use).
   Extended $399 only if we ever resell the software.
 
-## Observed design language (configure via the theme, don't reproduce in CSS)
+## Observed design language — staff/admin (configure via the theme, don't reproduce in CSS)
 - Light lavender/white canvas; **blue→purple gradient primary**; card surfaces with soft shadow.
 - Left icon+label sidebar; sticky top bar with global search; Material Symbols iconography.
 - Charts via ApexCharts. Light + dark themes.
@@ -54,17 +79,20 @@ from-scratch design, then wire the Laravel API behind it.
 | Staff users / roles | **Users** + **My Profile** |
 | Settings (settings table UI) | Daxa settings/forms pages |
 
-### Guest Portal (Viking-style guided flow)
-| Portal pane | Daxa starting point |
+### Guest Portal (Viking-style guided flow) — **Tailwind, not Daxa**
+Built in Tailwind per the build rules above. The patterns below say what each pane *is* — they
+are framework-agnostic descriptions, not Daxa component names.
+
+| Portal pane | Pattern |
 |---|---|
 | Home (hero, trip summary, completion checklist) | Profile/dashboard cards + progress widgets |
-| Personal Info / Flight Info | Forms + **Date/Time Picker**; File Uploader for docs |
-| Activities (scheduling grid, companion picker) | Table/Kanban + Material dialogs (companion picker is custom) |
-| Adventures (browse + cart) | **Products Grid** + **Gallery** |
-| Agenda | **Calendar** / **Timeline** |
-| Cart & Payments | **Invoices** / **Pricing** (real Stripe wiring is a later phase) |
+| Personal Info / Flight Info | Forms + date/time picker; file uploader for docs |
+| Activities (scheduling grid, companion picker) | Table/board + dialogs (companion picker is custom) |
+| Adventures (browse + cart) | Product grid + gallery |
+| Agenda | Calendar / timeline |
+| Cart & Payments | Invoice / pricing layout (real Stripe wiring is a later phase) |
 
-## Custom-built (Daxa has no direct equivalent — build from its primitives)
+## Custom-built (no direct equivalent in either framework — build from primitives)
 - Guest-matching / merge-and-undo UI (tables + dialogs + audit view).
 - Activity companion picker with live min/max party enforcement.
 - Per-day person→asset assignment grid (boats/guides/rooms).
@@ -86,7 +114,9 @@ ApexCharts 5.3.x) that Daxa's own demo code does **not** type-check against — 
 (We confirmed this while trying to run it locally; the hosted demo builds fine because the
 vendor built it before those patches shipped.)
 
-## Next actions (when the licensed Daxa source is available in `references/daxa/`)
+## Next actions
+
+### Staff / admin (when the licensed Daxa source is available in `references/daxa/`)
 1. Read Daxa's theme config; record its Sass palette/typography variables in `STYLE_GUIDE.md`
    (values to set — not CSS to write). Adjust only the theme to rebrand for Talon.
 2. Stand up the Angular shell (sidebar + topbar + routing) in `talon-lodge-ui`, stripped of
@@ -94,3 +124,8 @@ vendor built it before those patches shipped.)
 3. Build the look/feel-first screens per the mapping above **by composing existing Daxa/Material
    components** — no custom CSS. Lock as the blueprint.
 4. Then wire each screen to the Laravel API.
+
+### Guest portal
+1. Confirm Tailwind's theme config reads from `brand/_talon-tokens.scss` rather than Tailwind's
+   default palette — this is what keeps the two surfaces in one visual system.
+2. Portal shell (nav, header, layout), then the first screens wired to the scoped API endpoints.
