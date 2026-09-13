@@ -8,6 +8,7 @@ DUBROVNIK = 'https://claude.ai/code/artifact/669911a2-6688-499d-bd9b-562f23ba997
 ELAFITI   = 'https://claude.ai/code/artifact/12896c08-9872-4589-86f9-dea11227ff26'
 HVAR      = 'https://claude.ai/code/artifact/3b50398f-5d8d-4eaa-ae2a-995d76a92a39'
 FOODWINE  = 'https://claude.ai/code/artifact/7af05126-72f1-4684-ac1d-d95bbff074bf'
+VENGE     = 'https://claude.ai/code/artifact/a14454b5-d57e-43fb-9c39-fd6d40240682'
 
 ADV=[
  ("Dubrovnik Before the Ships","Dubrovnik, Croatia","A walled city with no road through it, best seen in the two hours before the tenders land. From the stone bridge at Pile to a six-hundred-year-old fountain that still runs cold &mdash; and what the old town becomes by lunchtime.","adv-dubrovnik.jpg"),
@@ -120,7 +121,7 @@ adv=''.join(_adv_card(n, t, loc, b, f) for n,(t,loc,b,f) in enumerate(ADV))
 
 FW=[
  ("Pick Your Fish","Dalmatia, Croatia","The fish is not on the menu &mdash; it is in a case by the door, whole, on ice, priced by the kilo. How ordering works on this coast, what the kitchen does next, and which wines never leave the island they grow on.","food-fish.jpg",FOODWINE),
- ("Venge Vineyards","Calistoga, Napa Valley","One of Talon&rsquo;s winemaking partners, at the north end of Napa Valley. The blocks they farm, the small lots they blend, and how the bottles reach the lodge&rsquo;s table.",None,None),
+ ("Venge Vineyards","Calistoga, Napa Valley","A family estate at the north end of Napa Valley, photographed at the end of harvest: fruit still on the vine, tables laid under the oaks, and the Cabernet open.","fw-venge.jpg",VENGE),
  ("The Winemakers","Partners worldwide","Talon&rsquo;s winemaking partners, their cellars and their wine clubs &mdash; and the tables where you can drink what they make.",None,None),
  ("The Chefs","Partners worldwide","The chefs who cook at Talon and the restaurants they run the rest of the year, from island kitchens to city dining rooms.",None,None),
 ]

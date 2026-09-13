@@ -62,6 +62,11 @@ PAGES = [
             'chosen from the case and priced by the kilo.',
        theme='#1B1F24'),
 
+  dict(src='magnus-food-venge.html', out='food-and-wine/venge-vineyards/index.html',
+       desc='Venge Vineyards at the end of harvest \u2014 the house above the rows, fruit '
+            'still on the vine, and the table laid out under the pergola.',
+       theme='#1B1F24'),
+
   # Experiences
   dict(src='magnus-experience-alaska.html', out='experiences/alaskaadventure/index.html',
        desc='#alaskaadventure \u2014 the photographs travellers are posting from Alaska, '
@@ -82,6 +87,7 @@ LINKS = [
   ('https://claude.ai/code/artifact/12896c08-9872-4589-86f9-dea11227ff26', '/adventures/out-to-the-elaphiti/'),
   ('https://claude.ai/code/artifact/3b50398f-5d8d-4eaa-ae2a-995d76a92a39', '/adventures/hvar-runs-on-boats/'),
   ('https://claude.ai/code/artifact/7af05126-72f1-4684-ac1d-d95bbff074bf', '/food-and-wine/pick-your-fish/'),
+  ('https://claude.ai/code/artifact/a14454b5-d57e-43fb-9c39-fd6d40240682', '/food-and-wine/venge-vineyards/'),
   ('https://claude.ai/code/artifact/b7aabc5e-0477-4d1a-8575-c9793f78cc82', '/experiences/alaskaadventure/'),
   ('https://claude.ai/code/artifact/b7babd23-ad62-412c-9c20-b668a598cd00', '/'),
 ]

@@ -1,55 +1,92 @@
 #!/usr/bin/env python3
-"""Venge Vineyards, Calistoga -> magnus-food-venge.html
+"""Venge Vineyards, Napa -> magnus-food-venge.html
 
-Waiting on photographs. The stories in this section are photograph-led: each
-slide is written to a specific frame, the way the Croatia pages were, so the
-writing cannot sensibly come first. SHOTS below is the list the story needs.
-Drop the files into venge/ under these names and run this; it reports what is
-still missing rather than building a page full of gaps.
+Four photographs, taken on the estate at the end of harvest. The copy is
+written to the frames and describes only what is in them: no blend, no
+vintage beyond the one legible on a label, no claim about the farming that
+the photograph does not show. Everything else waits for the winery to
+confirm it.
 
-Nothing here asserts a fact about the estate. The headings and bodies are
-written once the photographs and the confirmed details are both in hand -
-this is a commercial page for a real producer, and getting a blend or a
-vintage wrong on it is worse than shipping it a week later.
+The Talon partnership is named here and deliberately not on the homepage
+card - the owner's call.
 """
 import base64, io, os
 
 SP = os.path.dirname(os.path.abspath(__file__))
 V  = os.path.join(SP, 'venge')
+A  = os.path.join(SP, 'talon', 'assets')
 
-# filename, what the frame should show, working heading
-SHOTS = [
- ('approach.jpg',    'The drive in - gate, track, the first sight of the property',
-                     'The road in'),
- ('vines.jpg',       'A block of vines close enough to read the fruit and the soil',
-                     'What they farm'),
- ('tasting.jpg',     'The tasting table or porch, laid, with the view beyond it',
-                     'Where you taste'),
- ('pour.jpg',        'A pour in progress - hands, bottle, glass, close',
-                     'The pour'),
- ('cellar.jpg',      'Barrels or tanks, working cellar rather than a showroom',
-                     'The small lots'),
- ('bottles.jpg',     'The bottles together, labels legible',
-                     'What to take home'),
+TALON = 'https://claude.ai/code/artifact/5911cc64-baa6-498e-a580-318f24a75b2b'
+HOME  = 'https://claude.ai/code/artifact/b7babd23-ad62-412c-9c20-b668a598cd00'
+
+def uri(name, folder):
+    mt = 'image/png' if name.endswith('.png') else 'image/jpeg'
+    with open(os.path.join(folder, name), 'rb') as f:
+        return 'data:%s;base64,%s' % (mt, base64.b64encode(f.read()).decode())
+
+SLIDES = [
+ ('house.jpg',
+  'A low winery building with a long porch standing above a vineyard, autumn trees behind it '
+  'and guests gathered at the foot of the steps',
+  'The house above the rows',
+  'You see it from the vineyard before you reach it &mdash; a low building with a porch running '
+  'its length, set on the rise above the last row. Olive trees along the front, one tree gone '
+  'orange beside the roof, and a crowd already collected at the foot of the steps. Nothing about '
+  'it announces itself. The vines come first and the building second, which is most of what you '
+  'need to know about the order of things here.'),
+
+ ('vines.jpg',
+  'A cluster of small dark grapes hanging on the vine among yellowing leaves, with green cover '
+  'crop between the rows behind',
+  'Still on the vine',
+  'Late in the season and there is fruit still hanging. The leaves have gone yellow at the edges, '
+  'the berries have pulled in tight and dark, and the skins are thick enough to read from a step '
+  'away. Between the rows the cover crop is still green and a drip line runs along the wire. This '
+  'is the stretch of the year when the only question left is which block comes in and which one '
+  'waits another week.'),
+
+ ('bottles.jpg',
+  'A magnum of Venge Vineyards Family Reserve Cabernet on a table with sunflowers, Indian corn '
+  'and small pumpkins, rows of empty wine glasses in front and vineyard behind',
+  'What gets opened',
+  'A magnum of Family Reserve Cabernet, &rsquo;07 on the label, standing where everyone walking '
+  'up has to pass it, with two more bottles behind. Sunflowers in a jar, Indian corn, small '
+  'pumpkins, a barrel head with the name burned into it &mdash; the whole arrangement is harvest, '
+  'and deliberately so. Then the rows of polished glasses in front of it, which tell you how many '
+  'people are expected.'),
+
+ ('tasting.jpg',
+  'Guests seated at round tables under a wooden pergola on grass, green gingham cloths, with '
+  'vineyard rows and hills beyond in low evening sun',
+  'The table',
+  'Green gingham, plates already worked through, and the sun coming in low and flat under the '
+  'pergola. Round tables set on the grass, the vineyard running off behind them towards the hills '
+  'on the far side of the valley. The tasting is not held in a room. It happens out among the rows '
+  'the wine came from, at the hour when the light does the work for you.'),
 ]
 
-def uri(name):
-    with open(os.path.join(V, name), 'rb') as f:
-        return 'data:image/jpeg;base64,%s' % base64.b64encode(f.read()).decode()
-
-missing = [n for n, _, _ in SHOTS if not os.path.exists(os.path.join(V, n))]
+missing = [n for n, _, _, _ in SLIDES if not os.path.exists(os.path.join(V, n))]
 if missing:
-    print('venge/ is short %d of %d photographs:\n' % (len(missing), len(SHOTS)))
-    for name, wants, _ in SHOTS:
-        here = os.path.exists(os.path.join(V, name))
-        print('  [%s] %-14s %s' % ('ok' if here else '  ', name, wants))
-    print('\nConfirmed: Venge is a Talon winemaking partner - that is the spine')
-    print('of the story, Calistoga to a table in the Tongass.\n')
-    print('Still needed before this can be written:')
-    print('  - the wines to name, with the vintages you want on the page')
-    print('  - which of them are poured at the lodge, and whether guests can buy')
-    print('  - who to credit for the photographs')
-    raise SystemExit(0)
+    raise SystemExit('venge/ is missing: ' + ', '.join(missing))
 
-raise SystemExit('Photographs are present. The slide copy still has to be '
-                 'written to them - see the module docstring.')
+out = []
+for i, (img, alt, title, body) in enumerate(SLIDES):
+    cap = '<div class="cap"><h2>%s</h2><hr class="rule"><p>%s</p></div>' % (title, body)
+    out.append('<div class="slide%s"><div class="stage captioned"><figure>'
+               '<img src="%s" alt="%s"%s></figure>%s</div></div>'
+               % (' on' if i == 0 else '', uri(img, V), alt,
+                  '' if i == 0 else ' loading="lazy"', cap))
+
+html = io.open(os.path.join(SP, 'venge-template.html'), encoding='utf-8').read()
+html = (html.replace('__GRIFFIN__', uri('magnus-griffin.png', A))
+            .replace('__TALON__', TALON).replace('__HOME__', HOME)
+            .replace('__SLIDES__', ''.join(out)))
+
+# nothing from the Croatia story it was cut from may survive above the footer
+body_only = html[:html.index('class="about"')]
+leaks = [w for w in ('Dubrovnik', 'Hvar', 'Elaphiti', 'Dalmatia', 'Croatia', 'turbot')
+         if w in body_only]
+
+io.open(os.path.join(SP, 'magnus-food-venge.html'), 'w', encoding='utf-8').write(html)
+print('built magnus-food-venge.html  %.0f KB   slides: %d   leaks: %s'
+      % (len(html)/1024, len(SLIDES), ', '.join(leaks) if leaks else 'none'))
