@@ -347,6 +347,117 @@
     if (play && play.catch) play.catch(fallback);
   })();
 
+  /* Rails that come back round.  Scroll past Clayoquot and Talon follows;
+     scroll back past Talon and Clayoquot is there.  A rail never dead-ends.
+
+     The cards are cloned at runtime rather than written out by build.py.  The
+     photographs are data URIs, and however many <img> elements point at one,
+     the browser keeps a single decoded copy - so this costs no page weight.
+     Cloning in the build would have multiplied 3 MB by the number of copies.
+
+     The scroll position is shifted back a whole set only once scrolling has
+     settled, never mid-flick: assigning scrollLeft during momentum stops the
+     momentum dead on iOS.  Enough copies are laid down that one flick cannot
+     reach the end before it settles. */
+  (function(){
+    var rails = document.querySelectorAll('.rail, .pubrail');
+    for (var i = 0; i < rails.length; i++) carousel(rails[i]);
+
+    function carousel(rail){
+      var originals = Array.prototype.slice.call(rail.children);
+      if (originals.length < 2) return;
+
+      var setWidth = 0, idle = null, shifting = false, resizer = null;
+
+      lay();
+      rail.addEventListener('scroll', function(){
+        if (shifting || !setWidth) return;
+        clearTimeout(idle);
+        idle = setTimeout(recentre, 120);
+      }, { passive: true });
+      window.addEventListener('resize', function(){
+        clearTimeout(resizer);
+        resizer = setTimeout(relay, 200);
+      });
+
+      function lay(){
+        // a rail you cannot run off the end of has nothing to wrap
+        if (rail.scrollWidth <= rail.clientWidth + 4) return;
+
+        // one trailing copy measures a set exactly, gap included
+        var probe = copy();
+        add(probe);
+        setWidth = probe[0].offsetLeft - originals[0].offsetLeft;
+        if (!(setWidth > 0)) { strip(); setWidth = 0; return; }
+
+        // one copy ahead of the originals so scrolling left wraps too, and
+        // copies behind until a single flick cannot reach the end
+        lead(copy());
+        var guard = 0;
+        while (rail.scrollWidth - rail.clientWidth <= setWidth * 2.5 && guard++ < 12)
+          add(copy());
+
+        if (rail.scrollWidth - rail.clientWidth <= setWidth * 2) { strip(); setWidth = 0; return; }
+        shiftTo(setWidth);   // start the viewer on the originals
+      }
+
+      function relay(){
+        strip();
+        setWidth = 0;
+        rail.scrollLeft = 0;
+        lay();
+      }
+
+      function recentre(){
+        var max = rail.scrollWidth - rail.clientWidth;
+        if (max <= setWidth * 2) return;
+        var at = rail.scrollLeft, to = at;
+        while (to < setWidth)       to += setWidth;
+        while (to > max - setWidth) to -= setWidth;
+        if (Math.abs(to - at) > 1) shiftTo(to);
+      }
+
+      /* Snapping has to stand down for the assignment: with it live the
+         browser treats the jump as a scroll and snaps somewhere else. */
+      function shiftTo(x){
+        shifting = true;
+        var snap = rail.style.scrollSnapType;
+        rail.style.scrollSnapType = 'none';
+        rail.scrollLeft = x;
+        requestAnimationFrame(function(){
+          rail.style.scrollSnapType = snap;
+          shifting = false;
+        });
+      }
+
+      function copy(){
+        var out = [];
+        for (var i = 0; i < originals.length; i++){
+          var c = originals[i].cloneNode(true);
+          c.setAttribute('data-clone', '');
+          // a screen reader should hear the cards once, and tabbing should
+          // pass through them once; the mouse may still use them
+          c.setAttribute('aria-hidden', 'true');
+          var focusable = c.querySelectorAll('a, button, input, [tabindex]');
+          for (var j = 0; j < focusable.length; j++)
+            focusable[j].setAttribute('tabindex', '-1');
+          var ided = c.querySelectorAll('[id]');
+          for (var k = 0; k < ided.length; k++) ided[k].removeAttribute('id');
+          if (c.id) c.removeAttribute('id');
+          out.push(c);
+        }
+        return out;
+      }
+
+      function add(set){ for (var i = 0; i < set.length; i++) rail.appendChild(set[i]); }
+      function lead(set){ for (var i = set.length - 1; i >= 0; i--) rail.insertBefore(set[i], rail.firstChild); }
+      function strip(){
+        var clones = rail.querySelectorAll('[data-clone]');
+        for (var i = 0; i < clones.length; i++) clones[i].parentNode.removeChild(clones[i]);
+      }
+    }
+  })();
+
   (function(){
     var btn = document.getElementById('menu-toggle');
     var menu = document.getElementById('menu');
