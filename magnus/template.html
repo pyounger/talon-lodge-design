@@ -145,8 +145,16 @@
   .wall h2{font:400 clamp(26px,4vw,40px)/1.1 var(--serif);color:var(--ink);text-align:center;
            margin:0 0 clamp(20px,3vw,30px);padding-inline:clamp(16px,4vw,44px)}
   .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
-  @media(min-width:1000px){.tiles{grid-template-columns:repeat(3,1fr)}}
   .tiles img{width:100%;aspect-ratio:1;object-fit:cover}
+  /* Three abreast on a phone makes 131px thumbnails and lets the wall run
+     edge to edge while every other section keeps a gutter. Two abreast,
+     inside that same gutter, nearly doubles each photograph. */
+  @media(max-width:560px){
+    .tiles{grid-template-columns:repeat(2,1fr);gap:6px;
+           padding-inline:clamp(16px,4vw,44px)}
+    /* an odd number of posts would leave a lone tile on the last row */
+    .tiles img:nth-child(odd):last-child{display:none}
+  }
   .more{display:block;margin:26px auto 0;background:var(--gold);color:#211a05;border:0;border-radius:6px;
         font:700 13px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;padding:14px 30px;cursor:pointer}
   .more:hover{background:var(--gold-ink);color:#fff}
