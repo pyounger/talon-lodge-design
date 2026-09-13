@@ -108,10 +108,11 @@ SLIDES = [
  ('tasting.jpg',
   'Guests seated at round tables under a wooden pergola on grass, green gingham cloths, with '
   'vineyard rows and hills beyond in low evening sun',
-  'The table',
-  'Green gingham, plates already worked through, and the sun coming in low and flat under the '
-  'pergola. Round tables set on the grass, the vineyard running off behind them towards the hills '
-  'on the far side of the valley. The tasting is not held in a room. It ends out among the rows '
+  'The harvest gathering',
+  'Round tables on the grass under the pergola, green gingham, plates already worked through, and '
+  'the sun coming in low and flat. People are still sitting. This is the part of the day when '
+  'nobody is being shown anything and the vineyard is simply the view, running off behind them to '
+  'the hills on the far side of the valley. It does not end in a room. It ends out among the rows '
   'the wine came from, at the hour when the light does the work for you.'),
 ]
 
