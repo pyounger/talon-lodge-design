@@ -43,9 +43,11 @@ if missing:
     for name, wants, _ in SHOTS:
         here = os.path.exists(os.path.join(V, name))
         print('  [%s] %-14s %s' % ('ok' if here else '  ', name, wants))
-    print('\nAlso needed before this can be written:')
-    print('  - whether Venge is a Talon partner, and in what way')
+    print('\nConfirmed: Venge is a Talon winemaking partner - that is the spine')
+    print('of the story, Calistoga to a table in the Tongass.\n')
+    print('Still needed before this can be written:')
     print('  - the wines to name, with the vintages you want on the page')
+    print('  - which of them are poured at the lodge, and whether guests can buy')
     print('  - who to credit for the photographs')
     raise SystemExit(0)
 

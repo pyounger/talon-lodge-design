@@ -120,7 +120,7 @@ adv=''.join(_adv_card(n, t, loc, b, f) for n,(t,loc,b,f) in enumerate(ADV))
 
 FW=[
  ("Pick Your Fish","Dalmatia, Croatia","The fish is not on the menu &mdash; it is in a case by the door, whole, on ice, priced by the kilo. How ordering works on this coast, what the kitchen does next, and which wines never leave the island they grow on.","food-fish.jpg",FOODWINE),
- ("Venge Vineyards","Calistoga, Napa Valley","A family estate at the north end of Napa Valley: the blocks they farm, the small lots they blend, and the table where you taste them.",None,None),
+ ("Venge Vineyards","Calistoga, Napa Valley","One of Talon&rsquo;s winemaking partners, at the north end of Napa Valley. The blocks they farm, the small lots they blend, and how the bottles reach the lodge&rsquo;s table.",None,None),
  ("The Winemakers","Partners worldwide","Talon&rsquo;s winemaking partners, their cellars and their wine clubs &mdash; and the tables where you can drink what they make.",None,None),
  ("The Chefs","Partners worldwide","The chefs who cook at Talon and the restaurants they run the rest of the year, from island kitchens to city dining rooms.",None,None),
 ]
