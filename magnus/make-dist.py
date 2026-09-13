@@ -63,8 +63,8 @@ PAGES = [
        theme='#1B1F24'),
 
   dict(src='magnus-food-venge.html', out='food-and-wine/venge-vineyards/index.html',
-       desc='Venge Vineyards at the end of harvest \u2014 the house above the rows, fruit '
-            'still on the vine, and the table laid out under the pergola.',
+       desc='Venge Vineyards, Calistoga \u2014 harvest at the Napa estate, the Maldonado '
+            'Chardonnay and the Stagecoach Block I-4 Syrah, and the table under the oaks.',
        theme='#1B1F24'),
 
   # Experiences

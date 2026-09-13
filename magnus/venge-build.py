@@ -9,6 +9,15 @@ confirm it.
 
 The Talon partnership is named here and deliberately not on the homepage
 card - the owner's call.
+
+Confirmed by the owner, not inferred: Venge is a Talon winemaking partner,
+and the estate is at Calistoga. The two wines named in the copy are read off
+the labels in the photographs - Maldonado Vineyard Chardonnay and Stagecoach
+Vineyard Block I-4 Syrah - and both labels were checked legible at the size
+that ships, not only in the originals.
+
+Still open: photo credit, and whether the four people in porch.jpg are happy
+to appear on a public page.
 """
 import base64, io, os
 
