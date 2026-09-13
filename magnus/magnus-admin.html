@@ -1,0 +1,873 @@
+<title>Magnus Control Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Mulish:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+
+<style>
+  :root{
+    --paper:#F6F6F5; --card:#FFFFFF; --sunk:#EFEFED; --raise:#FAFAF9;
+    --ink:#16181A; --body:#3D4045; --muted:#666A70; --faint:#8C9097;
+    --line:#E1E1DE; --line-2:#C9C9C5;
+    --gold:#D5B041; --gold-ink:#846A14; --gold-wash:#F8F0D8;
+    --slate:#35393F;
+    --live:#2C6E4E; --live-wash:#E1EFE7;
+    --draft:#8A6A1C; --draft-wash:#F7EEDA;
+    --danger:#A63D22; --danger-wash:#F8E5DF;
+    --shadow:0 1px 2px rgba(22,24,26,.05),0 10px 26px rgba(22,24,26,.07);
+    --serif:"Playfair Display",Georgia,serif;
+    --sans:"Mulish",ui-sans-serif,system-ui,-apple-system,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --paper:#121316; --card:#1A1C20; --sunk:#212429; --raise:#20232700;
+    --ink:#F1F0ED; --body:#C6C9CE; --muted:#9AA0A6; --faint:#767B82;
+    --line:#2A2D33; --line-2:#3C4149;
+    --gold:#E0C05C; --gold-ink:#E8CE7C; --gold-wash:#2B2517;
+    --live:#71C49E; --live-wash:#16291F;
+    --draft:#D5AC58; --draft-wash:#2C2416;
+    --danger:#E08A6B; --danger-wash:#32211B;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 30px rgba(0,0,0,.45);
+  }}
+  :root[data-theme="dark"]{
+    --paper:#121316; --card:#1A1C20; --sunk:#212429;
+    --ink:#F1F0ED; --body:#C6C9CE; --muted:#9AA0A6; --faint:#767B82;
+    --line:#2A2D33; --line-2:#3C4149;
+    --gold:#E0C05C; --gold-ink:#E8CE7C; --gold-wash:#2B2517;
+    --live:#71C49E; --live-wash:#16291F;
+    --draft:#D5AC58; --draft-wash:#2C2416;
+    --danger:#E08A6B; --danger-wash:#32211B;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 30px rgba(0,0,0,.45);
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--body);font:400 15px/1.6 var(--sans);
+       -webkit-font-smoothing:antialiased;padding:0 clamp(14px,3vw,32px)}
+  .wrap{max-width:1120px;margin:0 auto;padding-block:clamp(20px,4vw,36px) 80px}
+  img{max-width:100%;display:block}
+  button{font:inherit;cursor:pointer}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+
+  /* masthead */
+  .top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+  .eyebrow{font:600 10.5px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--gold-ink);margin:0 0 9px}
+  h1{font:700 clamp(24px,3.4vw,33px)/1.05 var(--serif);color:var(--ink);margin:0;letter-spacing:-.01em}
+  .sub{font-size:14px;color:var(--muted);margin:7px 0 0}
+
+  .btn{border:1px solid var(--line-2);background:var(--card);color:var(--ink);border-radius:7px;
+       padding:10px 15px;font:600 13.5px/1 var(--sans);display:inline-flex;align-items:center;gap:7px}
+  .btn:hover{border-color:var(--gold);color:var(--gold-ink)}
+  .btn.gold{background:var(--gold);border-color:var(--gold);color:#241C05}
+  .btn.gold:hover{background:var(--gold-ink);border-color:var(--gold-ink);color:#fff}
+  .btn.sm{padding:7px 11px;font-size:12.5px;border-radius:6px}
+  .btn.danger{color:var(--danger);border-color:var(--line-2)}
+  .btn.danger:hover{background:var(--danger-wash);border-color:var(--danger);color:var(--danger)}
+  .btn[disabled]{opacity:.45;cursor:not-allowed}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap}
+
+  /* status strip */
+  .strip{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);
+         border-left:3px solid var(--gold);border-radius:8px;padding:12px 15px;margin-bottom:18px;font-size:13.5px}
+  .strip.warn{border-left-color:var(--danger);color:var(--danger)}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--faint);flex:none}
+  .dot.on{background:var(--live)}
+
+  /* tabs */
+  .tabs{display:flex;gap:5px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:20px}
+  .tab{background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);
+       padding:11px 14px;font:700 14px/1 var(--sans);border-radius:0}
+  .tab:hover{color:var(--ink)}
+  .tab.on{color:var(--gold-ink);border-bottom-color:var(--gold)}
+  .tab .n{font:600 10.5px/1 var(--mono);background:var(--sunk);color:var(--faint);
+          padding:3px 6px;border-radius:20px;margin-left:7px}
+  .tab.on .n{background:var(--gold-wash);color:var(--gold-ink)}
+
+  /* item rows */
+  .rows{display:flex;flex-direction:column;gap:9px}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:9px;box-shadow:var(--shadow);
+       display:grid;grid-template-columns:88px 1fr auto;gap:14px;align-items:center;padding:11px 13px}
+  .row .thumb{width:88px;aspect-ratio:4/3;border-radius:6px;overflow:hidden;background:var(--sunk);
+              display:grid;place-content:center}
+  .row .thumb img{width:100%;height:100%;object-fit:cover}
+  .row .thumb .none{font:600 9px/1.4 var(--mono);letter-spacing:.1em;color:var(--faint);text-align:center;padding:4px}
+  .row .t{font:700 16px/1.3 var(--serif);color:var(--ink);margin:0 0 3px}
+  .row .w{font-size:12.5px;color:var(--muted)}
+  .row .acts{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+  .pill{font:700 9.5px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;padding:5px 8px;border-radius:4px;white-space:nowrap}
+  .pill.live{background:var(--live-wash);color:var(--live);border:1px solid var(--live)}
+  .pill.draft{background:var(--draft-wash);color:var(--draft);border:1px solid var(--draft)}
+  .ord{display:flex;flex-direction:column;gap:2px}
+  .ord button{width:26px;height:19px;border:1px solid var(--line-2);background:var(--card);color:var(--muted);
+              border-radius:4px;font-size:10px;line-height:1;padding:0}
+  .ord button:hover{border-color:var(--gold);color:var(--gold-ink)}
+  @media(max-width:640px){
+    .row{grid-template-columns:64px 1fr;gap:11px}
+    .row .thumb{width:64px}
+    .row .acts{grid-column:1/-1;justify-content:flex-start}
+  }
+
+  .empty{background:var(--card);border:1px dashed var(--line-2);border-radius:9px;padding:34px 20px;
+         text-align:center;color:var(--muted);font-size:14px}
+
+  /* editor */
+  dialog{border:0;border-radius:12px;padding:0;background:var(--card);color:var(--body);
+         box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:660px;width:calc(100% - 28px)}
+  dialog::backdrop{background:rgba(15,17,20,.55)}
+  .dhd{display:flex;align-items:center;justify-content:space-between;gap:12px;
+       padding:15px 18px;border-bottom:1px solid var(--line)}
+  .dhd h2{font:700 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin:0}
+  .form{padding:18px;display:flex;flex-direction:column;gap:15px;max-height:66vh;overflow:auto}
+  .fld{display:flex;flex-direction:column;gap:6px}
+  label{font:700 10px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--faint)}
+  input[type=text],input[type=url],textarea,select{
+    background:var(--paper);border:1px solid var(--line-2);border-radius:7px;color:var(--ink);
+    font:400 14.5px/1.5 var(--sans);padding:10px 12px;width:100%}
+  textarea{min-height:96px;resize:vertical}
+  .hint{font-size:12px;color:var(--faint)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:560px){.two{grid-template-columns:1fr}}
+  .dft{display:flex;gap:8px;justify-content:flex-end;padding:14px 18px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .imgbox{display:flex;gap:13px;align-items:flex-start;flex-wrap:wrap}
+  .imgbox .prev{width:150px;aspect-ratio:4/3;border-radius:7px;overflow:hidden;background:var(--sunk);
+                display:grid;place-content:center;border:1px solid var(--line)}
+  .imgbox .prev img{width:100%;height:100%;object-fit:cover}
+  .imgbox .prev .none{font:600 9.5px/1.4 var(--mono);letter-spacing:.1em;color:var(--faint);text-align:center;padding:6px}
+  /* focal point picker */
+  .focal{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px}
+  .focal .hint{margin-bottom:9px}
+  .fpick{position:relative;border-radius:8px;overflow:hidden;background:var(--sunk);cursor:crosshair;
+         touch-action:none;max-width:420px;border:1px solid var(--line-2)}
+  .fpick img{width:100%;display:block;user-select:none;-webkit-user-drag:none}
+  .fpick .cross{position:absolute;inset:0;pointer-events:none}
+  .fpick .dot{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;
+              border:2px solid #fff;box-shadow:0 0 0 2px rgba(0,0,0,.45),0 2px 10px rgba(0,0,0,.4);
+              background:rgba(213,176,65,.5)}
+  .fpick .dot::after{content:"";position:absolute;inset:11px;border-radius:50%;background:#fff}
+  .fpick:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  /* one fixed height so the three crops share a baseline; width follows the ratio */
+  .fprev{display:flex;gap:12px;margin-top:13px;flex-wrap:wrap;align-items:flex-start}
+  .fprev figure{margin:0;flex:0 0 auto}
+  .fprev .crop{height:92px;width:auto;overflow:hidden;border-radius:6px;background:var(--sunk);
+               border:1px solid var(--line)}
+  .fprev .crop img{width:100%;height:100%;object-fit:cover;display:block}
+  .fprev .r-scene{aspect-ratio:5/3}
+  .fprev .r-card{aspect-ratio:4/3}
+  .fprev .r-tile{aspect-ratio:1/1}
+  .fprev figcaption{font:600 9.5px/1.4 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+                    color:var(--faint);margin-top:5px;text-align:center}
+  .frow{display:flex;align-items:center;gap:10px;margin-top:11px;flex-wrap:wrap}
+  .frow .val{font:600 11.5px/1 var(--mono);color:var(--gold-ink);background:var(--gold-wash);
+             border:1px solid var(--gold);padding:6px 9px;border-radius:4px}
+
+  .switch{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--ink)}
+  .switch input{width:18px;height:18px;accent-color:var(--gold)}
+
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(140%);
+         background:var(--slate);color:#fff;padding:12px 20px;border-radius:8px;font-size:13.5px;
+         box-shadow:0 12px 34px rgba(0,0,0,.35);transition:transform .22s ease;z-index:99;max-width:92vw}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .toast.bad{background:var(--danger)}
+  @media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+  .foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);
+        font:400 12.5px/1.7 var(--mono);color:var(--faint)}
+</style>
+
+<div class="wrap">
+
+  <div class="top">
+    <div>
+      <p class="eyebrow">magnusadventures.com</p>
+      <h1>Control Panel</h1>
+      <p class="sub">Update the header video, the photographs, and the stories. Changes save as you make them.</p>
+    </div>
+    <div class="btnrow">
+      <button class="btn" id="btn-header">Header video</button>
+      <button class="btn" id="btn-export">Export for the site</button>
+      <button class="btn gold" id="btn-new">+ New story</button>
+    </div>
+  </div>
+
+  <div class="strip" id="strip"><span class="dot" id="dot"></span><span id="strip-text">Connecting to your content…</span></div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab on" data-kind="adventure" role="tab">Adventures<span class="n" id="n-adventure">0</span></button>
+    <button class="tab" data-kind="resort" role="tab">Resorts<span class="n" id="n-resort">0</span></button>
+    <button class="tab" data-kind="experience" role="tab">Experiences<span class="n" id="n-experience">0</span></button>
+    <button class="tab" data-kind="food" role="tab">Food &amp; Wine<span class="n" id="n-food">0</span></button>
+    <button class="tab" data-kind="pub" role="tab">Publications<span class="n" id="n-pub">0</span></button>
+    <button class="tab" data-kind="social" role="tab">Social wall<span class="n" id="n-social">0</span></button>
+  </div>
+
+  <div class="rows" id="rows"><div class="empty">Loading…</div></div>
+
+  <p class="foot">
+    Stories, photographs and the header video are stored for this panel and shared with anyone you give it to.<br>
+    <b>Export for the site</b> writes a JSON file the published site reads &mdash; that is the hand-off to Firebase.
+  </p>
+</div>
+
+<dialog id="dlg">
+  <form id="frm" method="dialog">
+    <div class="dhd"><h2 id="dlg-title">Story</h2><span class="pill draft" id="dlg-state">Draft</span></div>
+    <div class="form">
+      <div class="fld">
+        <label for="f-title">Title</label>
+        <input type="text" id="f-title" required placeholder="Sitka, Alaska &ndash; Alaska's Best Fishing Trip">
+      </div>
+      <div class="two">
+        <div class="fld">
+          <label for="f-kind">Section</label>
+          <select id="f-kind">
+            <option value="adventure">Adventures</option>
+            <option value="resort">Resorts</option>
+            <option value="experience">Experiences</option>
+            <option value="food">Food &amp; Wine</option>
+            <option value="pub">Publications</option>
+            <option value="social">Social wall</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label for="f-where">Location / subtitle</label>
+          <input type="text" id="f-where" placeholder="Sitka, Alaska">
+        </div>
+      </div>
+      <div class="fld">
+        <label for="f-blurb">Story</label>
+        <textarea id="f-blurb" placeholder="Two or three sentences. This shows in full on the card — nothing is cut off."></textarea>
+        <span class="hint" id="f-count">0 characters</span>
+      </div>
+      <div class="fld">
+        <label for="f-link">Links to</label>
+        <input type="url" id="f-link" placeholder="https://magnusadventures.com/…">
+      </div>
+
+      <div class="fld" id="f-pubwrap" hidden>
+        <label for="f-pages">Pages</label>
+        <input type="number" id="f-pages" min="1" max="999" placeholder="24">
+        <span class="hint">Shown along the foot of the cover on the home page.</span>
+      </div>
+
+      <div id="f-social" hidden>
+        <div class="two">
+          <div class="fld">
+            <label for="f-handle">Whose photograph</label>
+            <input type="text" id="f-handle" placeholder="@someone">
+          </div>
+          <div class="fld">
+            <label for="f-tag">Found under</label>
+            <input type="text" id="f-tag" placeholder="#talonlodge">
+          </div>
+        </div>
+        <div class="fld">
+          <label for="f-perma">Original post</label>
+          <input type="url" id="f-perma" placeholder="https://www.instagram.com/p/…">
+          <span class="hint">Paste the address of the post. This is what you credit and link back to.</span>
+        </div>
+        <div class="fld">
+          <label for="f-ask">Ask for permission</label>
+          <textarea id="f-ask" rows="5"></textarea>
+          <div class="frow" style="margin-top:9px">
+            <button type="button" class="btn sm" id="f-copy-ask">Copy the message</button>
+            <button type="button" class="btn sm" id="f-mark-asked">Mark as asked today</button>
+          </div>
+          <span class="hint">Send it as a reply or a direct message on the post. Asking them to answer with
+            one word gives you a record that reads clearly months later. Have your lawyer look over the
+            wording once, then leave it alone.</span>
+        </div>
+
+        <div class="two">
+          <div class="fld">
+            <label for="f-rights">Permission</label>
+            <select id="f-rights">
+              <option value="none">Not asked yet</option>
+              <option value="asked">Asked, waiting</option>
+              <option value="granted">Granted</option>
+              <option value="declined">Declined</option>
+            </select>
+          </div>
+          <div class="fld">
+            <label for="f-rights-at">On</label>
+            <input type="date" id="f-rights-at">
+          </div>
+        </div>
+        <div class="fld">
+          <label for="f-rights-note">What they said</label>
+          <textarea id="f-rights-note" placeholder="Paste their reply, or note where the permission is filed."></textarea>
+          <span class="hint" id="f-rights-warn">A photograph can only go on the site once permission is
+            <b>granted</b>. Until then this stays a draft however the switch is set.</span>
+        </div>
+      </div>
+      <div class="fld">
+        <label>Photograph</label>
+        <div class="imgbox">
+          <div class="prev" id="f-prev"><span class="none">No photo</span></div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <input type="file" id="f-file" accept="image/*" hidden>
+            <button type="button" class="btn sm" id="f-upload">Choose a photo…</button>
+            <button type="button" class="btn sm danger" id="f-clear">Remove photo</button>
+            <span class="hint">JPG or PNG, landscape.<br>Shown at 4:3 on the card.</span>
+          </div>
+        </div>
+      </div>
+      <div class="fld" id="f-focal" hidden>
+        <label>Focal point</label>
+        <p class="hint">Drag on the photograph to choose what must stay in frame. Arrow keys nudge it.
+          The three crops below are the shapes the site actually uses.</p>
+        <div class="fpick" id="fpick" tabindex="0" role="application"
+             aria-label="Focal point. Use arrow keys to move.">
+          <img id="fimg" alt="">
+          <div class="cross"><span class="dot" id="fdot"></span></div>
+        </div>
+        <div class="fprev">
+          <figure><div class="crop r-scene"><img id="fp1" alt=""></div><figcaption>Scene band</figcaption></figure>
+          <figure><div class="crop r-card"><img id="fp2" alt=""></div><figcaption>Card</figcaption></figure>
+          <figure><div class="crop r-tile"><img id="fp3" alt=""></div><figcaption>Tile</figcaption></figure>
+        </div>
+        <div class="frow">
+          <span class="val" id="fval">50% / 50%</span>
+          <button type="button" class="btn sm" id="freset">Centre it</button>
+        </div>
+      </div>
+
+      <div class="fld">
+        <label class="switch" for="f-live"><input type="checkbox" id="f-live"> Show this on the site</label>
+      </div>
+    </div>
+    <div class="dft">
+      <button type="button" class="btn danger" id="f-delete">Delete</button>
+      <button type="button" class="btn" id="f-cancel">Cancel</button>
+      <button type="button" class="btn gold" id="f-save">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="hdlg">
+  <form method="dialog">
+    <div class="dhd"><h2>Header videos</h2></div>
+    <div class="form">
+      <div class="fld">
+        <label for="h-page">Which header</label>
+        <select id="h-page">
+          <option value="home">Home page</option>
+          <option value="talon">Talon Lodge &amp; Spa</option>
+        </select>
+        <span class="hint">Each page carries its own film. Switch between them here &mdash;
+          your edits to both are kept and saved together.</span>
+      </div>
+      <div class="two">
+        <div class="fld">
+          <label for="h-provider">Hosted on</label>
+          <select id="h-provider">
+            <option value="vimeo">Vimeo</option>
+            <option value="youtube">YouTube</option>
+            <option value="file">Direct file (Cloudinary, MP4)</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label for="h-id" id="h-id-label">Video ID</label>
+          <input type="text" id="h-id" placeholder="76979871">
+        </div>
+      </div>
+      <span class="hint" id="h-hint-id">Paste just the ID from the video's address &mdash; for
+        <code>vimeo.com/76979871</code> that is <code>76979871</code>. Keeping video on Vimeo or YouTube
+        means the site stays fast and you are not paying to serve it.</span>
+      <span class="hint" id="h-hint-file" hidden>Paste the whole address of the file, ending in
+        <code>.mp4</code>. A direct file plays silently behind the header with no player controls and
+        no Vimeo branding, which is the cleaner look &mdash; but every visitor downloads it from you,
+        so keep it short and under about 8&nbsp;MB.</span>
+      <div class="fld" id="h-quote-wrap">
+        <label for="h-quote">Quote under the header</label>
+        <input type="text" id="h-quote" placeholder="Live the life you've dreamed">
+      </div>
+      <div class="fld" id="h-by-wrap">
+        <label for="h-by">Credited to</label>
+        <input type="text" id="h-by" placeholder="Henry David Thoreau">
+      </div>
+    </div>
+    <div class="dft">
+      <button type="button" class="btn" id="h-cancel">Cancel</button>
+      <button type="button" class="btn gold" id="h-save">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var $ = function(s){ return document.querySelector(s); };
+  var DB = null, ASSETS = null, DL = null;
+  var items = [];                 // all stories
+  var site  = {quote:'', by:'', videos:{home:  {provider:'file',  src:''},
+                                       talon: {provider:'vimeo', videoId:''}}};
+  var hPage = 'home';             // which header the dialog is showing
+  var kind  = 'adventure';
+  var editing = null;
+  var pendingAsset = null;        // {id, url} chosen but not yet saved
+  var fx = 50, fy = 50;           // focal point, per cent across and down
+
+  var esc = function(s){ return String(s == null ? '' : s)
+    .replace(/[&<>"']/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); };
+
+  var toastT = null;
+  function toast(msg, bad){
+    var e = $('#toast'); e.textContent = msg;
+    e.classList.toggle('bad', !!bad); e.classList.add('show');
+    clearTimeout(toastT); toastT = setTimeout(function(){ e.classList.remove('show'); }, bad ? 4200 : 2000);
+  }
+
+  function status(text, ok, warn){
+    $('#strip-text').textContent = text;
+    $('#dot').classList.toggle('on', !!ok);
+    $('#strip').classList.toggle('warn', !!warn);
+  }
+
+  /* ---------- render ---------- */
+  function ofKind(k){
+    return items.filter(function(i){ return (i.kind || 'adventure') === k; })
+                .sort(function(a,b){ return (a.order||0) - (b.order||0); });
+  }
+
+  function renderCounts(){
+    ['adventure','resort','experience','food','pub','social'].forEach(function(k){
+      $('#n-' + k).textContent = ofKind(k).length;
+    });
+  }
+
+  function render(){
+    renderCounts();
+    document.querySelectorAll('.tab').forEach(function(b){
+      b.classList.toggle('on', b.dataset.kind === kind);
+    });
+    var list = ofKind(kind);
+    if (!list.length){
+      $('#rows').innerHTML = '<div class="empty">Nothing here yet. Use <b>+ New story</b> to add the first one.</div>';
+      return;
+    }
+    $('#rows').innerHTML = list.map(function(it, idx){
+      var thumb = it.imageUrl
+        ? '<img src="' + esc(it.imageUrl) + '" alt="" style="object-position:'
+          + (it.focalX == null ? 50 : it.focalX) + '% ' + (it.focalY == null ? 50 : it.focalY) + '%">'
+        : '<span class="none">NO<br>PHOTO</span>';
+      return '<div class="row" data-id="' + esc(it.id) + '">' +
+        '<div class="thumb">' + thumb + '</div>' +
+        '<div><p class="t">' + esc(it.title || 'Untitled') + '</p>' +
+        '<div class="w">' + esc(it.where || '—') + '</div></div>' +
+        '<div class="acts">' +
+          (it.kind === 'social'
+             ? '<span class="pill ' + (it.rights === 'granted' ? 'live">Permission granted'
+                 : it.rights === 'asked' ? 'draft">Permission asked'
+                 : it.rights === 'declined' ? 'draft">Declined'
+                 : 'draft">No permission') + '</span>'
+             : '') +
+          '<span class="pill ' + (it.published ? 'live">On the site' : 'draft">Draft') + '</span>' +
+          '<div class="ord">' +
+            '<button type="button" data-up="' + esc(it.id) + '" aria-label="Move up"' + (idx === 0 ? ' disabled' : '') + '>&#9650;</button>' +
+            '<button type="button" data-down="' + esc(it.id) + '" aria-label="Move down"' + (idx === list.length - 1 ? ' disabled' : '') + '>&#9660;</button>' +
+          '</div>' +
+          '<button type="button" class="btn sm" data-edit="' + esc(it.id) + '">Edit</button>' +
+        '</div></div>';
+    }).join('');
+  }
+
+  /* ---------- storage ---------- */
+  function save(it){
+    it.updatedAt = new Date().toISOString();
+    if (!DB) { toast('Not connected — change not saved.', true); return Promise.resolve(); }
+    return DB.collection('stories').doc(it.id).set(it).catch(function(e){
+      toast('Could not save: ' + (e && e.message ? e.message : 'unknown'), true);
+    });
+  }
+  function saveSite(){
+    if (!DB) return Promise.resolve();
+    return DB.doc('content/site').set(site).catch(function(e){
+      toast('Could not save: ' + (e && e.message ? e.message : 'unknown'), true);
+    });
+  }
+
+  /* ---------- social wall ---------- */
+  /* Somebody else's photograph is theirs, not yours. The site will not show one
+     until permission is recorded here, whatever the publish switch says. */
+  function mayPublish(it){
+    return it.kind !== 'social' || it.rights === 'granted';
+  }
+  function syncSocial(){
+    var k = $('#f-kind').value;
+    var isSocial = k === 'social';
+    $('#f-pubwrap').hidden = k !== 'pub';
+    $('#f-social').hidden = !isSocial;
+    var blocked = isSocial && $('#f-rights').value !== 'granted';
+    $('#f-live').disabled = blocked;
+    if (blocked) $('#f-live').checked = false;
+    $('#f-rights-warn').style.color = blocked ? 'var(--red,#B4483C)' : '';
+    setState($('#f-live').checked);
+  }
+
+  /* ---------- editor ---------- */
+  function openEditor(it){
+    editing = it; pendingAsset = null;
+    $('#dlg-title').textContent = it.isNew ? 'New story' : 'Edit story';
+    $('#f-title').value = it.title || '';
+    $('#f-kind').value  = it.kind || kind;
+    $('#f-where').value = it.where || '';
+    $('#f-blurb').value = it.blurb || '';
+    $('#f-link').value  = it.link || '';
+    $('#f-live').checked = !!it.published;
+    $('#f-pages').value = it.pages == null ? '' : it.pages;
+    $('#f-handle').value = it.handle || '';
+    $('#f-tag').value = it.hashtag || '';
+    $('#f-perma').value = it.permalink || '';
+    $('#f-rights').value = it.rights || 'none';
+    $('#f-rights-at').value = it.rightsAt || '';
+    $('#f-rights-note').value = it.rightsNote || '';
+    var ask = $('#f-ask');
+    ask.dataset.edited = it.askText ? '1' : '';
+    ask.value = it.askText || askText(it.handle, it.permalink);
+    syncSocial();
+    $('#f-delete').style.display = it.isNew ? 'none' : '';
+    fx = it.focalX == null ? 50 : it.focalX;
+    fy = it.focalY == null ? 50 : it.focalY;
+    setPreview(it.imageUrl);
+    setState(!!it.published);
+    countChars();
+    $('#f-upload').style.display = ASSETS ? '' : 'none';
+    $('#dlg').showModal();
+    $('#f-title').focus();
+  }
+  function setPreview(url){
+    $('#f-prev').innerHTML = url
+      ? '<img id="f-prev-img" src="' + esc(url) + '" alt="">'
+      : '<span class="none">No photo</span>';
+    var box = $('#f-focal');
+    box.hidden = !url;
+    if (url){
+      ['#fimg','#fp1','#fp2','#fp3'].forEach(function(sel){ $(sel).src = url; });
+      paintFocal();
+    }
+  }
+
+  /* object-position takes the same two numbers everywhere, so what the admin sees
+     in these three crops is exactly what the site renders. */
+  function paintFocal(){
+    var pos = fx + '% ' + fy + '%';
+    ['#fp1','#fp2','#fp3'].forEach(function(sel){ $(sel).style.objectPosition = pos; });
+    var d = $('#fdot');
+    d.style.left = fx + '%';
+    d.style.top  = fy + '%';
+    $('#fval').textContent = Math.round(fx) + '% / ' + Math.round(fy) + '%';
+    var img = $('#f-prev-img');
+    if (img) img.style.objectPosition = pos;
+  }
+  function setFocalFromEvent(e){
+    var r = $('#fpick').getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    fx = Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width)  * 100));
+    fy = Math.max(0, Math.min(100, ((e.clientY - r.top)  / r.height) * 100));
+    paintFocal();
+  }
+  function setState(live){
+    var p = $('#dlg-state');
+    p.className = 'pill ' + (live ? 'live' : 'draft');
+    p.textContent = live ? 'On the site' : 'Draft';
+  }
+  function countChars(){
+    $('#f-count').textContent = ($('#f-blurb').value || '').length + ' characters';
+  }
+
+  /* ---------- events ---------- */
+  document.querySelectorAll('.tab').forEach(function(b){
+    b.addEventListener('click', function(){ kind = b.dataset.kind; render(); });
+  });
+
+  $('#rows').addEventListener('click', function(e){
+    var t = e.target.closest('button'); if (!t) return;
+    var d = t.dataset;
+    if (d.edit){
+      var it = items.filter(function(i){ return i.id === d.edit; })[0];
+      if (it) openEditor(Object.assign({}, it));
+      return;
+    }
+    if (d.up || d.down){
+      var id = d.up || d.down, list = ofKind(kind);
+      var i = list.findIndex(function(x){ return x.id === id; });
+      var j = d.up ? i - 1 : i + 1;
+      if (j < 0 || j >= list.length) return;
+      var a = list[i], b = list[j];
+      var ao = a.order, bo = b.order;
+      a.order = bo; b.order = ao;
+      render();
+      Promise.all([save(a), save(b)]).then(function(){ toast('Order updated.'); });
+    }
+  });
+
+  $('#btn-new').addEventListener('click', function(){
+    var list = ofKind(kind);
+    openEditor({ id: 's' + Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+                 kind: kind, title:'', where:'', blurb:'', link:'', imageUrl:'', assetId:'',
+                 pages:null, handle:'', hashtag:'', permalink:'', rights:'none', rightsAt:'', rightsNote:'',
+                 focalX:50, focalY:50,
+                 published:false, order:(list.length ? list[list.length-1].order + 10 : 10), isNew:true });
+  });
+
+  $('#f-blurb').addEventListener('input', countChars);
+  $('#f-live').addEventListener('change', function(){ setState($('#f-live').checked); });
+  $('#f-cancel').addEventListener('click', function(){ $('#dlg').close(); });
+
+  (function(){
+    var pick = $('#fpick'), dragging = false;
+    pick.addEventListener('pointerdown', function(e){
+      dragging = true;
+      setFocalFromEvent(e);                       /* position first — capture is a nicety */
+      try { pick.setPointerCapture(e.pointerId); } catch (err) {}
+      pick.focus();
+      e.preventDefault();
+    });
+    pick.addEventListener('pointermove', function(e){ if (dragging) setFocalFromEvent(e); });
+    pick.addEventListener('pointerup',   function(){ dragging = false; });
+    pick.addEventListener('pointercancel', function(){ dragging = false; });
+    pick.addEventListener('keydown', function(e){
+      var step = e.shiftKey ? 10 : 2, used = true;
+      if (e.key === 'ArrowLeft')       fx = Math.max(0, fx - step);
+      else if (e.key === 'ArrowRight') fx = Math.min(100, fx + step);
+      else if (e.key === 'ArrowUp')    fy = Math.max(0, fy - step);
+      else if (e.key === 'ArrowDown')  fy = Math.min(100, fy + step);
+      else used = false;
+      if (used){ e.preventDefault(); paintFocal(); }
+    });
+    $('#freset').addEventListener('click', function(){ fx = 50; fy = 50; paintFocal(); });
+  })();
+
+  $('#f-upload').addEventListener('click', function(){ $('#f-file').click(); });
+  $('#f-file').addEventListener('change', function(e){
+    var f = e.target.files && e.target.files[0]; if (!f) return;
+    if (!ASSETS){ toast('Photo upload is not available here.', true); return; }
+    $('#f-upload').disabled = true; $('#f-upload').textContent = 'Uploading…';
+    ASSETS.upload(f).then(function(res){
+      pendingAsset = {id: res.id, url: res.url};
+      fx = 50; fy = 50;              // new photograph, start from the middle
+      setPreview(res.url);
+      toast('Photo added. Save to keep it.');
+    }).catch(function(err){
+      var c = err && err.code;
+      toast(c === 'too_large' ? 'That photo is too large — try one under 20 MB.'
+          : c === 'unsupported_type' ? 'That file type is not supported — use JPG or PNG.'
+          : 'Upload failed. Try again.', true);
+    }).then(function(){
+      $('#f-upload').disabled = false; $('#f-upload').textContent = 'Choose a photo…';
+      $('#f-file').value = '';
+    });
+  });
+  $('#f-clear').addEventListener('click', function(){
+    pendingAsset = {id:'', url:''}; fx = 50; fy = 50; setPreview('');
+  });
+
+  $('#f-save').addEventListener('click', function(){
+    var title = $('#f-title').value.trim();
+    if (!title){ toast('A story needs a title.', true); $('#f-title').focus(); return; }
+    var it = editing;
+    it.title = title;
+    it.kind  = $('#f-kind').value;
+    it.where = $('#f-where').value.trim();
+    it.blurb = $('#f-blurb').value.trim();
+    it.link  = $('#f-link').value.trim();
+    it.pages      = $('#f-pages').value === '' ? null : +$('#f-pages').value;
+    it.handle     = $('#f-handle').value.trim();
+    it.hashtag    = $('#f-tag').value.trim();
+    it.permalink  = $('#f-perma').value.trim();
+    it.rights     = $('#f-rights').value;
+    it.rightsAt   = $('#f-rights-at').value;
+    it.rightsNote = $('#f-rights-note').value.trim();
+    it.askText    = $('#f-ask').dataset.edited === '1' ? $('#f-ask').value : '';
+    it.published  = $('#f-live').checked && mayPublish(it);
+    if (pendingAsset){ it.imageUrl = pendingAsset.url; it.assetId = pendingAsset.id;
+                       it.imageFile = ''; }   /* an upload replaces the packaged file */
+    it.focalX = Math.round(fx); it.focalY = Math.round(fy);
+    delete it.isNew;
+    var idx = items.findIndex(function(x){ return x.id === it.id; });
+    if (idx >= 0) items[idx] = it; else items.push(it);
+    kind = it.kind;
+    render();
+    save(it).then(function(){ toast('Saved.'); });
+    $('#dlg').close();
+  });
+
+  ['#f-handle','#f-perma'].forEach(function(sel){
+    $(sel).addEventListener('input', refreshAsk);
+  });
+  $('#f-ask').addEventListener('input', function(){ this.dataset.edited = '1'; });
+  $('#f-copy-ask').addEventListener('click', function(){
+    var text = $('#f-ask').value;
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text)
+        .then(function(){ toast('Message copied. Send it on the post.'); })
+        .catch(function(){ toast('Could not copy here \u2014 select the text instead.', true); });
+    } else toast('Could not copy here \u2014 select the text instead.', true);
+  });
+  $('#f-mark-asked').addEventListener('click', function(){
+    $('#f-rights').value = 'asked';
+    $('#f-rights-at').value = new Date().toISOString().slice(0,10);
+    syncSocial();
+    toast('Recorded as asked. Come back when they answer.');
+  });
+
+  $('#f-kind').addEventListener('change', syncSocial);
+  $('#f-rights').addEventListener('change', syncSocial);
+
+  $('#f-delete').addEventListener('click', function(){
+    if (!editing || !confirm('Delete "' + (editing.title || 'this story') + '"? This cannot be undone.')) return;
+    var id = editing.id;
+    items = items.filter(function(x){ return x.id !== id; });
+    render();
+    if (DB) DB.collection('stories').doc(id).delete().catch(function(){});
+    $('#dlg').close();
+    toast('Deleted.');
+  });
+
+  /* header videos */
+  /* Bring a saved document up to the two-header shape, including one written
+     before the panel handled more than a single video. */
+  function normSite(d){
+    d = d || {};
+    var v = d.videos ? Object.assign({}, d.videos) : {};
+    if (!d.videos && d.videoId) v.talon = {provider: d.provider || 'vimeo', videoId: d.videoId};
+    if (!v.home)  v.home  = {provider:'file',  src:''};
+    if (!v.talon) v.talon = {provider:'vimeo', videoId:''};
+    return {quote: d.quote || '', by: d.by || '', videos: v};
+  }
+  function syncHeaderFields(){
+    var isFile = $('#h-provider').value === 'file';
+    $('#h-id-label').textContent = isFile ? 'File address' : 'Video ID';
+    $('#h-id').placeholder = isFile
+      ? 'https://res.cloudinary.com/your-account/video/upload/film.mp4'
+      : '76979871';
+    $('#h-hint-id').hidden = isFile;
+    $('#h-hint-file').hidden = !isFile;
+    var home = $('#h-page').value === 'home';
+    $('#h-quote-wrap').hidden = !home;
+    $('#h-by-wrap').hidden = !home;
+  }
+  /* The message that does the asking. Everything a permission needs to be worth
+     having: who is asking, which picture, where it goes, what they keep, how to
+     say no later, and a one-word reply that makes the yes easy to point at. */
+  function askText(handle, permalink){
+    var who = (handle || '').trim() || 'there';
+    if (who.charAt(0) !== '@' && who !== 'there') who = '@' + who;
+    return 'Hi ' + who + ' \u2014 this is Magnus Adventures.\n\n' +
+      'We would like to feature your photograph' +
+      (permalink ? ' (' + permalink + ')' : '') +
+      ' on magnusadventures.com, alongside other posts tagged #alaskaadventure.\n\n' +
+      'You keep the copyright. We would credit you by name and link back to your post, ' +
+      'we would not edit it beyond cropping, and we would take it down the day you ask us to.\n\n' +
+      'If that is all right, reply with YES MAGNUS and we will take that as your permission.';
+  }
+
+  function refreshAsk(){
+    var box = $('#f-ask');
+    if (!box || box.dataset.edited === '1') return;
+    box.value = askText($('#f-handle').value, $('#f-perma').value);
+  }
+
+  function loadHeaderForm(){
+    var v = site.videos[hPage] || {};
+    $('#h-provider').value = v.provider || 'vimeo';
+    $('#h-id').value = v.provider === 'file' ? (v.src || '') : (v.videoId || '');
+    syncHeaderFields();
+  }
+  function captureHeaderForm(){
+    var prov = $('#h-provider').value, raw = $('#h-id').value.trim();
+    if (prov === 'file') { site.videos[hPage] = {provider:'file', src: raw}; return; }
+    /* accept a pasted URL as well as a bare id */
+    var m = raw.match(/(?:vimeo\.com\/|v=|youtu\.be\/|embed\/)([A-Za-z0-9_-]+)/);
+    site.videos[hPage] = {provider: prov, videoId: m ? m[1] : raw};
+  }
+  $('#h-provider').addEventListener('change', syncHeaderFields);
+  $('#h-page').addEventListener('change', function(){
+    captureHeaderForm();            /* keep what was typed before switching */
+    hPage = $('#h-page').value;
+    loadHeaderForm();
+  });
+  $('#btn-header').addEventListener('click', function(){
+    hPage = 'home';
+    $('#h-page').value = hPage;
+    $('#h-quote').value = site.quote || '';
+    $('#h-by').value = site.by || '';
+    loadHeaderForm();
+    $('#hdlg').showModal();
+  });
+  $('#h-cancel').addEventListener('click', function(){ $('#hdlg').close(); });
+  $('#h-save').addEventListener('click', function(){
+    captureHeaderForm();
+    site.quote = $('#h-quote').value.trim();
+    site.by = $('#h-by').value.trim();
+    saveSite().then(function(){ toast('Headers saved.'); });
+    $('#hdlg').close();
+  });
+
+  /* export */
+  $('#btn-export').addEventListener('click', function(){
+    var payload = {
+      exportedAt: new Date().toISOString(),
+      site: site,
+      stories: items.filter(function(i){ return i.published && mayPublish(i); })
+        .sort(function(a,b){ return (a.order||0)-(b.order||0); })
+        .map(function(i){
+          return {id:i.id, kind:i.kind, title:i.title, where:i.where,
+                  blurb:i.blurb, link:i.link, image:i.imageUrl, imageFile:i.imageFile || '', order:i.order,
+                  pages:i.pages == null ? null : i.pages,
+                  handle:i.handle || '', hashtag:i.hashtag || '',
+                  permalink:i.permalink || '', rights:i.rights || '',
+                  focal:{x: i.focalX == null ? 50 : i.focalX,
+                         y: i.focalY == null ? 50 : i.focalY}};
+        })
+    };
+    var json = JSON.stringify(payload, null, 2);
+    if (DL){
+      DL.save({filename:'magnus-content.json', data: json})
+        .then(function(){ toast('Exported ' + payload.stories.length + ' stories.'); })
+        .catch(function(err){
+          if (err && err.code === 'declined') return;
+          copyFallback(json);
+        });
+    } else copyFallback(json);
+  });
+  function copyFallback(json){
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(json)
+        .then(function(){ toast('Copied to the clipboard — paste it into magnus-content.json.'); })
+        .catch(function(){ toast('Could not export here.', true); });
+    } else toast('Could not export here.', true);
+  }
+
+  window.__setPrev = setPreview;   /* test hook */
+
+  /* ---------- connect ---------- */
+  render();
+  if (window.claude && window.claude.use){
+    window.claude.use('db').then(function(db){
+      DB = db;
+      if (!DB){ status('Not connected — this is a preview. Changes will not be kept.', false, true); return; }
+      status('Connected. Changes save as you make them.', true);
+      DB.collection('stories').onSnapshot(function(snap){
+        items = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data() || {}); });
+        render();
+        status(items.length
+          ? 'Connected. ' + items.length + ' items loaded. Changes save as you make them.'
+          : 'Connected, but there is nothing stored yet. Use + New story to add the first one.',
+          items.length > 0, items.length === 0);
+      }, function(err){
+        status('Lost the connection to your content (' + (err && err.code) + ').', false, true);
+      });
+      DB.doc('content/site').get().then(function(d){
+        if (d && d.exists) site = normSite(d.data());
+      }).catch(function(){});
+    });
+    window.claude.use('assets').then(function(a){
+      ASSETS = a;
+      if (!ASSETS && editing) $('#f-upload').style.display = 'none';
+    });
+    window.claude.use('downloads').then(function(d){ DL = d; });
+  } else {
+    status('Preview only — open the published panel to save changes.', false, true);
+  }
+})();
+</script>

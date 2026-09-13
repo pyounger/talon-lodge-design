@@ -1,0 +1,348 @@
+<title>Talon Lodge &amp; Spa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Mulish:wght@300;400;600;700&display=swap">
+
+<style>
+  :root{
+    --gold:#D5B041; --gold-ink:#8A6F16;
+    --slate:#35393F; --band:#F1F1F1; --paper:#FFFFFF;
+    --ink:#0C0A05; --body:#3C3E42; --muted:#6B6E73; --line:#E2E2E0;
+    --serif:"Playfair Display",Georgia,"Times New Roman",serif;
+    --sans:"Mulish",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+  body{margin:0;background:var(--paper);color:var(--body);font:400 16px/1.75 var(--sans);-webkit-font-smoothing:antialiased}
+  img{max-width:100%;display:block}
+  a{color:inherit}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .pad{padding-inline:clamp(16px,4vw,44px)}
+  .col{max-width:74ch;margin-inline:auto}
+
+  /* header — one menu, matching the homepage */
+  .bar{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--line);
+       display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px clamp(16px,4vw,44px)}
+  .burger{width:50px;height:42px;border:1px solid var(--ink);background:none;border-radius:3px;
+          display:grid;place-content:center;gap:5px;cursor:pointer;padding:0}
+  .burger i{display:block;width:23px;height:2px;background:var(--ink)}
+  .mark{display:flex;align-items:center;gap:11px}
+  .mark img{width:44px;height:44px;flex:none}
+  .mark .word{font:700 15px/1 var(--serif);letter-spacing:.34em;color:var(--gold-ink)}
+  .mark .sub{font:400 8.5px/1 var(--sans);letter-spacing:.42em;color:var(--gold-ink);margin-top:5px}
+  nav[hidden]{display:none}
+  nav{border-bottom:1px solid var(--line);background:var(--paper)}
+  nav ul{list-style:none;margin:0;padding:10px clamp(16px,4vw,44px) 18px;display:flex;flex-wrap:wrap;gap:6px 30px}
+  nav a{font:600 12.5px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ink);
+        text-decoration:none;padding:9px 0;display:inline-block}
+  nav a:hover{color:var(--gold-ink)}
+
+  /* hero */
+  .hero{position:relative;background:#1c2226}
+  .hero>img{width:100%;height:clamp(300px,52vh,540px);object-fit:cover}
+  .hero .plate{position:absolute;inset:auto 0 0;background:linear-gradient(transparent,rgba(12,14,16,.78));
+               padding:clamp(30px,7vw,64px) clamp(16px,4vw,44px) clamp(20px,4vw,38px)}
+  .hero .plate .inner{max-width:1180px;margin:0 auto;display:flex;align-items:flex-end;gap:22px;flex-wrap:wrap}
+  .hero .lodgemark{width:112px;flex:none;filter:drop-shadow(0 2px 10px rgba(0,0,0,.5))}
+  .hero h1{font:700 clamp(27px,4.6vw,49px)/1.05 var(--serif);color:#fff;margin:0;letter-spacing:-.015em;text-wrap:balance}
+  .hero .deck{font-size:clamp(14px,1.6vw,17px);line-height:1.5;color:#E7E3D8;margin:9px 0 0;max-width:60ch}
+
+  /* article */
+  .article{padding-block:clamp(40px,6vw,68px)}
+  .article p{margin:0 0 18px;font-size:16.5px}
+  .article .lead{font-size:19px;line-height:1.65;color:var(--ink)}
+  .article .lead b{font-weight:700}
+  .midrule{display:flex;align-items:center;gap:clamp(14px,3vw,32px);margin:clamp(34px,5vw,54px) 0 clamp(24px,4vw,38px)}
+  .midrule::before,.midrule::after{content:"";flex:1;height:1.5px;background:var(--gold)}
+  .midrule h2{font:400 clamp(22px,3.4vw,36px)/1.15 var(--serif);color:var(--ink);margin:0;text-align:center;text-wrap:balance}
+
+  /* alternating prose sections */
+  .prose{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);
+         gap:clamp(22px,4vw,52px);align-items:center;padding-block:clamp(28px,4vw,46px)}
+  .prose.flip .shot{order:2}
+  .prose .shot{aspect-ratio:4/3;overflow:hidden;background:var(--band)}
+  .prose .shot img{width:100%;height:100%;object-fit:cover}
+  .prose h2{font:400 clamp(24px,3.4vw,36px)/1.15 var(--serif);color:var(--ink);margin:0 0 14px;text-wrap:balance}
+  .prose p{font-size:16.5px;line-height:1.75;margin:0 0 15px}
+  .prose p:last-child{margin-bottom:0}
+  @media(max-width:760px){.prose{grid-template-columns:1fr;gap:16px}.prose.flip .shot{order:0}}
+
+  /* booking panel — where the live availability widget mounts */
+  .book{background:var(--slate);color:#E7E3D8;padding:clamp(26px,4vw,44px) clamp(16px,4vw,44px)}
+  .book .inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;
+               gap:22px;flex-wrap:wrap}
+  .book h2{font:400 clamp(22px,3vw,31px)/1.15 var(--serif);color:#fff;margin:0 0 7px}
+  .book p{font-size:14.5px;margin:0;color:#B9BEC4;max-width:52ch}
+  .book .act{display:flex;gap:11px;align-items:center;flex-wrap:wrap}
+  .book .btn{background:var(--gold);color:#241C05;border:0;border-radius:6px;padding:15px 28px;
+             font:700 13px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+             display:inline-block}
+  .book .btn:hover{background:#fff;color:#241C05}
+  .book .sub{font:600 12px/1 var(--sans);color:#9AA0A7;letter-spacing:.04em}
+
+  /* three-up */
+  .trio{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:clamp(20px,3vw,38px);
+        max-width:1180px;margin:0 auto;padding-block:clamp(10px,2vw,20px)}
+  .tri .shot{aspect-ratio:3/2;overflow:hidden;margin-bottom:15px;background:var(--band)}
+  .tri .shot img{width:100%;height:100%;object-fit:cover}
+  .tri h3{font:700 20px/1.25 var(--serif);color:var(--ink);margin:0 0 8px;text-wrap:balance}
+  .tri p{font-size:14.5px;line-height:1.65;margin:0 0 14px}
+  .cta{font:700 15px/1 var(--serif);color:var(--gold-ink);text-decoration:underline;
+       text-underline-offset:4px;text-decoration-thickness:1px;display:inline-block}
+  .cta:hover{color:var(--ink)}
+
+  /* video */
+  .videoblock{background:var(--band);padding-block:clamp(36px,5vw,60px);margin-top:clamp(36px,5vw,60px)}
+  .videoblock h2{font:400 clamp(24px,3.4vw,36px)/1 var(--serif);color:var(--ink);text-align:center;margin:0 0 clamp(20px,3vw,32px)}
+  .frame{position:relative;max-width:1180px;margin:0 auto;background:#000}
+  .frame img{width:100%;aspect-ratio:16/9;object-fit:cover;opacity:.86}
+  .play{position:absolute;inset:0;display:grid;place-content:center;border:0;background:none;cursor:pointer;width:100%}
+  .play span{width:84px;height:84px;border-radius:50%;background:rgba(255,255,255,.94);display:grid;place-content:center;
+             box-shadow:0 6px 26px rgba(0,0,0,.4)}
+  .play span::after{content:"";border-left:22px solid var(--ink);border-top:14px solid transparent;
+                    border-bottom:14px solid transparent;margin-left:6px}
+  .play:hover span{background:var(--gold)}
+
+  /* feature cards — alternating sides, so eight of them don't read as one list */
+  .feats{max-width:1180px;margin:0 auto;padding-block:clamp(36px,5vw,60px);
+         display:flex;flex-direction:column;gap:clamp(26px,4vw,46px)}
+  .feat{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(20px,3.5vw,44px);align-items:center}
+  .feat:nth-child(even) .shot{order:2}
+  .feat .shot{aspect-ratio:4/3;overflow:hidden;background:var(--band)}
+  .feat .shot img{width:100%;height:100%;object-fit:cover}
+  .feat h3{font:700 clamp(21px,2.6vw,28px)/1.2 var(--serif);color:var(--ink);margin:0 0 11px;text-wrap:balance}
+  .feat p{font-size:15.5px;line-height:1.7;margin:0 0 16px}
+  @media(max-width:760px){
+    .feat{grid-template-columns:1fr;gap:16px}
+    .feat:nth-child(even) .shot{order:0}
+  }
+
+  /* curated instagram wall — edge to edge, like the homepage social band */
+  .wall{padding-block:clamp(38px,5vw,64px) 0;border-top:1px solid var(--line)}
+  .wall .head{max-width:1180px;margin:0 auto;text-align:center;padding-inline:clamp(16px,4vw,44px)}
+  .wall h2{font:400 clamp(24px,3.4vw,36px)/1.1 var(--serif);color:var(--ink);margin:0 0 9px}
+  .wall .sub{font-size:14.5px;color:var(--muted);margin:0 auto clamp(22px,3vw,32px);max-width:56ch}
+  .tiles{display:grid;grid-template-columns:repeat(5,1fr);gap:0}
+  @media(max-width:900px){.tiles{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:520px){.tiles{grid-template-columns:repeat(2,1fr)}}
+  .tile{position:relative;display:block;overflow:hidden;background:var(--band)}
+  .tile img{width:100%;aspect-ratio:1;object-fit:cover}
+  .tile .ig{position:absolute;right:9px;bottom:9px;width:26px;height:26px;border-radius:6px;
+            background:rgba(14,17,20,.6);color:#fff;display:grid;place-content:center;font-size:13px}
+  .tile:hover .ig{background:var(--gold);color:#1A1405}
+  @media (prefers-reduced-motion:no-preference){
+    .tile img{transition:transform .45s ease}
+    .tile:hover img{transform:scale(1.05)}
+  }
+  .wall .foot{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+              max-width:1180px;margin:0 auto;padding:18px clamp(16px,4vw,44px) 0}
+  .wall .follow{background:var(--gold);color:#241C05;border-radius:6px;padding:13px 26px;text-decoration:none;
+                font:700 12.5px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase}
+  .wall .follow:hover{background:var(--gold-ink);color:#fff}
+  .wall .credit{font-size:12.5px;color:var(--muted);max-width:58ch;margin:0}
+
+  /* breadcrumb */
+  .crumb{max-width:1180px;margin:0 auto;padding-block:26px;font-size:13px;color:var(--muted)}
+  .crumb a{color:var(--gold-ink);text-decoration:none}
+  .crumb a:hover{text-decoration:underline}
+  .crumb span{margin:0 7px;color:var(--line)}
+
+  /* footer */
+  .about{background:var(--slate);color:#D8DADD;padding:clamp(38px,6vw,64px) clamp(16px,4vw,44px) 0}
+  .about .grid{max-width:1240px;margin:0 auto;display:grid;
+               grid-template-columns:minmax(0,1.9fr) minmax(0,.7fr) minmax(0,1.2fr);gap:clamp(24px,4vw,54px)}
+  @media(max-width:900px){.about .grid{grid-template-columns:1fr}}
+  .about h3{font:700 17px/1.3 var(--serif);color:#fff;margin:0 0 13px}
+  .about h4{font:700 13px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#fff;margin:0 0 15px}
+  .about p{font-size:14.5px;line-height:1.75;margin:0 0 14px;max-width:62ch}
+  .about b{color:#fff}
+  .about ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+  .about ul a{font-size:14.5px;color:#D8DADD;text-decoration:none}
+  .about ul a:hover{color:var(--gold)}
+  .social{display:flex;gap:10px;margin:0 0 26px}
+  .social a{width:40px;height:40px;border:1px solid #5A5F66;border-radius:5px;display:grid;place-content:center;
+            color:#fff;text-decoration:none;font:700 15px/1 var(--sans)}
+  .social a:hover{background:var(--gold);border-color:var(--gold);color:#211a05}
+  .resorts p{font-size:14px;line-height:1.65;margin:0 0 15px}
+  .resorts a{color:var(--gold);text-decoration:none;font-weight:700}
+  .copyright{max-width:1240px;margin:clamp(28px,5vw,50px) auto 0;border-top:1px solid #4A4F56;
+             padding:20px 0 30px;font-size:12.5px;color:#9AA0A7;text-align:center}
+</style>
+
+<header class="bar">
+  <button class="burger" id="menu-toggle" aria-expanded="false" aria-controls="menu" aria-label="Menu">
+    <i></i><i></i><i></i>
+  </button>
+  <a class="mark" href="__HOME__" style="text-decoration:none">
+    <img src="__GRIFFIN__" alt="">
+    <div><div class="word">M&middot;A&middot;G&middot;N&middot;U&middot;S</div><div class="sub">ADVENTURES</div></div>
+  </a>
+</header>
+
+<nav id="menu" hidden>
+  <ul>
+    <li><a href="__HOME__">Home</a></li>
+    <li><a href="#">Adventures</a></li>
+    <li><a href="#">Resorts</a></li>
+    <li><a href="#">Experiences</a></li>
+    <li><a href="#contact">Contact Us</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <img src="__HERO__" alt="Mount Edgecumbe at sunset across Sitka Sound">
+  <div class="plate">
+    <div class="inner">
+      <img class="lodgemark" src="__TALONMARK__" alt="Talon Lodge">
+      <div>
+        <h1>Alaska&rsquo;s Luxury Fishing Resort</h1>
+        <p class="deck">The ultimate Alaska adventure resort and private island luxury fishing lodge
+          &mdash; Sitka, Alaska</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="article pad">
+  <div class="col">
+    <p class="lead">Fifteen minutes by boat from Sitka, Talon Lodge sits alone on a private island in the
+      Tongass &mdash; the largest national forest in America, and the only temperate rain forest most guests
+      will ever fish.</p>
+    <p>Four chefs. A three-thousand-bottle cellar. An open-air massage pavilion built out over the water.
+      King salmon within thirty minutes of the dock. Twenty-four guests at a time.</p>
+    <p>It is a fishing lodge in the sense that a great restaurant is a place with chairs. The fishing is
+      extraordinary &mdash; kings, silvers and Pacific halibut in the salt; steelhead, cutthroat and dolly
+      varden in the freshwater of the Tongass. But guests tend to talk afterwards about the wood-fired soaking
+      tub, or the night a visiting winemaker opened something from the vault that nobody expected to find in
+      Southeast Alaska.</p>
+  </div>
+</div>
+
+<div class="pad">
+  <section class="prose">
+    <div class="shot"><img src="__ISLAND__" alt="A float plane moored below the mountains" loading="lazy"></div>
+    <div>
+      <h2>An island in the Inside Passage</h2>
+      <p>Talon sits off Baranof Island, in the waters of Alaska&rsquo;s Inside Passage, with the Tongass at its
+        back and Mount Edgecumbe across the sound. The Bluff House &mdash; three bedrooms, its own view of the
+        volcano &mdash; looks west over open Pacific.</p>
+      <p>Everything the lodge serves and every place it fishes is inside that frame. The prime saltwater grounds
+        are half an hour out. The freshwater is reached by float plane, ATV or boat. Kruzof Island, with its ATV
+        country and its volcano, is a morning&rsquo;s run. You are not commuting to the wilderness; you are
+        staying in it.</p>
+    </div>
+  </section>
+
+  <section class="prose flip">
+    <div class="shot"><img src="__TABLE__" alt="Chefs working the outdoor kitchen on the deck" loading="lazy"></div>
+    <div>
+      <h2>Four chefs, twenty-four guests</h2>
+      <p>The ratio is the point. Three culinary masters run the kitchen through the season and a visiting chef
+        series brings a fourth, cooking for a room of twenty-four. That is a restaurant ratio, not a lodge one.</p>
+      <p>The island supplies more of it than you would expect: wild berries from the property, an organic garden
+        that has grown well past the word &ldquo;kitchen,&rdquo; and seafood landed the same day. Alaska-to-table
+        is a phrase most places use loosely. Here the distance is measured in yards.</p>
+      <p>The cellar holds three thousand bottles and several hundred varietals. Its port and dessert selection
+        has no equal in the Pacific Northwest &mdash; a strange sentence to write about a private island, and
+        the reason winemakers keep coming back to pour at the guest winemaker events.</p>
+    </div>
+  </section>
+</div>
+
+<div class="book">
+  <div class="inner">
+    <div>
+      <h2>Late May to early September</h2>
+      <p>Twenty-four guests at a time, so the season fills from the inside out. Check dates before you plan
+        flights into Sitka.</p>
+    </div>
+    <div class="act">
+      <!-- Talon availability widget mounts here — reads the platform API on its own domain -->
+      <a class="btn" href="#" id="check-availability">Check availability</a>
+      <span class="sub">talonlodge.com</span>
+    </div>
+  </div>
+</div>
+
+<div class="videoblock pad">
+  <h2>Featured Resort Video</h2>
+  <div class="frame">
+    <img src="__VIDEOPOSTER__" alt="The waterfront pavilion at Talon Lodge">
+    <button class="play" type="button" aria-label="Play the resort video"><span></span></button>
+  </div>
+</div>
+
+<div class="pad"><div class="feats">__CARDS__</div></div>
+
+<section class="wall">
+  <div class="head">
+    <h2>#talonlodge</h2>
+    <p class="sub">Picked from the island&rsquo;s own feed &mdash; guests, crew and the odd bear, over one season.</p>
+  </div>
+  <div class="tiles">__WALL__</div>
+  <div class="foot">
+    <p class="credit">Every photograph belongs to the person who took it. Talon Lodge publishes the selection;
+      it does not own the images.</p>
+    <a class="follow" href="#">Follow on Instagram</a>
+  </div>
+</section>
+
+<div class="pad"><nav class="crumb" aria-label="Breadcrumb">
+  <a href="__HOME__">Home</a><span>&rsaquo;</span><a href="__HOME__#resorts">Resorts</a><span>&rsaquo;</span>Talon Lodge &amp; Spa
+</nav></div>
+
+<div class="about" id="contact">
+  <div class="grid">
+    <div>
+      <h3>MAGNUS &mdash; meaning &ldquo;GREAT&rdquo; in Latin</h3>
+      <p>Magnus Adventures assembles the best in class and location of Adventures, Resorts and Experiences.</p>
+      <p><b>Resorts:</b> Best-in-class means the highest reviewed, real resort amenities and services, and an
+        experience offering that is extraordinary. <b>None of the resorts on this site pay to participate, and
+        there is no subscription or fee to be listed. Magnus Adventures is not an advertising vehicle.</b>
+        Each resort is selected by an expert travel industry panel, then reviewed and approved against the strict
+        requirements that qualify it as MAGNUS.</p>
+      <p>Videos, images and content on this site are owned by the resort or by the Instagram subscriber.
+        Magnus Adventures is strictly a publisher of content.</p>
+    </div>
+    <div>
+      <h4>Menu</h4>
+      <ul>
+        <li><a href="__HOME__">Home</a></li><li><a href="#">Adventures</a></li>
+        <li><a href="#">Resorts</a></li><li><a href="#">Experiences</a></li><li><a href="#">Login</a></li>
+      </ul>
+    </div>
+    <div class="resorts">
+      <h4>Find us</h4>
+      <div class="social">
+        <a href="#" aria-label="Facebook">f</a><a href="#" aria-label="Instagram">ig</a>
+        <a href="#" aria-label="YouTube">&#9654;</a>
+      </div>
+      <h4>Magnus Adventures &mdash; Resorts</h4>
+      <p><a href="#">Talon Lodge &amp; Spa</a> &mdash; one of a kind Alaska fishing lodge, on a secluded private
+        island, providing luxury resort services and amenities.</p>
+      <p><a href="#">Hotel Wailea</a> &mdash; Hawaii&rsquo;s only Relais &amp; Ch&acirc;teaux hotel. Adults-only
+        resort overlooking Maui&rsquo;s spectacular Wailea Beach.</p>
+      <p><a href="#">Post Ranch Inn</a> &mdash; award-winning luxury hotel located on the cliffs of Big Sur.</p>
+      <p><a href="#">Castle Hot Springs</a> &mdash; nestled in a private canyon, an Arizona desert wellness
+        resort like no other.</p>
+      <p><a href="#">Clayoquot Wilderness Lodge</a> &mdash; world-class tent safari resort located on Vancouver
+        Island, BC.</p>
+    </div>
+  </div>
+  <div class="copyright">&copy; 2004&ndash;2026 Magnus Adventures, Inc.</div>
+</div>
+
+<script>
+  (function(){
+    var btn = document.getElementById('menu-toggle'), menu = document.getElementById('menu');
+    btn.addEventListener('click', function(){
+      var open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      menu.hidden = open;
+    });
+    menu.addEventListener('click', function(e){
+      if (e.target.tagName === 'A'){ btn.setAttribute('aria-expanded','false'); menu.hidden = true; }
+    });
+  })();
+</script>

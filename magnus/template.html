@@ -1,0 +1,354 @@
+<title>Magnus Adventures</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Mulish:wght@300;400;600;700&display=swap">
+
+<style>
+  :root{
+    --gold:#D5B041;
+    --gold-ink:#8A6F16;
+    --slate:#35393F;
+    --band:#F1F1F1;
+    --paper:#FFFFFF;
+    --ink:#0C0A05;
+    --body:#3C3E42;
+    --muted:#6B6E73;
+    --line:#E2E2E0;
+    --serif:"Playfair Display", Georgia, "Times New Roman", serif;
+    --sans:"Mulish", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  /* the site commits to one light world; painted explicitly so it holds on any host ground */
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{animation:none!important;transition:none!important}}
+  body{margin:0;background:var(--paper);color:var(--body);font:400 16px/1.7 var(--sans);-webkit-font-smoothing:antialiased}
+  img{max-width:100%;display:block}
+  a{color:inherit}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+  /* ---------- header ---------- */
+  .bar{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--line);
+       display:flex;align-items:center;justify-content:space-between;padding:14px clamp(16px,4vw,44px)}
+  .burger{width:52px;height:44px;border:1px solid var(--ink);background:none;border-radius:3px;
+          display:grid;place-content:center;gap:5px;cursor:pointer;padding:0}
+  .burger i{display:block;width:24px;height:2px;background:var(--ink)}
+  .mark{display:flex;align-items:center;gap:11px}
+  .mark .griffin{width:44px;height:44px;flex:none}
+  .mark .words{text-align:left;line-height:1}
+  .mark .word{font:700 15px/1 var(--serif);letter-spacing:.34em;color:var(--gold-ink);margin-top:5px}
+  .mark .sub{font:400 8.5px/1 var(--sans);letter-spacing:.42em;color:var(--gold-ink);margin-top:5px}
+
+  nav[hidden]{display:none}
+  nav{border-bottom:1px solid var(--line);background:var(--paper)}
+  nav ul{list-style:none;margin:0;padding:10px clamp(16px,4vw,44px) 18px;display:flex;flex-wrap:wrap;gap:6px 30px}
+  nav a{font:600 12.5px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ink);
+        text-decoration:none;padding:9px 0;display:inline-block}
+  nav a:hover{color:var(--gold-ink)}
+
+  /* ---------- video header ---------- */
+  /* The header fills the monitor. svh keeps phones honest: vh there measures the
+     screen with the browser bars retracted, which overshoots by their height. */
+  .hero{position:relative;background:#20262b;overflow:hidden;
+        height:max(460px,94vh);height:max(460px,94svh)}
+  .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .hero .vwrap{position:absolute;inset:0;overflow:hidden;z-index:1;background:#20262b}
+  .hero .vwrap video{width:100%;height:100%;object-fit:cover;display:block}
+  .hero .scrim{position:absolute;inset:0;z-index:2;pointer-events:none;
+               background:linear-gradient(180deg,rgba(0,0,0,.20) 0%,rgba(0,0,0,0) 34%,rgba(0,0,0,.42) 100%)}
+  .hero .pillars{z-index:3;position:absolute;inset:auto 0 clamp(38px,9vh,120px);display:flex;justify-content:space-evenly;
+                 gap:12px;flex-wrap:wrap;padding:0 clamp(16px,4vw,44px)}
+  .hero .pillars a{font:400 clamp(22px,3.6vw,44px)/1.1 var(--serif);color:#fff;text-decoration:none;
+                   text-shadow:0 2px 18px rgba(0,0,0,.45);text-align:center}
+  .hero .pillars span{display:block;width:58px;height:1.5px;background:#fff;margin:12px auto 0;opacity:.9}
+  .hero .pillars a:hover span{background:var(--gold)}
+
+  @media(max-width:700px){
+    .hero{height:clamp(420px,74svh,780px)}
+  }
+  @media(max-width:560px){
+    .hero .pillars{flex-direction:column;gap:clamp(13px,3vh,22px);align-items:center;
+                   inset:auto 0 clamp(26px,6vh,64px)}
+    .hero .pillars a{font-size:clamp(26px,7.4vw,34px)}
+    .hero .pillars span{width:46px;margin-top:9px}
+  }
+
+  /* ---------- quote ---------- */
+  .quote{text-align:center;padding:clamp(40px,7vw,72px) clamp(16px,4vw,44px)}
+  .quote p{font:400 clamp(21px,3vw,32px)/1.35 var(--serif);color:var(--ink);letter-spacing:.07em;margin:0;text-wrap:balance}
+  .quote hr{width:150px;height:2px;background:var(--gold);border:0;margin:22px auto}
+  .quote cite{font:400 14px/1 var(--sans);color:var(--muted);font-style:normal}
+
+  /* ---------- sections ---------- */
+  section{padding:clamp(38px,6vw,66px) 0}
+  .band{background:var(--band)}
+  .head{display:flex;align-items:center;gap:clamp(14px,3vw,34px);padding:0 0 clamp(24px,4vw,40px)}
+  .head::before,.head::after{content:"";flex:1;height:1.5px;background:var(--gold)}
+  .head h2{font:400 clamp(26px,4vw,42px)/1 var(--serif);color:var(--ink);margin:0;white-space:nowrap}
+
+  /* horizontal rail — replaces the arrow carousel; flicks properly on touch */
+  .rail{display:flex;gap:clamp(18px,3vw,40px);overflow-x:auto;scroll-snap-type:x mandatory;
+        padding:2px clamp(16px,4vw,44px) 12px;scrollbar-width:thin;
+        scroll-padding-inline:clamp(16px,4vw,44px)}
+  .card{flex:0 0 clamp(258px,78vw,376px);scroll-snap-align:start;display:flex;flex-direction:column}
+  .shot{display:block;aspect-ratio:4/3;background:var(--band);overflow:hidden;margin-bottom:16px}
+  .card h3 a.plain{text-decoration:none;color:inherit}
+  .card h3 a.plain:hover{color:var(--gold-ink)}
+  .shot img{width:100%;height:100%;object-fit:cover}
+  .slot{width:100%;height:100%;display:grid;place-content:center;text-align:center;padding:16px;
+        background:var(--band);border:1px solid var(--line)}
+  .slot span{font:600 10px/1.5 var(--sans);letter-spacing:.13em;text-transform:uppercase;color:#9EA2A7}
+
+  /* resort cards awaiting photography: a set plate rather than an empty frame */
+  .plate{width:100%;height:100%;display:grid;align-content:center;justify-items:center;gap:14px;
+         text-align:center;padding:clamp(18px,2.4vw,30px);background:#2E3338;
+         background-image:radial-gradient(120% 90% at 50% 0%,#3A4046 0%,#262B30 72%)}
+  .plate .nm{font:400 clamp(19px,2vw,25px)/1.25 var(--serif);color:#F4F1E6;margin:0;text-wrap:balance}
+  .plate hr{width:60px;height:1.5px;background:var(--gold);border:0;margin:0}
+  .plate .loc{font:600 10px/1.6 var(--sans);letter-spacing:.18em;text-transform:uppercase;
+              color:#A8AEB4;margin:0;max-width:26ch}
+  .card h3{font:700 clamp(19px,2.2vw,23px)/1.25 var(--serif);color:var(--ink);margin:0 0 7px;text-wrap:balance}
+  .card .where{font:italic 400 15px/1.4 var(--serif);color:var(--ink);margin:0 0 10px}
+  .card .blurb{font-size:14.5px;line-height:1.65;color:var(--body);margin:0 0 16px}
+  .card .cta{margin-top:auto;font:700 15px/1 var(--serif);color:var(--gold-ink);text-decoration:underline;
+             text-underline-offset:4px;text-decoration-thickness:1px}
+  .card .cta:hover{color:var(--ink)}
+  /* a hashtag with no page yet: the same line, unlinked and unemphatic */
+  .card .cta.soon{color:var(--body);text-decoration:none;font-weight:400;font-style:italic}
+
+  /* ---------- publications ----------
+     A pub is a brochure or magazine, so its card is tall and the title sits on
+     the cover rather than under it. Deliberately unlike the other rails. */
+  .pubrail{display:flex;gap:clamp(16px,2.4vw,30px);overflow-x:auto;scroll-snap-type:x mandatory;
+           padding:2px clamp(16px,4vw,44px) 14px;scroll-padding-inline:clamp(16px,4vw,44px);
+           scrollbar-width:thin}
+  .pub{flex:0 0 clamp(212px,25vw,286px);scroll-snap-align:start;text-decoration:none;color:inherit}
+  .pub .cover{position:relative;aspect-ratio:3/4;overflow:hidden;background:#20262B;
+              box-shadow:0 10px 26px rgba(12,10,5,.22)}
+  .pub .cover img{width:100%;height:100%;object-fit:cover}
+  .pub .cover::after{content:"";position:absolute;inset:0;
+                     background:linear-gradient(180deg,rgba(8,10,12,.05) 40%,rgba(8,10,12,.82) 100%)}
+  .pub .plate{position:absolute;inset:auto 0 0;z-index:2;padding:clamp(14px,1.6vw,20px)}
+  .pub .plate h3{font:700 clamp(15.5px,1.5vw,18.5px)/1.28 var(--serif);color:#fff;margin:0;
+                 text-wrap:balance;text-shadow:0 1px 10px rgba(0,0,0,.5)}
+  .pub .plate .by{font:400 12.5px/1.4 var(--sans);color:#E6E2D6;margin:6px 0 0;letter-spacing:.02em}
+  .pub .spine{display:flex;align-items:center;justify-content:space-between;gap:10px;
+              padding:11px 2px 0;font:600 11px/1 var(--sans);letter-spacing:.13em;text-transform:uppercase}
+  .pub .spine .pages{color:var(--muted)}
+  .pub .spine .go{color:var(--gold-ink)}
+  .pub:hover .spine .go{color:var(--ink)}
+  @media (prefers-reduced-motion:no-preference){
+    .pub .cover img{transition:transform .45s ease}
+    .pub:hover .cover img{transform:scale(1.04)}
+  }
+
+  /* ---------- social wall ---------- */
+  .wall h2{font:400 clamp(26px,4vw,40px)/1.1 var(--serif);color:var(--ink);text-align:center;
+           margin:0 0 clamp(20px,3vw,30px);padding-inline:clamp(16px,4vw,44px)}
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  @media(min-width:1000px){.tiles{grid-template-columns:repeat(3,1fr)}}
+  .tiles img{width:100%;aspect-ratio:1;object-fit:cover}
+  .more{display:block;margin:26px auto 0;background:var(--gold);color:#211a05;border:0;border-radius:6px;
+        font:700 13px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;padding:14px 30px;cursor:pointer}
+  .more:hover{background:var(--gold-ink);color:#fff}
+
+  /* ---------- about + footer ---------- */
+  .about{background:var(--slate);color:#D8DADD;padding:clamp(40px,6vw,68px) clamp(16px,4vw,44px) 0}
+  .about .grid{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.9fr) minmax(0,.7fr) minmax(0,1.2fr);
+               gap:clamp(26px,4vw,54px)}
+  @media(max-width:900px){.about .grid{grid-template-columns:1fr}}
+  .about h3{font:700 17px/1.3 var(--serif);color:#fff;margin:0 0 14px}
+  .about h4{font:700 13px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#fff;margin:0 0 16px}
+  .about p{font-size:14.5px;line-height:1.75;margin:0 0 14px;max-width:62ch}
+  .about b{color:#fff}
+  .about ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+  .about ul a{font-size:14.5px;color:#D8DADD;text-decoration:none}
+  .about ul a:hover{color:var(--gold)}
+  .social{display:flex;gap:10px;margin:0 0 26px}
+  .social a{width:40px;height:40px;border:1px solid #5A5F66;border-radius:5px;display:grid;place-content:center;
+            color:#fff;text-decoration:none;font:700 15px/1 var(--sans)}
+  .social a:hover{background:var(--gold);border-color:var(--gold);color:#211a05}
+  .resorts p{font-size:14px;line-height:1.65;margin:0 0 15px}
+  .resorts a{color:var(--gold);text-decoration:none;font-weight:700}
+  .resorts a:hover{text-decoration:underline}
+  .copyright{max-width:1240px;margin:clamp(30px,5vw,52px) auto 0;border-top:1px solid #4A4F56;
+             padding:20px 0 30px;font-size:12.5px;color:#9AA0A7;text-align:center}
+</style>
+
+<header class="bar">
+  <button class="burger" id="menu-toggle" aria-expanded="false" aria-controls="menu" aria-label="Menu">
+    <i></i><i></i><i></i>
+  </button>
+  <div class="mark">
+    <img class="griffin" src="__GRIFFIN__" alt="">
+    <div class="words">
+      <div class="word">M&middot;A&middot;G&middot;N&middot;U&middot;S</div>
+      <div class="sub">ADVENTURES</div>
+    </div>
+  </div>
+</header>
+
+<nav id="menu" hidden>
+  <ul>
+    <li><a href="#top">Home</a></li>
+    <li><a href="#adventures">Adventures</a></li>
+    <li><a href="#resorts">Resorts</a></li>
+    <li><a href="#experiences">Experiences</a></li>
+    <li><a href="#food">Food &amp; Wine</a></li>
+    <li><a href="#pubs">Publications</a></li>
+    <li><a href="#contact">Contact Us</a></li>
+  </ul>
+</nav>
+
+<div class="hero" id="top">
+  <img src="__HERO__" alt="Coastal islands at first light">
+  <div class="vwrap" id="hero-video" data-src="__HEROVIDEO__" data-poster="__HEROPOSTER__"></div>
+  <div class="scrim"></div>
+  <div class="pillars">
+    <a href="#adventures">Adventures<span></span></a>
+    <a href="#resorts">Resorts<span></span></a>
+    <a href="#experiences">Experiences<span></span></a>
+  </div>
+</div>
+
+<div class="quote">
+  <p>&ldquo;Live the life you&rsquo;ve dreamed&rdquo;</p>
+  <hr>
+  <cite>&mdash;Henry David Thoreau</cite>
+</div>
+
+<section id="adventures">
+  <div class="head"><h2>Adventures</h2></div>
+  <div class="rail">__ADV__</div>
+</section>
+
+<section id="resorts" class="band">
+  <div class="head"><h2>Resorts</h2></div>
+  <div class="rail">__RES__</div>
+</section>
+
+<section id="experiences">
+  <div class="head"><h2>Experiences</h2></div>
+  <div class="rail">__EXP__</div>
+</section>
+
+<section id="food" class="band">
+  <div class="head"><h2>Food &amp; Wine</h2></div>
+  <div class="rail">__FW__</div>
+</section>
+
+<section id="pubs">
+  <div class="head"><h2>Publications</h2></div>
+  <div class="pubrail">__PUBS__</div>
+</section>
+
+<section class="wall">
+  <h2>#MagnusMoments</h2>
+  <div class="tiles">__IG__</div>
+  <button class="more" type="button">Load More</button>
+</section>
+
+<div class="about" id="contact">
+  <div class="grid">
+    <div>
+      <h3>MAGNUS &mdash; meaning &ldquo;GREAT&rdquo; in Latin</h3>
+      <p>Magnus Adventures assembles the best in class and location of Adventures, Resorts and Experiences.</p>
+      <p><b>Adventures:</b> Live the life you&rsquo;ve dreamed. A continual story offering of adventures that are
+        out of the ordinary &mdash; even in destinations that may seem ordinary.</p>
+      <p><b>Resorts:</b> Best-in-class means the highest reviewed, real resort amenities and services, and an
+        experience offering that is extraordinary. <b>None of the resorts on this site pay to participate, and
+        there is no subscription or fee to be listed. Magnus Adventures is not an advertising vehicle.</b>
+        Each resort is selected by an expert travel industry panel, then reviewed and approved against the
+        strict requirements that qualify it as MAGNUS.</p>
+      <p><b>Experiences:</b> The world is experiencing new adventures daily. Magnus Experiences provides a
+        snapshot of what is happening all around us.</p>
+      <p>Videos, images and content on this site are owned by the resort or by the Instagram subscriber.
+        Magnus Adventures is strictly a publisher of content.</p>
+    </div>
+
+    <div>
+      <h4>Menu</h4>
+      <ul>
+        <li><a href="#top">Home</a></li>
+        <li><a href="#adventures">Adventures</a></li>
+        <li><a href="#resorts">Resorts</a></li>
+        <li><a href="#experiences">Experiences</a></li>
+        <li><a href="#">Login</a></li>
+      </ul>
+    </div>
+
+    <div class="resorts">
+      <h4>Find us</h4>
+      <div class="social">
+        <a href="#" aria-label="Facebook">f</a>
+        <a href="#" aria-label="Instagram">ig</a>
+        <a href="#" aria-label="YouTube">&#9654;</a>
+      </div>
+      <h4>Magnus Adventures &mdash; Resorts</h4>
+      <p><a href="__TALON__">Talon Lodge &amp; Spa</a> &mdash; a private island fifteen minutes from Sitka.
+        Four chefs and a three-thousand-bottle cellar, for twenty-four guests.</p>
+      <p><a href="__WAILEA__">Hotel Wailea</a> &mdash; Hawaii&rsquo;s only Relais &amp; Ch&acirc;teaux hotel. Adults-only
+        resort overlooking Maui&rsquo;s spectacular Wailea Beach.</p>
+      <p><a href="__POSTRANCH__">Post Ranch Inn</a> &mdash; award-winning luxury hotel located on the cliffs of Big Sur.</p>
+      <p><a href="__CASTLE__">Castle Hot Springs</a> &mdash; nestled in a private canyon, an Arizona desert wellness
+        resort like no other.</p>
+      <p><a href="__CLAYOQUOT__">Clayoquot Wilderness Lodge</a> &mdash; world-class tent safari resort located on Vancouver
+        Island, BC.</p>
+    </div>
+  </div>
+  <div class="copyright">&copy; 2004&ndash;2026 Magnus Adventures, Inc.</div>
+</div>
+
+<script>
+  /* A full-height header magnifies the embedded still, which is only a small
+     crop.  Swap in a full-size frame taken from the film itself, but only once
+     it has actually loaded, so a blocked address leaves the still in place. */
+  (function(){
+    var img = document.querySelector('.hero img');
+    var box = document.getElementById('hero-video');
+    if (!img || !box) return;
+    var poster = box.getAttribute('data-poster');
+    if (!poster) return;
+    var probe = new Image();
+    probe.onload = function(){ img.src = poster; };
+    probe.src = poster;
+  })();
+
+  /* Background header film. Injected rather than inlined so that reduced-motion
+     visitors never request the file, and so a blocked or failed load falls back
+     to the still photograph underneath instead of a black box. */
+  (function(){
+    var box = document.getElementById('hero-video');
+    if (!box) return;
+    var src = box.getAttribute('data-src');
+    if (!src) { box.parentNode.removeChild(box); return; }
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      box.parentNode.removeChild(box); return;
+    }
+    function fallback(){ if (box.parentNode) box.parentNode.removeChild(box); }
+    var v = document.createElement('video');
+    v.setAttribute('autoplay','');   v.autoplay = true;
+    v.setAttribute('loop','');       v.loop = true;
+    v.setAttribute('muted','');      v.muted = true; v.defaultMuted = true;
+    v.setAttribute('playsinline',''); v.playsInline = true;
+    v.setAttribute('aria-hidden','true');
+    v.tabIndex = -1; v.preload = 'auto'; v.disablePictureInPicture = true;
+    v.addEventListener('error', fallback);
+    v.src = src;
+    box.appendChild(v);
+    var play = v.play();
+    if (play && play.catch) play.catch(fallback);
+  })();
+
+  (function(){
+    var btn = document.getElementById('menu-toggle');
+    var menu = document.getElementById('menu');
+    btn.addEventListener('click', function(){
+      var open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      menu.hidden = open;
+    });
+    menu.addEventListener('click', function(e){
+      if (e.target.tagName === 'A') { btn.setAttribute('aria-expanded','false'); menu.hidden = true; }
+    });
+  })();
+</script>
