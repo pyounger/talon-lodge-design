@@ -45,6 +45,35 @@ SLIDES = [
   'is the stretch of the year when the only question left is which block comes in and which one '
   'waits another week.'),
 
+ ('porch.jpg',
+  'Four people seated at a long wooden table on a covered deck with glasses of red wine and '
+  'tasting folders, oaks and vineyard visible through the open side',
+  'A flight on the deck',
+  'Four at a long table on the deck, the side open to the oaks, a row of glasses already poured '
+  'and a folder at every place. Each pour is named for the vineyard it came off &mdash; not a '
+  'label but a series of specific blocks, tasted against one another. It is the most useful hour '
+  'you will spend here, and nobody is in a hurry.'),
+
+ ('chardonnay.jpg',
+  'A bottle of Venge Vineyards Maldonado Vineyard Napa Valley Chardonnay beside a black bowl of '
+  'salad with orange segments, beetroot and tomatoes',
+  'Maldonado, in white',
+  'The label reads <i>Maldonado Vineyard, Napa Valley Chardonnay, Dijon clones</i> &mdash; a named '
+  'grower&rsquo;s block rather than a county blend. Beside it a bowl of greens with orange '
+  'segments, beetroot and tomato, which is a harder plate for a Chardonnay than most people '
+  'expect: the orange is doing the job a dressing usually does, and the wine has to stand next to '
+  'it rather than under it.'),
+
+ ('syrah.jpg',
+  'A bottle of Venge Vineyards Stagecoach Vineyard Napa Valley Syrah Block I-4 beside a glass of '
+  'red wine and a dark plate of sliced slow-cooked meat with pickled onion and sweet potato',
+  'Stagecoach, Block I-4',
+  'A Syrah &mdash; not the Cabernet most people come for. <i>Stagecoach Vineyard, Napa Valley, '
+  'Block I-4</i>, a single named block printed on the label. On the plate something slow-cooked '
+  'and sliced, sweet potato beneath it, a shaved slaw over the top, pickled onion cutting through '
+  'and a ring of red around a pale pur&eacute;e. This is the glass to ask for if you think you '
+  'already know what a Napa estate tastes like.'),
+
  ('bottles.jpg',
   'A magnum of Venge Vineyards Family Reserve Cabernet on a table with sunflowers, Indian corn '
   'and small pumpkins, rows of empty wine glasses in front and vineyard behind',
@@ -61,7 +90,7 @@ SLIDES = [
   'The table',
   'Green gingham, plates already worked through, and the sun coming in low and flat under the '
   'pergola. Round tables set on the grass, the vineyard running off behind them towards the hills '
-  'on the far side of the valley. The tasting is not held in a room. It happens out among the rows '
+  'on the far side of the valley. The tasting is not held in a room. It ends out among the rows '
   'the wine came from, at the hour when the light does the work for you.'),
 ]
 
