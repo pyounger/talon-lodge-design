@@ -34,15 +34,16 @@ def uri(name, folder):
         return 'data:%s;base64,%s' % (mt, base64.b64encode(f.read()).decode())
 
 SLIDES = [
- ('house.jpg',
-  'A low winery building with a long porch standing above a vineyard, autumn trees behind it '
-  'and guests gathered at the foot of the steps',
-  'The house above the rows',
-  'You see it from the vineyard before you reach it &mdash; a low building with a porch running '
-  'its length, set on the rise above the last row. Olive trees along the front, one tree gone '
+ ('tasting-room.jpg',
+  'The Venge Vineyards tasting room, a low building with a long porch, standing above the '
+  'vineyard with autumn trees behind it and guests gathered at the foot of the steps',
+  'The tasting room, above the rows',
+  'You see it from the vineyard before you reach it &mdash; the tasting room, low and long, with '
+  'a porch running its full length above the last row. Olive trees along the front, one tree gone '
   'orange beside the roof, and a crowd already collected at the foot of the steps. Nothing about '
-  'it announces itself. The vines come first and the building second, which is most of what you '
-  'need to know about the order of things here.'),
+  'it announces itself, and from down here it could be somebody&rsquo;s house. The vines come '
+  'first and the building second, which is most of what you need to know about the order of '
+  'things.'),
 
  ('vines.jpg',
   'A cluster of small dark grapes hanging on the vine among yellowing leaves, with green cover '
@@ -67,8 +68,9 @@ SLIDES = [
  ('porch.jpg',
   'Four people seated at a long wooden table on a covered deck with glasses of red wine and '
   'tasting folders, oaks and vineyard visible through the open side',
-  'A flight on the deck',
-  'Four at a long table on the deck, the side open to the oaks, a row of glasses already poured '
+  'A flight on the porch',
+  'Four at a long table on that same porch, the side open to the oaks, a row of glasses already '
+  'poured '
   'and a folder at every place. Each pour is named for the vineyard it came off &mdash; not a '
   'label but a series of specific blocks, tasted against one another. It is the most useful hour '
   'you will spend here, and nobody is in a hurry.'),
