@@ -120,6 +120,7 @@ adv=''.join(_adv_card(n, t, loc, b, f) for n,(t,loc,b,f) in enumerate(ADV))
 
 FW=[
  ("Pick Your Fish","Dalmatia, Croatia","The fish is not on the menu &mdash; it is in a case by the door, whole, on ice, priced by the kilo. How ordering works on this coast, what the kitchen does next, and which wines never leave the island they grow on.","food-fish.jpg",FOODWINE),
+ ("Venge Vineyards","Calistoga, Napa Valley","A family estate at the north end of Napa Valley: the blocks they farm, the small lots they blend, and the table where you taste them.",None,None),
  ("The Winemakers","Partners worldwide","Talon&rsquo;s winemaking partners, their cellars and their wine clubs &mdash; and the tables where you can drink what they make.",None,None),
  ("The Chefs","Partners worldwide","The chefs who cook at Talon and the restaurants they run the rest of the year, from island kitchens to city dining rooms.",None,None),
 ]
@@ -163,8 +164,14 @@ def res_cta(title):
     return 'Discover ' + (t or 'Resort')
 
 RES_CTA  = {n: res_cta(t) for n, (t, _s, _b) in enumerate(RES)}
+# The whole site exists to feed Talon, so Talon is the card the rail opens on -
+# centred, not first. Marked by name rather than by position, because the
+# control panel is free to reorder the resorts.
+def anchored(title):
+    return ' data-anchor' if 'Talon' in title else ''
+
 res=''.join(
-  f'''<article class="card">
+  f'''<article class="card"{anchored(t)}>
         <a class="shot" href="{RES_LINK.get(n,'#')}">{f'<img src="{RES_SRC.get(n) or uri(RES_IMG[n])}" alt="{t}" loading="lazy">' if n in RES_IMG else res_plate(t, s)}</a>
         <h3><a class="plain" href="{RES_LINK.get(n,'#')}">{t}</a></h3>
         <p class="where">{s}</p><p class="blurb">{b}</p>

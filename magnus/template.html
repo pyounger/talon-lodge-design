@@ -367,7 +367,7 @@
       var originals = Array.prototype.slice.call(rail.children);
       if (originals.length < 2) return;
 
-      var setWidth = 0, idle = null, shifting = false, resizer = null;
+      var setWidth = 0, idle = null, shifting = false, resizer = null, laidAt = 0;
 
       lay();
       rail.addEventListener('scroll', function(){
@@ -375,9 +375,14 @@
         clearTimeout(idle);
         idle = setTimeout(recentre, 120);
       }, { passive: true });
+      /* Safari fires resize when the address bar collapses during an ordinary
+         vertical scroll. Re-laying then would yank every rail back to its
+         opening position mid-browse, so only a real width change counts. */
       window.addEventListener('resize', function(){
         clearTimeout(resizer);
-        resizer = setTimeout(relay, 200);
+        resizer = setTimeout(function(){
+          if (rail.clientWidth !== laidAt) relay();
+        }, 200);
       });
 
       function lay(){
@@ -398,7 +403,37 @@
           add(copy());
 
         if (rail.scrollWidth - rail.clientWidth <= setWidth * 2) { strip(); setWidth = 0; return; }
-        shiftTo(setWidth);   // start the viewer on the originals
+        laidAt = rail.clientWidth;
+        shiftTo(opening());
+      }
+
+      /* Where the rail opens.  Without an anchored card, on the originals.
+         With one - Talon - with that card as near the middle of the rail as
+         snapping allows.  Snapping is mandatory and aligns card starts, so
+         the only real choice is which card the rail starts on; take whichever
+         leaves the anchor closest to the centre.  On a phone that is the
+         anchor itself, filling the screen; on a wide monitor it is two or
+         three cards earlier. */
+      function opening(){
+        var anchor = rail.querySelector('[data-anchor]:not([data-clone])');
+        if (!anchor) return setWidth;
+        var pad   = parseFloat(getComputedStyle(rail).paddingLeft) || 0;
+        var ideal = anchor.offsetLeft + anchor.offsetWidth / 2 - rail.clientWidth / 2;
+        var best = anchor.offsetLeft - pad, bestOff = Math.abs(best - ideal);
+        var card = anchor, steps = 0;
+        while ((card = card.previousElementSibling) && steps++ < 8) {
+          var here = card.offsetLeft - pad, off = Math.abs(here - ideal);
+          if (off < bestOff) { best = here; bestOff = off; } else break;
+        }
+        return band(best);
+      }
+
+      /* Keep a scroll position inside the copies, away from either end. */
+      function band(x){
+        var max = rail.scrollWidth - rail.clientWidth;
+        while (x < setWidth)       x += setWidth;
+        while (x > max - setWidth) x -= setWidth;
+        return Math.max(0, Math.min(max, x));
       }
 
       function relay(){
@@ -409,11 +444,8 @@
       }
 
       function recentre(){
-        var max = rail.scrollWidth - rail.clientWidth;
-        if (max <= setWidth * 2) return;
-        var at = rail.scrollLeft, to = at;
-        while (to < setWidth)       to += setWidth;
-        while (to > max - setWidth) to -= setWidth;
+        if (rail.scrollWidth - rail.clientWidth <= setWidth * 2) return;
+        var at = rail.scrollLeft, to = band(at);
         if (Math.abs(to - at) > 1) shiftTo(to);
       }
 

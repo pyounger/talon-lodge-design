@@ -382,7 +382,7 @@
    "link": "",
    "image": "",
    "imageFile": "",
-   "order": 1,
+   "order": 2,
    "pages": null,
    "focal": {
     "x": 50,
@@ -398,7 +398,7 @@
    "link": "",
    "image": "",
    "imageFile": "",
-   "order": 2,
+   "order": 3,
    "pages": null,
    "focal": {
     "x": 50,
@@ -564,6 +564,25 @@
     "x": 50,
     "y": 50
    }
+  },
+  {
+   "id": "fw-03-venge-vineyards",
+   "kind": "food",
+   "title": "Venge Vineyards",
+   "where": "Calistoga, Napa Valley",
+   "blurb": "A family estate at the north end of Napa Valley: the blocks they farm, the small lots they blend, and the table where you taste them.",
+   "link": "",
+   "image": "",
+   "imageFile": "",
+   "order": 1,
+   "pages": null,
+   "focal": "",
+   "imageUrl": "",
+   "focalX": "50",
+   "focalY": "50",
+   "rights": "none",
+   "published": true,
+   "updatedAt": "2026-09-13T00:00:00.000Z"
   }
  ]
 }
