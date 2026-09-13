@@ -54,6 +54,16 @@ SLIDES = [
   'is the stretch of the year when the only question left is which block comes in and which one '
   'waits another week.'),
 
+ ('barrels.jpg',
+  'A winery barrel room with barrels stacked on steel racks along both walls, a wide door open '
+  'at the far end and a gable window above, and guests in evening dress holding wine glasses',
+  'The barrel room',
+  'A working shed rather than a show cellar &mdash; steel frame, concrete floor, barrels stacked '
+  'five high on racks down both walls with the name burned into the heads, and the door left open '
+  'at the end onto the path. What it also is, on the right evening, is a room: flowers set out on '
+  'the barrel tops, an easel by the door, people in evening dress standing between the racks with '
+  'a glass each. The wine ages either way.'),
+
  ('porch.jpg',
   'Four people seated at a long wooden table on a covered deck with glasses of red wine and '
   'tasting folders, oaks and vineyard visible through the open side',
