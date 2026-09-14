@@ -170,26 +170,32 @@ Worst case a visitor pays three redirects before the first byte of HTML. Consoli
 
 Every hardcoded URL in the templates is also `http://` — see §4.3.
 
-### 3.5 The site appears to be HTTP-only
+### 3.5 TLS existed but the site redirected away from it
 
-Two independent signals point the same way:
+A certificate is installed. Every redirect in `.htaccess` nonetheless targeted `http://`, and
+`cpf/boot.php` hardcoded an `http` scheme into every generated URL and the `<base href>`. The
+practical effect was a site that had HTTPS available and actively pushed visitors off it — a
+"Not Secure" marker, a ranking penalty, and an enquiry form posting names, emails and phone
+numbers in plaintext.
 
-```php
-// cpf/boot.php:33 (before this change)
-define('CPF_ROOT_URL', sprintf('http://%s/', $_SERVER['HTTP_HOST']));
-```
+Enforcement could not simply be switched on. Several subresources were pinned to absolute
+`http://` URLs on the site's own origin, which browsers block as mixed content:
 
-Every internal link and the `<base href>` in the layout was generated as `http://`, and the
-canonical redirect in `.htaccess` targets `http://www.` as well. Nothing in the tree suggests TLS.
+| Reference | Count | Effect under HTTPS |
+|-----------|-------|--------------------|
+| Gallery CSS + JS, absolute `http://` | 3 | Blocked — gallery breaks |
+| `special.js` from `dev.talonlodge.com` | 1 | Blocked |
+| Privacy-page photos from the dev host | 7 | Blocked or force-upgraded |
+| Absolute `http://` internal nav links | 37 | A redirect hop per click |
 
-This is worth raising beyond performance. An HTTP-only site draws a "Not Secure" marker in
-Chrome and Safari, carries a search-ranking penalty, and — most concretely — the enquiry form
-described in `INQUIRY_INTAKE.md` would submit names, emails and phone numbers in plaintext.
+All of the referenced files exist locally; the absolute URLs were copy-paste leftovers, not real
+remote dependencies. One was a live bug independent of TLS: the Bluff House "Previous Page" link
+sent visitors to the dev server.
 
-`CPF_ROOT_URL` is now derived from the request scheme rather than hardcoded, which is a no-op
-while the site stays on HTTP and correct the moment a certificate is installed. Actually
-enabling TLS (cPanel AutoSSL or Let's Encrypt, then retargeting the redirect) is a separate
-task, and should probably outrank everything else in this document.
+*Fixed in Stage 2 — `pyounger/talonlodge` branch `claude/perf-stage-1-config`.* The redirect
+chain was simulated across six entry combinations to confirm it settles rather than loops,
+including the proxy-terminated case where `%{HTTPS}` reads as off. HSTS was deliberately not
+added; it should follow once TLS is confirmed stable.
 
 ### 3.4 PHP 5.4
 
@@ -391,10 +397,14 @@ cheapest wins land first.
 - ~~`JPEG_QUALITY` 100 → 82, plus the three defaults in `app/utils/image.php`~~ **done**
 - ~~Add `mod_deflate` for HTML, CSS, JS, SVG~~ **done**
 - ~~Add `mod_expires` for images, fonts and static assets~~ **done**
-- ~~Non-www redirect: `[R]` → `[R=301]`~~ **done**. Retargeting it to `https://` is deferred —
-  see §3.5, the site appears to be HTTP-only.
+- ~~Non-www redirect: `[R]` → `[R=301]`~~ **done**
 
-### Stage 2 — Remove dead weight (hours; nothing visible changes)
+### Stage 2 — HTTPS safety and enforcement — **done**
+- ~~Repoint absolute `http://` subresources and internal links~~
+- ~~Remove dev-host references from production templates~~
+- ~~Force TLS; stop the trailing-slash rule downgrading to http~~
+
+### Stage 2b — Remove dead weight (hours; nothing visible changes)
 - Delete the `index_old.php` script tag
 - Remove or replace `ga.js`
 - Self-host and subset Font Awesome
@@ -408,7 +418,9 @@ cheapest wins land first.
 - Add WebP/AVIF with `<picture>` and JPEG fallback
 
 ### Stage 4 — Bundle (days; needs regression testing)
-- Replace full jQuery UI with a datepicker-only build
+- Replace full jQuery UI with a datepicker-only build. Note also that `frontend.tpl:748` loads
+  jQuery UI 1.8.18 from the Google CDN on top of the 1.8.17 already in the bundle — two copies
+  load on every page and the second overwrites the first.
 - Point the manifest at minified jQuery
 - Consider a content hash for cache-busting
 
