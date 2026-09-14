@@ -126,16 +126,36 @@ Typography is Times / Times New Roman for display and body, with a licensed
 webfont **BalticaPlain** (and **BalticaItalic**) used across headings, plus
 Arial for UI text.
 
-> **Discrepancy worth settling first.** `brand/_talon-tokens.scss` in this repo
-> defines a different palette — `#0e7c6f` teal, `#bd5836` salmon, `#a9791f`
-> gold. Those tokens are for the **internal platform**, not the public site.
-> They are the same family but distinctly different values. If the rebuilt site
-> should adopt the platform's palette, that is a redesign, not a rebuild, and
-> changes this brief. Assumption until told otherwise: **match the live site.**
+> **Settled by Phil, 2026-09-14: keep the talonlodge.com site colours.** The
+> palette in `brand/_talon-tokens.scss` (`#0e7c6f` teal, `#bd5836` salmon,
+> `#a9791f` gold) belongs to the **reservation / profile / survey system** — the
+> internal platform — and is not the public site's. It should not be carried
+> into the rebuild.
 
-Two things to confirm before build: whether the **Baltica** font licence covers
-continued web use, and whether we have the original files (`brand/fonts/` is
-currently empty).
+**Which colours are structural**, from where each is declared:
+
+| Colour | Declared in | Read as |
+|---|---|---|
+| `#332a1f` brown | `header.css`, `layout.css`, `sidebar.css`, `subheader.css`, most page files | Core. Primary text and structure. |
+| `#a93102` rust | `footer.css`, `page-main.css`, `sidebar.css`, `page-recipe.css` | Core. The accent. |
+| `#1f4c59` teal | interior page files + `subheader.css`; **absent** from header, layout, footer, page-main | Secondary. Interior pages only. |
+| `#e0a213` gold | `plugins/slider.css` only | Not a brand colour — slider plugin chrome. |
+
+Two caveats on this table. It is derived from where colours are *declared*, not
+from what reaches the screen, so it ranks worse than sampling rendered pages.
+And `INQUIRY_INTAKE.md` records a gold `#c1a867` sampled from screenshots that
+appears in none of these stylesheets — most likely from the logo or photography
+rather than CSS. Confirm against the live site before building the token set.
+
+Note also that the site's `#1f4c59` is **not** the platform's `#0e7c6f`. Ruling
+out the platform teal does not rule out the site's own, which interior pages
+genuinely use.
+
+Typography is Times / Times New Roman for display and body, with a licensed
+webfont **BalticaPlain** (and **BalticaItalic**) used across headings, plus
+Arial for UI text. Two things to confirm before build: whether the **Baltica**
+font licence covers continued web use, and whether we have the original files
+(`brand/fonts/` is currently empty).
 
 ---
 
@@ -263,7 +283,9 @@ endpoint (§9.4).
 ## 9. Open questions
 
 1. **Stack** — Payload or Laravel + Filament (§6). Blocks everything.
-2. **Palette** — live site values, or the platform's tokens (§4).
+2. ~~**Palette**~~ — settled: keep the site's own colours; the platform tokens
+   stay with the platform (§4). Still worth sampling the rendered pages to
+   confirm the structural set.
 3. **Baltica font licence** — do we have the files and the right to keep using
    them on the web?
 4. **Package read endpoint** — the platform has no public, cacheable endpoint
