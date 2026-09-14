@@ -492,18 +492,28 @@ pre .c{color:#8e8a80;font-style:italic}
           <option value="5+">Five or more</option>
         </select>
       </div>
-      <div class="field">
+      <div class="field" id="heard-field">
         <label for="heard">How did you hear about us?</label>
         <select id="heard">
           <option value="">Select…</option>
-          <option value="returning">I've stayed before</option>
-          <option value="referral" selected>Friend or family</option>
+          <option value="friend" selected>A friend or family member</option>
+          <option value="past_guest">A past guest</option>
+          <option value="returning">I've stayed here before</option>
           <option value="search">Search engine</option>
           <option value="social">Social media</option>
           <option value="agent">Travel agent</option>
           <option value="show">Sportsman's show</option>
           <option value="other">Somewhere else</option>
         </select>
+      </div>
+    </div>
+
+    <div class="reveal" id="referrer-wrap">
+      <div class="field">
+        <label for="referrer">Who should we thank?</label>
+        <input type="text" id="referrer" placeholder="Their name">
+        <p class="hint">If they stayed with us we'd like to thank them — and it helps us
+          put your trip together knowing whose it reminded them of.</p>
       </div>
     </div>
   </div>
@@ -745,6 +755,12 @@ pre .c{color:#8e8a80;font-style:italic}
     $("kids-wrap").classList.toggle("show", this.checked);
   });
 
+  // "A past guest" names someone already in the system — ask who
+  function heardChanged(){
+    $("referrer-wrap").classList.toggle("show", $("heard").value === "past_guest");
+  }
+  $("heard").addEventListener("change", heardChanged);
+
   function nights(){
     var a = $("arrive").value, d = $("depart").value;
     if(!a || !d) return 0;
@@ -804,6 +820,8 @@ pre .c{color:#8e8a80;font-style:italic}
     if(state.asrole === "agent") f.push(["info","Travel agent"]);
     if(state.asrole === "group") f.push(["info","Group organiser"]);
     if($("heard").value === "returning" || $("been").value === "5+") f.push(["good","Likely repeat guest"]);
+    if($("heard").value === "past_guest") f.push(["good","Past-guest referral"]);
+    if($("heard").value === "friend") f.push(["good","Word of mouth"]);
     if(state.interests.indexOf("Corporate or group buyout") >= 0) f.push(["hot","Buyout enquiry"]);
     if(state.interests.indexOf("Special occasion") >= 0) f.push(["warm","Special occasion"]);
     if(!f.length) f.push(["good","Standard enquiry"]);
@@ -849,6 +867,7 @@ pre .c{color:#8e8a80;font-style:italic}
         agency_email: state.asrole==="agent" ? ($("agency-email").value.trim() || null) : null,
         times_to_alaska_before: $("been").value,
         how_heard: $("heard").value || null,
+        referred_by: $("heard").value === "past_guest" ? ($("referrer").value.trim() || null) : null,
         opt_in_offers: $("optin").checked
       }
     };
@@ -905,13 +924,20 @@ pre .c{color:#8e8a80;font-style:italic}
       (s.fixedGuests ? " (whole house — fixed)" : "") + kidtxt;
     $("s-int").textContent = state.interests.length ? state.interests.join(" · ") : "Not specified";
     $("s-contact").textContent = $("email").value.trim() + ($("phone").value.trim() ? " · " + $("phone").value.trim() : " · no phone given");
+    var ref = $("heard").value === "past_guest" ? $("referrer").value.trim() : "";
     $("s-src").textContent = $("heard").options[$("heard").selectedIndex].text +
+      (ref ? " — " + ref : "") +
       " · Alaska before: " + $("been").options[$("been").selectedIndex].text.toLowerCase();
     var msg = $("message").value.trim();
     $("s-msg").textContent = msg || "No message left.";
     $("s-msg").style.display = msg ? "" : "none";
 
     var repeat = $("heard").value === "returning" || $("been").value === "5+";
+    if($("heard").value === "past_guest" && $("referrer").value.trim()){
+      $("s-matchtxt").textContent = "Referred by " + $("referrer").value.trim() +
+        " — run the name against the person records before replying. If it resolves, the referral " +
+        "attaches to their record and you have someone to thank.";
+    } else
     $("s-matchtxt").textContent = repeat
       ? "This guest says they've stayed before. The matching engine will look for an existing person on this email — open the record before replying; stay history and last survey score are worth reading first."
       : "The matching engine runs on this email and phone before the agent opens it. If it resolves to an existing person, their stay history appears here instead of this note.";
@@ -968,6 +994,7 @@ pre .c{color:#8e8a80;font-style:italic}
 
   applySite();
   party();
+  heardChanged();
 })();
 </script>
 </body>

@@ -94,18 +94,28 @@ property's custom field`, so one property can add a question the others never se
 
 ## Schema changes required
 
-Two, both small:
+Three:
 
 1. **`field_definitions.target`** currently accepts `asset | trip_profile | assignment |
-   person`. Add **`inquiry`**. This is the only change to the meta-schema itself.
+   person`. Add **`inquiry`**.
 2. **`inquiries.details`** JSON, governed by those definitions — already proposed in
    INQUIRY_INTAKE.md as the place the non-core answers land.
+3. **Conditional fields.** `field_definitions` has `validation` JSON but no notion of a
+   field that appears only when another answer is given. The form already has three:
+   *not sure yet* on dates reveals a month picker, *as an agent* reveals the agency fields,
+   and *a past guest* reveals "who should we thank". A `show_if` JSON column —
+   `{"field": "how_heard", "equals": "past_guest"}` — covers all three and is the smallest
+   thing that works. Without it, conditionals stay hard-coded and an admin cannot add one.
 
 Plus one seed row: a boolean field definition for `offer_on_enquiry_form` against the
 activity asset type.
 
 That is the whole schema cost. No form-definition tables, no form-version tables, no
 per-field storage table.
+
+> **Note on the enum options.** `how_heard` is a `field_definitions` enum, so its choices —
+> *a friend*, *a past guest*, *travel agent* and the rest — are admin-editable already. The
+> conditional follow-up on *a past guest* is the part that needs `show_if`.
 
 ---
 

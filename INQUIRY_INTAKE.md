@@ -66,7 +66,9 @@ Public, unauthenticated, CORS-restricted to the three site origins.
     "agency_name":         null,
     "agency_email":        null,
     "times_to_alaska_before": "1",
-    "how_heard":           "referral",
+    "how_heard":           "past_guest",  // friend | past_guest | returning | search
+                                          // | social | agent | show | other
+    "referred_by":         "Jim Harrower", // only when how_heard = past_guest
     "opt_in_offers":       false
   }
 }
@@ -169,6 +171,16 @@ the payload tells the endpoint the number was not the guest's choice.
 **"Not sure yet" is a first-class answer on dates.** Many enquirers have no dates — that is
 why they are enquiring. Forcing a date produces a fictional one. Choosing it reveals a
 month picker and a note that every month of the season offers something different.
+
+**A past-guest referral names a person, so ask who.** "How did you hear about us"
+distinguishes *a friend*, *a past guest* (who referred them) and *I've stayed here before*
+(their own history) — three different things that a single "referral" option collapses.
+Choosing **a past guest** asks for the name.
+
+That name is almost certainly already a `person` in the system. The matching engine should
+resolve it the way it resolves the enquirer, so the referral attaches to the referrer's
+record: the agent has someone to thank, and over a season you can see which guests actually
+send people. A free-text name in a message field can never do that.
 
 **"Enquiring as" — self, group organiser, or travel agent.** The matching run found 16
 shared-email-across-different-surnames cases flagged as an *over-merge trap*. Capturing
