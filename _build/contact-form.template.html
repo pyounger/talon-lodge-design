@@ -706,6 +706,7 @@ pre .c{color:#8e8a80;font-style:italic}
         s.fixedGuests + " — the count is fixed, not a minimum to fill.";
       $("guest-label").innerHTML = "Guests<br><span>whole house</span>";
     } else {
+      $("fixed-note").textContent = "";
       $("guest-label").innerHTML = "Guests<br><span>in your party</span>";
     }
     party();

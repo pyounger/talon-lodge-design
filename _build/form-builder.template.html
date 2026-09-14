@@ -260,6 +260,10 @@ h1,h2,h3{text-wrap:balance}
     <div class="pv">
       <div class="pv-bar"><span class="dot"></span><span id="pv-host">talonlodge.com/contact</span></div>
       <div class="pv-in" id="pv" data-b="talon">
+        <p class="pv-sec">2 · Who</p>
+        <p class="pv-q">How many guests?</p>
+        <div id="pv-guests"></div>
+        <hr class="pv-hr">
         <p class="pv-sec">3 · What</p>
         <p class="pv-q">What are you interested in?</p>
         <p class="pv-sub">Pick anything that appeals. This shapes the packages we suggest — nothing is committed.</p>
@@ -310,7 +314,7 @@ h1,h2,h3{text-wrap:balance}
     {k:"name",       label:"First and last name", why:"Identifies the person record"},
     {k:"email",      label:"Email",               why:"Required — the auto-reply and every future match depend on it", hard:true},
     {k:"dates",      label:"Dates of interest",   why:"Arrival, departure and how firm they are"},
-    {k:"party_size", label:"Guest count",         why:"Fixed where the property books as a whole house"},
+    {k:"party_size", label:"Guest count",         why:"", cap:true},
     {k:"message",    label:"Anything else",       why:"Free text"}
   ];
 
@@ -318,7 +322,7 @@ h1,h2,h3{text-wrap:balance}
     talon:  {name:"Talon Lodge & Spa", host:"talonlodge.com/contact", brand:"talon",
              off:[], qs:["heard","been"]},
     all:    {name:"The Bluff House",   host:"alaskaluxurylodge.com/enquire", brand:"all",
-             off:[6,7,2,10], qs:["heard","been","occasion"]},
+             fixedGuests:6, off:[6,7,2,10], qs:["heard","been","occasion"]},
     magnus: {name:"Magnus Adventures", host:"magnusadventures.com/contact", brand:"magnus",
              off:[1,12,6], qs:["heard"]}
   };
@@ -345,14 +349,25 @@ h1,h2,h3{text-wrap:balance}
 
   /* ---------- render: locked core ---------- */
   function drawCore(){
+    var fixed = PROPS[prop].fixedGuests;
     $("core").innerHTML = CORE.map(function(c){
+      var why = c.why, meta = c.hard ? '<span class="pill off">Cannot be optional</span>' : '';
+      if(c.cap){
+        why  = fixed ? "Booked as a whole house — the guest is not asked to choose"
+                     : "The guest sets their party size";
+        meta = fixed ? '<span class="pill off">Fixed at ' + fixed + '</span>'
+                     : '<span class="pill derived">Guest chooses</span>';
+      }
       return '<div class="rowitem">' +
         '<span class="ic">🔒</span>' +
-        '<span class="nm"><b>' + esc(c.label) + '</b><small>' + esc(c.why) + '</small></span>' +
-        '<span class="meta">' + (c.hard ? '<span class="pill off">Cannot be optional</span>' : '') + '</span>' +
+        '<span class="nm"><b>' + esc(c.label) + '</b><small>' + esc(why) + '</small></span>' +
+        '<span class="meta">' + meta + '</span>' +
         '<button class="sw" role="switch" aria-checked="true" aria-label="' + esc(c.label) + '" disabled></button>' +
       '</div>';
     }).join("") +
+    (fixed ? '<div class="locknote"><span>🏠</span><span><b>Capacity is a property fact, not a form setting.</b> ' +
+      esc(PROPS[prop].name) + ' books as a whole house for one party of ' + fixed +
+      '. The form states it rather than asking, and no admin can change it here — it follows the property record.</span></div>' : '') +
     '<div class="locknote"><span>🛡️</span><span><b>Why these are locked.</b> The matching run over the 2026 exports found <b>1,115 name-only people with no email or phone</b> — almost all of them enquiries. That pile exists because intake was loose. If email can be switched off here, it gets rebuilt.</span></div>';
   }
 
@@ -429,6 +444,17 @@ h1,h2,h3{text-wrap:balance}
     $("pv-host").textContent = p.host;
     $("prop-name").textContent = p.name;
 
+    var fixed = p.fixedGuests;
+    $("pv-guests").innerHTML = fixed
+      ? '<div style="display:flex;align-items:center;gap:11px"><b style="font-size:22px">' + fixed +
+        '</b><span style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase">Guests<br>' +
+        '<span style="font-weight:400">whole house</span></span></div>' +
+        '<p class="pv-sub" style="margin:10px 0 0">Booked as a whole house for one party of ' + fixed + ' — fixed, not a minimum to fill.</p>'
+      : '<div style="display:flex;align-items:center;gap:9px">' +
+        '<span class="pv-chip">−</span><b style="font-size:20px;min-width:2ch;text-align:center">6</b>' +
+        '<span class="pv-chip">+</span><span style="font-size:10px;font-weight:700;letter-spacing:.14em;' +
+        'text-transform:uppercase;margin-left:4px">Guests<br><span style="font-weight:400">in your party</span></span></div>';
+
     var shown = ACTS.filter(function(a){ return hidden.indexOf(a.id) < 0; });
     $("pv-chips").innerHTML = shown.map(function(a,i){
       return '<span class="pv-chip' + (i < 2 ? ' sel' : '') + '">' + esc(a.name) + '</span>';
@@ -464,7 +490,7 @@ h1,h2,h3{text-wrap:balance}
     $("p-"+k).addEventListener("click", function(){
       prop = k;
       ["talon","all","magnus"].forEach(function(x){ $("p-"+x).classList.toggle("on", x===k); });
-      drawActs(); drawQs(); drawPreview();
+      drawCore(); drawActs(); drawQs(); drawPreview();
     });
   });
   $("theme").addEventListener("click", function(){

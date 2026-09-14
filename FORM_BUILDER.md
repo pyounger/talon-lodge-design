@@ -123,15 +123,21 @@ per-field storage table.
 
 1. **The core cannot be removed or made optional.** Enforce server-side, not only in the
    admin UI — the endpoint validates against the core regardless of configuration.
-2. **Visibility is not deletion.** Hiding an activity from a form never touches the activity.
+2. **Capacity is a property fact, never a form setting.** The Bluff House books as a whole
+   house for one party of **6** — fixed, not a minimum to fill. The form states it instead of
+   asking, the stepper is not rendered, and no admin can change it in the builder: it follows
+   the property record. The builder shows the rule (*Fixed at 6* / *Guest chooses*) so an
+   admin can see what each property's form does without being able to break it. Anything that
+   is true of the property rather than of the form belongs here, not in form config.
+3. **Visibility is not deletion.** Hiding an activity from a form never touches the activity.
    An enquiry that already referenced it still renders correctly.
-3. **Changes are versioned and attributed.** `created_by` / `updated_by` are already
+4. **Changes are versioned and attributed.** `created_by` / `updated_by` are already
    repo-wide conventions (DEVELOPER_TASKS §0). A form that silently changed shape is a
    support problem when an agent asks why an enquiry lacks a field.
-4. **Reportable is a deliberate flag, not a default.** `field_definitions.reportable`
+5. **Reportable is a deliberate flag, not a default.** `field_definitions.reportable`
    already exists. Custom questions nobody reports on are just clutter that survives for
    years.
-5. **A preview before publish.** The admin sees the real form, per property, before it goes
+6. **A preview before publish.** The admin sees the real form, per property, before it goes
    live. The prototype shows this side by side.
 
 ---
