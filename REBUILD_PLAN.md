@@ -44,11 +44,10 @@ the new control panel actually needs to manage.
 |---|---|---|
 | **Pages** | `pages`, `blocks`, `layouts`, `layout_elements`, `template_layout` | The current page builder is five tables deep. A block-based editor collapses this to one collection with a blocks field. |
 | **Navigation** | `navigation_menus`, `navigation_menu_elements` | Main, footer and mobile menus. |
-| **Media** | `photos`, `videos` | One library. Derivatives generated on upload — see §4. |
+| **Media** | `photos`, `videos` | One library. Derivatives generated on upload — see §6. |
 | **Galleries** | `galleries`, `gallery_types` | Ordered sets of media with a type/category. |
-| **Packages & Rates** | `packages` | Feeds `/rates/`. Check against the platform's package model before finalising — this is the one collection that may want to read from the API rather than own its data. |
 | **Reviews** | `reviews` | Testimonials surfaced site-wide. |
-| **Recipes** | `recipes`, `recipe_categories`, `recipes_in_categories` | Powers `/recipe-finder/`. Confirm this is still wanted — see §7. |
+| **Recipes** | `recipes`, `recipe_categories`, `recipes_in_categories` | Powers `/recipe-finder/`. First-class, and rebuilt rather than ported — see §5. |
 | **Banners** | `banners`, `banners_visits` | Promo slots. Visit counting is analytics, not CMS; drop it. |
 | **Users & Roles** | `users`, `usergroups`, `usertokens`, `sys_rights`, `sys_securables`, `sys_controllers` | Six tables of bespoke ACL replaced by the CMS's own roles. |
 | **Email templates** | `email_templates` | Only if the site still sends mail directly; the platform may own this. |
@@ -57,11 +56,59 @@ the new control panel actually needs to manage.
 integrations, long dead), `cities`/`states` (lookup data with one live
 consumer), `messages` (enquiries now go to the platform).
 
-That is **28 tables down to roughly 9 collections**.
+That is **28 tables down to roughly 8 collections**. Rates are not among them:
+they are read from the platform, not owned here (§3).
 
 ---
 
-## 3. Keeping the design
+## 3. Platform integration
+
+Rates come from the new platform, and the integration is wider than the enquiry
+form alone. Reading `DB_SCHEMA.md`, the platform already models everything the
+website needs — including a flag that exists for exactly this purpose.
+
+### Rates read from `packages`
+
+`packages` carries `slug`, `title_override`, `description`, `details`,
+`fees_and_terms`, `nights`, `adventure_days_min/max`, arrival and booking date
+windows, and a `pricing_mode` with either flat (`deposit_amount`,
+`surcharge_per_person`) or adult/child rate fields. Around it sit
+`package_series` (with `rate_increase_per_person`), `package_arrival_days`,
+`package_species`, `package_inclusions` / `package_exclusions` via feature tags,
+and `package_assets` for the rooms and activities a package includes.
+
+**`packages.available_on_website` is the contract.** Combined with
+`status = published`, it is what the site queries. Staff control what appears on
+`/rates/` from the platform, and nobody maintains rates twice.
+
+What the site needs from the platform, and does not have yet:
+
+- A **public read endpoint** — published, website-visible packages for a
+  property, with their series, inclusions, species and assets resolved.
+  Unauthenticated, cacheable, and shaped for rendering rather than mirroring
+  the schema.
+- A **caching strategy.** Rates change rarely and the page must stay fast.
+  Cache aggressively and invalidate on publish rather than fetching per request.
+- A **fallback.** If the platform is unreachable, `/rates/` must still render
+  from the last good response, not error. A marketing page cannot take an
+  outage from an internal system.
+
+### Three forms, three tables
+
+The site posts to the platform in three places, not one:
+
+| Site route | Platform table | Notes |
+|---|---|---|
+| `/contacts/` | `inquiries` | Per `INQUIRY_INTAKE.md`. |
+| `/reservation/` | `reservation_requests` | Carries `package_id` — so the form must know which package, which means rates and the reservation flow share the same fetch. |
+| `/brochure/` | `brochure_requests` | Richer: address, fishing and non-fishing guest counts, previous visits, purpose of travel, package interest, how they heard. |
+
+`reservation_requests.package_id` is the reason rates integration and the
+reservation flow are one piece of work rather than two.
+
+---
+
+## 4. Keeping the design
 
 The brief is to preserve the design, so the rebuild starts from the live site's
 own values, extracted from `static/css/frontend/`:
@@ -92,7 +139,49 @@ currently empty).
 
 ---
 
-## 4. Recommended stack
+## 5. The recipe finder
+
+Flagged as important, and to be rebuilt rather than ported. Worth stating what
+it currently does, because the data model is sound and the implementation is not.
+
+**Today it is a three-facet search.** `recipe_categories` carries a `type`
+column of `meal`, `fish` or `technique`, so one table serves three taxonomies.
+The finder intersects a selection from each, plus a free-text term matched
+against title, slug, ingredients, directions and nutritional text. A recipe has
+`title`, `slug`, `serves`, `ingredients`, `directions`, `nutritional` and an
+image.
+
+**Four things are wrong with how that is built**, each of which the rebuild
+fixes by construction:
+
+1. **It runs a query per facet**, pulls every matching recipe id into PHP, and
+   intersects the arrays in memory before issuing a final `id IN (...)`. One
+   query with joins does the same work.
+2. **Search is `LIKE '%term%'`** across five columns — no index can serve it, no
+   relevance ranking, no stemming, so "smoked salmon" and "salmon, smoked" are
+   different queries. Postgres full-text search handles this natively.
+3. **Filtering is an AJAX POST**, so a filtered view has no URL. Guests cannot
+   share "salmon dinner recipes", and search engines never see them. Moving
+   filter state into the query string (`/recipe-finder/?meal=dinner&fish=salmon`)
+   makes those views linkable, bookmarkable and indexable.
+4. **No structured data.** For a lodge with a chef series and a winemaker
+   series, `schema.org/Recipe` markup is among the highest-value SEO available —
+   it is what puts a photograph, cook time and ratings into Google results.
+   These recipes are a genuine content asset currently invisible to that.
+
+**Two improvements worth considering while it is open:**
+
+- **Facet counts** — "Salmon (12)" rather than letting a guest pick a
+  combination that returns nothing.
+- **Align the fish taxonomy with the platform's `species` table.** The platform
+  already has a species vocabulary that `package_species` uses. One shared
+  vocabulary means a package and a recipe can agree on what a coho is, which is
+  the kind of link that makes the integration feel deliberate rather than
+  bolted on.
+
+---
+
+## 6. Recommended stack
 
 **Next.js (App Router) + Payload CMS + PostgreSQL.**
 
@@ -128,7 +217,7 @@ This needs a decision before any code is written.
 
 ---
 
-## 5. Migration
+## 7. Migration
 
 **Content.** The live database is the source. The only dumps in the repo are
 from 2014 and 2015 (`_dump/`), which are useful for reading the schema and
@@ -150,35 +239,39 @@ into the new CMS, leave it where it is, or retire it.
 
 ---
 
-## 6. Phases
+## 8. Phases
 
-1. **Decide the stack** (§4) and settle the palette question (§3).
+1. **Decide the stack** (§6) and settle the palette question (§4).
 2. **Foundation** — repo, content model, deploy pipeline, a page rendering from
    the CMS.
 3. **Design system** — the live site's palette and type as tokens, components
    built from them, checked side by side against production.
-4. **Templates** — the page types: standard content, gallery, rates, recipe
-   finder, contact.
-5. **Content migration** — masters and content from the live database, with the
+4. **Templates** — the page types: standard content, gallery, recipe finder,
+   contact, brochure.
+5. **Platform integration** — the package read endpoint and its caching, then
+   `/rates/` and the reservation flow together, then the three forms (§3).
+6. **Content migration** — masters and content from the live database, with the
    redirect map.
-6. **Enquiry integration** — post to the platform per `INQUIRY_INTAKE.md`.
 7. **Launch** — staging, redirect verification, cutover.
 
-Phases 2–4 are where the bulk of the work sits.
+Phases 2–5 are where the bulk of the work sits. Phase 5 has a dependency
+outside this project: it cannot finish before the platform exposes the package
+endpoint (§9.4).
 
 ---
 
-## 7. Open questions
+## 9. Open questions
 
-1. **Stack** — Payload or Laravel + Filament (§4). Blocks everything.
-2. **Palette** — live site values, or the platform's tokens (§3).
+1. **Stack** — Payload or Laravel + Filament (§6). Blocks everything.
+2. **Palette** — live site values, or the platform's tokens (§4).
 3. **Baltica font licence** — do we have the files and the right to keep using
    them on the web?
-4. **Recipe finder** — 3 tables and a route for a feature that may no longer
-   earn its place. Keep or retire?
-5. **Rates/packages** — does the site own this content, or read it from the
-   platform so rates are maintained once?
-6. **The blog** — migrate, leave, or retire (§5).
+4. **Package read endpoint** — the platform has no public, cacheable endpoint
+   for website-visible packages yet (§3). Who builds it, and when? This gates
+   `/rates/` and the reservation flow together.
+5. **Species vocabulary** — should the recipe fish taxonomy share the platform's
+   `species` table, or stay independent (§5)?
+6. **The blog** — migrate, leave, or retire (§7).
 7. **Reservation flow** — `/reservation/` is currently a booking journey in the
    legacy app. Does the rebuilt site keep it, or hand off to the platform?
 
