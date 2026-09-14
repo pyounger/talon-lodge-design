@@ -167,16 +167,45 @@ instead of fusing unrelated guests onto one email.
 
 ---
 
+## Brand styling per site
+
+The form carries a token block per property and switches on `data-brand`. Palettes were
+**sampled from screenshots of the live sites** (Sep 2026), not from their stylesheets — the
+hexes are measured from rendered pixels and should be confirmed against the real CSS.
+
+| | Talon Lodge & Spa | The Bluff House | Magnus Adventures |
+|---|---|---|---|
+| Site | talonlodge.com | alaskaluxurylodge.com | magnusadventures.com |
+| Accent | `#c1a867` gold | `#5c5f71` slate | **none — no assets** |
+| Chrome | white / cream | `#9a9897` silver | — |
+| Footer ground | `#494546` | `#040404` | — |
+| Display face | serif, light | serif, classic | — |
+| Corners | square | square | — |
+
+Both sites share a visual language the form now follows: centred headings over a thin rule,
+uppercase letterspaced labels, squared controls, white ground, no rounded pills. Neither site
+uses the teal in `brand/_talon-tokens.scss` — that palette came from the prototypes, not from
+the brands, and is worth reconciling separately.
+
+**Two things still to confirm:**
+
+1. **Typefaces.** The real faces can't be identified from a screenshot. The form uses
+   Cormorant Garamond (Talon) and Lora (Bluff House) as close stand-ins. Replace with the
+   actual faces from each site's CSS.
+2. **Magnus Adventures has no brand assets at all.** Its block is deliberately neutral grey
+   and the prototype says so on screen, so nothing is mistaken for a match.
+
 ## Open questions for the developer
 
 1. **`details` JSON, promoted columns, or both?** (See the mapping section.)
 2. **Spam protection.** Three public endpoints need it. Honeypot plus rate limiting, or a
    CAPTCHA? A CAPTCHA costs conversions on a low-volume, high-value form — worth avoiding
    if rate limiting will do.
-3. **Bluff House.** MODULE_ROADMAP lists four properties (Talon, Bluff House, Alaska
-   Luxury, Magnus) across three websites. Is Bluff House a `property` with its own queue,
-   selectable on the Talon form, or accommodation within Talon? The prototype assumes the
-   latter.
+3. **Bluff House — answered.** The screenshots show **alaskaluxurylodge.com *is* The Bluff
+   House at Talon Lodge**, with its own site, header and booking bar. So it is a `property`
+   in its own right with its own enquiry queue, not accommodation inside the Talon form.
+   That resolves the four-properties / three-websites mismatch: Talon, Bluff House and
+   Magnus each have a site; the fourth roadmap entry needs checking against this.
 4. **Embed mechanism.** MODULE_ROADMAP already plans an embeddable availability widget for
    these same three sites. This form should use whatever that lands on rather than
    inventing a second embed.
