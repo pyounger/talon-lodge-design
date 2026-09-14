@@ -94,7 +94,10 @@ JPEG at that size is 60–90 KB. Those 463 files should total roughly 35 MB, not
 
 ### 2.2 Recommendation
 
-1. **Change the setting** to `78` (quality 75–82 is the standard band; 78 is a safe default).
+1. **Change the setting** to `82` (quality 75–82 is the standard band). 82 rather than a lower
+   value because photography is the product here — it keeps more headroom against artefacts in
+   gradients like sky and water, and still costs roughly a quarter of the bytes of q100.
+   *Implemented — see `pyounger/talonlodge` branch `claude/perf-stage-1-config`.*
    One line. Affects all newly generated derivatives.
 2. **Batch re-encode existing derivatives** from the retained `-orig` masters. The masters are
    all present, so this is lossless in practice — derivatives are regenerated from source rather
@@ -166,6 +169,27 @@ Worst case a visitor pays three redirects before the first byte of HTML. Consoli
 301 straight to the canonical `https://www.` origin removes two.
 
 Every hardcoded URL in the templates is also `http://` — see §4.3.
+
+### 3.5 The site appears to be HTTP-only
+
+Two independent signals point the same way:
+
+```php
+// cpf/boot.php:33 (before this change)
+define('CPF_ROOT_URL', sprintf('http://%s/', $_SERVER['HTTP_HOST']));
+```
+
+Every internal link and the `<base href>` in the layout was generated as `http://`, and the
+canonical redirect in `.htaccess` targets `http://www.` as well. Nothing in the tree suggests TLS.
+
+This is worth raising beyond performance. An HTTP-only site draws a "Not Secure" marker in
+Chrome and Safari, carries a search-ranking penalty, and — most concretely — the enquiry form
+described in `INQUIRY_INTAKE.md` would submit names, emails and phone numbers in plaintext.
+
+`CPF_ROOT_URL` is now derived from the request scheme rather than hardcoded, which is a no-op
+while the site stays on HTTP and correct the moment a certificate is installed. Actually
+enabling TLS (cPanel AutoSSL or Let's Encrypt, then retargeting the redirect) is a separate
+task, and should probably outrank everything else in this document.
 
 ### 3.4 PHP 5.4
 
@@ -364,10 +388,11 @@ Grouped so each stage is independently reviewable, independently revertible, and
 cheapest wins land first.
 
 ### Stage 1 — Configuration (hours; no markup touched)
-- `JPEG_QUALITY` 100 → 78, plus the three defaults in `app/utils/image.php`
-- Add `mod_deflate` for HTML, CSS, JS, SVG
-- Add `mod_expires` for images, fonts and static assets
-- Non-www redirect: `[R]` → `[R=301]`, target `https://`
+- ~~`JPEG_QUALITY` 100 → 82, plus the three defaults in `app/utils/image.php`~~ **done**
+- ~~Add `mod_deflate` for HTML, CSS, JS, SVG~~ **done**
+- ~~Add `mod_expires` for images, fonts and static assets~~ **done**
+- ~~Non-www redirect: `[R]` → `[R=301]`~~ **done**. Retargeting it to `https://` is deferred —
+  see §3.5, the site appears to be HTTP-only.
 
 ### Stage 2 — Remove dead weight (hours; nothing visible changes)
 - Delete the `index_old.php` script tag
@@ -378,7 +403,7 @@ cheapest wins land first.
 - Remove `maximum-scale=1`
 
 ### Stage 3 — Image re-encode (days; batch job)
-- Validate quality 78 on a 20-image sample
+- Validate quality 82 on a 20-image sample
 - Batch regenerate all derivatives from `-orig` masters
 - Add WebP/AVIF with `<picture>` and JPEG fallback
 
