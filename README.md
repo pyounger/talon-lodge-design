@@ -21,7 +21,7 @@ IndexedDB), no server needed.
 Schema and rules that the api implements: `DB_SCHEMA.md`,
 `DATABASE_DESIGN.md`, `MATCHING_RULES.md`, `MERGE_RULES.md`,
 `RECORD_MANAGEMENT.md`, `UI_MAPPING.md`, `MODULE_ROADMAP.md`,
-`DEVELOPER_TASKS.md`, `PROTOTYPE_BUILD_LOG.md`.
+`DEVELOPER_TASKS.md`, `PROTOTYPE_BUILD_LOG.md`, `INQUIRY_INTAKE.md`.
 
 > These mockups are the reference for behavior and screens; when the prototype
 > and the docs disagree, the prototype is the source of truth for intended UX.

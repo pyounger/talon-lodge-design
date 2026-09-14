@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Talon Lodge — Enquiry Form</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"></noscript>
+<style>
+:root{
+  --accent:#0e7c6f; --accent-deep:#0a544c; --accent-soft:#e0efe9;
+  --salmon:#c25e39; --salmon-soft:#f4e5de; --gold:#b9892b; --gold-soft:#f6ecd6;
+  --blue:#3b6ea5; --blue-soft:#e4eefa;
+  --paper:#eef3f1; --surface:#ffffff; --surface-2:#e6efeb; --raise:#f5f9f7;
+  --ink:#12292a; --muted:#5a6f6b; --faint:#84958f; --on:#fff;
+  --line:#d6e2dd; --line-2:#c1d1cb; --sky-1:#0a544c; --sky-2:#0e7c6f; --sky-3:#2a9d8f;
+  --sans:"Outfit",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:ui-serif,Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --shadow:0 1px 2px rgba(18,42,43,.05),0 12px 30px rgba(18,42,43,.06);
+}
+:root:not([data-theme="light"]){ @media (prefers-color-scheme:dark){
+  --accent:#38b8a6; --accent-deep:#5fd0bf; --accent-soft:#0f2a26;
+  --salmon:#e18a62; --salmon-soft:#33231b; --gold:#e0b45e; --gold-soft:#2c2413;
+  --blue:#7aa8dc; --blue-soft:#15243a;
+  --paper:#081210; --surface:#0e1c1a; --surface-2:#152522; --raise:#122220;
+  --ink:#e9f1ed; --muted:#9bada9; --faint:#6f817c;
+  --line:#20332d; --line-2:#2e453e; --sky-1:#04211d; --sky-2:#0a3a34; --sky-3:#12564d;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{
+  --accent:#38b8a6; --accent-deep:#5fd0bf; --accent-soft:#0f2a26;
+  --salmon:#e18a62; --salmon-soft:#33231b; --gold:#e0b45e; --gold-soft:#2c2413;
+  --blue:#7aa8dc; --blue-soft:#15243a;
+  --paper:#081210; --surface:#0e1c1a; --surface-2:#152522; --raise:#122220;
+  --ink:#e9f1ed; --muted:#9bada9; --faint:#6f817c;
+  --line:#20332d; --line-2:#2e453e; --sky-1:#04211d; --sky-2:#0a3a34; --sky-3:#12564d;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3{text-wrap:balance}
+
+/* ---------- demo chrome (not part of the embed) ---------- */
+.topbar{display:flex;align-items:center;gap:11px;padding:13px 20px;background:var(--surface);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.topbar img{height:26px;width:auto}
+.tb-name{display:flex;flex-direction:column;line-height:1.1}
+.tb-name b{font-weight:600;font-size:14px}
+.tb-name span{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint)}
+.tools{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.tbtn{font-family:var(--mono);font-size:11px;font-weight:600;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);border-radius:8px;padding:7px 10px;cursor:pointer}
+.tbtn:hover{border-color:var(--accent)}
+.tbtn.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep)}
+.demobar{background:var(--gold-soft);border-bottom:1px solid var(--line);padding:9px 20px;font-family:var(--mono);font-size:11px;color:var(--ink);display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.demobar b{color:var(--accent-deep);letter-spacing:.08em;text-transform:uppercase}
+
+/* ---------- hero ---------- */
+.hero{background:linear-gradient(135deg,var(--sky-1),var(--sky-2) 55%,var(--sky-3));color:#fff;text-shadow:0 1px 3px rgba(4,16,14,.55)}
+.hero .in{max-width:680px;margin:0 auto;padding:34px 22px 30px}
+.hero .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin:0 0 8px;opacity:.92}
+.hero h1{font-family:var(--serif);font-weight:600;font-size:clamp(25px,5vw,35px);line-height:1.12;margin:0 0 9px}
+.hero p{margin:0;opacity:.94;font-size:14.5px;max-width:56ch}
+
+/* ---------- form ---------- */
+.wrap{max-width:680px;margin:0 auto;padding:22px 22px 40px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:14px;box-shadow:var(--shadow)}
+.sec-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-deep);margin:22px 4px 9px}
+.sec-label:first-of-type{margin-top:4px}
+.q{font-weight:600;font-size:16px;margin:0 0 3px}
+.qsub{font-size:13px;color:var(--muted);margin:0 0 14px;max-width:60ch}
+.req{color:var(--salmon);font-weight:600}
+
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field > label{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
+.row{display:grid;gap:12px}
+.row.two{grid-template-columns:1fr 1fr}
+.row.three{grid-template-columns:1fr 1fr 1fr}
+@media (max-width:520px){ .row.two,.row.three{grid-template-columns:1fr} }
+.row + .row{margin-top:12px}
+
+input[type=text],input[type=email],input[type=tel],input[type=date],input[type=number],select,textarea{
+  width:100%;font-family:var(--sans);font-size:15px;color:var(--ink);background:var(--surface);
+  border:1px solid var(--line-2);border-radius:10px;padding:11px 12px}
+textarea{min-height:96px;resize:vertical}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+input.bad,select.bad{border-color:var(--salmon);background:var(--salmon-soft)}
+.err{font-family:var(--mono);font-size:11px;color:var(--salmon);display:none}
+.err.show{display:block}
+.hint{font-family:var(--mono);font-size:11px;color:var(--faint)}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-weight:500;font-size:13.5px;padding:9px 13px;border:1px solid var(--line-2);border-radius:999px;background:var(--surface);color:var(--ink);cursor:pointer;transition:.12s;text-align:left}
+.chip:hover{border-color:var(--accent)}
+.chip.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep);font-weight:600}
+.chip:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* segmented */
+.seg{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+.seg .chip{border-radius:10px;text-align:center;padding:11px 8px}
+.seg .chip small{display:block;font-family:var(--mono);font-size:9.5px;font-weight:500;color:var(--faint);text-transform:uppercase;letter-spacing:.03em;margin-top:3px}
+.seg .chip.on small{color:var(--accent-deep)}
+
+/* counters */
+.count{display:flex;align-items:center;gap:10px}
+.count button{width:38px;height:38px;flex:0 0 38px;font-size:19px;font-weight:600;line-height:1;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);border-radius:10px;cursor:pointer}
+.count button:hover{border-color:var(--accent);color:var(--accent-deep)}
+.count button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.count output{font-family:var(--mono);font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;min-width:2ch;text-align:center}
+.count .cl{font-size:13px;color:var(--muted);line-height:1.25}
+.total{margin-top:13px;padding-top:12px;border-top:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;justify-content:space-between;gap:10px}
+.total b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+.reveal{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line-2);display:none}
+.reveal.show{display:block}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--muted);cursor:pointer}
+.check input{margin-top:3px;width:16px;height:16px;flex:0 0 16px;accent-color:var(--accent)}
+
+.submitbar{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:13px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.submitbar .note{flex:1;font-family:var(--mono);font-size:11px;color:var(--faint);min-width:160px}
+.btn{font-family:var(--sans);font-weight:600;font-size:15px;background:var(--accent);color:#fff;border:1px solid var(--accent);border-radius:10px;padding:12px 22px;cursor:pointer}
+.btn:hover{background:var(--accent-deep);border-color:var(--accent-deep)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line-2)}
+.btn.ghost:hover{background:var(--surface-2);color:var(--ink);border-color:var(--accent)}
+
+/* ---------- results ---------- */
+#results{display:none}
+#results.show{display:block}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tab{font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--line-2);background:var(--surface);color:var(--muted);border-radius:9px;padding:9px 13px;cursor:pointer}
+.tab:hover{border-color:var(--accent)}
+.tab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pane{display:none}
+.pane.on{display:block}
+
+/* email mock */
+.mail{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.mail-hd{background:var(--surface-2);border-bottom:1px solid var(--line);padding:13px 18px;display:grid;gap:3px}
+.mail-hd .l{display:grid;grid-template-columns:62px 1fr;gap:8px;font-family:var(--mono);font-size:11.5px;color:var(--muted);align-items:baseline}
+.mail-hd .l i{font-style:normal;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;font-size:10px}
+.mail-hd .l b{color:var(--ink);font-weight:600;font-family:var(--sans);font-size:13.5px}
+.mail-bd{padding:22px 20px}
+.mail-bd p{margin:0 0 13px;font-size:14.5px;max-width:62ch}
+.mail-bd p:last-child{margin-bottom:0}
+.mail-bd h3{font-family:var(--serif);font-weight:600;font-size:19px;margin:0 0 12px}
+.mail-bd .sig{margin-top:18px;padding-top:14px;border-top:1px solid var(--line);font-size:13.5px;color:var(--muted)}
+.recap{background:var(--raise);border:1px solid var(--line);border-radius:11px;padding:14px 16px;margin:0 0 15px}
+.recap dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:7px 16px;font-size:13.5px}
+.recap dt{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);padding-top:3px}
+.recap dd{margin:0;color:var(--ink)}
+.pk{display:flex;flex-direction:column;gap:9px;margin:0 0 14px}
+.pk a{display:block;text-decoration:none;border:1px solid var(--line-2);border-left:3px solid var(--accent);border-radius:9px;padding:11px 14px;background:var(--surface)}
+.pk a:hover{background:var(--accent-soft)}
+.pk b{display:block;font-size:14.5px;color:var(--accent-deep);font-weight:600}
+.pk span{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+
+/* staff notification */
+.alert{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.alert-hd{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.alert-hd .who{flex:1;min-width:180px}
+.alert-hd h3{margin:0 0 2px;font-size:17px;font-weight:600}
+.alert-hd .sub{font-family:var(--mono);font-size:11px;color:var(--faint)}
+.flags{display:flex;gap:6px;flex-wrap:wrap}
+.flag{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:4px 9px;border-radius:999px;border:1px solid}
+.flag.hot{background:var(--salmon-soft);border-color:var(--salmon);color:var(--salmon)}
+.flag.warm{background:var(--gold-soft);border-color:var(--gold);color:var(--gold)}
+.flag.info{background:var(--blue-soft);border-color:var(--blue);color:var(--blue)}
+.flag.good{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep)}
+.alert-bd{padding:16px 18px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;font-size:14px;margin:0 0 15px}
+.kv dt{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);padding-top:3px}
+.kv dd{margin:0}
+.quote{background:var(--surface-2);border-left:3px solid var(--line-2);border-radius:0 9px 9px 0;padding:11px 14px;font-size:14px;color:var(--ink);margin:0 0 15px}
+.match{background:var(--blue-soft);border:1px solid var(--blue);border-radius:11px;padding:13px 15px;margin:0 0 15px}
+.match .mt{font-family:var(--mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--blue);font-weight:600;margin-bottom:6px}
+.match p{margin:0;font-size:13.5px;color:var(--ink)}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.acts .btn{font-size:13.5px;padding:10px 15px}
+
+/* payload */
+pre{margin:0;background:var(--sky-1);color:#dff1ec;border-radius:12px;padding:17px 18px;overflow-x:auto;
+  font-family:var(--mono);font-size:12.5px;line-height:1.65;border:1px solid var(--line)}
+pre .k{color:#8fd9cb}
+pre .s{color:#f0c98a}
+pre .n{color:#a9c7f5}
+pre .b{color:#e79a78}
+pre .c{color:#6e918a;font-style:italic}
+.maptable{width:100%;border-collapse:collapse;font-size:13px;margin-top:14px}
+.maptable th,.maptable td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.maptable th{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);font-weight:600}
+.maptable td code{font-family:var(--mono);font-size:12px;color:var(--accent-deep);background:var(--accent-soft);padding:1px 5px;border-radius:5px}
+.scroller{overflow-x:auto}
+
+.rules{display:grid;gap:10px;margin-top:14px}
+.rule{display:grid;grid-template-columns:26px 1fr;gap:11px;align-items:start;font-size:13.5px;color:var(--muted)}
+.rule b{color:var(--ink);font-weight:600}
+.rule .num{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--accent-deep);background:var(--accent-soft);border-radius:6px;text-align:center;padding:3px 0}
+
+.foot{max-width:680px;margin:0 auto;padding:0 22px 44px;font-size:12.5px;color:var(--faint);line-height:1.6}
+.foot code{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img alt="Talon Lodge" src="__EAGLE__">
+  <div class="tb-name"><b>Enquiry Form</b><span>Prototype · intake</span></div>
+  <div class="tools">
+    <button class="tbtn on" id="site-talon" data-site="talon" type="button">talonlodge.com</button>
+    <button class="tbtn" id="site-all" data-site="all" type="button">alaskaluxurylodge.com</button>
+    <button class="tbtn" id="site-magnus" data-site="magnus" type="button">magnusadventures.com</button>
+    <button class="tbtn" id="theme" type="button">Theme</button>
+  </div>
+</div>
+
+<div class="demobar">
+  <b>Prototype</b>
+  <span id="demonote">Nothing is sent. Submitting shows the reply the guest receives, the alert the agent receives, and the JSON posted to <code>/inquiries</code>. Switch site above to see the same form embedded on each brand.</span>
+</div>
+
+<div class="hero">
+  <div class="in">
+    <p class="eyebrow" id="hero-eyebrow">Talon Lodge &amp; Spa · Sitka, Alaska</p>
+    <h1 id="hero-title">Plan your Alaska trip</h1>
+    <p id="hero-sub">Tell us roughly when you'd like to come and what you'd like to do. A reservations agent replies personally — usually the same day.</p>
+  </div>
+</div>
+
+<form class="wrap" id="form" novalidate>
+
+  <p class="sec-label">1 · When</p>
+  <div class="card">
+    <p class="q">Dates of interest</p>
+    <p class="qsub">Our season runs May through September. If you're not sure yet, say so — we'll suggest the best weeks for what you want to catch.</p>
+
+    <div class="row two">
+      <div class="field">
+        <label for="arrive">Preferred arrival</label>
+        <input type="date" id="arrive" min="2027-05-01" max="2027-09-30" value="2027-07-11">
+      </div>
+      <div class="field">
+        <label for="depart">Preferred departure</label>
+        <input type="date" id="depart" min="2027-05-01" max="2027-09-30" value="2027-07-16">
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:14px">
+      <div class="field">
+        <label>How firm are those dates?</label>
+        <div class="seg" id="flex" role="group" aria-label="Date flexibility">
+          <button class="chip on" type="button" data-v="exact" id="flex-exact">Exact<small>these days</small></button>
+          <button class="chip" type="button" data-v="few_days" id="flex-few">± a few days<small>can shift</small></button>
+          <button class="chip" type="button" data-v="month" id="flex-month">That month<small>anytime</small></button>
+          <button class="chip" type="button" data-v="unsure" id="flex-unsure">Not sure<small>advise me</small></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal" id="season-wrap">
+      <div class="field">
+        <label for="season-year">Which season, roughly?</label>
+        <div class="row two">
+          <select id="season-year">
+            <option value="2027" selected>2027 season</option>
+            <option value="2028">2028 season</option>
+            <option value="">Not decided</option>
+          </select>
+          <div class="chips" id="months" role="group" aria-label="Months of interest">
+            <button class="chip" type="button" data-v="May" id="m-may">May</button>
+            <button class="chip" type="button" data-v="June" id="m-jun">June</button>
+            <button class="chip" type="button" data-v="July" id="m-jul">July</button>
+            <button class="chip" type="button" data-v="August" id="m-aug">August</button>
+            <button class="chip" type="button" data-v="September" id="m-sep">September</button>
+          </div>
+        </div>
+        <p class="hint" style="margin-top:8px">King salmon peak in June; silvers run August into September.</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="sec-label">2 · Who</p>
+  <div class="card">
+    <p class="q">How many people?</p>
+    <p class="qsub">We price and assign boats by who's fishing, so the split matters more than the headcount.</p>
+
+    <div class="row two">
+      <div class="count">
+        <button type="button" id="ang-minus" aria-label="Fewer anglers">−</button>
+        <output id="anglers" for="ang-minus ang-plus">4</output>
+        <button type="button" id="ang-plus" aria-label="More anglers">+</button>
+        <span class="cl">Anglers<br><span class="hint">fishing</span></span>
+      </div>
+      <div class="count">
+        <button type="button" id="non-minus" aria-label="Fewer non-fishing guests">−</button>
+        <output id="nonanglers" for="non-minus non-plus">2</output>
+        <button type="button" id="non-plus" aria-label="More non-fishing guests">+</button>
+        <span class="cl">Not fishing<br><span class="hint">spa, touring</span></span>
+      </div>
+    </div>
+
+    <div class="total"><span>Party size</span><b id="party">6 guests</b></div>
+
+    <div class="row" style="margin-top:14px">
+      <label class="check" for="haskids">
+        <input type="checkbox" id="haskids">
+        <span>We're travelling with children under 16</span>
+      </label>
+    </div>
+    <div class="reveal" id="kids-wrap">
+      <div class="field">
+        <label for="kidages">Ages of the children</label>
+        <input type="text" id="kidages" placeholder="e.g. 9, 12, 14">
+        <p class="hint">Some activities have minimum ages — this lets us flag them before you book.</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="sec-label">3 · What</p>
+  <div class="card">
+    <p class="q">What are you interested in?</p>
+    <p class="qsub">Pick anything that appeals. This shapes the packages we suggest — nothing is committed.</p>
+    <div class="chips" id="interests" role="group" aria-label="Interests">
+      <button class="chip on" type="button" data-v="Saltwater sportfishing" id="i-salt">Saltwater sportfishing</button>
+      <button class="chip" type="button" data-v="Freshwater fishing — by boat" id="i-fwboat">Freshwater fishing — by boat</button>
+      <button class="chip" type="button" data-v="Freshwater fishing by float plane" id="i-fwair">Freshwater by float plane</button>
+      <button class="chip" type="button" data-v="Freshwater fishing — by ATV" id="i-fwatv">Freshwater by ATV</button>
+      <button class="chip on" type="button" data-v="Whale &amp; wildlife viewing" id="i-whale">Whale &amp; wildlife viewing</button>
+      <button class="chip" type="button" data-v="Float plane tour" id="i-tour">Float plane tour</button>
+      <button class="chip" type="button" data-v="ATV Kruzof Island tour" id="i-atv">ATV Kruzof Island tour</button>
+      <button class="chip" type="button" data-v="Kayak &amp; lunch" id="i-kayak">Kayak &amp; lunch</button>
+      <button class="chip" type="button" data-v="Hiking" id="i-hike">Hiking</button>
+      <button class="chip on" type="button" data-v="Massage &amp; day spa" id="i-spa">Massage &amp; day spa</button>
+      <button class="chip" type="button" data-v="Cooking class" id="i-cook">Cooking class</button>
+      <button class="chip" type="button" data-v="Winemaker Series" id="i-wine">Winemaker Series</button>
+      <button class="chip" type="button" data-v="Visiting Chef Series" id="i-chef">Visiting Chef Series</button>
+      <button class="chip" type="button" data-v="Corporate or group buyout" id="i-corp">Corporate / group buyout</button>
+      <button class="chip" type="button" data-v="Special occasion" id="i-occ">Special occasion</button>
+    </div>
+  </div>
+
+  <p class="sec-label">4 · You</p>
+  <div class="card">
+    <p class="q">Who should we reply to?</p>
+    <p class="qsub">We need an email to send your itinerary options to. <span class="req">Required fields are marked.</span></p>
+
+    <div class="row two">
+      <div class="field">
+        <label for="first">First name <span class="req">*</span></label>
+        <input type="text" id="first" autocomplete="given-name" value="Margaret">
+        <span class="err" id="e-first">Please tell us your first name.</span>
+      </div>
+      <div class="field">
+        <label for="last">Last name <span class="req">*</span></label>
+        <input type="text" id="last" autocomplete="family-name" value="Ellison">
+        <span class="err" id="e-last">Please tell us your last name.</span>
+      </div>
+    </div>
+
+    <div class="row two">
+      <div class="field">
+        <label for="email">Email <span class="req">*</span></label>
+        <input type="email" id="email" autocomplete="email" value="m.ellison@example.com">
+        <span class="err" id="e-email">We need a valid email to send your reply to.</span>
+      </div>
+      <div class="field">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" autocomplete="tel" value="(206) 555-0148">
+        <p class="hint">Optional, but it's how we reach you fastest in season.</p>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:14px">
+      <div class="field">
+        <label>You're enquiring</label>
+        <div class="seg" id="asrole" role="group" aria-label="Enquiring as">
+          <button class="chip on" type="button" data-v="self" id="as-self">For myself<small>and my party</small></button>
+          <button class="chip" type="button" data-v="group" id="as-group">For a group<small>I'm organising</small></button>
+          <button class="chip" type="button" data-v="agent" id="as-agent">As an agent<small>travel / planner</small></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal" id="agency-wrap">
+      <div class="row two">
+        <div class="field">
+          <label for="agency">Agency or company</label>
+          <input type="text" id="agency" placeholder="Agency name">
+        </div>
+        <div class="field">
+          <label for="agency-email">Best booking contact</label>
+          <input type="email" id="agency-email" placeholder="bookings@agency.com">
+        </div>
+      </div>
+      <p class="hint" style="margin-top:8px">We keep agent details separate from the guest record, so your clients stay their own contacts.</p>
+    </div>
+
+    <div class="row two" style="margin-top:14px">
+      <div class="field">
+        <label for="been">Been to Alaska before?</label>
+        <select id="been">
+          <option value="0">First time</option>
+          <option value="1" selected>Once before</option>
+          <option value="2-4">Two to four times</option>
+          <option value="5+">Five or more</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="heard">How did you hear about us?</label>
+        <select id="heard">
+          <option value="">Select…</option>
+          <option value="returning">I've stayed before</option>
+          <option value="referral" selected>Friend or family</option>
+          <option value="search">Search engine</option>
+          <option value="social">Social media</option>
+          <option value="agent">Travel agent</option>
+          <option value="show">Sportsman's show</option>
+          <option value="other">Somewhere else</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <p class="sec-label">5 · Anything else</p>
+  <div class="card">
+    <p class="q">Tell us about your trip</p>
+    <p class="qsub">Celebrating something, dietary needs, mobility, a particular fish you're after — anything that helps us plan.</p>
+    <textarea id="message" placeholder="Optional">Celebrating my father's 70th. He's fished Sitka before and wants kings; two of us would rather be on the spa and whale-watching side. One vegetarian in the party.</textarea>
+    <div style="margin-top:14px">
+      <label class="check" for="optin">
+        <input type="checkbox" id="optin">
+        <span>Send me occasional news about open weeks and special series dinners. We never share your details, and you can stop at any time.</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="submitbar">
+    <span class="note" id="note">Prototype — nothing is sent.</span>
+    <button class="btn ghost" type="button" id="reset">Reset</button>
+    <button class="btn" type="submit" id="send">Send enquiry</button>
+  </div>
+</form>
+
+<div class="wrap" id="results">
+  <div class="tabs" role="tablist">
+    <button class="tab on" type="button" id="t-guest" role="tab">Guest auto-reply</button>
+    <button class="tab" type="button" id="t-staff" role="tab">Agent notification</button>
+    <button class="tab" type="button" id="t-json" role="tab">What gets posted</button>
+  </div>
+
+  <div class="pane on" id="p-guest">
+    <div class="mail">
+      <div class="mail-hd">
+        <div class="l"><i>From</i><b id="g-from">Talon Lodge &amp; Spa</b></div>
+        <div class="l"><i>Reply-to</i><span id="g-reply">reservations@talonlodge.com</span></div>
+        <div class="l"><i>To</i><span id="g-to">m.ellison@example.com</span></div>
+        <div class="l"><i>Subject</i><b id="g-subj">Your July 2027 enquiry — Talon Lodge</b></div>
+      </div>
+      <div class="mail-bd">
+        <h3 id="g-hi">Thank you, Margaret —</h3>
+        <p id="g-open">We've got your enquiry and a reservations agent is looking at it now. Here's what you told us:</p>
+        <div class="recap">
+          <dl>
+            <dt>Lodge</dt><dd id="g-prop">Talon Lodge &amp; Spa, Sitka</dd>
+            <dt>Dates</dt><dd id="g-dates">11–16 July 2027 (5 nights)</dd>
+            <dt>Party</dt><dd id="g-party">6 guests — 4 fishing, 2 not</dd>
+            <dt>Interests</dt><dd id="g-int">Saltwater sportfishing · Whale &amp; wildlife viewing · Massage &amp; day spa</dd>
+          </dl>
+        </div>
+        <p id="g-pkintro">Based on what interests you, these are the packages worth looking at first:</p>
+        <div class="pk" id="g-pk"></div>
+        <p id="g-next">Your enquiry has gone to <b>Dana Whitfield</b>, who looks after Sitka bookings. You'll hear back personally within one business day — and in season, usually the same afternoon. If it's easier to talk it through, call <b>(907) 555-0190</b> and ask for Dana.</p>
+        <p id="g-hold">Nothing is held or charged at this stage. When you're ready, we'll put a courtesy hold on the week while you decide.</p>
+        <div class="sig">
+          Tight lines,<br>
+          <b>Dana Whitfield</b> · Reservations<br>
+          Talon Lodge &amp; Spa · Sitka, Alaska<br>
+          <span id="g-sigweb">talonlodge.com</span>
+        </div>
+      </div>
+    </div>
+    <p class="foot" style="padding-left:0;padding-right:0">The recap is built from the guest's own answers, so the reply never says "your enquiry" and nothing else. Reply-to is the agent, not a no-reply address — a reply from the guest lands on a person and threads onto the same enquiry.</p>
+  </div>
+
+  <div class="pane" id="p-staff">
+    <div class="alert">
+      <div class="alert-hd">
+        <div class="who">
+          <h3 id="s-name">Margaret Ellison · 6 guests · July 2027</h3>
+          <div class="sub" id="s-meta">talonlodge.com · contact-us · received just now</div>
+        </div>
+        <div class="flags" id="s-flags"></div>
+      </div>
+      <div class="alert-bd">
+        <dl class="kv">
+          <dt>Dates</dt><dd id="s-dates">11–16 July 2027 (5 nights) · exact dates</dd>
+          <dt>Party</dt><dd id="s-party">4 anglers, 2 non-fishing · 1 child (14)</dd>
+          <dt>Wants</dt><dd id="s-int">Saltwater sportfishing · Whale &amp; wildlife viewing · Massage &amp; day spa</dd>
+          <dt>Contact</dt><dd id="s-contact">m.ellison@example.com · (206) 555-0148</dd>
+          <dt>Source</dt><dd id="s-src">Friend or family · been to Alaska once before</dd>
+        </dl>
+        <div class="quote" id="s-msg">Celebrating my father's 70th…</div>
+        <div class="match" id="s-match">
+          <div class="mt">Possible existing guest</div>
+          <p id="s-matchtxt">One contactful person matches this email. Open the record before replying — if it's her, she has stay history and a satisfaction score worth reading first.</p>
+        </div>
+        <div class="acts">
+          <button class="btn" type="button" id="a-claim">Claim &amp; reply</button>
+          <button class="btn ghost" type="button" id="a-avail">Check availability</button>
+          <button class="btn ghost" type="button" id="a-person">Open person record</button>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <p class="q">How this gets routed</p>
+      <p class="qsub">Rules the endpoint applies — these are proposals for Andy's team, not built behaviour.</p>
+      <div class="rules">
+        <div class="rule"><span class="num">1</span><span><b>To the property's agent.</b> <code>property_id</code> decides the queue. Each property has assigned agents; if none is on duty the enquiry falls back to the property's <code>contact_email</code>.</span></div>
+        <div class="rule"><span class="num">2</span><span><b>Never only email.</b> The notification is a record in the system with a claim action. Email is a copy, so an enquiry can't be lost in one person's inbox.</span></div>
+        <div class="rule"><span class="num">3</span><span><b>Unclaimed escalates.</b> Nothing claimed within 2 working hours re-notifies the property manager; 8 hours goes to the group inbox.</span></div>
+        <div class="rule"><span class="num">4</span><span><b>Flags are computed, not typed.</b> Party size, peak weeks, repeat-guest match and agent enquiries are derived on arrival so the agent sees priority before opening it.</span></div>
+        <div class="rule"><span class="num">5</span><span><b>Auto-reply is immediate; the human reply is not.</b> The guest hears back in seconds either way, which is what stops them enquiring at three other lodges while they wait.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pane" id="p-json">
+    <pre id="json"></pre>
+    <div class="card" style="margin-top:14px">
+      <p class="q">How it maps to the schema</p>
+      <p class="qsub">Every field lands in <code>inquiries</code> (DB_SCHEMA §F) — no new table. Fields with no column are proposals, marked below.</p>
+      <div class="scroller">
+        <table class="maptable">
+          <thead><tr><th>Form field</th><th>Column</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr><td>— (set by server)</td><td><code>property_id</code></td><td>From the posting site's key. Never trusted from the browser.</td></tr>
+            <tr><td>— (set by server)</td><td><code>website</code>, <code>form_name</code></td><td>Origin host and which form. Already in the schema.</td></tr>
+            <tr><td>First + last name</td><td><code>name</code></td><td></td></tr>
+            <tr><td>Email</td><td><code>email</code></td><td><b>Required.</b> See the note below on why.</td></tr>
+            <tr><td>Phone</td><td><code>phone</code></td><td></td></tr>
+            <tr><td>Message</td><td><code>message</code></td><td></td></tr>
+            <tr><td>— (set by matching)</td><td><code>person_id</code></td><td>Null on write; the matching engine fills it.</td></tr>
+            <tr><td>Dates, flexibility, party split, interests, children, agent, consent</td><td><code>details</code> JSON <b>(proposed)</b></td><td>Governed by <code>field_definitions</code>, the way <code>assets.properties</code> and <code>trip_profiles.details</code> already work. Alternative: promote dates and party counts to real columns since every enquiry has them.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="qsub" style="margin-top:15px;margin-bottom:0"><b>Why email is required.</b> The matching run over your real 2026 data found 1,115 name-only persons with no email or phone — <i>"almost all inquiries — unmatchable by contact"</i> (MATCHING_RULES.md). Making email mandatory here is what stops the new system rebuilding that pile. It also has to be, for the auto-reply to exist at all.</p>
+    </div>
+  </div>
+
+  <div class="submitbar">
+    <span class="note">Prototype output — generated from the answers above.</span>
+    <button class="btn ghost" type="button" id="back">Back to the form</button>
+  </div>
+</div>
+
+<p class="foot">
+  Prototype for <code>talon-lodge-design</code>. Sample data throughout; agent names and phone numbers are placeholders.
+  The form is designed to be embedded on talonlodge.com, alaskaluxurylodge.com and magnusadventures.com, posting to one
+  <code>POST /inquiries</code> endpoint on the platform API. See <code>INQUIRY_INTAKE.md</code> for the full contract.
+</p>
+
+<script>
+(function(){
+  "use strict";
+
+  var SITES = {
+    talon:  { key:"talon",  label:"Talon Lodge & Spa",   place:"Sitka, Alaska",
+              website:"talonlodge.com", property_id:1, property:"Talon Lodge & Spa, Sitka",
+              agent:"Dana Whitfield", agentEmail:"reservations@talonlodge.com", phone:"(907) 555-0190",
+              title:"Plan your Alaska trip",
+              sub:"Tell us roughly when you'd like to come and what you'd like to do. A reservations agent replies personally — usually the same day." },
+    all:    { key:"all",    label:"Alaska Luxury Lodge", place:"Southeast Alaska",
+              website:"alaskaluxurylodge.com", property_id:3, property:"Alaska Luxury Lodge",
+              agent:"Ruth Alvarez", agentEmail:"reservations@alaskaluxurylodge.com", phone:"(907) 555-0164",
+              title:"Enquire about a stay",
+              sub:"Share your dates and what you'd like from the trip. One of our reservations team will come back to you personally." },
+    magnus: { key:"magnus", label:"Magnus Adventures",   place:"Southeast Alaska",
+              website:"magnusadventures.com", property_id:4, property:"Magnus Adventures",
+              agent:"Tom Bradbury", agentEmail:"bookings@magnusadventures.com", phone:"(907) 555-0177",
+              title:"Start planning your adventure",
+              sub:"Tell us when you're thinking of coming and what you want to do out there. We'll reply with the weeks that suit it best." }
+  };
+
+  var MONTH = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var PEAK  = { June:1, July:1 };
+
+  var state = {
+    site:"talon", flex:"exact", months:[], anglers:4, nonanglers:2,
+    interests:["Saltwater sportfishing","Whale & wildlife viewing","Massage & day spa"],
+    asrole:"self"
+  };
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+  /* ---------- site switching ---------- */
+  function applySite(){
+    var s = SITES[state.site];
+    ["talon","all","magnus"].forEach(function(k){
+      $("site-"+k).classList.toggle("on", k===state.site);
+    });
+    $("hero-eyebrow").textContent = s.label + " · " + s.place;
+    $("hero-title").textContent   = s.title;
+    $("hero-sub").textContent     = s.sub;
+    document.title = s.label + " — Enquiry Form";
+  }
+  ["talon","all","magnus"].forEach(function(k){
+    $("site-"+k).addEventListener("click", function(){ state.site = k; applySite(); });
+  });
+
+  $("theme").addEventListener("click", function(){
+    var cur = document.documentElement.getAttribute("data-theme");
+    var next = cur === "dark" ? "light" : cur === "light" ? "dark"
+      : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "dark");
+    document.documentElement.setAttribute("data-theme", next);
+  });
+
+  /* ---------- chip groups ---------- */
+  function single(wrapId, key, after){
+    $(wrapId).addEventListener("click", function(e){
+      var b = e.target.closest(".chip"); if(!b) return;
+      Array.prototype.forEach.call(this.querySelectorAll(".chip"), function(c){ c.classList.remove("on"); });
+      b.classList.add("on"); state[key] = b.dataset.v; if(after) after();
+    });
+  }
+  single("flex","flex",function(){
+    $("season-wrap").classList.toggle("show", state.flex==="unsure" || state.flex==="month");
+  });
+  single("asrole","asrole",function(){
+    $("agency-wrap").classList.toggle("show", state.asrole==="agent");
+  });
+
+  function multi(wrapId, key){
+    $(wrapId).addEventListener("click", function(e){
+      var b = e.target.closest(".chip"); if(!b) return;
+      b.classList.toggle("on");
+      var v = b.dataset.v.replace(/&amp;/g,"&");
+      var i = state[key].indexOf(v);
+      if(i>=0) state[key].splice(i,1); else state[key].push(v);
+    });
+  }
+  multi("interests","interests");
+  multi("months","months");
+
+  /* ---------- counters ---------- */
+  function counter(minusId, plusId, outId, key, min){
+    function draw(){ $(outId).textContent = state[key]; party(); }
+    $(minusId).addEventListener("click", function(){ state[key] = Math.max(min, state[key]-1); draw(); });
+    $(plusId).addEventListener("click",  function(){ state[key] = Math.min(40, state[key]+1); draw(); });
+  }
+  function party(){
+    var t = state.anglers + state.nonanglers;
+    $("party").textContent = t + (t===1 ? " guest" : " guests");
+  }
+  counter("ang-minus","ang-plus","anglers","anglers",0);
+  counter("non-minus","non-plus","nonanglers","nonanglers",0);
+
+  $("haskids").addEventListener("change", function(){
+    $("kids-wrap").classList.toggle("show", this.checked);
+  });
+
+  /* ---------- dates ---------- */
+  function nights(){
+    var a = $("arrive").value, d = $("depart").value;
+    if(!a || !d) return 0;
+    var n = Math.round((new Date(d) - new Date(a)) / 86400000);
+    return n > 0 ? n : 0;
+  }
+  function dayMonth(v){
+    var d = new Date(v + "T00:00:00");
+    return d.getDate() + " " + MONTH[d.getMonth()];
+  }
+  function dateLine(){
+    var a = $("arrive").value, d = $("depart").value, n = nights();
+    if(state.flex === "unsure" && !a){
+      var yr = $("season-year").value;
+      return state.months.length
+        ? state.months.join(" or ") + (yr ? " " + yr : "") + " — dates open"
+        : "Not yet decided" + (yr ? " · " + yr + " season" : "");
+    }
+    if(!a || !d) return "Not yet decided";
+    var y = new Date(d + "T00:00:00").getFullYear();
+    var line = dayMonth(a).split(" ")[0] + "–" + dayMonth(d) + " " + y;
+    if(n) line += " (" + n + (n===1 ? " night)" : " nights)");
+    if(state.flex === "few_days") line += " · flexible by a few days";
+    if(state.flex === "month")    line += " · anytime that month";
+    if(state.flex === "unsure")   line += " · dates open";
+    return line;
+  }
+  function primaryMonth(){
+    var a = $("arrive").value;
+    if(a && state.flex !== "unsure") return MONTH[new Date(a + "T00:00:00").getMonth()];
+    return state.months[0] || "";
+  }
+
+  /* ---------- package suggestions ---------- */
+  function packages(){
+    var i = state.interests, out = [], has = function(s){
+      return i.some(function(x){ return x.toLowerCase().indexOf(s) >= 0; });
+    };
+    var salt = has("saltwater"), fresh = has("freshwater"),
+        view = has("whale") || has("tour") || has("kayak") || has("hiking") || has("atv"),
+        food = has("winemaker") || has("chef") || has("cooking");
+
+    if(salt && view) out.push(["Alaska Adventure Combo","Fishing days paired with wildlife and touring days — the usual answer for a party that wants both."]);
+    if(salt && !out.length) out.push(["Sportfishing","Full guided saltwater days out of Sitka, boat and licence handled."]);
+    else if(salt) out.push(["Sportfishing","Add extra guided saltwater days to any package."]);
+    if(fresh) out.push(["Freshwater Fishing","Remote river and lake days, reached by boat, ATV or float plane."]);
+    if(view && !salt) out.push(["Adventure Viewing","Whales, bears and the outer coast, with no fishing days."]);
+    if(has("winemaker")) out.push(["Winemaker Series","Set weeks built around a visiting winemaker — limited dates each season."]);
+    if(has("chef")) out.push(["Visiting Chef Series","A guest chef in the kitchen for the week. Books out early."]);
+    if(!out.length) out.push(["Standard","Lodging, meals and the run of the lodge — build the days around it."]);
+    if(food && out.length < 3) out.push(["Standard","Lodging and meals, with the series dinners added on."]);
+    return out.slice(0,3);
+  }
+
+  /* ---------- flags ---------- */
+  function flags(){
+    var f = [], total = state.anglers + state.nonanglers, m = primaryMonth();
+    if(total >= 8) f.push(["hot","Buyout-size party"]);
+    else if(total >= 6) f.push(["warm","Large party"]);
+    if(PEAK[m]) f.push(["hot", m + " — peak"]);
+    if(state.asrole === "agent") f.push(["info","Travel agent"]);
+    if(state.asrole === "group") f.push(["info","Group organiser"]);
+    if($("heard").value === "returning" || $("been").value === "5+") f.push(["good","Likely repeat guest"]);
+    if(state.interests.indexOf("Corporate or group buyout") >= 0) f.push(["hot","Buyout enquiry"]);
+    if(state.interests.indexOf("Special occasion") >= 0) f.push(["warm","Special occasion"]);
+    if(!f.length) f.push(["good","Standard enquiry"]);
+    return f;
+  }
+
+  /* ---------- validation ---------- */
+  function validate(){
+    var ok = true;
+    [["first","e-first"],["last","e-last"]].forEach(function(p){
+      var el = $(p[0]), bad = !el.value.trim();
+      el.classList.toggle("bad", bad); $(p[1]).classList.toggle("show", bad);
+      if(bad) ok = false;
+    });
+    var em = $("email"), embad = !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value.trim());
+    em.classList.toggle("bad", embad); $("e-email").classList.toggle("show", embad);
+    if(embad) ok = false;
+    return ok;
+  }
+
+  /* ---------- payload ---------- */
+  function payload(){
+    var s = SITES[state.site], kids = $("haskids").checked;
+    return {
+      _server: { property_id: s.property_id, website: s.website, form_name: "contact-us",
+                 received_at: new Date().toISOString(), source_ip: "recorded", person_id: null },
+      name:  ($("first").value.trim() + " " + $("last").value.trim()).trim(),
+      email: $("email").value.trim(),
+      phone: $("phone").value.trim() || null,
+      message: $("message").value.trim() || null,
+      details: {
+        arrival_date:   $("arrive").value || null,
+        departure_date: $("depart").value || null,
+        nights: nights() || null,
+        date_flexibility: state.flex,
+        season_year: $("season-year").value || null,
+        months_of_interest: state.months.slice(),
+        num_fishing_guests: state.anglers,
+        num_non_fishing_guests: state.nonanglers,
+        party_size: state.anglers + state.nonanglers,
+        children: kids,
+        child_ages: kids ? $("kidages").value.trim() || null : null,
+        interests: state.interests.slice(),
+        enquiring_as: state.asrole,
+        agency_name:  state.asrole==="agent" ? ($("agency").value.trim() || null) : null,
+        agency_email: state.asrole==="agent" ? ($("agency-email").value.trim() || null) : null,
+        times_to_alaska_before: $("been").value,
+        how_heard: $("heard").value || null,
+        opt_in_offers: $("optin").checked
+      }
+    };
+  }
+  function paint(o, ind){
+    ind = ind || 2;
+    var j = JSON.stringify(o, null, ind);
+    return esc(j)
+      .replace(/&quot;([A-Za-z_0-9]+)&quot;:/g, '<span class="k">"$1"</span>:')
+      .replace(/: &quot;([^&]*)&quot;/g, ': <span class="s">"$1"</span>')
+      .replace(/: (true|false|null)/g, ': <span class="b">$1</span>')
+      .replace(/: (-?\d+(?:\.\d+)?)/g, ': <span class="n">$1</span>');
+  }
+
+  /* ---------- render results ---------- */
+  function render(){
+    var s = SITES[state.site],
+        first = $("first").value.trim(),
+        total = state.anglers + state.nonanglers,
+        m = primaryMonth(),
+        yr = ($("arrive").value ? new Date($("arrive").value+"T00:00:00").getFullYear() : $("season-year").value) || "";
+
+    /* guest email */
+    $("g-from").textContent  = s.label;
+    $("g-reply").textContent = s.agentEmail;
+    $("g-to").textContent    = $("email").value.trim();
+    $("g-subj").textContent  = "Your " + (m ? m + " " + yr : "trip") + " enquiry — " + s.label;
+    $("g-hi").textContent    = "Thank you, " + first + " —";
+    $("g-prop").textContent  = s.property;
+    $("g-dates").textContent = dateLine();
+
+    var pl = state.anglers + (state.anglers===1?" fishing":" fishing") + ", " + state.nonanglers + " not";
+    $("g-party").textContent = total + (total===1?" guest — ":" guests — ") + pl;
+    $("g-int").textContent   = state.interests.length ? state.interests.join(" · ") : "Still deciding";
+
+    var pk = packages();
+    $("g-pk").innerHTML = pk.map(function(p){
+      return '<a href="#"><b>' + esc(p[0]) + '</b><span>' + esc(p[1]) + '</span></a>';
+    }).join("");
+    $("g-pkintro").textContent = state.interests.length
+      ? "Based on what interests you, these are the packages worth looking at first:"
+      : "Here's where most people start:";
+
+    $("g-next").innerHTML = "Your enquiry has gone to <b>" + esc(s.agent) + "</b>, who looks after bookings for " +
+      esc(s.label) + ". You'll hear back personally within one business day — and in season, usually the same afternoon. " +
+      "If it's easier to talk it through, call <b>" + esc(s.phone) + "</b> and ask for " + esc(s.agent.split(" ")[0]) + ".";
+    $("g-sigweb").textContent = s.website;
+    document.querySelector(".mail-bd .sig").innerHTML =
+      "Tight lines,<br><b>" + esc(s.agent) + "</b> · Reservations<br>" + esc(s.label) + " · " + esc(s.place) +
+      "<br>" + esc(s.website);
+
+    /* staff alert */
+    $("s-name").textContent = ($("first").value.trim()+" "+$("last").value.trim()).trim() + " · " +
+      total + (total===1?" guest":" guests") + (m ? " · " + m + " " + yr : "");
+    $("s-meta").textContent = s.website + " · contact-us · received just now";
+    $("s-flags").innerHTML  = flags().map(function(f){
+      return '<span class="flag '+f[0]+'">'+esc(f[1])+'</span>';
+    }).join("");
+    $("s-dates").textContent = dateLine();
+    var kidtxt = $("haskids").checked && $("kidages").value.trim()
+      ? " · children " + $("kidages").value.trim() : ($("haskids").checked ? " · with children" : "");
+    $("s-party").textContent = state.anglers + " anglers, " + state.nonanglers + " non-fishing" + kidtxt;
+    $("s-int").textContent = state.interests.length ? state.interests.join(" · ") : "Not specified";
+    $("s-contact").textContent = $("email").value.trim() + ($("phone").value.trim() ? " · " + $("phone").value.trim() : " · no phone given");
+    var heardTxt = $("heard").options[$("heard").selectedIndex].text;
+    $("s-src").textContent = heardTxt + " · Alaska before: " + $("been").options[$("been").selectedIndex].text.toLowerCase();
+    var msg = $("message").value.trim();
+    $("s-msg").textContent = msg || "No message left.";
+    $("s-msg").style.display = msg ? "" : "none";
+
+    var repeat = $("heard").value === "returning" || $("been").value === "5+";
+    $("s-matchtxt").textContent = repeat
+      ? "This guest says they've stayed before. The matching engine will look for an existing person on this email — open the record before replying; stay history and last survey score are worth reading first."
+      : "The matching engine runs on this email and phone before the agent opens it. If it resolves to an existing person, their stay history appears here instead of this note.";
+
+    /* payload */
+    $("json").innerHTML =
+      '<span class="c">// POST https://api.talonlodge.com/inquiries</span>\n' +
+      '<span class="c">// _server fields are set by the endpoint, never sent by the browser</span>\n\n' +
+      paint(payload());
+  }
+
+  /* ---------- tabs ---------- */
+  var TABS = [["t-guest","p-guest"],["t-staff","p-staff"],["t-json","p-json"]];
+  TABS.forEach(function(t){
+    $(t[0]).addEventListener("click", function(){
+      TABS.forEach(function(x){
+        $(x[0]).classList.toggle("on", x[0]===t[0]);
+        $(x[1]).classList.toggle("on", x[1]===t[1]);
+      });
+    });
+  });
+
+  /* ---------- submit ---------- */
+  $("form").addEventListener("submit", function(e){
+    e.preventDefault();
+    if(!validate()){
+      $("note").textContent = "Check the highlighted fields.";
+      var bad = document.querySelector(".bad"); if(bad) bad.focus();
+      return;
+    }
+    $("note").textContent = "Prototype — nothing is sent.";
+    render();
+    $("form").style.display = "none";
+    $("results").classList.add("show");
+    window.scrollTo({ top:0, behavior:"smooth" });
+  });
+
+  $("back").addEventListener("click", function(){
+    $("results").classList.remove("show");
+    $("form").style.display = "";
+    window.scrollTo({ top:0, behavior:"smooth" });
+  });
+
+  $("reset").addEventListener("click", function(){
+    document.querySelectorAll(".err.show").forEach(function(x){ x.classList.remove("show"); });
+    document.querySelectorAll(".bad").forEach(function(x){ x.classList.remove("bad"); });
+    $("note").textContent = "Prototype — nothing is sent.";
+  });
+
+  ["a-claim","a-avail","a-person"].forEach(function(id){
+    $(id).addEventListener("click", function(){
+      $(id).textContent = "Prototype — not wired";
+      setTimeout(function(){
+        $("a-claim").textContent="Claim & reply";
+        $("a-avail").textContent="Check availability";
+        $("a-person").textContent="Open person record";
+      }, 1400);
+    });
+  });
+
+  applySite();
+  party();
+})();
+</script>
+</body>
+</html>

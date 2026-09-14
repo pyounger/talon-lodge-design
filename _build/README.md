@@ -11,6 +11,7 @@ used to generate them, so the prototypes can be rebuilt or reworked from git alo
   - `styleguide.template.html` → `style-guide.html`
   - `survey-dashboard.template.html` → `survey-dashboard.html`
   - `survey-guest.template.html` → `survey-guest.html`
+  - `contact-form.template.html` → `contact-form.html` (via `assemble-contact.js`)
   - `review.template.html`, `manual.template.html` → project-review / system-overview
 - **`assemble-*.js`** — inject the placeholders and wrap into the standalone HTML.
 - **`extract-cal.js` / `extract2.js` / `extract-final.js`** — parse the 2027 reservation
