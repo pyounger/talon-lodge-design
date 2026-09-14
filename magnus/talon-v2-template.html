@@ -52,7 +52,11 @@
                       text-shadow:0 2px 18px rgba(0,0,0,.5);text-align:center}
 
   /* background video: a 16:9 player oversized so it covers the hero box */
-  .vwrap{position:absolute;inset:0;overflow:hidden;z-index:1}
+  /* The frame stays invisible until the player proves it is alive; a failed one
+     paints its own grey error page, and it sits on top of the photograph. */
+  .vwrap{position:absolute;inset:0;overflow:hidden;z-index:1;
+         opacity:0;transition:opacity .8s ease}
+  .vwrap.playing{opacity:1}
   .vwrap iframe{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
                 width:100vw;height:56.25vw;min-height:100%;min-width:177.78vh;border:0;pointer-events:none}
   .hero .pillars{z-index:3}
@@ -319,21 +323,56 @@ __SCENES__
 </div>
 
 <script>
-  /* The header video is injected rather than hard-coded: a viewer who asks for reduced
-     motion keeps the still, and if the frame is ever blocked the poster is already there. */
+  /* The header film is injected rather than hard-coded: a viewer who asks for reduced
+     motion never requests it, and the still underneath is already in place.
+
+     A cross-origin frame cannot be asked whether it loaded, and a failed one does not
+     fail quietly - it paints its own grey error page straight over the photograph. So
+     the frame is mounted invisible and only revealed once the player itself speaks:
+     any message from player.vimeo.com means it is alive. We also send the handshake
+     the Vimeo API listens for, to give it a second reason to answer. Silence for five
+     seconds and the frame comes out again, leaving the still exactly as it was. */
   (function(){
     var box = document.getElementById('hero-video');
     if (!box) return;
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     var id = box.getAttribute('data-vimeo');
+    if (!id) { box.parentNode.removeChild(box); return; }
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      box.parentNode.removeChild(box); return;
+    }
+
+    var ORIGIN = 'https://player.vimeo.com';
     var f = document.createElement('iframe');
-    f.src = 'https://player.vimeo.com/video/' + id +
+    f.src = ORIGIN + '/video/' + id +
             '?background=1&autoplay=1&loop=1&muted=1&autopause=0&dnt=1';
     f.allow = 'autoplay; fullscreen';
     f.setAttribute('tabindex', '-1');
     f.setAttribute('aria-hidden', 'true');
     f.title = 'Talon Lodge';
+
+    var settled = false;
+    function alive(){
+      if (settled) return;
+      settled = true;
+      window.removeEventListener('message', heard);
+      box.classList.add('playing');
+    }
+    function heard(e){ if (e.origin === ORIGIN) alive(); }
+    window.addEventListener('message', heard);
+
+    f.addEventListener('load', function(){
+      try {
+        f.contentWindow.postMessage({ method: 'addEventListener', value: 'play' }, ORIGIN);
+      } catch (err) { /* a failed frame has no window worth talking to */ }
+    });
+
     box.appendChild(f);
+    setTimeout(function(){
+      if (settled) return;
+      settled = true;
+      window.removeEventListener('message', heard);
+      if (box.parentNode) box.parentNode.removeChild(box);
+    }, 5000);
   })();
 
   (function(){

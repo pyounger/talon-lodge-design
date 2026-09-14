@@ -151,7 +151,9 @@ else:
 RES_IMG  = RES_IMG if EXPORT.get('resort') else {0:'res-talon.jpg', 1:'res-castle.jpg',
                                                  2:'res-postranch.jpg', 3:'res-wailea.jpg',
                                                  4:'res-clayoquot.jpg'}
-TALON     = 'https://claude.ai/code/artifact/5911cc64-baa6-498e-a580-318f24a75b2b'
+# the cinematic page, which is what dist/ serves; the earlier article layout
+# at 5911cc64 is superseded and the homepage should not still point at it
+TALON     = 'https://claude.ai/code/artifact/afd0fd6e-5e0f-4c9d-ae28-2a7a82953f5e'
 POSTRANCH = 'https://claude.ai/code/artifact/c3c2f776-936f-4ce3-87cb-d5fbef19c331'
 CASTLE    = 'https://claude.ai/code/artifact/3ad1ebcd-5d1d-4178-b3b6-8a3c712fc27e'
 WAILEA    = 'https://claude.ai/code/artifact/216078f7-d048-49a8-8e55-b6b1f60125b4'
