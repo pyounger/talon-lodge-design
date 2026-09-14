@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Form Builder — Talon Platform</title>
+<link rel="stylesheet" media="print" onload="this.media='all'"
+  href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Staff console, not a guest-facing form: this wears the platform's own palette
+   (the teal system used across the admin prototypes), while the public enquiry
+   forms wear each property's brand. That split is deliberate. */
+:root{
+  --accent:#0e7c6f; --accent-deep:#0a544c; --accent-soft:#e0efe9;
+  --salmon:#c25e39; --salmon-soft:#f4e5de; --salmon-deep:#9a4529;
+  --gold:#b9892b; --gold-soft:#f6ecd6;
+  --blue:#3b6ea5; --blue-soft:#e4eefa;
+  --paper:#eef3f1; --surface:#ffffff; --surface-2:#e6efeb; --raise:#f5f9f7;
+  --ink:#12292a; --muted:#5a6f6b; --faint:#84958f;
+  --line:#d6e2dd; --line-2:#c1d1cb;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Cascadia Code",Consolas,monospace;
+  --shadow:0 1px 2px rgba(18,42,43,.05),0 10px 26px rgba(18,42,43,.06);
+}
+:root:not([data-theme="light"]){ @media (prefers-color-scheme:dark){
+  --accent:#38b8a6; --accent-deep:#5fd0bf; --accent-soft:#0f2a26;
+  --salmon:#e18a62; --salmon-soft:#33231b; --salmon-deep:#e8a184;
+  --gold:#e0b45e; --gold-soft:#2c2413;
+  --blue:#7aa8dc; --blue-soft:#15243a;
+  --paper:#081210; --surface:#0e1c1a; --surface-2:#152522; --raise:#122220;
+  --ink:#e9f1ed; --muted:#9bada9; --faint:#6f817c;
+  --line:#20332d; --line-2:#2e453e;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35);
+}}
+:root[data-theme="dark"]{
+  --accent:#38b8a6; --accent-deep:#5fd0bf; --accent-soft:#0f2a26;
+  --salmon:#e18a62; --salmon-soft:#33231b; --salmon-deep:#e8a184;
+  --gold:#e0b45e; --gold-soft:#2c2413;
+  --blue:#7aa8dc; --blue-soft:#15243a;
+  --paper:#081210; --surface:#0e1c1a; --surface-2:#152522; --raise:#122220;
+  --ink:#e9f1ed; --muted:#9bada9; --faint:#6f817c;
+  --line:#20332d; --line-2:#2e453e;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 26px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3{text-wrap:balance}
+
+.topbar{display:flex;align-items:center;gap:11px;padding:12px 20px;background:var(--surface);
+  border-bottom:1px solid var(--line);flex-wrap:wrap;position:sticky;top:0;z-index:20}
+.topbar img{height:25px;width:auto}
+.tb-name{display:flex;flex-direction:column;line-height:1.15}
+.tb-name b{font-weight:600;font-size:14px}
+.tb-name span{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--faint)}
+.tools{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.tbtn{font-family:var(--mono);font-size:11px;font-weight:500;border:1px solid var(--line-2);
+  background:var(--surface);color:var(--ink);border-radius:7px;padding:7px 10px;cursor:pointer}
+.tbtn:hover{border-color:var(--accent)}
+.tbtn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.tbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.save{background:var(--accent);border-color:var(--accent);color:#fff;font-family:var(--sans);
+  font-size:13px;font-weight:600;padding:8px 15px;border-radius:8px}
+.save[disabled]{opacity:.45;cursor:not-allowed}
+
+.demobar{background:var(--gold-soft);border-bottom:1px solid var(--line);padding:9px 20px;
+  font-family:var(--mono);font-size:11px;line-height:1.5;color:var(--ink);
+  display:flex;gap:9px;align-items:baseline;flex-wrap:wrap}
+.demobar b{color:var(--accent-deep);letter-spacing:.09em;text-transform:uppercase;flex:0 0 auto}
+
+.shell{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:18px;
+  max-width:1280px;margin:0 auto;padding:20px 20px 60px;align-items:start}
+@media (max-width:1000px){ .shell{grid-template-columns:1fr} }
+
+.col-h{display:flex;align-items:baseline;gap:10px;margin:0 2px 10px;flex-wrap:wrap}
+.col-h h2{font-size:15px;font-weight:600;margin:0}
+.col-h span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--faint)}
+.preview-col{position:sticky;top:70px}
+@media (max-width:1000px){ .preview-col{position:static} }
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  margin-bottom:14px;box-shadow:var(--shadow);overflow:hidden}
+.card-h{padding:13px 16px;border-bottom:1px solid var(--line);display:flex;
+  align-items:center;gap:10px;flex-wrap:wrap;background:var(--raise)}
+.card-h h3{margin:0;font-size:14px;font-weight:600;flex:1;min-width:140px}
+.card-h .sub{font-family:var(--mono);font-size:10px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--faint);width:100%}
+.card-b{padding:14px 16px}
+
+.pill{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;padding:3px 8px;border-radius:20px;border:1px solid;white-space:nowrap}
+.pill.lock{background:var(--surface-2);border-color:var(--line-2);color:var(--muted)}
+.pill.derived{background:var(--blue-soft);border-color:var(--blue);color:var(--blue)}
+.pill.custom{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep)}
+.pill.warn{background:var(--gold-soft);border-color:var(--gold);color:var(--gold)}
+.pill.off{background:var(--salmon-soft);border-color:var(--salmon);color:var(--salmon-deep)}
+
+.rowitem{display:flex;align-items:center;gap:11px;padding:10px 2px;border-bottom:1px solid var(--line)}
+.rowitem:last-child{border-bottom:0}
+.rowitem .ic{font-size:17px;width:22px;text-align:center;flex:0 0 22px}
+.rowitem .nm{flex:1;min-width:0}
+.rowitem .nm b{display:block;font-weight:600;font-size:13.5px}
+.rowitem .nm small{display:block;color:var(--faint);font-size:11.5px;margin-top:1px}
+.rowitem .meta{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.rowitem.isoff .nm b,.rowitem.isoff .ic{opacity:.42}
+
+/* toggle */
+.sw{position:relative;width:40px;height:23px;flex:0 0 40px;border-radius:20px;
+  background:var(--line-2);border:0;cursor:pointer;transition:.15s;padding:0}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;
+  background:#fff;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.25)}
+.sw[aria-checked="true"]{background:var(--accent)}
+.sw[aria-checked="true"]::after{transform:translateX(17px)}
+.sw[disabled]{opacity:.4;cursor:not-allowed}
+.sw:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.locknote{display:flex;gap:9px;align-items:flex-start;background:var(--surface-2);
+  border-left:3px solid var(--muted);border-radius:0 8px 8px 0;padding:11px 13px;
+  font-size:12.5px;color:var(--muted);margin-top:12px}
+.locknote b{color:var(--ink)}
+
+.cat-note{font-size:12.5px;color:var(--muted);background:var(--blue-soft);
+  border:1px solid var(--blue);border-radius:8px;padding:11px 13px;margin-bottom:13px}
+.cat-note b{color:var(--ink)}
+
+.addbtn{width:100%;margin-top:11px;font-family:var(--sans);font-size:13px;font-weight:600;
+  border:1px dashed var(--line-2);background:transparent;color:var(--muted);
+  border-radius:9px;padding:11px;cursor:pointer}
+.addbtn:hover{border-color:var(--accent);color:var(--accent-deep);background:var(--accent-soft)}
+.addbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.qrow{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;
+  padding:10px 2px;border-bottom:1px solid var(--line)}
+.qrow:last-of-type{border-bottom:0}
+.qrow .k{font-family:var(--mono);font-size:10.5px;color:var(--faint);display:block;margin-top:2px}
+.qrow .req{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);border:1px solid var(--line-2);border-radius:5px;padding:3px 7px;cursor:pointer;
+  background:var(--surface)}
+.qrow .req.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep)}
+
+/* ---------- preview ---------- */
+.pv{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;
+  box-shadow:var(--shadow)}
+.pv-bar{background:#f4f4f2;border-bottom:1px solid #e2e2df;padding:8px 13px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:#7c7c76;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pv-bar .dot{width:8px;height:8px;border-radius:50%;background:#d6d6d0;flex:0 0 8px}
+/* the preview renders the guest form, so it uses the brand tokens, not the console's */
+.pv-in{padding:22px 20px;background:#fff;color:#2a2724;
+  font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.pv-in[data-b="all"]{color:#23252b}
+.pv-in[data-b="magnus"]{color:#222}
+.pv-sec{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:#8a7338;margin:0 0 9px}
+.pv-in[data-b="all"] .pv-sec{color:#3c3f4d}
+.pv-in[data-b="magnus"] .pv-sec{color:#454545}
+.pv-q{font-family:Georgia,"Times New Roman",serif;font-size:20px;margin:0 0 4px;color:inherit}
+.pv-sub{font-size:12.5px;color:#6b6459;margin:0 0 14px}
+.pv-in[data-b="all"] .pv-sub{color:#5f636c}
+.pv-in[data-b="magnus"] .pv-sub{color:#5d5d5d}
+.pv-chips{display:flex;flex-wrap:wrap;gap:6px}
+.pv-chip{font-size:12.5px;padding:8px 11px;border:1px solid #d3cab3;border-radius:2px;
+  background:#fff;color:#2a2724}
+.pv-in[data-b="all"] .pv-chip{border-color:#c3c6cc;color:#23252b}
+.pv-in[data-b="magnus"] .pv-chip{border-color:#c6c6c6;color:#222}
+.pv-chip.sel{background:#f5efe0;border-color:#c1a867;color:#8a7338;font-weight:600}
+.pv-in[data-b="all"] .pv-chip.sel{background:#edeef2;border-color:#5c5f71;color:#3c3f4d}
+.pv-in[data-b="magnus"] .pv-chip.sel{background:#eee;border-color:#454545;color:#262626}
+.pv-hr{height:1px;background:#e6e0d2;border:0;margin:20px 0}
+.pv-in[data-b="all"] .pv-hr{background:#dcdee2}
+.pv-in[data-b="magnus"] .pv-hr{background:#dedede}
+.pv-fl{margin-bottom:13px}
+.pv-fl label{display:block;font-size:9.5px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:#6b6459;margin-bottom:5px}
+.pv-in[data-b="all"] .pv-fl label{color:#5f636c}
+.pv-in[data-b="magnus"] .pv-fl label{color:#5d5d5d}
+.pv-fl .box{border:1px solid #d3cab3;border-radius:2px;padding:9px 11px;font-size:13px;color:#948b7c}
+.pv-in[data-b="all"] .pv-fl .box{border-color:#c3c6cc;color:#8d919a}
+.pv-in[data-b="magnus"] .pv-fl .box{border-color:#c6c6c6;color:#8c8c8c}
+.pv-hid{font-size:12px;color:#8a6d3b;background:#fdf6e6;border:1px solid #e8d9ae;
+  border-radius:3px;padding:9px 11px;margin-top:12px;line-height:1.5}
+
+.foot{max-width:1280px;margin:0 auto;padding:0 20px 46px;font-size:12.5px;
+  color:var(--faint);line-height:1.65}
+.foot code{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img alt="Talon Lodge" src="__EAGLE__">
+  <div class="tb-name"><b>Form Builder</b><span>Enquiry · contact-us</span></div>
+  <div class="tools">
+    <button class="tbtn on" id="p-talon" type="button">Talon Lodge</button>
+    <button class="tbtn" id="p-all" type="button">The Bluff House</button>
+    <button class="tbtn" id="p-magnus" type="button">Magnus Adventures</button>
+    <button class="tbtn" id="theme" type="button">Theme</button>
+    <button class="tbtn save" id="save" type="button" disabled>Saved</button>
+  </div>
+</div>
+
+<div class="demobar">
+  <b>Prototype</b>
+  <span>Activities are the <b>real catalog</b> from Activities admin — names, minimums and seasons are read, never retyped. Toggle one and the preview changes. Nothing saves. See <code>FORM_BUILDER.md</code>.</span>
+</div>
+
+<div class="shell">
+
+  <!-- ================= builder ================= -->
+  <div>
+    <div class="col-h"><h2>What this form asks</h2><span id="prop-name">Talon Lodge &amp; Spa</span></div>
+
+    <!-- locked core -->
+    <div class="card">
+      <div class="card-h">
+        <h3>Core questions</h3>
+        <span class="pill lock">Locked</span>
+        <span class="sub">Always asked · order and wording editable, presence is not</span>
+      </div>
+      <div class="card-b" id="core"></div>
+    </div>
+
+    <!-- activities -->
+    <div class="card">
+      <div class="card-h">
+        <h3>Activities offered on this form</h3>
+        <span class="pill derived">From catalog</span>
+        <span class="sub" id="act-count">9 of 12 shown</span>
+      </div>
+      <div class="card-b">
+        <div class="cat-note">
+          <b>These come from Activities admin.</b> Names, descriptions, party minimums and
+          seasons are read from the activity record — change them there and every form
+          follows. Here you only choose what this property offers on this form.
+        </div>
+        <div id="acts"></div>
+      </div>
+    </div>
+
+    <!-- custom questions -->
+    <div class="card">
+      <div class="card-h">
+        <h3>Extra questions</h3>
+        <span class="pill custom">Configurable</span>
+        <span class="sub">Stored as <code>field_definitions</code> rows · target <code>inquiry</code></span>
+      </div>
+      <div class="card-b">
+        <div id="qs"></div>
+        <button class="addbtn" id="addq" type="button">+ Add a question</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= preview ================= -->
+  <div class="preview-col">
+    <div class="col-h"><h2>What the guest sees</h2><span>Live</span></div>
+    <div class="pv">
+      <div class="pv-bar"><span class="dot"></span><span id="pv-host">talonlodge.com/contact</span></div>
+      <div class="pv-in" id="pv" data-b="talon">
+        <p class="pv-sec">3 · What</p>
+        <p class="pv-q">What are you interested in?</p>
+        <p class="pv-sub">Pick anything that appeals. This shapes the packages we suggest — nothing is committed.</p>
+        <div class="pv-chips" id="pv-chips"></div>
+        <div class="pv-hid" id="pv-hidden" hidden></div>
+        <hr class="pv-hr">
+        <p class="pv-sec">4 · You</p>
+        <div id="pv-fields"></div>
+      </div>
+    </div>
+    <p class="foot" style="padding:12px 2px 0">
+      The preview wears the property's brand; this console wears the platform's.
+      Guest-facing forms match their site — see <code>contact-form.html</code>.
+    </p>
+  </div>
+</div>
+
+<p class="foot">
+  Prototype for <code>talon-lodge-design</code>. Activity records are the live catalog from
+  <code>activities-admin.html</code>. Spec: <code>FORM_BUILDER.md</code> · form:
+  <code>contact-form.html</code> · contract: <code>INQUIRY_INTAKE.md</code>.
+</p>
+
+<script>
+(function(){
+  "use strict";
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+  /* The real catalog, as it stands in activities-admin.html. */
+  var ACTS = [
+    {id:1, name:"Massage",                           icon:"💆",  min:null, season:"",           avail:"stay",               status:"active"},
+    {id:12,name:"Day Spa",                           icon:"🧖",  min:null, season:"",           avail:"stay",               status:"active"},
+    {id:8, name:"Whale & Wildlife Viewing",          icon:"🐋",  min:4,    season:"",           avail:"any",                status:"active"},
+    {id:5, name:"Float Plane Tour",                  icon:"🛩️", min:2,    season:"",           avail:"any",                status:"active"},
+    {id:3, name:"ATV Kruzof Island Tour",            icon:"🏍️", min:2,    season:"",           avail:"any",                status:"active"},
+    {id:4, name:"Kayak & Lunch",                     icon:"🛶",  min:2,    season:"",           avail:"any",                status:"active"},
+    {id:9, name:"Hiking",                            icon:"🥾",  min:null, season:"",           avail:"any",                status:"active"},
+    {id:6, name:"Cooking Class",                     icon:"👨‍🍳",min:4,    season:"",           avail:"stay",               status:"active"},
+    {id:11,name:"Additional Saltwater Sportfishing", icon:"🐟",  min:null, season:"",           avail:"arrival_departure",  status:"active"},
+    {id:10,name:"Freshwater Fishing — By Boat",      icon:"🎣",  min:2,    season:"",           avail:"any",                status:"active"},
+    {id:2, name:"Freshwater Fishing by Float Plane", icon:"🛩️", min:2,    season:"",           avail:"any",                status:"active"},
+    {id:7, name:"Freshwater Fishing — By ATV",       icon:"🎣",  min:2,    season:"Aug & Sept", avail:"any",                status:"seasonal"}
+  ];
+
+  var CORE = [
+    {k:"name",       label:"First and last name", why:"Identifies the person record"},
+    {k:"email",      label:"Email",               why:"Required — the auto-reply and every future match depend on it", hard:true},
+    {k:"dates",      label:"Dates of interest",   why:"Arrival, departure and how firm they are"},
+    {k:"party_size", label:"Guest count",         why:"Fixed where the property books as a whole house"},
+    {k:"message",    label:"Anything else",       why:"Free text"}
+  ];
+
+  var PROPS = {
+    talon:  {name:"Talon Lodge & Spa", host:"talonlodge.com/contact", brand:"talon",
+             off:[], qs:["heard","been"]},
+    all:    {name:"The Bluff House",   host:"alaskaluxurylodge.com/enquire", brand:"all",
+             off:[6,7,2,10], qs:["heard","been","occasion"]},
+    magnus: {name:"Magnus Adventures", host:"magnusadventures.com/contact", brand:"magnus",
+             off:[1,12,6], qs:["heard"]}
+  };
+
+  var QBANK = {
+    heard:    {key:"how_heard",              label:"How did you hear about us?", type:"enum",    input:"select",   req:false},
+    been:     {key:"times_to_alaska_before", label:"Been to Alaska before?",     type:"enum",    input:"select",   req:false},
+    occasion: {key:"purpose_of_travel",      label:"Is this a special occasion?",type:"string",  input:"text",     req:false},
+    diet:     {key:"dietary_notes",          label:"Dietary requirements",       type:"text",    input:"textarea", req:false}
+  };
+
+  var prop = "talon", dirty = false;
+  var off = {}, qs = {};
+  Object.keys(PROPS).forEach(function(k){
+    off[k] = PROPS[k].off.slice();
+    qs[k]  = PROPS[k].qs.slice();
+  });
+
+  function markDirty(){
+    dirty = true;
+    $("save").disabled = false;
+    $("save").textContent = "Save changes";
+  }
+
+  /* ---------- render: locked core ---------- */
+  function drawCore(){
+    $("core").innerHTML = CORE.map(function(c){
+      return '<div class="rowitem">' +
+        '<span class="ic">🔒</span>' +
+        '<span class="nm"><b>' + esc(c.label) + '</b><small>' + esc(c.why) + '</small></span>' +
+        '<span class="meta">' + (c.hard ? '<span class="pill off">Cannot be optional</span>' : '') + '</span>' +
+        '<button class="sw" role="switch" aria-checked="true" aria-label="' + esc(c.label) + '" disabled></button>' +
+      '</div>';
+    }).join("") +
+    '<div class="locknote"><span>🛡️</span><span><b>Why these are locked.</b> The matching run over the 2026 exports found <b>1,115 name-only people with no email or phone</b> — almost all of them enquiries. That pile exists because intake was loose. If email can be switched off here, it gets rebuilt.</span></div>';
+  }
+
+  /* ---------- render: activities ---------- */
+  function badges(a){
+    var b = [];
+    if(a.status === "seasonal") b.push('<span class="pill warn">Seasonal · ' + esc(a.season) + '</span>');
+    if(a.min) b.push('<span class="pill derived">Min ' + a.min + '</span>');
+    if(a.avail === "arrival_departure") b.push('<span class="pill derived">Travel days</span>');
+    if(a.avail === "stay") b.push('<span class="pill derived">During stay</span>');
+    return b.join("");
+  }
+  function drawActs(){
+    var hidden = off[prop];
+    $("acts").innerHTML = ACTS.map(function(a){
+      var on = hidden.indexOf(a.id) < 0;
+      return '<div class="rowitem' + (on ? '' : ' isoff') + '">' +
+        '<span class="ic">' + a.icon + '</span>' +
+        '<span class="nm"><b>' + esc(a.name) + '</b><small>' +
+          (on ? 'Shown on this form' : 'Not offered here') + '</small></span>' +
+        '<span class="meta">' + badges(a) + '</span>' +
+        '<button class="sw" role="switch" aria-checked="' + on + '" data-act="' + a.id +
+          '" aria-label="Offer ' + esc(a.name) + '"></button>' +
+      '</div>';
+    }).join("");
+    $("act-count").textContent = (ACTS.length - hidden.length) + " of " + ACTS.length + " shown";
+  }
+  $("acts").addEventListener("click", function(e){
+    var b = e.target.closest(".sw"); if(!b) return;
+    var id = +b.dataset.act, arr = off[prop], i = arr.indexOf(id);
+    if(i >= 0) arr.splice(i,1); else arr.push(id);
+    markDirty(); drawActs(); drawPreview();
+  });
+
+  /* ---------- render: custom questions ---------- */
+  function drawQs(){
+    var mine = qs[prop];
+    $("qs").innerHTML = mine.map(function(k){
+      var q = QBANK[k];
+      return '<div class="qrow">' +
+        '<span><b>' + esc(q.label) + '</b><span class="k">' + esc(q.key) + ' · ' + q.type + ' · ' + q.input + '</span></span>' +
+        '<button class="req' + (q.req ? ' on' : '') + '" data-req="' + k + '" type="button">' +
+          (q.req ? "Required" : "Optional") + '</button>' +
+        '<button class="sw" role="switch" aria-checked="true" data-q="' + k + '" aria-label="Ask ' + esc(q.label) + '"></button>' +
+      '</div>';
+    }).join("") || '<p style="color:var(--faint);font-size:13px;margin:4px 0">No extra questions on this form.</p>';
+  }
+  $("qs").addEventListener("click", function(e){
+    var sw = e.target.closest(".sw");
+    if(sw){
+      var k = sw.dataset.q, arr = qs[prop], i = arr.indexOf(k);
+      if(i >= 0) arr.splice(i,1);
+      markDirty(); drawQs(); drawPreview(); return;
+    }
+    var rq = e.target.closest(".req");
+    if(rq){
+      var key = rq.dataset.req;
+      QBANK[key].req = !QBANK[key].req;
+      markDirty(); drawQs(); drawPreview();
+    }
+  });
+  $("addq").addEventListener("click", function(){
+    var arr = qs[prop];
+    var next = Object.keys(QBANK).filter(function(k){ return arr.indexOf(k) < 0; })[0];
+    if(!next){ this.textContent = "Every sample question is already on this form";
+               var t=this; setTimeout(function(){ t.textContent = "+ Add a question"; },1600); return; }
+    arr.push(next); markDirty(); drawQs(); drawPreview();
+  });
+
+  /* ---------- render: preview ---------- */
+  function drawPreview(){
+    var p = PROPS[prop], hidden = off[prop];
+    $("pv").setAttribute("data-b", p.brand);
+    $("pv-host").textContent = p.host;
+    $("prop-name").textContent = p.name;
+
+    var shown = ACTS.filter(function(a){ return hidden.indexOf(a.id) < 0; });
+    $("pv-chips").innerHTML = shown.map(function(a,i){
+      return '<span class="pv-chip' + (i < 2 ? ' sel' : '') + '">' + esc(a.name) + '</span>';
+    }).join("") || '<span style="color:#948b7c;font-size:12.5px">No activities offered on this form.</span>';
+
+    // the payoff of reading the catalog rather than retyping it
+    var seasonal = shown.filter(function(a){ return a.status === "seasonal"; });
+    var mins = shown.filter(function(a){ return a.min && a.min > 2; });
+    var notes = [];
+    if(seasonal.length) notes.push("<b>" + esc(seasonal[0].name) + "</b> only appears for enquiries in " +
+      esc(seasonal[0].season) + " — the catalog marks it seasonal.");
+    if(mins.length) notes.push("<b>" + esc(mins[0].name) + "</b> needs " + mins[0].min +
+      " guests; a smaller party is flagged before the agent replies.");
+    if(notes.length){
+      $("pv-hidden").hidden = false;
+      $("pv-hidden").innerHTML = "Read from the catalog, not typed here: " + notes.join(" ");
+    } else {
+      $("pv-hidden").hidden = true;
+    }
+
+    var fields = '<div class="pv-fl"><label>First name *</label><div class="box">Margaret</div></div>' +
+                 '<div class="pv-fl"><label>Email *</label><div class="box">m.ellison@example.com</div></div>';
+    fields += qs[prop].map(function(k){
+      var q = QBANK[k];
+      return '<div class="pv-fl"><label>' + esc(q.label) + (q.req ? ' *' : '') + '</label>' +
+             '<div class="box">' + (q.input === "select" ? "Select…" : "—") + '</div></div>';
+    }).join("");
+    $("pv-fields").innerHTML = fields;
+  }
+
+  /* ---------- chrome ---------- */
+  ["talon","all","magnus"].forEach(function(k){
+    $("p-"+k).addEventListener("click", function(){
+      prop = k;
+      ["talon","all","magnus"].forEach(function(x){ $("p-"+x).classList.toggle("on", x===k); });
+      drawActs(); drawQs(); drawPreview();
+    });
+  });
+  $("theme").addEventListener("click", function(){
+    var cur = document.documentElement.getAttribute("data-theme");
+    var next = cur === "dark" ? "light" : cur === "light" ? "dark"
+      : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "light" : "dark");
+    document.documentElement.setAttribute("data-theme", next);
+  });
+  $("save").addEventListener("click", function(){
+    this.textContent = "Prototype — not saved";
+    this.disabled = true;
+    var t = this;
+    setTimeout(function(){ t.textContent = "Saved"; dirty = false; }, 1600);
+  });
+
+  drawCore(); drawActs(); drawQs(); drawPreview();
+})();
+</script>
+</body>
+</html>

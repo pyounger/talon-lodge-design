@@ -128,10 +128,10 @@ nothing for an hour enquires at three other lodges.
 
 - **From** the property, **reply-to the assigned agent** — never a no-reply address. A
   reply must land on a person and thread onto the same enquiry.
-- **Recaps their own answers** — lodge, dates, party split, interests. A generic
+- **Recaps their own answers** — lodge, dates, guest count, interests. A generic
   acknowledgement tells them nothing and reads as automated.
 - **Suggests packages from their interests** (see the prototype for the mapping —
-  saltwater + viewing → Alaska Adventure Combo, and so on).
+  wildlife + water → Alaska Adventure Combo, and so on).
 - **Names the agent and gives a timeframe.** "Dana will come back to you within one
   business day" is a commitment; "we'll be in touch" is not.
 - **States that nothing is held or charged.** Removes the main reason people hesitate.
@@ -154,7 +154,7 @@ nothing for an hour enquires at three other lodges.
 
 ---
 
-## Three things the form does deliberately
+## Four things the form does deliberately
 
 **One guest count, never split by activity.** Everyone in the party is a *guest*. There is
 no separate rate for people who don't fish, so the form does not ask who is and isn't —
@@ -168,7 +168,7 @@ the payload tells the endpoint the number was not the guest's choice.
 
 **"Not sure yet" is a first-class answer on dates.** Many enquirers have no dates — that is
 why they are enquiring. Forcing a date produces a fictional one. Choosing it reveals a
-month picker and a note about when kings and silvers run.
+month picker and a note that every month of the season offers something different.
 
 **"Enquiring as" — self, group organiser, or travel agent.** The matching run found 16
 shared-email-across-different-surnames cases flagged as an *over-merge trap*. Capturing
@@ -229,6 +229,9 @@ the brands, and is worth reconciling separately.
 ---
 
 ## Related
+
+Form configuration — which activities and questions appear, per property — is specified
+separately in [`FORM_BUILDER.md`](FORM_BUILDER.md).
 
 `DB_SCHEMA.md` §F · `DATABASE_DESIGN.md` · `MATCHING_RULES.md` · `MODULE_ROADMAP.md`
 Phase 2 · [`contact-form.html`](contact-form.html)

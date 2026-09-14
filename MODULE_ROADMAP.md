@@ -23,6 +23,7 @@ Nothing in the lifecycle works until these exist. Built first.
 | Multi-site tenancy | ⬜ | Talon, Bluff House, Alaska Luxury, Magnus |
 | Object storage (photos/videos/licenses) | ⬜ | S3, presigned URLs |
 | Settings table | ⬜ | Config in-app, not config files |
+| Meta-schema engine — dynamic forms | ⬜ | DB_SCHEMA §0 (locked); spec for intake: [FORM_BUILDER.md](FORM_BUILDER.md) + [form-builder.html](form-builder.html) |
 | API scaffold (Laravel) | ⬜ | Awaiting `talon-lodge-api` repo |
 | UI shell — staff/admin (Angular + Daxa) | ⬜ | Theme captured in STYLE_GUIDE.md; awaiting `talon-lodge-ui` repo |
 | UI shell — guest portal (Tailwind) | 🟡 | Separate front-end per [UI_MAPPING.md](UI_MAPPING.md); both read `brand/_talon-tokens.scss` |
