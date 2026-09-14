@@ -13,6 +13,8 @@ used to generate them, so the prototypes can be rebuilt or reworked from git alo
   - `survey-guest.template.html` → `survey-guest.html`
   - `contact-form.template.html` → `contact-form.html` (via `assemble-contact.js`)
   - `form-builder.template.html` → `form-builder.html` (via `assemble-formbuilder.js`)
+  - `in-situ.template.html` → `contact-form-in-situ.html` (via `assemble-insitu.js`;
+    embeds the built `contact-form.html` as base64, so rebuild the form first)
   - `review.template.html`, `manual.template.html` → project-review / system-overview
 - **`assemble-*.js`** — inject the placeholders and wrap into the standalone HTML.
 - **`extract-cal.js` / `extract2.js` / `extract-final.js`** — parse the 2027 reservation

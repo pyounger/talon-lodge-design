@@ -41,7 +41,7 @@ Nothing in the lifecycle works until these exist. Built first.
 ## Phase 2 — Acquisition & Sales
 | Module | Status | Depends on |
 |---|---|---|
-| Leads Management | ⬜ | Person record · intake designed: [contact-form.html](contact-form.html) + [INQUIRY_INTAKE.md](INQUIRY_INTAKE.md) |
+| Leads Management | ⬜ | Person record · intake designed: [contact-form.html](contact-form.html) + [INQUIRY_INTAKE.md](INQUIRY_INTAKE.md) · [in situ on the sites](contact-form-in-situ.html) |
 | Reservation Inquiry (receive → approve → bill) | ⬜ | Billing, Package |
 | Reservations Calendar & Availability | ⬜ | Availability engine, Rooms/Boats |
 | Availability Widget (embeddable) | ⬜ | Availability engine, Multi-site |

@@ -233,5 +233,8 @@ the brands, and is worth reconciling separately.
 Form configuration — which activities and questions appear, per property — is specified
 separately in [`FORM_BUILDER.md`](FORM_BUILDER.md).
 
+To see the form inside each site's page chrome, at desktop, tablet and phone widths:
+[`contact-form-in-situ.html`](contact-form-in-situ.html).
+
 `DB_SCHEMA.md` §F · `DATABASE_DESIGN.md` · `MATCHING_RULES.md` · `MODULE_ROADMAP.md`
 Phase 2 · [`contact-form.html`](contact-form.html)

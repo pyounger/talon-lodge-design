@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Enquiry Form In Situ</title>
+<link rel="stylesheet" media="print" onload="this.media='all'"
+  href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Jost:wght@300;400;500;600&family=Lora:wght@400;500;600&family=Source+Sans+3:wght@300;400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --stage:#3a3d3c; --chrome:#f3f6f5; --ink:#12292a; --muted:#5a6f6b; --faint:#84958f;
+  --line:#d6e2dd; --line-2:#c1d1cb; --accent:#0e7c6f; --accent-soft:#e0efe9;
+  --gold-soft:#f6ecd6; --surface:#fff;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--stage);color:var(--ink);font-family:var(--sans);font-size:14px}
+
+/* ---- prototype chrome ---- */
+.topbar{display:flex;align-items:center;gap:11px;padding:11px 18px;background:var(--chrome);
+  border-bottom:1px solid var(--line);flex-wrap:wrap;position:sticky;top:0;z-index:30}
+.topbar img{height:24px;width:auto}
+.tb-name{display:flex;flex-direction:column;line-height:1.15}
+.tb-name b{font-family:var(--mono);font-size:12px;font-weight:600}
+.tb-name span{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--faint)}
+.grp{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.grp + .grp{margin-left:10px;padding-left:12px;border-left:1px solid var(--line-2)}
+.tools{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.tbtn{font-family:var(--mono);font-size:11px;font-weight:500;border:1px solid var(--line-2);
+  background:#fff;color:#3c4c49;border-radius:6px;padding:6px 10px;cursor:pointer}
+.tbtn:hover{border-color:var(--accent)}
+.tbtn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.tbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.demobar{background:var(--gold-soft);border-bottom:1px solid #e6dcc0;padding:9px 18px;
+  font-family:var(--mono);font-size:11px;line-height:1.55;color:#4b4534;
+  display:flex;gap:9px;align-items:baseline;flex-wrap:wrap}
+.demobar b{color:#8a7338;letter-spacing:.09em;text-transform:uppercase;flex:0 0 auto}
+
+/* ---- the stage ---- */
+.stage{padding:26px 18px 54px;display:flex;justify-content:center}
+.device{background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.4);
+  width:1120px;max-width:100%;transition:width .18s}
+.device[data-w="tablet"]{width:834px}
+.device[data-w="phone"]{width:390px}
+.urlbar{background:#e9ebea;border-bottom:1px solid #d3d7d6;padding:8px 12px;display:flex;
+  gap:8px;align-items:center}
+.urlbar .dots{display:flex;gap:5px}
+.urlbar .dots i{width:9px;height:9px;border-radius:50%;background:#c5cac9;display:block}
+.urlbar .u{flex:1;background:#fff;border:1px solid #d9dcdb;border-radius:5px;padding:4px 10px;
+  font-family:var(--mono);font-size:11px;color:#5c6664;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ===================================================================
+   Site chrome REPRODUCED from the September 2026 screenshots.
+   Colours are the measured values; this is a stand-in for the live
+   page, not a copy of it. Photography is represented by a tone band.
+   =================================================================== */
+.site{background:#fff}
+
+/* --- Talon Lodge & Spa ------------------------------------------- */
+.t-hero{background:linear-gradient(180deg,#4a5654,#2f3a38);padding:26px 20px 20px;text-align:center;position:relative}
+.t-hero .burger{position:absolute;left:16px;top:18px;width:30px;height:24px;border:1px solid rgba(255,255,255,.5);
+  border-radius:4px;display:flex;flex-direction:column;justify-content:center;gap:3px;padding:0 5px}
+.t-hero .burger i{display:block;height:1.5px;background:rgba(255,255,255,.85)}
+.t-hero .tf{position:absolute;right:16px;top:22px;font-size:13px;font-weight:700;color:#c1a867;letter-spacing:.01em}
+.t-word{font-family:"Cormorant Garamond",Georgia,serif;font-size:34px;letter-spacing:.16em;
+  color:#c1a867;font-weight:500;line-height:1}
+.t-word small{display:block;font-size:11px;letter-spacing:.42em;margin-top:3px;color:#c1a867;opacity:.9}
+.t-rule{height:1px;background:#c1a867;opacity:.75;margin-top:18px}
+.t-photo{height:74px;background:
+  linear-gradient(115deg,#5e6d63 0%,#7d8c77 28%,#54636b 55%,#6c7b6e 78%,#495a58 100%)}
+.t-book{display:flex;gap:9px;padding:12px 16px;background:#fff;border-bottom:1px solid #e6e0d2;flex-wrap:wrap}
+.t-book .sel{flex:1;min-width:120px;border:1px solid #2a2724;background:#fff;padding:9px 11px;
+  font-size:10.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#2a2724;
+  display:flex;justify-content:space-between;align-items:center;gap:8px}
+.t-book .sel::after{content:"▾";font-size:10px;opacity:.65}
+.t-book .go{border:1px solid #c1a867;background:#c1a867;color:#fff;padding:9px 16px;font-size:10.5px;
+  font-weight:600;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+.device[data-w="phone"] .t-hero{padding-top:14px}
+.device[data-w="phone"] .t-hero .tf{position:static;display:block;text-align:right;
+  font-size:11.5px;margin:0 0 12px}
+.device[data-w="phone"] .t-hero .burger{top:12px}
+.device[data-w="phone"] .t-word{font-size:27px}
+.device[data-w="phone"] .b-nav .links{display:none}
+.t-foot{background:#494546;color:#cfc9c2;padding:26px 20px;text-align:center;font-size:12px;line-height:1.9}
+.t-foot .w{font-family:"Cormorant Garamond",Georgia,serif;font-size:22px;letter-spacing:.16em;color:#c1a867;
+  margin-bottom:10px}
+.t-foot a{color:#cfc9c2;text-decoration:none;margin:0 9px}
+
+/* --- The Bluff House --------------------------------------------- */
+.b-nav{background:linear-gradient(180deg,#9a9897,#a7a5a4);padding:9px 16px;display:flex;
+  align-items:center;gap:14px;flex-wrap:wrap}
+.b-nav .brand{font-family:Lora,Georgia,serif;font-size:12.5px;color:#fff;letter-spacing:.04em;
+  text-shadow:0 1px 1px rgba(0,0,0,.25)}
+.b-nav .brand b{display:block;font-size:14px;letter-spacing:.1em;text-transform:uppercase}
+.b-nav .links{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
+.b-nav .links span{font-size:11.5px;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.25)}
+.b-book{display:flex;gap:9px;padding:11px 16px;background:#f3f3f3;border-bottom:1px solid #dcdee2;flex-wrap:wrap}
+.b-book .sel{flex:1;min-width:118px;border:1px solid #b6b6b6;background:#fff;padding:9px 11px;
+  font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#3d4046;
+  display:flex;justify-content:space-between;align-items:center;gap:8px}
+.b-book .sel::after{content:"▾";font-size:10px;opacity:.6}
+.b-book .go{border:1px solid #777;background:#777;color:#fff;padding:9px 16px;font-size:10.5px;
+  font-weight:600;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.b-foot{background:#040404;color:#9a9a9a;padding:26px 20px;text-align:center;font-size:12px;line-height:1.9}
+.b-foot .w{font-family:Lora,Georgia,serif;font-size:17px;letter-spacing:.12em;text-transform:uppercase;
+  color:#e6e6e6;margin-bottom:9px}
+.b-foot a{color:#9a9a9a;text-decoration:none;margin:0 9px}
+
+/* --- Magnus (no assets) ------------------------------------------- */
+.m-nav{background:#1a1a1a;padding:13px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.m-nav .brand{font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:#eee;font-weight:600}
+.m-nav .links{margin-left:auto;display:flex;gap:14px}
+.m-nav .links span{font-size:11.5px;color:#bbb}
+.m-note{background:#fdf0ea;border-bottom:1px solid #f0d8cc;color:#8a4326;padding:10px 16px;
+  font-family:var(--mono);font-size:11px;line-height:1.55}
+.m-foot{background:#1a1a1a;color:#9a9a9a;padding:24px 20px;text-align:center;font-size:12px}
+
+.repro{background:#fafcfb;border-top:1px solid var(--line);padding:9px 14px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:#8b9a96;text-align:center}
+
+/* the embedded form */
+.frame{width:100%;border:0;display:block;background:#fff}
+
+.notes{max-width:1120px;margin:0 auto;padding:0 18px 50px;color:#c8d2d0;font-size:13px;line-height:1.7}
+.notes h3{color:#fff;font-size:14px;margin:22px 0 8px}
+.notes code{font-family:var(--mono);font-size:12px;color:#e0d7bb}
+.notes ul{margin:0;padding-left:19px}
+.notes li{margin-bottom:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img alt="Talon Lodge" src="__EAGLE__">
+  <div class="tb-name"><b>In Situ</b><span>Enquiry form on the sites</span></div>
+  <div class="tools">
+    <div class="grp">
+      <button class="tbtn on" id="s-talon" type="button">Talon</button>
+      <button class="tbtn" id="s-all" type="button">Bluff House</button>
+      <button class="tbtn" id="s-magnus" type="button">Magnus</button>
+    </div>
+    <div class="grp">
+      <button class="tbtn on" id="w-desktop" type="button">Desktop</button>
+      <button class="tbtn" id="w-tablet" type="button">Tablet</button>
+      <button class="tbtn" id="w-phone" type="button">Phone</button>
+    </div>
+  </div>
+</div>
+
+<div class="demobar">
+  <b>Reproduction</b>
+  <span>The header, booking bar and footer are <b>rebuilt from the September screenshots</b> using the measured colours — a stand-in for the live page, not a copy of it. The form between them is the real <code>contact-form.html</code>, with its prototype chrome stripped, exactly as it would embed.</span>
+</div>
+
+<div class="stage">
+  <div class="device" id="device" data-w="desktop">
+    <div class="urlbar">
+      <span class="dots"><i></i><i></i><i></i></span>
+      <span class="u" id="url">talonlodge.com/contact-us</span>
+    </div>
+    <div class="site">
+      <div id="chrome-top"></div>
+      <iframe class="frame" id="frame" title="Enquiry form as embedded"></iframe>
+      <div id="chrome-bot"></div>
+      <div class="repro">Site chrome above and below is a reproduction · the form is the live prototype</div>
+    </div>
+  </div>
+</div>
+
+<div class="notes">
+  <h3>What to look at</h3>
+  <ul>
+    <li><b>Does it read as part of the page?</b> The form takes the site's ground, accent and type, so the seam should be the booking bar, not a colour change.</li>
+    <li><b>Phone width.</b> Switch to Phone — the date pair, the four date-flexibility buttons and the interest chips all reflow to one column. This is where embedded forms usually break.</li>
+    <li><b>The Bluff House</b> shows the fixed party of six instead of a stepper.</li>
+    <li><b>Magnus</b> is deliberately unstyled, pending brand assets.</li>
+  </ul>
+  <h3>Known gaps in this reproduction</h3>
+  <ul>
+    <li>Talon's hero is photography; here it is a tone band. The gold wordmark, rule and booking bar are placed as measured.</li>
+    <li>The real sites' typefaces could not be identified from screenshots — Cormorant Garamond and Lora stand in.</li>
+  </ul>
+</div>
+
+<script type="text/plain" id="form-src">__FORM_B64__</script>
+<script>
+(function(){
+  "use strict";
+  function $(id){ return document.getElementById(id); }
+
+  var FORM = decodeURIComponent(escape(window.atob($("form-src").textContent.trim())));
+
+  var CHROME = {
+    talon: {
+      url:"talonlodge.com/contact-us",
+      top:'<div class="t-hero">' +
+            '<div class="burger"><i></i><i></i><i></i></div>' +
+            '<div class="tf">Toll Free: 800-536-1864</div>' +
+            '<div class="t-word">TALON<small>lodge + spa</small></div>' +
+            '<div class="t-rule"></div>' +
+          '</div>' +
+          '<div class="t-photo"></div>' +
+          '<div class="t-book">' +
+            '<span class="sel">Adventure Year</span>' +
+            '<span class="sel">Month/Date</span>' +
+            '<span class="sel">Number of Guests</span>' +
+            '<span class="go">Check Availability</span>' +
+          '</div>',
+      bot:'<div class="t-foot"><div class="w">TALON</div>' +
+          '<a href="#">Privacy Policy</a><a href="#">Rates</a><a href="#">FAQs</a><a href="#">Contact Us</a>' +
+          '<div style="margin-top:10px;opacity:.75">Call 800.536.1864 · P.O. Box 6506, Sitka, AK, 99835 US</div></div>'
+    },
+    all: {
+      url:"alaskaluxurylodge.com/enquire",
+      top:'<div class="b-nav">' +
+            '<div class="brand">The<b>Bluff House</b></div>' +
+            '<div class="links"><span>Accommodations</span><span>Cuisine</span><span>Alaska Adventures</span><span>Talon Lodge</span></div>' +
+          '</div>' +
+          '<div class="b-book">' +
+            '<span class="sel">Adventure Year</span>' +
+            '<span class="sel">Month/Date</span>' +
+            '<span class="sel">Number of Guests</span>' +
+            '<span class="go">Check Availability</span>' +
+          '</div>',
+      bot:'<div class="b-foot"><div class="w">The Bluff House</div>' +
+          '<a href="#">Privacy Policy</a><a href="#">Rates</a><a href="#">FAQs</a><a href="#">Contact Us</a>' +
+          '<div style="margin-top:10px;opacity:.8">at Talon Lodge · Sitka, Alaska</div></div>'
+    },
+    magnus: {
+      url:"magnusadventures.com/contact",
+      top:'<div class="m-nav"><div class="brand">Magnus Adventures</div>' +
+            '<div class="links"><span>Trips</span><span>About</span><span>Contact</span></div></div>' +
+          '<div class="m-note">No brand assets for this site yet — the chrome and the form are both placeholder neutral. Send the site and both become a third brand.</div>',
+      bot:'<div class="m-foot">Magnus Adventures · Southeast Alaska</div>'
+    }
+  };
+
+  var site = "talon", width = "desktop";
+
+  // size the iframe to its content; the form changes height as sections reveal
+  function fit(){
+    var f = $("frame");
+    try{
+      var d = f.contentDocument;
+      if(!d || !d.body) return;
+      var h = Math.max(d.documentElement.scrollHeight, d.body.scrollHeight);
+      if(h > 80) f.style.height = h + "px";
+      if(!d.__bound){
+        d.__bound = true;
+        d.addEventListener("click", function(){ setTimeout(fit, 140); });
+        d.addEventListener("change", function(){ setTimeout(fit, 140); });
+      }
+    }catch(e){ f.style.height = "2600px"; }
+  }
+
+  function load(){
+    var c = CHROME[site];
+    $("url").textContent = c.url;
+    $("chrome-top").innerHTML = c.top;
+    $("chrome-bot").innerHTML = c.bot;
+
+    // set the brand on the embedded copy, then hand it to the iframe
+    var html = FORM.replace(/<html lang="en" data-brand="[^"]*"/, '<html lang="en" data-brand="' + site + '"');
+    var f = $("frame");
+
+    // attach before srcdoc — a srcdoc load can commit before a later-assigned handler
+    f.onload = fit;
+    f.srcdoc = html;
+    // and don't rely on load alone: re-measure for a couple of seconds, then on interaction
+    var tries = 0, iv = setInterval(function(){ fit(); if(++tries > 20) clearInterval(iv); }, 120);
+    fit();
+  }
+
+  ["talon","all","magnus"].forEach(function(k){
+    $("s-"+k).addEventListener("click", function(){
+      site = k;
+      ["talon","all","magnus"].forEach(function(x){ $("s-"+x).classList.toggle("on", x===k); });
+      load();
+    });
+  });
+  ["desktop","tablet","phone"].forEach(function(k){
+    $("w-"+k).addEventListener("click", function(){
+      width = k;
+      ["desktop","tablet","phone"].forEach(function(x){ $("w-"+x).classList.toggle("on", x===k); });
+      $("device").setAttribute("data-w", k);
+      setTimeout(fit, 260); setTimeout(fit, 600);
+    });
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>
