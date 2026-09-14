@@ -173,6 +173,8 @@ input.bad,select.bad{border-color:var(--alert);background:var(--alert-soft)}
 .count button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .count output{font-family:var(--label);font-size:19px;font-weight:600;font-variant-numeric:tabular-nums;
   min-width:2ch;text-align:center;color:var(--ink)}
+.count.fixed button{display:none}
+.count.fixed output{font-size:22px}
 .count .cl{font-family:var(--label);font-size:11px;font-weight:600;letter-spacing:.09em;
   text-transform:uppercase;color:var(--muted);line-height:1.35}
 .count .cl span{font-weight:400;letter-spacing:.04em;color:var(--faint)}
@@ -328,7 +330,7 @@ pre .c{color:#8e8a80;font-style:italic}
   <p class="sec-label">1 · When</p>
   <div class="card">
     <p class="q">Dates of interest</p>
-    <p class="qsub">Our season runs May through September. If you're not sure yet, say so — we'll suggest the best weeks for what you want to catch.</p>
+    <p class="qsub">Our season runs May through September. If you're not sure yet, say so — we'll suggest the weeks that suit what you want to do.</p>
 
     <div class="row two">
       <div class="field">
@@ -370,32 +372,23 @@ pre .c{color:#8e8a80;font-style:italic}
             <button class="chip" type="button" data-v="September" id="m-sep">September</button>
           </div>
         </div>
-        <p class="hint" style="margin-top:9px">King salmon peak in June; silvers run August into September.</p>
+        <p class="hint" style="margin-top:9px">Every month of the season offers something different. Tell us what matters most and we'll match the weeks to it.</p>
       </div>
     </div>
   </div>
 
   <p class="sec-label">2 · Who</p>
   <div class="card">
-    <p class="q">How many people?</p>
-    <p class="qsub">We price and assign boats by who's fishing, so the split matters more than the headcount.</p>
+    <p class="q">How many guests?</p>
+    <p class="qsub">Your whole party, including anyone not taking part in activities. We'll match it to the right accommodation.</p>
 
-    <div class="row two">
-      <div class="count">
-        <button type="button" id="ang-minus" aria-label="Fewer anglers">−</button>
-        <output id="anglers" for="ang-minus ang-plus">4</output>
-        <button type="button" id="ang-plus" aria-label="More anglers">+</button>
-        <span class="cl">Anglers<br><span>fishing</span></span>
-      </div>
-      <div class="count">
-        <button type="button" id="non-minus" aria-label="Fewer non-fishing guests">−</button>
-        <output id="nonanglers" for="non-minus non-plus">2</output>
-        <button type="button" id="non-plus" aria-label="More non-fishing guests">+</button>
-        <span class="cl">Not fishing<br><span>spa, touring</span></span>
-      </div>
+    <div class="count" id="guest-count">
+      <button type="button" id="g-minus" aria-label="Fewer guests">−</button>
+      <output id="guests" for="g-minus g-plus">6</output>
+      <button type="button" id="g-plus" aria-label="More guests">+</button>
+      <span class="cl" id="guest-label">Guests<br><span>in your party</span></span>
     </div>
-
-    <div class="total"><span>Party size</span><b id="party">6 guests</b></div>
+    <p class="hint" id="fixed-note" style="margin-top:11px;display:none"></p>
 
     <div class="row" style="margin-top:15px">
       <label class="check" for="haskids">
@@ -417,10 +410,6 @@ pre .c{color:#8e8a80;font-style:italic}
     <p class="q">What are you interested in?</p>
     <p class="qsub">Pick anything that appeals. This shapes the packages we suggest — nothing is committed.</p>
     <div class="chips" id="interests" role="group" aria-label="Interests">
-      <button class="chip on" type="button" data-v="Saltwater sportfishing" id="i-salt">Saltwater sportfishing</button>
-      <button class="chip" type="button" data-v="Freshwater fishing — by boat" id="i-fwboat">Freshwater fishing — by boat</button>
-      <button class="chip" type="button" data-v="Freshwater fishing by float plane" id="i-fwair">Freshwater by float plane</button>
-      <button class="chip" type="button" data-v="Freshwater fishing — by ATV" id="i-fwatv">Freshwater by ATV</button>
       <button class="chip on" type="button" data-v="Whale &amp; wildlife viewing" id="i-whale">Whale &amp; wildlife viewing</button>
       <button class="chip" type="button" data-v="Float plane tour" id="i-tour">Float plane tour</button>
       <button class="chip" type="button" data-v="ATV Kruzof Island tour" id="i-atv">ATV Kruzof Island tour</button>
@@ -430,6 +419,8 @@ pre .c{color:#8e8a80;font-style:italic}
       <button class="chip" type="button" data-v="Cooking class" id="i-cook">Cooking class</button>
       <button class="chip" type="button" data-v="Winemaker Series" id="i-wine">Winemaker Series</button>
       <button class="chip" type="button" data-v="Visiting Chef Series" id="i-chef">Visiting Chef Series</button>
+      <button class="chip on" type="button" data-v="Saltwater sportfishing" id="i-salt">Saltwater sportfishing</button>
+      <button class="chip" type="button" data-v="Freshwater fishing" id="i-fresh">Freshwater fishing</button>
       <button class="chip" type="button" data-v="Corporate or group buyout" id="i-corp">Corporate / group buyout</button>
       <button class="chip" type="button" data-v="Special occasion" id="i-occ">Special occasion</button>
     </div>
@@ -559,7 +550,7 @@ pre .c{color:#8e8a80;font-style:italic}
           <dl>
             <dt>Lodge</dt><dd id="g-prop">Talon Lodge &amp; Spa, Sitka</dd>
             <dt>Dates</dt><dd id="g-dates">11–16 July 2027 (5 nights)</dd>
-            <dt>Party</dt><dd id="g-party">6 guests — 4 fishing, 2 not</dd>
+            <dt>Guests</dt><dd id="g-party">6 guests</dd>
             <dt>Interests</dt><dd id="g-int">Saltwater sportfishing · Whale &amp; wildlife viewing · Massage &amp; day spa</dd>
           </dl>
         </div>
@@ -585,7 +576,7 @@ pre .c{color:#8e8a80;font-style:italic}
       <div class="alert-bd">
         <dl class="kv">
           <dt>Dates</dt><dd id="s-dates">11–16 July 2027 (5 nights) · exact dates</dd>
-          <dt>Party</dt><dd id="s-party">4 anglers, 2 non-fishing</dd>
+          <dt>Guests</dt><dd id="s-party">6 guests</dd>
           <dt>Wants</dt><dd id="s-int">Saltwater sportfishing · Whale &amp; wildlife viewing · Massage &amp; day spa</dd>
           <dt>Contact</dt><dd id="s-contact">m.ellison@example.com · (206) 555-0148</dd>
           <dt>Source</dt><dd id="s-src">Friend or family · been to Alaska once before</dd>
@@ -631,7 +622,7 @@ pre .c{color:#8e8a80;font-style:italic}
             <tr><td>Phone</td><td><code>phone</code></td><td></td></tr>
             <tr><td>Message</td><td><code>message</code></td><td></td></tr>
             <tr><td>— (set by matching)</td><td><code>person_id</code></td><td>Null on write; the matching engine fills it.</td></tr>
-            <tr><td>Dates, party split, interests, children, agent, consent</td><td><code>details</code> JSON <b>(proposed)</b></td><td>Governed by <code>field_definitions</code>, as <code>assets.properties</code> already works. Alternative: promote dates and party counts to real columns.</td></tr>
+            <tr><td>Dates, guest count, interests, children, agent, consent</td><td><code>details</code> JSON <b>(proposed)</b></td><td>Governed by <code>field_definitions</code>, as <code>assets.properties</code> already works. Alternative: promote dates and party counts to real columns.</td></tr>
           </tbody>
         </table>
       </div>
@@ -663,6 +654,7 @@ pre .c{color:#8e8a80;font-style:italic}
               sub:"Tell us roughly when you'd like to come and what you'd like to do. A reservations agent replies personally — usually the same day." },
     all:    { key:"all",    label:"The Bluff House",     place:"at Talon Lodge · Sitka",
               website:"alaskaluxurylodge.com", property_id:3, property:"The Bluff House, at Talon Lodge",
+              fixedGuests:6,
               agent:"Ruth Alvarez", agentEmail:"reservations@alaskaluxurylodge.com", phone:"(907) 555-0164",
               title:"Enquire About The Bluff House", styled:true,
               sub:"The Bluff House takes one party of six at a time. Share your dates and what you'd like from the trip, and we'll come back to you personally." },
@@ -679,8 +671,8 @@ pre .c{color:#8e8a80;font-style:italic}
   var DEMO_NO = "<b>No brand assets for magnusadventures.com yet</b> — this is deliberately neutral so nothing here is mistaken for a match. Send the site or its colours and type, and this becomes a third brand.";
 
   var state = {
-    site:"talon", flex:"exact", months:[], anglers:4, nonanglers:2,
-    interests:["Saltwater sportfishing","Whale & wildlife viewing","Massage & day spa"],
+    site:"talon", flex:"exact", months:[], guests:6,
+    interests:["Whale & wildlife viewing","Massage & day spa","Saltwater sportfishing"],
     asrole:"self"
   };
 
@@ -695,6 +687,18 @@ pre .c{color:#8e8a80;font-style:italic}
     $("hero-title").textContent   = s.title;
     $("hero-sub").textContent     = s.sub;
     $("demonote").innerHTML       = s.styled ? DEMO_OK : DEMO_NO;
+    var fixed = !!s.fixedGuests;
+    $("guest-count").classList.toggle("fixed", fixed);
+    $("fixed-note").style.display = fixed ? "" : "none";
+    if(fixed){
+      state.guests = s.fixedGuests;
+      $("fixed-note").textContent = s.label + " is booked as a whole house for one party of " +
+        s.fixedGuests + " — the count is fixed, not a minimum to fill.";
+      $("guest-label").innerHTML = "Guests<br><span>whole house</span>";
+    } else {
+      $("guest-label").innerHTML = "Guests<br><span>in your party</span>";
+    }
+    party();
     $("demobar").classList.toggle("warn", !s.styled);
     document.title = s.label + " — Enquiry Form";
   }
@@ -728,17 +732,14 @@ pre .c{color:#8e8a80;font-style:italic}
   multi("interests","interests");
   multi("months","months");
 
-  function counter(minusId, plusId, outId, key, min){
-    function draw(){ $(outId).textContent = state[key]; party(); }
-    $(minusId).addEventListener("click", function(){ state[key] = Math.max(min, state[key]-1); draw(); });
-    $(plusId).addEventListener("click",  function(){ state[key] = Math.min(40, state[key]+1); draw(); });
+  function party(){ $("guests").textContent = state.guests; }
+  function bump(d){
+    if(SITES[state.site].fixedGuests) return;          // whole-house booking, not adjustable
+    state.guests = Math.max(1, Math.min(40, state.guests + d));
+    party();
   }
-  function party(){
-    var t = state.anglers + state.nonanglers;
-    $("party").textContent = t + (t===1 ? " guest" : " guests");
-  }
-  counter("ang-minus","ang-plus","anglers","anglers",0);
-  counter("non-minus","non-plus","nonanglers","nonanglers",0);
+  $("g-minus").addEventListener("click", function(){ bump(-1); });
+  $("g-plus").addEventListener("click",  function(){ bump(1);  });
 
   $("haskids").addEventListener("change", function(){
     $("kids-wrap").classList.toggle("show", this.checked);
@@ -783,11 +784,10 @@ pre .c{color:#8e8a80;font-style:italic}
     var salt = has("saltwater"), fresh = has("freshwater"),
         view = has("whale") || has("tour") || has("kayak") || has("hiking") || has("atv");
 
-    if(salt && view) out.push(["Alaska Adventure Combo","Fishing days paired with wildlife and touring days — the usual answer for a party that wants both."]);
-    if(salt && !out.length) out.push(["Sportfishing","Full guided saltwater days out of Sitka, boat and licence handled."]);
-    else if(salt) out.push(["Sportfishing","Add extra guided saltwater days to any package."]);
+    if(view && (salt || fresh)) out.push(["Alaska Adventure Combo","Wildlife and touring days alongside days on the water — the usual answer for a party that wants the range."]);
+    else if(view) out.push(["Adventure Viewing","Whales, bears and the outer coast, by boat, float plane and on foot."]);
+    if(salt) out.push(["Sportfishing","Guided saltwater days out of Sitka, boat and licence handled."]);
     if(fresh) out.push(["Freshwater Fishing","Remote river and lake days, reached by boat, ATV or float plane."]);
-    if(view && !salt) out.push(["Adventure Viewing","Whales, bears and the outer coast, with no fishing days."]);
     if(has("winemaker")) out.push(["Winemaker Series","Set weeks built around a visiting winemaker — limited dates each season."]);
     if(has("chef")) out.push(["Visiting Chef Series","A guest chef in the kitchen for the week. Books out early."]);
     if(!out.length) out.push(["Standard","Lodging, meals and the run of the lodge — build the days around it."]);
@@ -795,9 +795,11 @@ pre .c{color:#8e8a80;font-style:italic}
   }
 
   function flags(){
-    var f = [], total = state.anglers + state.nonanglers, m = primaryMonth();
-    if(total >= 8) f.push(["hot","Buyout-size party"]);
-    else if(total >= 6) f.push(["warm","Large party"]);
+    var f = [], total = state.guests, m = primaryMonth(), fixed = !!SITES[state.site].fixedGuests;
+    if(!fixed){                                  // 6 is the norm at a whole-house property
+      if(total >= 8) f.push(["hot","Buyout-size party"]);
+      else if(total >= 6) f.push(["warm","Large party"]);
+    }
     if(PEAK[m]) f.push(["hot", m + " — peak"]);
     if(state.asrole === "agent") f.push(["info","Travel agent"]);
     if(state.asrole === "group") f.push(["info","Group organiser"]);
@@ -837,9 +839,8 @@ pre .c{color:#8e8a80;font-style:italic}
         date_flexibility: state.flex,
         season_year: $("season-year").value || null,
         months_of_interest: state.months.slice(),
-        num_fishing_guests: state.anglers,
-        num_non_fishing_guests: state.nonanglers,
-        party_size: state.anglers + state.nonanglers,
+        party_size: state.guests,
+        party_size_fixed: !!SITES[state.site].fixedGuests,
         children: kids,
         child_ages: kids ? $("kidages").value.trim() || null : null,
         interests: state.interests.slice(),
@@ -863,7 +864,7 @@ pre .c{color:#8e8a80;font-style:italic}
   function render(){
     var s = SITES[state.site],
         first = $("first").value.trim(),
-        total = state.anglers + state.nonanglers,
+        total = state.guests,
         m = primaryMonth(),
         yr = ($("arrive").value ? new Date($("arrive").value+"T00:00:00").getFullYear() : $("season-year").value) || "";
 
@@ -874,7 +875,8 @@ pre .c{color:#8e8a80;font-style:italic}
     $("g-hi").textContent    = "Thank you, " + first + " —";
     $("g-prop").textContent  = s.property;
     $("g-dates").textContent = dateLine();
-    $("g-party").textContent = total + (total===1?" guest — ":" guests — ") + state.anglers + " fishing, " + state.nonanglers + " not";
+    $("g-party").textContent = total + (total===1?" guest":" guests") +
+      (s.fixedGuests ? " — the whole house" : "");
     $("g-int").textContent   = state.interests.length ? state.interests.join(" · ") : "Still deciding";
 
     $("g-pk").innerHTML = packages().map(function(p){
@@ -887,7 +889,7 @@ pre .c{color:#8e8a80;font-style:italic}
     $("g-next").innerHTML = "Your enquiry has gone to <b>" + esc(s.agent) + "</b>, who looks after bookings for " +
       esc(s.label) + ". You'll hear back personally within one business day — and in season, usually the same afternoon. " +
       "If it's easier to talk it through, call <b>" + esc(s.phone) + "</b> and ask for " + esc(s.agent.split(" ")[0]) + ".";
-    $("g-sig").innerHTML = "Tight lines,<br><b>" + esc(s.agent) + "</b> · Reservations<br>" +
+    $("g-sig").innerHTML = "Looking forward to it,<br><b>" + esc(s.agent) + "</b> · Reservations<br>" +
       esc(s.label) + " · " + esc(s.place) + "<br>" + esc(s.website);
 
     $("s-name").textContent = ($("first").value.trim()+" "+$("last").value.trim()).trim() + " · " +
@@ -899,7 +901,8 @@ pre .c{color:#8e8a80;font-style:italic}
     $("s-dates").textContent = dateLine();
     var kidtxt = $("haskids").checked && $("kidages").value.trim()
       ? " · children " + $("kidages").value.trim() : ($("haskids").checked ? " · with children" : "");
-    $("s-party").textContent = state.anglers + " anglers, " + state.nonanglers + " non-fishing" + kidtxt;
+    $("s-party").textContent = total + (total===1?" guest":" guests") +
+      (s.fixedGuests ? " (whole house — fixed)" : "") + kidtxt;
     $("s-int").textContent = state.interests.length ? state.interests.join(" · ") : "Not specified";
     $("s-contact").textContent = $("email").value.trim() + ($("phone").value.trim() ? " · " + $("phone").value.trim() : " · no phone given");
     $("s-src").textContent = $("heard").options[$("heard").selectedIndex].text +

@@ -57,12 +57,11 @@ Public, unauthenticated, CORS-restricted to the three site origins.
     "date_flexibility":    "exact",      // exact | few_days | month | unsure
     "season_year":         "2027",
     "months_of_interest":  ["July"],
-    "num_fishing_guests":     4,
-    "num_non_fishing_guests": 2,
-    "party_size":             6,
+    "party_size":          6,
+    "party_size_fixed":    false,   // true where the property books as a whole house
     "children":            true,
     "child_ages":          "9, 12, 14",
-    "interests":           ["Saltwater sportfishing", "Whale & wildlife viewing"],
+    "interests":           ["Whale & wildlife viewing", "Saltwater sportfishing"],
     "enquiring_as":        "self",       // self | group | agent
     "agency_name":         null,
     "agency_email":        null,
@@ -108,11 +107,15 @@ Everything lands in **`inquiries`** (DB_SCHEMA §F). No new table.
    model in DATABASE_DESIGN.md, and lets each property add its own questions without a
    migration. *Recommended.*
 2. **Promote the common fields to real columns** — `arrival_date`, `departure_date`,
-   `num_fishing_guests`, `num_non_fishing_guests`, `party_size` — and put only the tail in
-   JSON. Every enquiry has these, they are the ones reports will group by, and
-   `brochure_requests` already stores `num_fishing/non_fishing_guests` as columns.
+   `party_size` — and put only the tail in JSON. Every enquiry has these and they are the
+   ones reports will group by.
 
-A reasonable answer is both: promote the five, JSON for the rest.
+A reasonable answer is both: promote the three, JSON for the rest.
+
+> **Schema note.** `brochure_requests` still carries `num_fishing/non_fishing_guests`
+> (DB_SCHEMA §F). Those columns pre-date the move to an adventure-resort brand and no
+> longer reflect how guests are counted or priced — there is no non-fishing rate. Worth
+> deciding whether they are retired, or kept read-only for the legacy import.
 
 ---
 
@@ -153,8 +156,15 @@ nothing for an hour enquires at three other lodges.
 
 ## Three things the form does deliberately
 
-**Anglers and non-anglers counted separately.** Not a single "number of guests". Boats and
-pricing are assigned by who is fishing, and `brochure_requests` already splits them.
+**One guest count, never split by activity.** Everyone in the party is a *guest*. There is
+no separate rate for people who don't fish, so the form does not ask who is and isn't —
+asking would imply a pricing distinction that does not exist, and the words a form uses set
+the expectation before anyone speaks to an agent.
+
+**Capacity is a property fact, not a question.** The Bluff House books as a whole house for
+one party of six — fixed, not a minimum to fill. On that site the stepper is removed and the
+count is stated, so nobody enquires for four and is corrected later. `party_size_fixed` in
+the payload tells the endpoint the number was not the guest's choice.
 
 **"Not sure yet" is a first-class answer on dates.** Many enquirers have no dates — that is
 why they are enquiring. Forcing a date produces a fictional one. Choosing it reveals a
@@ -181,6 +191,10 @@ hexes are measured from rendered pixels and should be confirmed against the real
 | Footer ground | `#494546` | `#040404` | — |
 | Display face | serif, light | serif, classic | — |
 | Corners | square | square | — |
+
+The copy throughout is adventure-resort, not fishing-lodge: fishing is one of the things on
+offer rather than the frame around everything, and the interests list leads with wildlife,
+touring and spa.
 
 Both sites share a visual language the form now follows: centred headings over a thin rule,
 uppercase letterspaced labels, squared controls, white ground, no rounded pills. Neither site
